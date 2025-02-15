@@ -66,8 +66,7 @@ def parse_arguments():
 
 def choose_directory(args):
     """
-    List valid directories in the current directory (Activities, Homeworks, Project) and prompt the user to choose one.
-    Then, let the user choose a subdirectory within the selected directory.
+    List valid directories in the current directory (Phase-1, Phase-2, Phase-3) and prompt the user to choose one.
 
     Args:
         args (Namespace): Parsed command-line arguments for determining the context of directory usage.

@@ -1,0 +1,1 @@
+add wave /Shifter_tb/iDUT/Shift_In; add wave /Shifter_tb/iDUT/Shift_Val; add wave /Shifter_tb/iDUT/Mode; add wave /Shifter_tb/iDUT/shft_stg1; add wave /Shifter_tb/iDUT/shft_stg2; add wave /Shifter_tb/iDUT/shft_stg3; add wave /Shifter_tb/iDUT/Shift_Out; add wave /Shifter_tb/expected_result;

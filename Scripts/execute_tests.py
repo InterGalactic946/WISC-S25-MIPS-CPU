@@ -78,37 +78,6 @@ def choose_directory(args):
     # Define the top-level valid directories
     top_level_dirs = [PHASE1_DIR, PHASE2_DIR, PHASE3_DIR]
 
-    # Prompt the user to choose one of the top-level directories
-    print("Available top-level directories:")
-    for idx, directory in enumerate(top_level_dirs, 1):
-        print(f"{idx}. {os.path.basename(directory)}")
-
-
-    while True:
-        try:
-            selection = int(input("Enter the number of the top-level directory to choose: "))
-            if 1 <= selection <= len(top_level_dirs):
-                selected_top_dir = top_level_dirs[selection - 1]
-                break
-            else:
-                print(f"Invalid input. Please enter a number between 1 and {len(top_level_dirs)}.")
-        except ValueError:
-            print("Invalid input. Please enter a valid number.")
-
-    # Get the list of subdirectories in the selected top-level directory
-    subdirectories = [d for d in os.listdir(selected_top_dir) if os.path.isdir(os.path.join(selected_top_dir, d))]
-
-    # If only one subdirectory exists, automatically select it and print the selected directory
-    if len(subdirectories) == 1:
-        selected_directory = os.path.join(selected_top_dir, subdirectories[0])
-        print(f"Only one subdirectory found: {selected_directory}. Proceeding with this directory.")
-        return selected_directory
-
-    # If no subdirectories found, show an error and exit
-    if not subdirectories:
-        print(f"No subdirectories found in {selected_top_dir}. Exiting...")
-        sys.exit(1)
-
     # Determine the prompt message based on the args flags
     if args.logs == "c":
         prompt_message = "Enter the number of the directory to view compilation logs: "
@@ -124,25 +93,23 @@ def choose_directory(args):
     # Display the prompt message after the top-level directory is selected but before subdirectory selection
     print(prompt_message)
 
-    # Prompt the user to choose a subdirectory from the list
-    print(f"Available subdirectories in {os.path.basename(selected_top_dir)}:")
-    for idx, subdir in enumerate(subdirectories, 1):
-        print(f"{idx}. {subdir}")
+    # Prompt the user to choose one of the top-level directories
+    for idx, directory in enumerate(top_level_dirs, 1):
+        print(f"{idx}. {os.path.basename(directory)}")
 
     while True:
         try:
-            selection = int(input("Enter the number of the subdirectory to choose: "))
-            if 1 <= selection <= len(subdirectories):
-                selected_subdir = subdirectories[selection - 1]
-                selected_directory = os.path.join(selected_top_dir, selected_subdir)
+            selection = int(input("Enter the number of the directory to choose: "))
+            if 1 <= selection <= len(top_level_dirs):
+                selected_top_dir = top_level_dirs[selection - 1]
                 break
             else:
-                print(f"Invalid input. Please enter a number between 1 and {len(subdirectories)}.")
+                print(f"Invalid input. Please enter a number between 1 and {len(top_level_dirs)}.")
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
     # Return the selected directory path
-    return selected_directory
+    return selected_top_dir
 
 
 def setup_directories(name):

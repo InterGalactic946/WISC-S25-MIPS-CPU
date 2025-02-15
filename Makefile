@@ -134,31 +134,14 @@ clean:
 		echo "No valid top-level directories (Phase-1, Phase-2, Phase-3) found."; \
 		exit 1; \
 	fi; \
-	PS3="Please select a top-level directory (Phase-1, Phase-2, Phase-3) to clean from: "; \
+	PS3="Please select a top-level directory (Phase-1, Phase-2, Phase-3) to clean: "; \
 	select top_level_dir in $$top_level_dirs; do \
 		if [ -n "$$top_level_dir" ] && [ -d "$$top_level_dir" ]; then \
-			break; \
-		else \
-			echo "Invalid selection, please choose a valid top-level directory."; \
-		fi; \
-	done; \
-	# Now using $$top_level_dir in the next part within the same shell invocation \
-	echo "Available subdirectories in $$top_level_dir to clean:"; \
-	# Correctly list the subdirectories within the selected top-level directory \
-	subdirs=$$(find "$$top_level_dir" -mindepth 1 -maxdepth 1 -type d); \
-	if [ -z "$$subdirs" ]; then \
-		echo "No subdirectories found to clean in $$top_level_dir."; \
-		exit 1; \
-	fi; \
-	PS3="Please select a subdirectory to clean: "; \
-	select subdir in $$subdirs; do \
-		if [ -n "$$subdir" ] && [ -d "$$subdir" ]; then \
-			echo "You selected $$subdir"; \
-			echo "Cleaning up generated files in directory $$subdir..."; \
-			rm -rf "$$subdir/output/" "$$subdir/work/"; \
+			echo "Cleaning up generated files in $$top_level_dir..."; \
+			rm -rf "$$top_level_dir/output/" "$$top_level_dir/work/"; \
 			echo "Cleanup complete."; \
 			break; \
 		else \
-			echo "Invalid selection, please choose a valid subdirectory."; \
+			echo "Invalid selection, please choose a valid top-level directory."; \
 		fi; \
 	done

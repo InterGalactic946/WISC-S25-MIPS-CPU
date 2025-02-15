@@ -268,13 +268,13 @@ def check_design_files():
     Returns:
         None
     """
-    # Get absolute paths of all Verilog files (excluding testbench files)
-    verilog_files = [os.path.abspath(f) for f in os.listdir() if f.endswith(".v") and "_tb.v" not in f]
+    # Get absolute paths of all Verilog files (excluding testbench files).
+    verilog_files = [ os.path.abspath(f) for f in os.listdir() if (f.endswith((".v", ".sv")) and "_tb" not in f)]
     
-    # List to store files that fail the check
+    # List to store files that fail the check.
     failed_files = []
 
-    # Iterate over each design file and run the Vcheck command
+    # Iterate over each design file and run the Vcheck command.
     for vfile in verilog_files:
         try:
             # Run 'java Vcheck <design_file.v>' with the specified classpath
@@ -539,7 +539,7 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
         # Scan all .v files in the directory to populate the definitions.
         for root, _, files in os.walk(TEST_DIR):
             for file in files:
-                if file.endswith('.v'):
+                if file.endswith(('.v', '.sv')):  # Check for both .v and .sv files
                     file_path = os.path.join(root, file)
                     with open(file_path, 'r') as f:
                         content = f.read()
@@ -903,37 +903,37 @@ def find_testbench(find_all=False):
     """
     Search for testbench files in the specified directory.
 
-    This function scans the testbench directory for `.v` files with the `_tb.v` suffix.
+    This function scans the testbench directory for `.(s)v` files with the `_tb.(s)v` suffix.
     - If no testbench files are found, it raises an error.
-    - If `find_all` is True, returns all testbench files (excluding the `.v` extension).
-    - If only one testbench file is found, returns its name (excluding the `.v` extension).
+    - If `find_all` is True, returns all testbench files (excluding the `.(s)v` extension).
+    - If only one testbench file is found, returns its name (excluding the `.(s)v` extension).
     - If multiple testbench files are found, and `find_all` is False, prompts the user to choose one.
 
     Args:
         find_all (bool): If True, return all testbenches.
 
     Returns:
-        list: A list of testbench names (excluding the `.v` extension).
+        list: A list of testbench names (excluding the `.sv` or `.v` extension).
 
     Raises:
         FileNotFoundError: If no testbench files matching the criteria are found.
     """
-    # Collect all testbench .v files in the specified directory.
+   # Collect all testbench _tb.sv or _tb.v files in the specified directory.
     testbench_names = [
-        filename for filename in os.listdir(TEST_DIR) if filename.endswith("_tb.v")
+        filename for filename in os.listdir(TEST_DIR) if filename.endswith(("_tb.sv", "_tb.v"))
     ]
 
     # If no testbench files are found, raise an error.
     if not testbench_names:
-        raise FileNotFoundError("No testbench files ending with '_tb.v' found.")
+        raise FileNotFoundError("No testbench files ending with '_tb.(s)v' found.")
 
-    # If `find_all` is True, return all testbench names without `.v`.
+    # If `find_all` is True, return all testbench names without `.sv` or `.v` extension.
     if find_all:
-        return [tb[:-2] for tb in testbench_names]
+        return [tb.rsplit('.', 1)[0] for tb in testbench_names]  # Remove the extension
 
-    # If only one testbench file is found, return its name.
+    # If only one testbench file is found, return its name without the extension.
     if len(testbench_names) == 1:
-        return [testbench_names[0][:-2]]  # Return as a list for consistency.
+        return [testbench_names[0].rsplit('.', 1)[0]]  # Return as a list for consistency.
 
     # If multiple testbenches are found, prompt the user to choose one.
     print("Multiple testbench files found. Please choose one:")
@@ -946,8 +946,8 @@ def find_testbench(find_all=False):
             # Ask the user to input their choice.
             choice = int(input("Enter the number corresponding to your choice: "))
             if 1 <= choice <= len(testbench_names):
-                # Return the chosen testbench as a single-item list.
-                return [testbench_names[choice - 1][:-2]]
+                # Return the chosen testbench without the extension.
+                return [testbench_names[choice - 1].rsplit('.', 1)[0]]
             else:
                 # Handle out-of-range inputs.
                 print(f"Invalid choice. Please select a number between 1 and {len(testbench_names)}.")
@@ -970,8 +970,15 @@ def execute_test(test_name, args):
     3. Compiles the required files if necessary.
     4. Executes the testbench with the provided arguments.
     """
-    # Construct the full file path for the testbench.
-    test_file = os.path.join(TEST_DIR, f"{test_name}.v")
+    # First, try to find the file with the .sv extension.
+    test_file_sv = os.path.join(TEST_DIR, f"{test_name}.sv")
+    
+    # If the .sv file exists, use it. Otherwise, try the .v extension.
+    if os.path.exists(test_file_sv):
+        test_file = test_file_sv
+    else:
+        # Fallback to .v if .sv doesn't exist.
+        test_file = os.path.join(TEST_DIR, f"{test_name}.v")
 
     # Find all dependencies for the testbench.
     all_dependencies = find_dependencies(test_file)

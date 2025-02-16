@@ -269,7 +269,7 @@ def check_design_files():
         None
     """
     # Get absolute paths of all Verilog files (excluding testbench files).
-    verilog_files = [os.path.abspath(f) for f in os.listdir() if f.endswith(".v") and not (f.endswith("_tb.v") or f.endswith("_tb.sv"))]
+    verilog_files = [os.path.abspath(f) for f in os.listdir() if f.endswith(".v") and not f.endswith("_tb.v")]
     
     # List to store files that fail the check.
     failed_files = []
@@ -308,8 +308,12 @@ def check_design_files():
         for vfile, error in failed_files:
             print(f"Check failed for {os.path.basename(vfile)}:\n{error}\n")
     else:
-        # If no files failed, print success message
-        print("YAHOO!! All design files are compliant.")
+        # If no files failed, print success message.
+        if len(verilog_files) != 0:
+            print("YAHOO!! All Verilog design files are compliant.")
+        else:
+        # Exit gracefully, if no Verilog design files found.
+            print(f"No Verilog design files found in {os.path.basename(TEST_DIR)}. Exiting...")
 
 
 def check_logs(logfile, mode):

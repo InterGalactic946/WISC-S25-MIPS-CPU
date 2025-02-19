@@ -2,12 +2,14 @@
 # Makefile for handling check, run, log, and clean targets with arguments.
 # This Makefile supports the following goals:
 # - check: Checks if Verilog design files are compliant.
+# - kill: Closes all vsim instances started from the script.
 # - run: Executes tests with specified arguments.
 # - log: Displays logs based on the provided log mode.
 # - clean: Cleans up generated files in the specified directory.
 #
 # Usage:
 # - make check          - Checks if Verilog design files are compliant.
+# - make kill           - Closes all started vsim instances from the script.
 # - make run <mode> (a) - Run tests in a specified directory with a selected mode (optionally all tests in the directory).
 # - make log <log_type> - Display logs for a specified directory and log type.
 # - make clean          - Clean up generated files in a specified directory.
@@ -25,6 +27,7 @@
 default:
 	@echo "Usage instructions for the Makefile:"
 	@echo "  make check 	      - Checks all .v design files for compliancy within a selected directory."
+	@echo "  make kill 	      - Closes all started vsim instances from the script."
 	@echo "  make run <mode> [a] - Run tests in a specified directory with a selected mode (c,s,g,v)."
 	@echo "  make log <log_type> - Display logs for a specified directory and log type."
 	@echo "  make clean 	      - Clean up generated files in a specified directory."
@@ -41,7 +44,7 @@ else ifeq ($(firstword $(MAKECMDGOALS)), log)
 endif
 
 # Declare phony targets.
-.PHONY: default check run log clean $(runargs) $(logargs)
+.PHONY: default check kill run log clean $(runargs) $(logargs)
 
 
 ##################################################
@@ -52,6 +55,17 @@ endif
 ##################################################
 check:
 	@ cd Scripts && python3 execute_tests.py -c
+
+
+##################################################
+# Target: kill
+# This target closes all started vsim instances.
+# Usage:
+#   make kill
+##################################################
+kill:
+	@echo "Closing all started vsim instances..."
+	@ pkill vish -9
 
 
 ##################################################

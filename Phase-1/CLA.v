@@ -22,7 +22,7 @@ module CLA(Sum, Ovfl, A, B, sub);
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
   wire [15:0] B_operand;       // Operand B or its complement.
-	wire [3:0] Carries;	         // Carry chain logic of the 4-bit CLA.
+	wire [3:0] Carries;	         // Carry chain logic of the 16-bit CLA.
   wire [3:0] P_group, G_group; // 4-bit propagate and generate signals of each CLA_4bit adder.
   ///////////////////////////////////////////////
 

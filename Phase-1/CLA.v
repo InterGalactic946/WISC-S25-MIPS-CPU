@@ -1,0 +1,49 @@
+`default_nettype none // Set the default as none to avoid errors
+
+////////////////////////////////////////////////////////////
+// CLA.v: 16-bit Hierarchical Carry Lookahead Adder       //
+//                                                        //
+// This module implements a 16-bit Carry Lookahead Adder  //
+// using four 4-bit CLA blocks. It performs addition or   //
+// subtraction based on the `sub` signal and produces     //
+// the sum and overflow output for the given 16-bit input.//
+// It computes the carry chain and overflow condition     //
+// by utilizing the propagate and generate signals from   //
+// each 4-bit CLA block.                                  //
+////////////////////////////////////////////////////////////
+module CLA(Sum, Ovfl, A, B, sub);
+
+  input wire [15:0] A,B;   // 4-bit input bits to be added
+  input wire sub;	         // add-sub indicator
+  output wire [15:0] Sum;  // 4-bit sum output
+  output wire Ovfl;        // overflow indicator
+
+  /////////////////////////////////////////////////
+  // Declare any internal signals as type wire  //
+  ///////////////////////////////////////////////
+  wire [15:0] B_operand;       // Operand B or its complement.
+	wire [3:0] Carries;	         // Carry chain logic of the 4-bit CLA.
+  wire [3:0] P_group, G_group; // 4-bit propagate and generate signals of each CLA_4bit adder.
+  ///////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////
+  // Implement CLA Adder as structural/dataflow verilog //
+  ///////////////////////////////////////////////////////
+  // Negate B if subtracting.
+  assign B_operand = (sub) ? ~B : B;
+
+  // Form the carry chain based on the group propagate and generates of each 4-bit nibble.
+  assign Carries[0] = G_group[0] | (P_group[0] & sub);
+  assign Carries[1] = G_group[1] | (P_group[1] & G_group[0]) | (P_group[1] & P_group[0] & Carries[0]);
+  assign Carries[2] = G_group[2] | (P_group[2] & G_group[1]) | (P_group[2] & P_group[1] & G_group[0]) | (P_group[2] & P_group[1] & P_group[0] & Carries[0]);
+  assign Carries[3] = G_group[3] | (P_group[3] & G_group[2]) | (P_group[3] & P_group[2] & G_group[1]) | (P_group[3] & P_group[2] & P_group[1] & G_group[0]) | (P_group[3] & P_group[2] & P_group[1] & P_group[0] & Carries[0]);
+
+  // Vector instantiate 4 4-bit CLA blocks.
+  CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin(Carries), .Sum(Sum), .P_group(P_group), .G_group(G_group), .Ovfl());
+
+  // Overflow based on subtraction or addition.
+  assign Ovfl = (sub) ? ((~A[15] & B_operand[15] & Sum[15]) | (A[15] & ~B_operand[15] & ~Sum[15])) : ((A[15] & B_operand[15] & ~Sum[15]) | (~A[15] & B_operand[15] & Sum[15]));
+
+endmodule
+
+`default_nettype wire  // Reset default behavior at the end

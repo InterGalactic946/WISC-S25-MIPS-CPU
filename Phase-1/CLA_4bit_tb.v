@@ -20,7 +20,7 @@ module CLA_4bit_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  CLA_4bit iDUT(.A(stim[8:5]),.B(stim[4:1]),.sub(stim[0]), .Cin(1'b0), .Sum(Sum),.Ovfl(overflow) .P_group(), .G_group());
+  CLA_4bit iDUT(.A(stim[8:5]),.B(stim[4:1]),.sub(stim[0]), .Cin(1'b0), .Sum(Sum),.Ovfl(overflow), .P_group(), .G_group());
   
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin

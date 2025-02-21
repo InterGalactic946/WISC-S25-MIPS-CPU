@@ -24,8 +24,8 @@ module CLA_tb();
   
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin
-    stim = 9'h000; // initialize stimulus
-    expected_sum = 4'h0; // initialize expected sum
+    stim = 33'h000000000; // initialize stimulus
+    expected_sum = 16'h0000; // initialize expected sum
     expected_overflow = 1'b0; // initialize expected overflow
     addition_operations = 17'h00000; // initialize addition operation count
     subtraction_operations = 17'h00000; // initialize subtraction operation count

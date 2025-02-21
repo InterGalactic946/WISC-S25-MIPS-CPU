@@ -50,13 +50,21 @@ module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
   assign C[3] = G[3] | (P[3] & G[2]) | (P[3] & P[2] & G[1]) | (P[3] & P[2] & P[1] & G[0]) | (P[3] & P[2] & P[1] & P[0] & Cin_operand);
 
   // Form the sum of the CLA adder.
-  assign Sum[0] = A[0] ^ B[0] ^ Cin_operand;
-  assign Sum[1] = A[1] ^ B[1] ^ C[0];
-  assign Sum[2] = A[2] ^ B[2] ^ C[1];
-  assign Sum[3] = A[3] ^ B[3] ^ C[2];
+  assign Sum[0] = A[0] ^ B_operand[0] ^ Cin_operand;
+  assign Sum[1] = A[1] ^ B_operand[1] ^ C[0];
+  assign Sum[2] = A[2] ^ B_operand[2] ^ C[1];
+  assign Sum[3] = A[3] ^ B_operand[3] ^ C[2];
 
-  // Overflow based on subtraction or addition.
-  assign Ovfl_sub = (~A[3] & B_operand[3] & ~Sum[3]) | (A[3] & ~B_operand[3] & Sum[3]);
+  /* Overflow Detection */
+    /* 1) Addition:
+        When both operands have the same sign and the result has a different sign.
+    */
+    /* 2) Subtraction:
+        a) A is positive and B is negative but the result is negative.
+        b) A is negative and B is positive but the result is positive.
+    */
+  */
+  assign Ovfl_sub = (~A[3] & B_operand[3] & Sum[3]) | (A[3] & ~B_operand[3] & ~Sum[3]);
   assign Ovfl_add = (A[3] & B_operand[3] & ~Sum[3]) | (~A[3] & ~B_operand[3] & Sum[3]);
   assign Ovfl = (sub) ? Ovfl_sub : Ovfl_add;
 

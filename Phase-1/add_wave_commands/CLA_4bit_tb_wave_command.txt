@@ -1,0 +1,1 @@
+add wave /CLA_4bit_tb/iDUT/A; add wave /CLA_4bit_tb/iDUT/B; add wave /CLA_4bit_tb/iDUT/sub; add wave /CLA_4bit_tb/expected_sum; add wave /CLA_4bit_tb/Sum; add wave /CLA_4bit_tb/expected_overflow; add wave /CLA_4bit_tb/overflow;

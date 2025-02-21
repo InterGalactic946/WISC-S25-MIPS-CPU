@@ -39,7 +39,7 @@ module CLA_4bit_tb();
       stim = $random & 9'h1FF; // Generate random stimulus
 
       // Wait to process the change in the input.
-      #5;
+      #1;
 
       // Overflow detection based on operation type.
       case (stim[0])

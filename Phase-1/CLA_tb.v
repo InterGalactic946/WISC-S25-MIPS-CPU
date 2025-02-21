@@ -12,6 +12,7 @@
 module CLA_tb();
 
   reg [32:0] stim;	                 // stimulus vector of type reg
+  reg sub;                           // add/sub indicator
   wire [15:0] Sum;                   // 16-bit sum formed on addition/subtraction of the given operands
   wire overflow;	                   // overflow indicator of the addition/subtraction
   reg expected_overflow;             // expected overflow
@@ -23,11 +24,11 @@ module CLA_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  CLA iDUT(.A(stim[32:17]), .B(stim[16:1]), .sub(stim[0]), .Sum(Sum), .Ovfl(overflow));
+  CLA iDUT(.A(stim[32:16]), .B(stim[15:0]), .sub(sub), .Sum(Sum), .Ovfl(overflow));
   
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin
-    stim = 33'h000000000; // initialize stimulus
+    stim = 32'h00000000; // initialize stimulus
     expected_sum = 16'h0000; // initialize expected sum
     expected_overflow = 1'b0; // initialize expected overflow
     addition_operations = 17'h00000; // initialize addition operation count
@@ -39,20 +40,20 @@ module CLA_tb();
 
     // Apply stimulus as 100000 random input vectors.
     repeat (100000) begin
-      stim[32:1] = $random; // Generate random stimulus
-      stim[0] = $random & 1'b1;
+      stim = $random; // Generate random stimulus
+      sub = $random % 2;
 
       // Wait to process the change in the input.
-      #5;
+      #1;
 
       // Overflow detection based on operation type.
-      case (stim[0])
+      case (sub)
         1'b0: begin 
-          expected_sum = stim[32:17] + stim[16:1];
+          expected_sum = stim[31:16] + stim[15:0];
           
           // Overflow occurs in addition when both operands have the same sign and the result has a different sign.
-          if (stim[32] === stim[16]) begin
-            if (expected_sum[15] !== stim[32]) 
+          if (stim[31] === stim[15]) begin
+            if (expected_sum[15] !== stim[31]) 
               expected_overflow = 1'b1; // Overflow detected
             else 
               expected_overflow = 1'b0; // No overflow
@@ -62,13 +63,13 @@ module CLA_tb();
 
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Sum expected 0x%h, got 0x%h.", stim[31:17], stim[16:1], expected_sum, Sum);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Sum expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], expected_sum, Sum);
             error = 1'b1;
           end
 
           /* Validate the overflow. */
           if (overflow !== expected_overflow) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Overflow expected 0x%h, got 0x%h.", stim[31:17], stim[16:1], expected_overflow, overflow);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Overflow expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], expected_overflow, overflow);
             error = 1'b1;
           end
 
@@ -77,27 +78,27 @@ module CLA_tb();
             addition_operations = addition_operations + 1'b1;
         end 
         1'b1: begin
-          expected_sum = stim[32:17] - stim[16:1];
+          expected_sum = stim[31:16] - stim[15:0];
 
           // Overflow occurs in subtraction when:
           // 1. A is positive and B is negative but the result is negative.
           // 2. A is negative and B is positive but the result is positive.
-          if ((stim[32] === 1'b0) && (stim[16] === 1'b1) && (expected_sum[15] === 1'b1))
+          if ((stim[31] === 1'b0) && (stim[15] === 1'b1) && (expected_sum[15] === 1'b1))
             expected_overflow = 1'b1; // Overflow detected (positive - negative giving negative)
-          else if ((stim[32] === 1'b1) && (stim[16] === 1'b0) && (expected_sum[15] === 1'b0)) 
+          else if ((stim[31] === 1'b1) && (stim[15] === 1'b0) && (expected_sum[15] === 1'b0)) 
             expected_overflow = 1'b1; // Overflow detected (negative - positive giving positive)
           else 
             expected_overflow = 1'b0; // No overflow in other cases
           
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Sum expected 0x%h, got 0x%h.", stim[31:17], stim[16:1], expected_sum, Sum);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Sum expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], expected_sum, Sum);
             error = 1'b1;
           end
 
           /* Validate the overflow. */
           if (overflow !== expected_overflow) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Overflow expected 0x%h, got 0x%h.", stim[31:17], stim[16:1], expected_overflow, overflow);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Overflow expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], expected_overflow, overflow);
             error = 1'b1;
           end
 

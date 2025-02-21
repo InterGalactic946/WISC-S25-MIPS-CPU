@@ -36,7 +36,7 @@ module CLA_tb();
 
     // Apply stimulus as 100000 random input vectors.
     repeat (100000) begin
-      stim = {$random, $random[0]}; // Generate random stimulus
+      stim = {$random, $random & 0x1}; // Generate random stimulus
 
       // Wait to process the change in the input.
       #5;

@@ -34,15 +34,25 @@ module CLA(Sum, Ovfl, A, B, sub);
 
   // Form the carry chain based on the group propagate and generates of each 4-bit nibble.
   assign Carries[0] = G_group[0] | (P_group[0] & sub);
-  assign Carries[1] = G_group[1] | (P_group[1] & G_group[0]) | (P_group[1] & P_group[0] & Carries[0]);
-  assign Carries[2] = G_group[2] | (P_group[2] & G_group[1]) | (P_group[2] & P_group[1] & G_group[0]) | (P_group[2] & P_group[1] & P_group[0] & Carries[0]);
-  assign Carries[3] = G_group[3] | (P_group[3] & G_group[2]) | (P_group[3] & P_group[2] & G_group[1]) | (P_group[3] & P_group[2] & P_group[1] & G_group[0]) | (P_group[3] & P_group[2] & P_group[1] & P_group[0] & Carries[0]);
+  assign Carries[1] = G_group[1] | (P_group[1] & G_group[0]) | (P_group[1] & P_group[0] & sub);
+  assign Carries[2] = G_group[2] | (P_group[2] & G_group[1]) | (P_group[2] & P_group[1] & G_group[0]) | (P_group[2] & P_group[1] & P_group[0] & sub);
+  assign Carries[3] = G_group[3] | (P_group[3] & G_group[2]) | (P_group[3] & P_group[2] & G_group[1]) | (P_group[3] & P_group[2] & P_group[1] & G_group[0]) | (P_group[3] & P_group[2] & P_group[1] & P_group[0] & sub);
 
   // Vector instantiate 4 4-bit CLA blocks.
   CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin(Carries), .Sum(Sum), .P_group(P_group), .G_group(G_group), .Ovfl());
 
-  // Overflow based on subtraction or addition.
-  assign Ovfl = (sub) ? ((~A[15] & B_operand[15] & Sum[15]) | (A[15] & ~B_operand[15] & ~Sum[15])) : ((A[15] & B_operand[15] & ~Sum[15]) | (~A[15] & B_operand[15] & Sum[15]));
+  /* Overflow Detection */
+    /* 1) Addition:
+        When both operands have the same sign and the result has a different sign.
+    */
+    /* 2) Subtraction:
+        a) A is positive and B is negative but the result is negative.
+        b) A is negative and B is positive but the result is positive.
+    */
+  assign Ovfl_sub = (~A[15] & B_operand[15] & Sum[15]) | (A[15] & ~B_operand[15] & ~Sum[15]);
+  assign Ovfl_add = (A[15] & B_operand[15] & ~Sum[15]) | (~A[15] & ~B_operand[15] & Sum[15]);
+  assign Ovfl = (sub) ? Ovfl_sub : Ovfl_add;
+  assign Ovfl_sub = (A[15] ^ B_operand[15]) ? (~A[15] & Sum[15]) | (~A[15] & Sum[15])
 
 endmodule
 

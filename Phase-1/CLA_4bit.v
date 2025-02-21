@@ -24,7 +24,6 @@ module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
   ///////////////////////////////////////////////
   wire [3:0] B_operand;     // Operand B or its complement.
   wire Cin_operand;         // Carry in modified to the CLA.
-  wire Ovfl_sub, Ovfl_add;  // overflow indicator based on sub or add
   wire [3:0] C, P, G;       // 4-bit carry, propagate and generate signals of 4-bit nibble.
   ///////////////////////////////////////////////
 
@@ -55,17 +54,8 @@ module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
   assign Sum[2] = A[2] ^ B_operand[2] ^ C[1];
   assign Sum[3] = A[3] ^ B_operand[3] ^ C[2];
 
-  /* Overflow Detection */
-    /* 1) Addition:
-        When both operands have the same sign and the result has a different sign.
-    */
-    /* 2) Subtraction:
-        a) A is positive and B is negative but the result is negative.
-        b) A is negative and B is positive but the result is positive.
-    */
-  assign Ovfl_sub = (~A[3] & B_operand[3] & Sum[3]) | (A[3] & ~B_operand[3] & ~Sum[3]);
-  assign Ovfl_add = (A[3] & B_operand[3] & ~Sum[3]) | (~A[3] & ~B_operand[3] & Sum[3]);
-  assign Ovfl = (sub) ? Ovfl_sub : Ovfl_add;
+  // Overflow when carry-in to the MSB is not the same as carry-out of MSB.
+  assign Ovfl = C[2] ^ C[3];
 
   // Get the group's propagate signal as a whole.
   assign P_group = &P;

@@ -43,7 +43,7 @@ module CLA(Sum, Ovfl, A, B, sub);
   CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin(Carries), .Sum(Sum), .Cin_MSB(Carries_MSB) .P_group(P_group), .G_group(G_group), .Ovfl());
 
   // Overflow when carry-in to the MSB is not the same as carry-out of MSB.
-  assign Ovfl = (Carries_MSB[3] ^ Carries[3]);
+  assign Ovfl = Carries_MSB[3] ^ Carries[3];
 
 endmodule
 

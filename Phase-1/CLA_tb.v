@@ -1,11 +1,14 @@
 `default_nettype none // Set the default as none to avoid errors
 
-//////////////////////////////////////////////////////////////////
-// addsub_4bit_tb.v: Testbench for the 4-bit adder/subtractor  //
-// This testbench verifies the functionality of the 4-bit     //
-// full adder by applying random stimulus to the inputs and  //
-// monitoring the outputs.                                  //               
-/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+// CLA_tb.v: Testbench for the 16-bit hierarchical Carry Lookahead //
+// Adder (CLA) using 4-bit CLA blocks                              //
+// This testbench verifies the functionality of the 16-bit CLA     //
+// by applying various test cases for addition and subtraction.    //
+// The 16-bit CLA is instantiated by connecting four 4-bit CLA     //
+// blocks, and the outputs (Sum and Overflow) are monitored for    //
+// correctness.                                                    //
+/////////////////////////////////////////////////////////////////////
 module CLA_tb();
 
   reg [32:0] stim;	                 // stimulus vector of type reg

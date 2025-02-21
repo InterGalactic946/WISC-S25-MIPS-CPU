@@ -1,11 +1,11 @@
 `default_nettype none // Set the default as none to avoid errors
 
-//////////////////////////////////////////////////////////////////
-// addsub_4bit_tb.v: Testbench for the 4-bit adder/subtractor  //
-// This testbench verifies the functionality of the 4-bit     //
-// full adder by applying random stimulus to the inputs and  //
-// monitoring the outputs.                                  //               
-/////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+// CLA_4bit_tb.v: Testbench for the 4-bit adder/subtractor           //
+// This testbench verifies the functionality of the 4-bit Carry      //
+// Lookahead Adder/Subtractor (CLA_4bit) by applying various test    //
+// cases and checking the outputs for both addition and subtraction  //
+///////////////////////////////////////////////////////////////////////
 module CLA_4bit_tb();
 
   reg [8:0] stim;	                   // stimulus vector of type reg

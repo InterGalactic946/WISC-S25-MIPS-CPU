@@ -63,7 +63,6 @@ module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
         a) A is positive and B is negative but the result is negative.
         b) A is negative and B is positive but the result is positive.
     */
-  */
   assign Ovfl_sub = (~A[3] & B_operand[3] & Sum[3]) | (A[3] & ~B_operand[3] & ~Sum[3]);
   assign Ovfl_add = (A[3] & B_operand[3] & ~Sum[3]) | (~A[3] & ~B_operand[3] & Sum[3]);
   assign Ovfl = (sub) ? Ovfl_sub : Ovfl_add;

@@ -10,7 +10,7 @@
 // and generate signals for use in higher-level carry     //
 // lookahead adders.                                      //
 ////////////////////////////////////////////////////////////
-module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
+module CLA_4bit(Sum, Ovfl, Cin_MSB, P_group, G_group, A, B, Cin, sub);
 
   input wire [3:0] A,B;                  // 4-bit input bits to be added
   input wire sub;	                       // add-sub indicator

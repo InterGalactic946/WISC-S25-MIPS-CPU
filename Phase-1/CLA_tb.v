@@ -62,13 +62,13 @@ module CLA_tb();
 
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Sum expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_sum, Sum);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Sum expected 0x%h, got 0x%h.", stim[31:17], stim[16:1], expected_sum, Sum);
             error = 1'b1;
           end
 
           /* Validate the overflow. */
           if (overflow !== expected_overflow) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Overflow expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_overflow, overflow);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Overflow expected 0x%h, got 0x%h.", stim[31:17], stim[16:1], expected_overflow, overflow);
             error = 1'b1;
           end
 
@@ -91,13 +91,13 @@ module CLA_tb();
           
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Sum expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_sum, Sum);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Sum expected 0x%h, got 0x%h.", stim[31:17], stim[16:1], expected_sum, Sum);
             error = 1'b1;
           end
 
           /* Validate the overflow. */
           if (overflow !== expected_overflow) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Overflow expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_overflow, overflow);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Overflow expected 0x%h, got 0x%h.", stim[31:17], stim[16:1], expected_overflow, overflow);
             error = 1'b1;
           end
 

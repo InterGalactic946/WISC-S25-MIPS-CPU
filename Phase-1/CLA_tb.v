@@ -24,7 +24,7 @@ module CLA_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  CLA iDUT(.A(stim[32:16]), .B(stim[15:0]), .sub(sub), .Sum(Sum), .Ovfl(overflow));
+  CLA iDUT(.A(stim[31:16]), .B(stim[15:0]), .sub(sub), .Sum(Sum), .Ovfl(overflow));
   
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin

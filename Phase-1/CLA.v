@@ -23,6 +23,7 @@ module CLA(Sum, Ovfl, A, B, sub);
   ///////////////////////////////////////////////
   wire [15:0] B_operand;       // Operand B or its complement.
 	wire [3:0] Carries;	         // Carry chain logic of the 16-bit CLA.
+  wire [3:0] Carries_MSB;	     // Carry-in of MSB of each nibble.
   wire [3:0] P_group, G_group; // 4-bit propagate and generate signals of each CLA_4bit adder.
   ///////////////////////////////////////////////
 
@@ -39,20 +40,10 @@ module CLA(Sum, Ovfl, A, B, sub);
   assign Carries[3] = G_group[3] | (P_group[3] & G_group[2]) | (P_group[3] & P_group[2] & G_group[1]) | (P_group[3] & P_group[2] & P_group[1] & G_group[0]) | (P_group[3] & P_group[2] & P_group[1] & P_group[0] & sub);
 
   // Vector instantiate 4 4-bit CLA blocks.
-  CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin(Carries), .Sum(Sum), .P_group(P_group), .G_group(G_group), .Ovfl());
+  CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin(Carries), .Sum(Sum), .Cin_MSB(Carries_MSB) .P_group(P_group), .G_group(G_group), .Ovfl());
 
-  /* Overflow Detection */
-    /* 1) Addition:
-        When both operands have the same sign and the result has a different sign.
-    */
-    /* 2) Subtraction:
-        a) A is positive and B is negative but the result is negative.
-        b) A is negative and B is positive but the result is positive.
-    */
-  assign Ovfl_sub = (~A[15] & B_operand[15] & Sum[15]) | (A[15] & ~B_operand[15] & ~Sum[15]);
-  assign Ovfl_add = (A[15] & B_operand[15] & ~Sum[15]) | (~A[15] & ~B_operand[15] & Sum[15]);
-  assign Ovfl = (sub) ? Ovfl_sub : Ovfl_add;
-  assign Ovfl_sub = (A[15] ^ B_operand[15]) ? (~A[15] & Sum[15]) | (~A[15] & Sum[15])
+  // Overflow when carry-in to the MSB is not the same as carry-out of MSB.
+  assign Ovfl = (Carries_MSB[3] ^ Carries[3]);
 
 endmodule
 

@@ -12,12 +12,12 @@
 ////////////////////////////////////////////////////////////
 module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
 
-  input wire [3:0] A,B;         // 4-bit input bits to be added
-  input wire sub;	              // add-sub indicator
-  input wire Cin;	              // carry-in to the CLA
-  output wire [3:0]	Sum;        // 4-bit sum output
-  output wire Ovfl;             // overflow indicator
-  output wire P_group, G_group; // group propagate and generate signals
+  input wire [3:0] A,B;                  // 4-bit input bits to be added
+  input wire sub;	                       // add-sub indicator
+  input wire Cin;	                       // carry-in to the CLA
+  output wire [3:0]	Sum;                 // 4-bit sum output
+  output wire Ovfl;                      // overflow indicator
+  output wire Cin_MSB, P_group, G_group; // carry into MSB, group propagate and generate signals
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
@@ -56,6 +56,9 @@ module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
 
   // Overflow when carry-in to the MSB is not the same as carry-out of MSB.
   assign Ovfl = C[2] ^ C[3];
+
+  // Output the carry into the MSB.
+  assign Cin_MSB = C[2];
 
   // Get the group's propagate signal as a whole.
   assign P_group = &P;

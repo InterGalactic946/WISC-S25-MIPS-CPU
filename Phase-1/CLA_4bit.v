@@ -22,9 +22,10 @@ module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire [3:0] B_operand; // Operand B or its complement.
-  wire Cin_operand;     // Carry in modified to the CLA.
-  wire [3:0] C, P, G;   // 4-bit carry, propagate and generate signals of 4-bit nibble.
+  wire [3:0] B_operand;     // Operand B or its complement.
+  wire Cin_operand;         // Carry in modified to the CLA.
+  wire Ovfl_sub, Ovfl_add;  // overflow indicator based on sub or add
+  wire [3:0] C, P, G;       // 4-bit carry, propagate and generate signals of 4-bit nibble.
   ///////////////////////////////////////////////
 
   ///////////////////////////////////////////////////
@@ -37,22 +38,24 @@ module CLA_4bit(Sum, Ovfl, P_group, G_group, A, B, Cin, sub);
   assign Cin_operand = (sub) ? 1'b1 : Cin;
 
   // Form the propagate signal of the operation.
-  assign P = A ^ B_operand;
+  assign P = A | B_operand;
 
   // Form the generate signal of the operation.
   assign G = A & B_operand;
 
   // Form the carry chain logic
   assign C[0] = G[0] | (P[0] & Cin_operand);
-  assign C[1] = G[1] | (P[1] & G[0]) | (P[1] & P[0] & C[0]);
-  assign C[2] = G[2] | (P[2] & G[1]) | (P[2] & P[1] & G[0]) | (P[2] & P[1] & P[0] & C[0]);
-  assign C[3] = G[3] | (P[3] & G[2]) | (P[3] & P[2] & G[1]) | (P[3] & P[2] & P[1] & G[0]) | (P[3] & P[2] & P[1] & P[0] & C[0]);
+  assign C[1] = G[1] | (P[1] & G[0]) | (P[1] & P[0] & Cin_operand);
+  assign C[2] = G[2] | (P[2] & G[1]) | (P[2] & P[1] & G[0]) | (P[2] & P[1] & P[0] & Cin_operand);
+  assign C[3] = G[3] | (P[3] & G[2]) | (P[3] & P[2] & G[1]) | (P[3] & P[2] & P[1] & G[0]) | (P[3] & P[2] & P[1] & P[0] & Cin_operand);
 
   // Form the sum of the CLA adder.
-  assign Sum = P ^ C[3:0];
+  assign Sum = A ^ B ^ C;
 
   // Overflow based on subtraction or addition.
-  assign Ovfl = (sub) ? ((~A[3] & B_operand[3] & Sum[3]) | (A[3] & ~B_operand[3] & ~Sum[3])) : ((A[3] & B_operand[3] & ~Sum[3]) | (~A[3] & B_operand[3] & Sum[3]));
+  assign Ovfl_sub = (~A[3] & B_operand[3] & ~Sum[3]) | (A[3] & ~B_operand[3] & Sum[3]);
+  assign Ovfl_add = (A[3] & B_operand[3] & ~Sum[3]) | (~A[3] & ~B_operand[3] & Sum[3]);
+  assign Ovfl = (sub) ? Ovfl_sub : Ovfl_add;
 
   // Get the group's propagate signal as a whole.
   assign P_group = &P;

@@ -98,15 +98,16 @@ module CLA_tb();
           // Overflow occurs in subtraction when:
           // 1. A is positive and B is negative but the result is negative.
           // 2. A is negative and B is positive but the result is positive.
-          if ((stim[32] === 1'b0) && (stim[16] === 1'b1) && (expected_sum[15] === 1'b1))
+          if ((stim[32] === 1'b0) && (stim[16] === 1'b1) && (expected_sum[15] === 1'b1)) begin
               expected_pos_overflow = 1'b1;  // Positive overflow detected (positive - negative giving positive result)
               expected_neg_overflow = 1'b0;  // No negative overflow
-          else if ((stim[32] === 1'b1) && (stim[16] === 1'b0) && (expected_sum[15] === 1'b0)) 
+          end else if ((stim[32] === 1'b1) && (stim[16] === 1'b0) && (expected_sum[15] === 1'b0)) begin
               expected_neg_overflow = 1'b1;  // Negative overflow detected (negative - positive giving negative result)
               expected_pos_overflow = 1'b0;  // No positive overflow
-          else 
+          end else begin
               expected_pos_overflow = 1'b0;  // No positive overflow
               expected_neg_overflow = 1'b0;  // No negative overflow
+          end
           
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin

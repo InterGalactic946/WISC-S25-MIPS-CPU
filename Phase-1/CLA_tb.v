@@ -13,8 +13,9 @@ module CLA_tb();
 
   reg [33:0] stim;	                 // stimulus vector of type reg
   wire [15:0] Sum;                   // 16-bit sum formed on addition/subtraction of the given operands
-  wire overflow;	                   // overflow indicator of the addition/subtraction
-  reg expected_overflow;             // expected overflow
+  wire pos_overflow, neg_overflow;	 // overflow indicator of the addition/subtraction
+  reg expected_pos_overflow;         // expected positive overflow
+  reg expected_neg_overflow;         // expected negative overflow
   reg [15:0] expected_sum;           // expected sum
   reg [16:0] addition_operations;    // number of addition operations performed
   reg [16:0] subtraction_operations; // number of subtraction operations performed
@@ -23,13 +24,14 @@ module CLA_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  CLA iDUT(.A(stim[32:17]), .B(stim[16:1]), .sub(stim[0]), .Sum(Sum), .Ovfl(overflow));
+  CLA iDUT(.A(stim[32:17]), .B(stim[16:1]), .sub(stim[0]), .Sum(Sum), .pos_Ovfl(pos_overflow), .neg_overflow(neg_overflow));
   
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin
     stim = 33'h000000000; // initialize stimulus
     expected_sum = 16'h0000; // initialize expected sum
-    expected_overflow = 1'b0; // initialize expected overflow
+    expected_pos_overflow = 1'b0; // initialize expected positive overflow
+    expected_neg_overflow = 1'b0; // initialize expected negative overflow
     addition_operations = 17'h00000; // initialize addition operation count
     subtraction_operations = 17'h00000; // initialize subtraction operation count
     error = 1'b0; // initialize error flag
@@ -51,13 +53,22 @@ module CLA_tb();
           expected_sum = stim[32:17] + stim[16:1];
           
           // Overflow occurs in addition when both operands have the same sign and the result has a different sign.
-          if (stim[32] === stim[16]) begin
-            if (expected_sum[15] !== stim[32]) 
-              expected_overflow = 1'b1; // Overflow detected
-            else 
-              expected_overflow = 1'b0; // No overflow
+          if (~stim[32] & ~stim[16]) begin
+            // Case when both operands have the same sign (positive)
+            if (expected_sum[15] !== stim[32]) begin
+                expected_pos_overflow = 1'b1; // Positive overflow detected
+                expected_neg_overflow = 1'b0; // No Negative overflow
+            end
+          end else if (stim[32] & stim[16]) begin
+            // Case when both operands have the same sign (negative)
+            if (expected_sum[15] !== stim[32]) begin
+                expected_neg_overflow = 1'b1; // Negative overflow detected
+                expected_pos_overflow = 1'b0; // No Positive overflow
+            end
           end else begin
-            expected_overflow = 1'b0; // No overflow when operands have different signs
+            // Case when operands have different signs (no overflow)
+            expected_pos_overflow = 1'b0; // No overflow
+            expected_neg_overflow = 1'b0; // No overflow
           end
 
           /* Validate the Sum. */
@@ -67,8 +78,13 @@ module CLA_tb();
           end
 
           /* Validate the overflow. */
-          if (overflow !== expected_overflow) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Overflow expected 0x%h, got 0x%h.", stim[32:17], stim[16:1], expected_overflow, overflow);
+          if (pos_overflow !== expected_pos_overflow) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Positve Overflow expected 0x%h, got 0x%h.", stim[32:17], stim[16:1], expected_pos_overflow, pos_overflow);
+            error = 1'b1;
+          end
+
+          if (neg_overflow !== expected_neg_overflow) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Negative Overflow expected 0x%h, got 0x%h.", stim[32:17], stim[16:1], expected_neg_overflow, neg_overflow);
             error = 1'b1;
           end
 
@@ -83,11 +99,14 @@ module CLA_tb();
           // 1. A is positive and B is negative but the result is negative.
           // 2. A is negative and B is positive but the result is positive.
           if ((stim[32] === 1'b0) && (stim[16] === 1'b1) && (expected_sum[15] === 1'b1))
-            expected_overflow = 1'b1; // Overflow detected (positive - negative giving negative)
+              expected_pos_overflow = 1'b1;  // Positive overflow detected (positive - negative giving positive result)
+              expected_neg_overflow = 1'b0;  // No negative overflow
           else if ((stim[32] === 1'b1) && (stim[16] === 1'b0) && (expected_sum[15] === 1'b0)) 
-            expected_overflow = 1'b1; // Overflow detected (negative - positive giving positive)
+              expected_neg_overflow = 1'b1;  // Negative overflow detected (negative - positive giving negative result)
+              expected_pos_overflow = 1'b0;  // No positive overflow
           else 
-            expected_overflow = 1'b0; // No overflow in other cases
+              expected_pos_overflow = 1'b0;  // No positive overflow
+              expected_neg_overflow = 1'b0;  // No negative overflow
           
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin
@@ -96,8 +115,13 @@ module CLA_tb();
           end
 
           /* Validate the overflow. */
-          if (overflow !== expected_overflow) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Overflow expected 0x%h, got 0x%h.", stim[32:17], stim[16:1], expected_overflow, overflow);
+          if (pos_overflow !== expected_pos_overflow) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Positve Overflow expected 0x%h, got 0x%h.", stim[32:17], stim[16:1], expected_pos_overflow, pos_overflow);
+            error = 1'b1;
+          end
+
+          if (neg_overflow !== expected_neg_overflow) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Negative Overflow expected 0x%h, got 0x%h.", stim[32:17], stim[16:1], expected_neg_overflow, neg_overflow);
             error = 1'b1;
           end
 

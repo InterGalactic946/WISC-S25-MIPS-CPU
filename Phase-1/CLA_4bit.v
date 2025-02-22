@@ -10,13 +10,13 @@
 // and generate signals for use in higher-level carry     //
 // lookahead adders.                                      //
 ////////////////////////////////////////////////////////////
-module CLA_4bit(Sum, Ovfl, Cin_MSB, P_group, G_group, A, B, Cin, sub);
+module CLA_4bit(Sum, pos_Ovfl, neg_Ovfl, Cin_MSB, P_group, G_group, A, B, Cin, sub);
 
   input wire [3:0] A,B;                  // 4-bit input bits to be added
   input wire sub;	                       // add-sub indicator
   input wire Cin;	                       // carry-in to the CLA
   output wire [3:0]	Sum;                 // 4-bit sum output
-  output wire Ovfl;                      // overflow indicator
+  output wire pos_Ovfl, neg_Ovfl;        // overflow indicator
   output wire Cin_MSB, P_group, G_group; // carry into MSB, group propagate and generate signals
 
   /////////////////////////////////////////////////
@@ -24,6 +24,7 @@ module CLA_4bit(Sum, Ovfl, Cin_MSB, P_group, G_group, A, B, Cin, sub);
   ///////////////////////////////////////////////
   wire [3:0] B_operand;     // Operand B or its complement.
   wire Cin_operand;         // Carry in modified to the CLA.
+  wire Ovfl;                // Overflow indicator.
   wire [3:0] C, P, G;       // 4-bit carry, propagate and generate signals of 4-bit nibble.
   ///////////////////////////////////////////////
 
@@ -56,6 +57,12 @@ module CLA_4bit(Sum, Ovfl, Cin_MSB, P_group, G_group, A, B, Cin, sub);
 
   // Overflow when carry-in to the MSB is not the same as carry-out of MSB.
   assign Ovfl = C[2] ^ C[3];
+
+  // Used to know if it is positive overflow.
+  assign pos_Ovfl = ~A[3] & ~B_operand[3] & Ovfl;
+
+  // Used to know if it is negative overflow.
+  assign neg_Ovfl = A[3] & B_operand[3] & Ovfl;
 
   // Output the carry into the MSB.
   assign Cin_MSB = C[2];

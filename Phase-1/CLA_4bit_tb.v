@@ -50,21 +50,21 @@ module CLA_4bit_tb();
           
           // Overflow occurs in addition when both operands have the same sign and the result has a different sign.
           if (~stim[8] & ~stim[4]) begin
-            // Case when both operands have the same sign (positive)
-            if (expected_sum[3] !== stim[8]) begin
-                expected_pos_overflow = 1'b1; // Positive overflow detected
-                expected_neg_overflow = 1'b0; // No Negative overflow
-            end
+              // Case when both operands are positive (stim[8] = 0 and stim[4] = 0)
+              if (expected_sum[3] !== stim[8]) begin
+                  expected_pos_overflow = 1'b1;  // Positive overflow detected
+                  expected_neg_overflow = 1'b0; // No negative overflow
+              end
           end else if (stim[8] & stim[4]) begin
-            // Case when both operands have the same sign (negative)
-            if (expected_sum[3] !== stim[8]) begin
-                expected_neg_overflow = 1'b1; // Negative overflow detected
-                expected_pos_overflow = 1'b0; // No Positive overflow
-            end
+              // Case when both operands are negative (stim[8] = 1 and stim[4] = 1)
+              if (expected_sum[3] !== stim[8]) begin
+                  expected_neg_overflow = 1'b1;  // Negative overflow detected
+                  expected_pos_overflow = 1'b0; // No positive overflow
+              end
           end else begin
-            // Case when operands have different signs (no overflow)
-            expected_pos_overflow = 1'b0; // No overflow
-            expected_neg_overflow = 1'b0; // No overflow
+              // Case when operands have different signs (no overflow expected)
+              expected_pos_overflow = 1'b0;   // No positive overflow
+              expected_neg_overflow = 1'b0;   // No negative overflow
           end
 
           /* Validate the Sum. */
@@ -104,7 +104,7 @@ module CLA_4bit_tb();
               expected_pos_overflow = 1'b0;  // No positive overflow
               expected_neg_overflow = 1'b0;  // No negative overflow
           end
-          
+
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin
             $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Sum expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_sum, Sum);

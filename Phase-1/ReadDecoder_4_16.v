@@ -16,7 +16,7 @@ module ReadDecoder_4_16(RegId, Wordline);
   // Implement ReadDecoder as structural verilog //
   ////////////////////////////////////////////////
   // Decode the ID by shifting 1 left by RegID amount.
-  Shifter iSHIFT (.Shift_In(16'h0001), .Mode(1'b0), .Shift_Val(RegId), .Shift_Out(Wordline));
+  Shifter iSHIFT (.Shift_In(16'h0001), .Mode(2'h1), .Shift_Val(RegId), .Shift_Out(Wordline));
 	
 endmodule
 

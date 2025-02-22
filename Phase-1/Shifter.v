@@ -30,43 +30,43 @@ module Shifter (Shift_Out, Shift_In, Shift_Val, Mode);
   assign Shift_SLL_step = (Shift_Val[1:0] == 2'h0) ? Shift_In               :
                           (Shift_Val[1:0] == 2'h1) ? {Shift_In[14:0], 1'h0} :
                           (Shift_Val[1:0] == 2'h2) ? {Shift_In[13:0], 2'h0} :
-                          (Shift_Val[1:0] == 2'h3) ? {Shift_In[12:0], 3'h0};
+                          (Shift_Val[1:0] == 2'h3) ? {Shift_In[12:0], 3'h0} : Shift_In;
   
   // Second 4:1 MUX for SLL shifts Shift_SLL_step by 0, 2, 8, 12 bits.
-  assign Shift_SLL_Out = (Shift_Val[3:2] == 2'h0) ? Shift_SLL_step               :
-                         (Shift_Val[3:2] == 2'h1) ? {Shift_SLL_step[11:0], 4'h0} :
-                         (Shift_Val[3:2] == 2'h2) ? {Shift_SLL_step[7:0], 8'h00} :
-                         (Shift_Val[3:2] == 2'h3) ? {Shift_SLL_step[3:0], 12'h000};
+  assign Shift_SLL_Out = (Shift_Val[3:2] == 2'h0) ? Shift_SLL_step                 :
+                         (Shift_Val[3:2] == 2'h1) ? {Shift_SLL_step[11:0], 4'h0}   :
+                         (Shift_Val[3:2] == 2'h2) ? {Shift_SLL_step[7:0], 8'h00}   :
+                         (Shift_Val[3:2] == 2'h3) ? {Shift_SLL_step[3:0], 12'h000} : Shift_SLL_step;
   
   // First 4:1 MUX for SRA shifts Shift_In by 0, 1, 2, 3 bits.
   assign Shift_SRA_step = (Shift_Val[1:0] == 2'h0) ? Shift_In                            :
                           (Shift_Val[1:0] == 2'h1) ? {Shift_In[15], Shift_In[15:1]}      :
                           (Shift_Val[1:0] == 2'h2) ? {{2{Shift_In[15]}}, Shift_In[15:2]} :
-                          (Shift_Val[1:0] == 2'h3) ? {{3{Shift_In[15]}}, Shift_In[15:3]};
+                          (Shift_Val[1:0] == 2'h3) ? {{3{Shift_In[15]}}, Shift_In[15:3]} : Shift_In;
   
   // Second 4:1 MUX for SRA shifts Shift_SRA_step by 0, 2, 8, 12 bits.
-  assign Shift_SRA_Out = (Shift_Val[3:2] == 2'h0) ? Shift_SRA_step                                  :
-                         (Shift_Val[3:2] == 2'h1) ? {{4{Shift_SRA_step[15]}}, Shift_SRA_step[15:4]} :
-                         (Shift_Val[3:2] == 2'h2) ? {{8{Shift_SRA_step[15]}}, Shift_SRA_step[15:8]} :
-                         (Shift_Val[3:2] == 2'h3) ? {{12{Shift_SRA_step[15]}}, Shift_SRA_step[15:12]};
+  assign Shift_SRA_Out = (Shift_Val[3:2] == 2'h0) ? Shift_SRA_step                                    :
+                         (Shift_Val[3:2] == 2'h1) ? {{4{Shift_SRA_step[15]}}, Shift_SRA_step[15:4]}   :
+                         (Shift_Val[3:2] == 2'h2) ? {{8{Shift_SRA_step[15]}}, Shift_SRA_step[15:8]}   :
+                         (Shift_Val[3:2] == 2'h3) ? {{12{Shift_SRA_step[15]}}, Shift_SRA_step[15:12]} : Shift_SRA_step;
   
   // First 4:1 MUX for ROR shifts Shift_In by 0, 1, 2, 3 bits.
   assign Shift_ROR_step = (Shift_Val[1:0] == 2'h0) ? Shift_In                        :
                           (Shift_Val[1:0] == 2'h1) ? {Shift_In[0], Shift_In[15:1]}   :
                           (Shift_Val[1:0] == 2'h2) ? {Shift_In[1:0], Shift_In[15:2]} :
-                          (Shift_Val[1:0] == 2'h3) ? {Shift_In[2:0], Shift_In[15:3]};
+                          (Shift_Val[1:0] == 2'h3) ? {Shift_In[2:0], Shift_In[15:3]} : Shift_In;
   
   // Second 4:1 MUX for ROR shifts Shift_ROR_step by 0, 2, 8, 12 bits.
-  assign Shift_ROR_Out = (Shift_Val[3:2] == 2'h0) ? Shift_ROR_step                              :
-                         (Shift_Val[3:2] == 2'h1) ? {Shift_ROR_step[1:0], Shift_ROR_step[15:2]} :
-                         (Shift_Val[3:2] == 2'h2) ? {Shift_ROR_step[7:0], Shift_ROR_step[15:8]} :
-                         (Shift_Val[3:2] == 2'h3) ? {Shift_ROR_step[11:0], Shift_ROR_step[15:12]};
+  assign Shift_ROR_Out = (Shift_Val[3:2] == 2'h0) ? Shift_ROR_step                                :
+                         (Shift_Val[3:2] == 2'h1) ? {Shift_ROR_step[1:0], Shift_ROR_step[15:2]}   :
+                         (Shift_Val[3:2] == 2'h2) ? {Shift_ROR_step[7:0], Shift_ROR_step[15:8]}   :
+                         (Shift_Val[3:2] == 2'h3) ? {Shift_ROR_step[11:0], Shift_ROR_step[15:12]} : Shift_ROR_step;
 
   // The shifted output is one of SLL, SRA, ROR, or none.
 assign Shift_Out = (Mode == 2'h0) ? Shift_In      :
                    (Mode == 2'h1) ? Shift_SLL_Out :
                    (Mode == 2'h2) ? Shift_SRA_Out :
-                   (Mode == 2'h3) ? Shift_ROR_Out;
+                   (Mode == 2'h3) ? Shift_ROR_Out : Shift_In;
 
 endmodule
 

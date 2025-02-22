@@ -58,7 +58,7 @@ module CLA_4bit_tb();
               expected_neg_overflow = 1'b0; // No negative overflow
           end else if (stim[8] & stim[4]) begin
               // Case when both operands are negative (stim[8] = 1 and stim[4] = 1)
-              if (~expected_sum[3]) begin
+              if (~expected_sum[3])
                   expected_neg_overflow = 1'b1;  // Negative overflow detected
               else
                 expected_neg_overflow = 1'b0; // No negative overflow

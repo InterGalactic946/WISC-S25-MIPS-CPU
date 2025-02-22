@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////
 module Shifter_tb();
 
-  reg [20:0] stim;    		    // stimulus vector of type reg
+  reg [21:0] stim;    		    // stimulus vector of type reg
   wire [15:0] result;         // result of the shift operation
   reg [15:0] expected_result; // expected result that we should receive from the DUT
   reg [16:0] noop_operations; // number of no-ops performed

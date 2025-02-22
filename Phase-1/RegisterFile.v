@@ -46,12 +46,6 @@ module RegisterFile(clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData, SrcDa
   // Hardcode register 0 to always hold 0x0000, otherwise write whatever data that was meant to be.
   assign DstData_operand = (DstReg == 4'h0) ? 16'h0000 : DstData;
 
-  // Reads in the latest data being written into the first register to allow for RF bypassing.
-  assign SrcData1 = (WriteReg & (SrcReg1 == DstReg)) ? DstData_operand : ReadData1;
-
-  // Reads in the latest data being written into the second register to allow for RF bypassing.
-  assign SrcData2 = (WriteReg & (SrcData2 == DstData)) ? DstData_operand : ReadData2;
-
 endmodule
 
 `default_nettype wire // Reset default behavior at the end

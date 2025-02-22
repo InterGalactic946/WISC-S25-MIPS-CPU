@@ -51,16 +51,18 @@ module CLA_4bit_tb();
           // Overflow occurs in addition when both operands have the same sign and the result has a different sign.
           if (~stim[8] & ~stim[4]) begin
               // Case when both operands are positive (stim[8] = 0 and stim[4] = 0)
-              if (expected_sum[3]) begin
+              if (expected_sum[3])
                   expected_pos_overflow = 1'b1;  // Positive overflow detected
-                  expected_neg_overflow = 1'b0; // No negative overflow
-              end
+              else
+                expected_pos_overflow = 1'b0;  // No Positive overflow
+              expected_neg_overflow = 1'b0; // No negative overflow
           end else if (stim[8] & stim[4]) begin
               // Case when both operands are negative (stim[8] = 1 and stim[4] = 1)
               if (~expected_sum[3]) begin
                   expected_neg_overflow = 1'b1;  // Negative overflow detected
-                  expected_pos_overflow = 1'b0; // No positive overflow
-              end
+              else
+                expected_neg_overflow = 1'b0; // No negative overflow
+              expected_pos_overflow = 1'b0; // No positive overflow
           end else begin
               // Case when operands have different signs (no overflow expected)
               expected_pos_overflow = 1'b0;   // No positive overflow

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////
 // flag_register.v                                    //
-// This module creates a register to hold and change //
-// the values of Z, V, and N signals                //
+// This module infers a 3-bit register to hold and   //
+// change the values of Z, V, and N signals.        //
 /////////////////////////////////////////////////////
 module flag_register(
   input clk,          // System clock
@@ -12,7 +12,7 @@ module flag_register(
   output Z,           // Z (Zero) signal
   output V,           // V (Overflow) signal
   output N            // N (Sign) signal
-)
+);
 
   ///////////////////////////////////////
   // Flop each singal based on enable //

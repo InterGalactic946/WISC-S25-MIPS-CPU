@@ -36,9 +36,9 @@ module PSA_16bit_tb();
       // Check for overflow in the MSB nibble (bits 31:28 and 15:12)
       if (stimulus[31] === stimulus[15]) begin  // Both operands have the same sign
           sum = stimulus[31:28] + stimulus[15:12];
-          if (sum > 4'd7)
+          if ($signed(sum) > $signed(4'd7))
               pos_overflow[3] = 1;  // Positive overflow
-          else if (sum < -4'd8)
+          else if ($signed(sum) < $signed(-4'd8))
               neg_overflow[3] = 1;  // Negative overflow
           else begin
               pos_overflow[3] = 0;  // No positive overflow
@@ -52,9 +52,9 @@ module PSA_16bit_tb();
       // Check for overflow in the second MSB nibble (bits 27:24 and 11:8)
       if (stimulus[27] === stimulus[11]) begin
           sum = stimulus[27:24] + stimulus[11:8];
-          if (sum > 4'd7)
+          if ($signed(sum) > $signed(4'd7))
               pos_overflow[2] = 1;  // Positive overflow
-          else if (sum < -4'd8)
+          else if ($signed(sum) < $signed(-4'd8))
               neg_overflow[2] = 1;  // Negative overflow
           else begin
               pos_overflow[2] = 0;  // No positive overflow
@@ -68,9 +68,9 @@ module PSA_16bit_tb();
       // Check for overflow in the second LSB nibble (bits 23:20 and 7:4)
       if (stimulus[23] === stimulus[7]) begin
           sum = stimulus[23:20] + stimulus[7:4];
-          if (sum > 4'd7)
+          if ($signed(sum) > $signed(4'd7))
               pos_overflow[1] = 1;  // Positive overflow
-          else if (sum < -4'd8)
+          else if ($signed(sum) < $signed(-4'd8))
               neg_overflow[1] = 1;  // Negative overflow
           else begin
               pos_overflow[1] = 0;  // No positive overflow
@@ -84,9 +84,9 @@ module PSA_16bit_tb();
       // Check for overflow in the LSB nibble (bits 19:16 and 3:0)
       if (stimulus[19] === stimulus[3]) begin  // Both operands have the same sign
           sum = stimulus[19:16] + stimulus[3:0];
-          if (sum > 4'd7)
+          if ($signed(sum) > $signed(4'd7))
               pos_overflow[0] = 1;  // Positive overflow
-          else if (sum < -4'd8)
+          else if ($signed(sum) < $signed(-4'd8))
               neg_overflow[0] = 1;  // Negative overflow
           else begin
               pos_overflow[0] = 0;  // No positive overflow
@@ -101,6 +101,7 @@ module PSA_16bit_tb();
       expected_PSA_error = (pos_overflow[3] | pos_overflow[2] | pos_overflow[1] | pos_overflow[0]) | 
                           (neg_overflow[3] | neg_overflow[2] | neg_overflow[1] | neg_overflow[0]);
   endtask
+
 
   // Task 2: Apply saturation based on overflow flags for each 4-bit sub-word (nibble).
   task apply_saturation();

@@ -94,7 +94,8 @@ module PSA_16bit_tb();
       end
 
       // Get the expected error flag.
-      expected_PSA_error = (|pos_overflow) || (|neg_overflow);
+      expected_PSA_error = (pos_overflow[3] | pos_overflow[2] | pos_overflow[1] | pos_overflow[0]) | 
+                     (neg_overflow[3] | neg_overflow[2] | neg_overflow[1] | neg_overflow[0]);
   endtask
 
   // Task 2: Apply saturation based on overflow flags for each 4-bit sub-word (nibble).
@@ -148,8 +149,8 @@ module PSA_16bit_tb();
     expected_sum = '{default: 4'h0}; // initialize the expected sum array
     expected_PSA_sum = 16'h0000; // initialize expected PSA_16bit sum
     expected_PSA_error = 1'b0; // initialize expected error flag
-    pos_overflow = 4'h0; // initialize expected pos overflow
-    neg_overflow = 4'h0; // initialize expected neg overflow
+    pos_overflow = '{default: 4'h0}; // initialize expected pos overflow
+    neg_overflow = '{default: 4'h0}; // initialize expected neg overflow
     addition_operations = 17'h00000; // initialize addition operation count
     error = 1'b0; // initialize error flag
 

@@ -98,36 +98,36 @@ module PSA_16bit_tb();
       // Apply saturation based on the overflow flags for each nibble in the expected_sum array
 
       // Handle Most Significant Nibble (MSN)
-      if (pos_overflow[3] == 1) begin
+      if (pos_overflow[3] === 1) begin
           expected_sum[3] = 4'h7;  // Saturate to max positive value for most significant nibble
-      end else if (neg_overflow[3] == 1) begin
+      end else if (neg_overflow[3] === 1) begin
           expected_sum[3] = 4'h8;  // Saturate to max negative value for most significant nibble
       end else begin
           expected_sum[3] = stim[31:28] + stim[15:12];  // No overflow, use the actual sum
       end
 
       // Handle second Most Significant Nibble (MSMN)
-      if (pos_overflow[2] == 1) begin
+      if (pos_overflow[2] === 1) begin
           expected_sum[2] = 4'h7;  // Saturate to max positive value for second most significant nibble
-      end else if (neg_overflow[2] == 1) begin
+      end else if (neg_overflow[2] === 1) begin
           expected_sum[2] = 4'h8;  // Saturate to max negative value for second most significant nibble
       end else begin
           expected_sum[2] = stim[27:24] + stim[11:8];  // No overflow, use the actual sum
       end
 
       // Handle second Least Significant Nibble (LSMN)
-      if (pos_overflow[1] == 1) begin
+      if (pos_overflow[1] === 1) begin
           expected_sum[1] = 4'h7;  // Saturate to max positive value for second least significant nibble
-      end else if (neg_overflow[1] == 1) begin
+      end else if (neg_overflow[1] === 1) begin
           expected_sum[1] = 4'h8;  // Saturate to max negative value for second least significant nibble
       end else begin
           expected_sum[1] = stim[23:20] + stim[7:4];  // No overflow, use the actual sum
       end
 
       // Handle Least Significant Nibble (LSN)
-      if (pos_overflow[0] == 1) begin
+      if (pos_overflow[0] === 1) begin
           expected_sum[0] = 4'h7;  // Saturate to max positive value for least significant nibble
-      end else if (neg_overflow[0] == 1) begin
+      end else if (neg_overflow[0] === 1) begin
           expected_sum[0] = 4'h8;  // Saturate to max negative value for least significant nibble
       end else begin
           expected_sum[0] = stim[19:16] + stim[3:0];  // No overflow, use the actual sum

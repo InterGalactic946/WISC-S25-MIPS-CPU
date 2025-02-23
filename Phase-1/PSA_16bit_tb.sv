@@ -79,18 +79,18 @@ module PSA_16bit_tb();
       end
 
       // Check for overflow in the LSB nibble (bits 19:16 and 3:0)
-      if (stimulus[19] === stimulus[3]) begin
-        if ($signed(stimulus[19:16]) + $signed(stimulus[3:0]) > $signed(4'h7))
-          pos_overflow[0] = 1;  // Positive overflow
-        else if ($signed(stimulus[19:16]) + $signed(stimulus[3:0]) < $signed(4'h8))
-          neg_overflow[0] = 1;  // Negative overflow
-        else begin
-          pos_overflow[0] = 0;  // No positive overflow
-          neg_overflow[0] = 0;  // No negative overflow
-        end
+      if (stimulus[19] === stimulus[3]) begin  // Both operands have the same sign
+          if ($signed(stimulus[19:16]) + $signed(stimulus[3:0]) > 4'd7)
+              pos_overflow[0] = 1;  // Positive overflow
+          else if ($signed(stimulus[19:16]) + $signed(stimulus[3:0]) < -4'd8)
+              neg_overflow[0] = 1;  // Negative overflow
+          else begin
+              pos_overflow[0] = 0;  // No positive overflow
+              neg_overflow[0] = 0;  // No negative overflow
+          end
       end else begin 
-        pos_overflow[0] = 0;  // No overflow when operands have different signs
-        neg_overflow[0] = 0;
+          pos_overflow[0] = 0;  // No overflow when operands have different signs
+          neg_overflow[0] = 0;
       end
   endtask
 

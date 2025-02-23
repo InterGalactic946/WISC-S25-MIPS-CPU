@@ -19,13 +19,14 @@ module PSA_16bit_tb();
   reg [3:0] neg_overflow[0:3];     // stores expected negative overflow of each sub word addition
   reg [3:0] expected_sum[0:3];     // expected sum, an array of 4, 4-bit vectors
   reg [15:0] expected_PSA_sum;     // expected PSA_16bit sum
+  reg expected_PSA_error;          // the expected error flag of the PSA_16bit operation
   reg [16:0] addition_operations;  // number of addition operations performed
   reg error;                       // set an error flag on error
 
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  PSA_16bit iDUT(.A(stim[31:16]),.B(stim[15:0]),.Sum(Sum));
+  PSA_16bit iDUT(.A(stim[31:16]), .B(stim[15:0]), .Sum(Sum), .Error(overflow));
 
   // Task 1: Check for positive or negative overflow for each 4-bit sub-word.
   task check_overflow(input [31:0] stimulus);
@@ -36,7 +37,7 @@ module PSA_16bit_tb();
       if (stimulus[31] === stimulus[15]) begin  // Both operands have the same sign
         if ($signed(stimulus[31:28]) + $signed(stimulus[15:12]) > $signed(4'h7))
           pos_overflow[3] = 1;  // Positive overflow
-        else if ($signed(stimulus[31:28]) + $signed(stimulus[15:12]) < $signed(-4'h8))
+        else if ($signed(stimulus[31:28]) + $signed(stimulus[15:12]) < $signed(4'h8))
           neg_overflow[3] = 1;  // Negative overflow
         else begin
           pos_overflow[3] = 0;  // No positive overflow
@@ -51,7 +52,7 @@ module PSA_16bit_tb();
       if (stimulus[27] === stimulus[11]) begin
         if ($signed(stimulus[27:24]) + $signed(stimulus[11:8]) > $signed(4'h7))
           pos_overflow[2] = 1;  // Positive overflow
-        else if ($signed(stimulus[27:24]) + $signed(stimulus[11:8]) < $signed(-4'h8))
+        else if ($signed(stimulus[27:24]) + $signed(stimulus[11:8]) < $signed(4'h8))
           neg_overflow[2] = 1;  // Negative overflow
         else begin
           pos_overflow[2] = 0;  // No positive overflow
@@ -66,7 +67,7 @@ module PSA_16bit_tb();
       if (stimulus[23] === stimulus[7]) begin
         if ($signed(stimulus[23:20]) + $signed(stimulus[7:4]) > $signed(4'h7))
           pos_overflow[1] = 1;  // Positive overflow
-        else if ($signed(stimulus[23:20]) + $signed(stimulus[7:4]) < $signed(-4'h8))
+        else if ($signed(stimulus[23:20]) + $signed(stimulus[7:4]) < $signed(4'h8))
           neg_overflow[1] = 1;  // Negative overflow
         else begin
           pos_overflow[1] = 0;  // No positive overflow
@@ -81,7 +82,7 @@ module PSA_16bit_tb();
       if (stimulus[19] === stimulus[3]) begin
         if ($signed(stimulus[19:16]) + $signed(stimulus[3:0]) > $signed(4'h7))
           pos_overflow[0] = 1;  // Positive overflow
-        else if ($signed(stimulus[19:16]) + $signed(stimulus[3:0]) < $signed(-4'h8))
+        else if ($signed(stimulus[19:16]) + $signed(stimulus[3:0]) < $signed(4'h8))
           neg_overflow[0] = 1;  // Negative overflow
         else begin
           pos_overflow[0] = 0;  // No positive overflow
@@ -168,6 +169,17 @@ module PSA_16bit_tb();
       if ($signed(Sum) !== $signed(expected_PSA_sum)) begin
           $display("ERROR: A: 0x%h, B: 0x%h.\nExpected_Sum[3]: 0x%h, Expected_Sum[2]: 0x%h, Expected_Sum[1]: 0x%h, Expected_Sum[0]: 0x%h.\nSum[3]: 0x%h, Sum[2]: 0x%h, Sum[1]: 0x%h, Sum[0]: 0x%h.", stim[31:16], stim[15:0], expected_sum[3], expected_sum[2], expected_sum[1], expected_sum[0], Sum[15:12], Sum[11:8], Sum[7:4], Sum[3:0]);
           error = 1'b1;
+      end
+
+      /* Validate the overflow. */
+      if (overflow !== expected_PSA_error) begin
+        $display("ERROR: A: 0x%h, B: 0x%h.\nExpected_Pos_Overflow[3]: 0x%h, Expected_Pos_Overflow[2]: 0x%h, Expected_Pos_Overflow[1]: 0x%h, Expected_Pos_Overflow[0]: 0x%h.\nExpected_Neg_Overflow[3]: 0x%h, Expected_Neg_Overflow[2]: 0x%h, Expected_Neg_Overflow[1]: 0x%h, Expected_Neg_Overflow[0]: 0x%h.\nDUT_Pos_Overflow[3]: 0x%h, DUT_Pos_Overflow[2]: 0x%h, DUT_Pos_Overflow[1]: 0x%h, DUT_Pos_Overflow[0]: 0x%h.\nDUT_Neg_Overflow[3]: 0x%h, DUT_Neg_Overflow[2]: 0x%h, DUT_Neg_Overflow[1]: 0x%h, DUT_Neg_Overflow[0]: 0x%h.", 
+        stim[31:16], stim[15:0], 
+        expected_pos_overflow[3], expected_pos_overflow[2], expected_pos_overflow[1], expected_pos_overflow[0], 
+        expected_neg_overflow[3], expected_neg_overflow[2], expected_neg_overflow[1], expected_neg_overflow[0], 
+        iDUT.pos_overflow[3], iDUT.pos_overflow[2], iDUT.pos_overflow[1], iDUT.pos_overflow[0], 
+        iDUT.neg_overflow[3], iDUT.neg_overflow[2], iDUT.neg_overflow[1], iDUT.neg_overflow[0]);
+        error = 1'b1;
       end
 
       // Count up the number of successful addition operations performed.

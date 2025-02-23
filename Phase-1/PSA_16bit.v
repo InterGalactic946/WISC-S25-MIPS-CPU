@@ -12,10 +12,11 @@
 // When PSA is executed, these four numbers are added    //
 // separately while maintaining their sub-word integrity.//
 ///////////////////////////////////////////////////////////
-module PSA_16bit (Sum, A, B);
+module PSA_16bit (Sum, Error, A, B);
 
   input wire [15:0] A, B; // Input data values
   output wire [15:0] Sum; // Sum output
+  output wire Error; 	    // To indicate overflows
   
   ////////////////////////////////////////////////
   // Declare any internal signals as type wire //
@@ -39,6 +40,9 @@ module PSA_16bit (Sum, A, B);
                       (neg_Ovfl[2]) ? 4'h8 : Sum_operand[11:8];
   assign Sum[15:12] = (pos_Ovfl[3]) ? 4'h7 : 
                       (neg_Ovfl[3]) ? 4'h8 : Sum_operand[15:12];
+  
+  // The 'Error' flag is set when any of the individual nibble sums result in overflow.
+  assign Error = |pos_Ovfl | |neg_Ovfl;
 
 endmodule
 

@@ -31,85 +31,94 @@ module PSA_16bit_tb();
   // Task: Check for positive or negative overflow for each 4-bit sub-word.
   task check_overflow(input [31:0] stimulus);
       // Check overflow for each 4-bit sub-word (nibble)
-      reg [3:0] sum;
+      // Checking the sum and determining whether the overflow is positive or negative.
 
       // Check for overflow in the MSB nibble (bits 31:28 and 15:12)
-      if (stimulus[31] === stimulus[15]) begin  // Both operands have the same sign
-          // Calculate sum of the nibbles
-          sum = stimulus[31:28] + stimulus[15:12];
-
-          // Check for overflow based on sign bit logic:
-          // Positive overflow if both operands are positive, but the result is negative
-          if (stimulus[31] == 1'b0 && stimulus[15] == 1'b0 && sum[3] == 1'b1)
+      if (~stimulus[31] & ~stimulus[15]) begin  // Both operands are positive (stimulus[31] = 0 and stimulus[15] = 0)
+          // If the sign bit of the sum is 1, then it's a positive overflow
+          if (~(stimulus[31:28] + stimulus[15:12])[3])
               pos_overflow[3] = 1;  // Positive overflow
-
-          // Negative overflow if both operands are negative, but the result is positive
-          else if (stimulus[31] == 1'b1 && stimulus[15] == 1'b1 && sum[3] == 1'b0)
+          else
+              pos_overflow[3] = 0;  // No Positive overflow
+          neg_overflow[3] = 0;  // No negative overflow
+      end else if (stimulus[31] & stimulus[15]) begin  // Both operands are negative (stimulus[31] = 1 and stimulus[15] = 1)
+          // If the sign bit of the sum is 0, then it's a negative overflow
+          if ((stimulus[31:28] + stimulus[15:12])[3])
               neg_overflow[3] = 1;  // Negative overflow
-          else begin
-              pos_overflow[3] = 0;
-              neg_overflow[3] = 0;
-          end
-      end else begin 
-          pos_overflow[3] = 0;
-          neg_overflow[3] = 0;
+          else
+              neg_overflow[3] = 0;  // No negative overflow
+          pos_overflow[3] = 0;  // No positive overflow
+      end else begin  // Case when operands have different signs (no overflow expected)
+          pos_overflow[3] = 0;  // No positive overflow
+          neg_overflow[3] = 0;  // No negative overflow
       end
 
       // Check for overflow in the second MSB nibble (bits 27:24 and 11:8)
-      if (stimulus[27] === stimulus[11]) begin
-          sum = stimulus[27:24] + stimulus[11:8];
-
-          if (stimulus[27] == 1'b0 && stimulus[11] == 1'b0 && sum[3] == 1'b1)
+      if (~stimulus[27] & ~stimulus[11]) begin  // Both operands are positive (stimulus[27] = 0 and stimulus[11] = 0)
+          // If the sign bit of the sum is 1, then it's a positive overflow
+          if (~(stimulus[27:24] + stimulus[11:8])[3])
               pos_overflow[2] = 1;  // Positive overflow
-          else if (stimulus[27] == 1'b1 && stimulus[11] == 1'b1 && sum[3] == 1'b0)
+          else
+              pos_overflow[2] = 0;  // No Positive overflow
+          neg_overflow[2] = 0;  // No negative overflow
+      end else if (stimulus[27] & stimulus[11]) begin  // Both operands are negative (stimulus[27] = 1 and stimulus[11] = 1)
+          // If the sign bit of the sum is 0, then it's a negative overflow
+          if ((stimulus[27:24] + stimulus[11:8])[3])
               neg_overflow[2] = 1;  // Negative overflow
-          else begin
-              pos_overflow[2] = 0;
-              neg_overflow[2] = 0;
-          end
-      end else begin
-          pos_overflow[2] = 0;
-          neg_overflow[2] = 0;
+          else
+              neg_overflow[2] = 0;  // No negative overflow
+          pos_overflow[2] = 0;  // No positive overflow
+      end else begin  // Case when operands have different signs (no overflow expected)
+          pos_overflow[2] = 0;  // No positive overflow
+          neg_overflow[2] = 0;  // No negative overflow
       end
 
       // Check for overflow in the second LSB nibble (bits 23:20 and 7:4)
-      if (stimulus[23] === stimulus[7]) begin
-          sum = stimulus[23:20] + stimulus[7:4];
-
-          if (stimulus[23] == 1'b0 && stimulus[7] == 1'b0 && sum[3] == 1'b1)
+      if (~stimulus[23] & ~stimulus[7]) begin  // Both operands are positive (stimulus[23] = 0 and stimulus[7] = 0)
+          // If the sign bit of the sum is 1, then it's a positive overflow
+          if (~(stimulus[23:20] + stimulus[7:4])[3])
               pos_overflow[1] = 1;  // Positive overflow
-          else if (stimulus[23] == 1'b1 && stimulus[7] == 1'b1 && sum[3] == 1'b0)
+          else
+              pos_overflow[1] = 0;  // No Positive overflow
+          neg_overflow[1] = 0;  // No negative overflow
+      end else if (stimulus[23] & stimulus[7]) begin  // Both operands are negative (stimulus[23] = 1 and stimulus[7] = 1)
+          // If the sign bit of the sum is 0, then it's a negative overflow
+          if ((stimulus[23:20] + stimulus[7:4])[3])
               neg_overflow[1] = 1;  // Negative overflow
-          else begin
-              pos_overflow[1] = 0;
-              neg_overflow[1] = 0;
-          end
-      end else begin 
-          pos_overflow[1] = 0;
-          neg_overflow[1] = 0;
+          else
+              neg_overflow[1] = 0;  // No negative overflow
+          pos_overflow[1] = 0;  // No positive overflow
+      end else begin  // Case when operands have different signs (no overflow expected)
+          pos_overflow[1] = 0;  // No positive overflow
+          neg_overflow[1] = 0;  // No negative overflow
       end
 
       // Check for overflow in the LSB nibble (bits 19:16 and 3:0)
-      if (stimulus[19] === stimulus[3]) begin
-          sum = stimulus[19:16] + stimulus[3:0];
-
-          if (stimulus[19] == 1'b0 && stimulus[3] == 1'b0 && sum[3] == 1'b1)
+      if (~stimulus[19] & ~stimulus[3]) begin  // Both operands are positive (stimulus[19] = 0 and stimulus[3] = 0)
+          // If the sign bit of the sum is 1, then it's a positive overflow
+          if (~(stimulus[19:16] + stimulus[3:0])[3])
               pos_overflow[0] = 1;  // Positive overflow
-          else if (stimulus[19] == 1'b1 && stimulus[3] == 1'b1 && sum[3] == 1'b0)
+          else
+              pos_overflow[0] = 0;  // No Positive overflow
+          neg_overflow[0] = 0;  // No negative overflow
+      end else if (stimulus[19] & stimulus[3]) begin  // Both operands are negative (stimulus[19] = 1 and stimulus[3] = 1)
+          // If the sign bit of the sum is 0, then it's a negative overflow
+          if ((stimulus[19:16] + stimulus[3:0])[3])
               neg_overflow[0] = 1;  // Negative overflow
-          else begin
-              pos_overflow[0] = 0;
-              neg_overflow[0] = 0;
-          end
-      end else begin 
-          pos_overflow[0] = 0;
-          neg_overflow[0] = 0;
+          else
+              neg_overflow[0] = 0;  // No negative overflow
+          pos_overflow[0] = 0;  // No positive overflow
+      end else begin  // Case when operands have different signs (no overflow expected)
+          pos_overflow[0] = 0;  // No positive overflow
+          neg_overflow[0] = 0;  // No negative overflow
       end
 
       // Get the expected error flag.
       expected_PSA_error = (pos_overflow[3] | pos_overflow[2] | pos_overflow[1] | pos_overflow[0]) | 
                           (neg_overflow[3] | neg_overflow[2] | neg_overflow[1] | neg_overflow[0]);
   endtask
+
+
 
 
 

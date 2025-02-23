@@ -42,7 +42,7 @@ module PSA_16bit (Sum, Error, A, B);
                       (neg_Ovfl[3]) ? 4'h8 : Sum_operand[15:12];
   
   // The 'Error' flag is set when any of the individual nibble sums result in overflow.
-  assign Error = |pos_Ovfl | |neg_Ovfl;
+  assign Error = |(pos_Ovfl | neg_Ovfl);
 
 endmodule
 

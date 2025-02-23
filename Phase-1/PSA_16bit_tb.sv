@@ -103,7 +103,7 @@ module PSA_16bit_tb();
       end else if (neg_overflow[3] == 1) begin
           expected_sum[3] = 4'h8;  // Saturate to max negative value for most significant nibble
       end else begin
-          expected_sum[3] = stimulus[31:28] + stimulus[15:12];  // No overflow, use the actual sum
+          expected_sum[3] = stim[31:28] + stim[15:12];  // No overflow, use the actual sum
       end
 
       // Handle second Most Significant Nibble (MSMN)
@@ -112,7 +112,7 @@ module PSA_16bit_tb();
       end else if (neg_overflow[2] == 1) begin
           expected_sum[2] = 4'h8;  // Saturate to max negative value for second most significant nibble
       end else begin
-          expected_sum[2] = stimulus[27:24] + stimulus[11:8];  // No overflow, use the actual sum
+          expected_sum[2] = stim[27:24] + stim[11:8];  // No overflow, use the actual sum
       end
 
       // Handle second Least Significant Nibble (LSMN)
@@ -121,7 +121,7 @@ module PSA_16bit_tb();
       end else if (neg_overflow[1] == 1) begin
           expected_sum[1] = 4'h8;  // Saturate to max negative value for second least significant nibble
       end else begin
-          expected_sum[1] = stimulus[23:20] + stimulus[7:4];  // No overflow, use the actual sum
+          expected_sum[1] = stim[23:20] + stim[7:4];  // No overflow, use the actual sum
       end
 
       // Handle Least Significant Nibble (LSN)
@@ -130,7 +130,7 @@ module PSA_16bit_tb();
       end else if (neg_overflow[0] == 1) begin
           expected_sum[0] = 4'h8;  // Saturate to max negative value for least significant nibble
       end else begin
-          expected_sum[0] = stimulus[19:16] + stimulus[3:0];  // No overflow, use the actual sum
+          expected_sum[0] = stim[19:16] + stim[3:0];  // No overflow, use the actual sum
       end
       
       // Form the expected_PSA_sum.

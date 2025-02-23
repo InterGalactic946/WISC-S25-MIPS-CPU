@@ -28,7 +28,7 @@ module PSA_16bit (Sum, A, B);
   // Implement PSA_16bit as dataflow verilog //
   ////////////////////////////////////////////
   // Vector instantiate 4 4-bit CLA adder blocks for the PSA_16bit.                      
-  CLA_4bit iCLA [3:0] (.A(A),.B(B), .sub(4'h0), .Cin(4'h0), .Sum(Sum_operand), .pos_Ovfl(pos_Ovfl), neg_Ovfl(neg_Ovfl), .Cin_MSB(), .P_group(), .G_group());
+  CLA_4bit iCLA [3:0] (.A(A),.B(B), .sub(4'h0), .Cin(4'h0), .Sum(Sum_operand), .pos_Ovfl(pos_Ovfl), .neg_Ovfl(neg_Ovfl), .Cin_MSB(), .P_group(), .G_group());
 
   // Saturate to the most positve/negative number in 4-bits based on the overflow condition.
   assign Sum[3:0]   = (pos_Ovfl[0]) ? 4'h7 : 

@@ -15,8 +15,8 @@ module PSA_16bit_tb();
   reg [31:0] stim;	               // stimulus vector of type reg
   wire [15:0] Sum;                 // 16-bit sum formed on addition of the given operands
   wire overflow;	                 // error indicator of the addition
-  reg [3:0] pos_overflow[0:3];     // stores expected positive overflow of each sub word addition
-  reg [3:0] neg_overflow[0:3];     // stores expected negative overflow of each sub word addition
+  reg pos_overflow[0:3];           // stores expected positive overflow of each sub word addition
+  reg neg_overflow[0:3];           // stores expected negative overflow of each sub word addition
   reg [3:0] expected_sum[0:3];     // expected sum, an array of 4, 4-bit vectors
   reg [15:0] expected_PSA_sum;     // expected PSA_16bit sum
   reg expected_PSA_error;          // the expected error flag of the PSA_16bit operation
@@ -35,9 +35,9 @@ module PSA_16bit_tb();
 
       // Check for overflow in the MSB nibble (bits 31:28 and 15:12)
       if (stimulus[31] === stimulus[15]) begin  // Both operands have the same sign
-        if ($signed(stimulus[31:28]) + $signed(stimulus[15:12]) > $signed(4'h7))
+        if ($signed(stimulus[31:28]) + $signed(stimulus[15:12]) > 4'd7)
           pos_overflow[3] = 1;  // Positive overflow
-        else if ($signed(stimulus[31:28]) + $signed(stimulus[15:12]) < $signed(4'h8))
+        else if ($signed(stimulus[31:28]) + $signed(stimulus[15:12]) < -4'h8)
           neg_overflow[3] = 1;  // Negative overflow
         else begin
           pos_overflow[3] = 0;  // No positive overflow
@@ -50,9 +50,9 @@ module PSA_16bit_tb();
 
       // Check for overflow in the second MSB nibble (bits 27:24 and 11:8)
       if (stimulus[27] === stimulus[11]) begin
-        if ($signed(stimulus[27:24]) + $signed(stimulus[11:8]) > $signed(4'h7))
+        if ($signed(stimulus[27:24]) + $signed(stimulus[11:8]) > 4'd7)
           pos_overflow[2] = 1;  // Positive overflow
-        else if ($signed(stimulus[27:24]) + $signed(stimulus[11:8]) < $signed(4'h8))
+        else if ($signed(stimulus[27:24]) + $signed(stimulus[11:8]) < -4'd8)
           neg_overflow[2] = 1;  // Negative overflow
         else begin
           pos_overflow[2] = 0;  // No positive overflow
@@ -65,9 +65,9 @@ module PSA_16bit_tb();
 
       // Check for overflow in the second LSB nibble (bits 23:20 and 7:4)
       if (stimulus[23] === stimulus[7]) begin
-        if ($signed(stimulus[23:20]) + $signed(stimulus[7:4]) > $signed(4'h7))
+        if ($signed(stimulus[23:20]) + $signed(stimulus[7:4]) > 4'd7)
           pos_overflow[1] = 1;  // Positive overflow
-        else if ($signed(stimulus[23:20]) + $signed(stimulus[7:4]) < $signed(4'h8))
+        else if ($signed(stimulus[23:20]) + $signed(stimulus[7:4]) < -4'h8)
           neg_overflow[1] = 1;  // Negative overflow
         else begin
           pos_overflow[1] = 0;  // No positive overflow
@@ -92,6 +92,9 @@ module PSA_16bit_tb();
           pos_overflow[0] = 0;  // No overflow when operands have different signs
           neg_overflow[0] = 0;
       end
+
+      // Get the expected error flag.
+      expected_PSA_error = (|pos_overflow) || (|neg_overflow);
   endtask
 
   // Task 2: Apply saturation based on overflow flags for each 4-bit sub-word (nibble).
@@ -144,6 +147,7 @@ module PSA_16bit_tb();
     stim = 32'h00000000; // initialize stimulus
     expected_sum = '{default: 4'h0}; // initialize the expected sum array
     expected_PSA_sum = 16'h0000; // initialize expected PSA_16bit sum
+    expected_PSA_error = 1'b0; // initialize expected error flag
     pos_overflow = '{default: 4'h0}; // initialize expected pos overflow
     neg_overflow = '{default: 4'h0}; // initialize expected neg overflow
     addition_operations = 17'h00000; // initialize addition operation count

@@ -41,7 +41,7 @@ module CLA(Sum, pos_Ovfl, neg_Ovfl, A, B, sub);
   assign Carries[3] = G_group[3] | (P_group[3] & G_group[2]) | (P_group[3] & P_group[2] & G_group[1]) | (P_group[3] & P_group[2] & P_group[1] & G_group[0]) | (P_group[3] & P_group[2] & P_group[1] & P_group[0] & sub);
 
   // Vector instantiate 4 4-bit CLA blocks.
-  CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin({Carries[2:0], sub}), .Sum(Sum), .Cin_MSB(Carries_MSB), .P_group(P_group), .G_group(G_group) .neg_Ovfl(), .pos_Ovfl());
+  CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin({Carries[2:0], sub}), .Sum(Sum), .Cin_MSB(Carries_MSB), .P_group(P_group), .G_group(G_group), .neg_Ovfl(), .pos_Ovfl());
 
   // Overflow when carry-in to the MSB is not the same as carry-out of MSB.
   assign Ovfl = Carries_MSB[3] ^ Carries[3];

@@ -31,7 +31,7 @@ module PSA_16bit_tb();
   // Task: Check for positive or negative overflow for each 4-bit sub-word.
   task check_overflow(input [31:0] stimulus);
       // Check overflow for each 4-bit sub-word (nibble)
-      // Checking the sum and determining whether the overflow is positive or negative.
+      reg [4:0] sum;
 
       // Check for overflow in the MSB nibble (bits 31:28 and 15:12)
       if (stimulus[31] === stimulus[15]) begin  // Both operands have the same sign

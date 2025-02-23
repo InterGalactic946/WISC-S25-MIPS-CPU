@@ -173,12 +173,12 @@ module PSA_16bit_tb();
 
       /* Validate the overflow. */
       if (overflow !== expected_PSA_error) begin
-        $display("ERROR: A: 0x%h, B: 0x%h.\nExpected_Pos_Overflow[3]: 0x%h, Expected_Pos_Overflow[2]: 0x%h, Expected_Pos_Overflow[1]: 0x%h, Expected_Pos_Overflow[0]: 0x%h.\nExpected_Neg_Overflow[3]: 0x%h, Expected_Neg_Overflow[2]: 0x%h, Expected_Neg_Overflow[1]: 0x%h, Expected_Neg_Overflow[0]: 0x%h.\nDUT_Pos_Overflow[3]: 0x%h, DUT_Pos_Overflow[2]: 0x%h, DUT_Pos_Overflow[1]: 0x%h, DUT_Pos_Overflow[0]: 0x%h.\nDUT_Neg_Overflow[3]: 0x%h, DUT_Neg_Overflow[2]: 0x%h, DUT_Neg_Overflow[1]: 0x%h, DUT_Neg_Overflow[0]: 0x%h.", 
-        stim[31:16], stim[15:0], 
-        expected_pos_overflow[3], expected_pos_overflow[2], expected_pos_overflow[1], expected_pos_overflow[0], 
-        expected_neg_overflow[3], expected_neg_overflow[2], expected_neg_overflow[1], expected_neg_overflow[0], 
-        iDUT.pos_overflow[3], iDUT.pos_overflow[2], iDUT.pos_overflow[1], iDUT.pos_overflow[0], 
-        iDUT.neg_overflow[3], iDUT.neg_overflow[2], iDUT.neg_overflow[1], iDUT.neg_overflow[0]);
+          $display("ERROR: A: 0x%h, B: 0x%h.\nPos_Overflow[3]: 0x%h, Pos_Overflow[2]: 0x%h, Pos_Overflow[1]: 0x%h, Pos_Overflow[0]: 0x%h.\nNeg_Overflow[3]: 0x%h, Neg_Overflow[2]: 0x%h, Neg_Overflow[1]: 0x%h, Neg_Overflow[0]: 0x%h.\nDUT_Pos_Overflow[3]: 0x%h, DUT_Pos_Overflow[2]: 0x%h, DUT_Pos_Overflow[1]: 0x%h, DUT_Pos_Overflow[0]: 0x%h.\nDUT_Neg_Overflow[3]: 0x%h, DUT_Neg_Overflow[2]: 0x%h, DUT_Neg_Overflow[1]: 0x%h, DUT_Neg_Overflow[0]: 0x%h.", 
+          stim[31:16], stim[15:0], 
+          pos_overflow[3], pos_overflow[2], pos_overflow[1], pos_overflow[0], 
+          neg_overflow[3], neg_overflow[2], neg_overflow[1], neg_overflow[0], 
+          iDUT.pos_Ovfl[3], iDUT.pos_Ovfl[2], iDUT.pos_Ovfl[1], iDUT.pos_Ovfl[0], 
+          iDUT.neg_Ovfl[3], iDUT.neg_Ovfl[2], iDUT.neg_Ovfl[1], iDUT.neg_Ovfl[0]);
         error = 1'b1;
       end
 

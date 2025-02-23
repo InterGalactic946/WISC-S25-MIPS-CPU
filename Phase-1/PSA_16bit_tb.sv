@@ -167,18 +167,18 @@ module PSA_16bit_tb();
 
       /* Validate the Sum. */
       if ($signed(Sum) !== $signed(expected_PSA_sum)) begin
-          $display("ERROR: Expected sum does not match the received sum. A: 0x%h, B: 0x%h.\nExpected_Sum[3]: 0x%h, Expected_Sum[2]: 0x%h, Expected_Sum[1]: 0x%h, Expected_Sum[0]: 0x%h.\nSum[3]: 0x%h, Sum[2]: 0x%h, Sum[1]: 0x%h, Sum[0]: 0x%h.", stim[31:16], stim[15:0], expected_sum[3], expected_sum[2], expected_sum[1], expected_sum[0], Sum[15:12], Sum[11:8], Sum[7:4], Sum[3:0]);
+          $display("\nERROR: Expected sum does not match the received sum. A: 0x%h, B: 0x%h.\nExpected_Sum[3]: 0x%h, Expected_Sum[2]: 0x%h, Expected_Sum[1]: 0x%h, Expected_Sum[0]: 0x%h.\nSum[3]: 0x%h, Sum[2]: 0x%h, Sum[1]: 0x%h, Sum[0]: 0x%h.", stim[31:16], stim[15:0], expected_sum[3], expected_sum[2], expected_sum[1], expected_sum[0], Sum[15:12], Sum[11:8], Sum[7:4], Sum[3:0]);
           error = 1'b1;
       end
 
       /* Validate the overflow. */
       if (overflow !== expected_PSA_error) begin
-          $display("ERROR: Error flag does not match expected error flag. A: 0x%h, B: 0x%h.\nPos_Overflow[3]: 0x%h, Pos_Overflow[2]: 0x%h, Pos_Overflow[1]: 0x%h, Pos_Overflow[0]: 0x%h.\nNeg_Overflow[3]: 0x%h, Neg_Overflow[2]: 0x%h, Neg_Overflow[1]: 0x%h, Neg_Overflow[0]: 0x%h.\nDUT_Pos_Overflow[3]: 0x%h, DUT_Pos_Overflow[2]: 0x%h, DUT_Pos_Overflow[1]: 0x%h, DUT_Pos_Overflow[0]: 0x%h.\nDUT_Neg_Overflow[3]: 0x%h, DUT_Neg_Overflow[2]: 0x%h, DUT_Neg_Overflow[1]: 0x%h, DUT_Neg_Overflow[0]: 0x%h.", 
-          stim[31:16], stim[15:0], 
-          pos_overflow[3], pos_overflow[2], pos_overflow[1], pos_overflow[0], 
-          neg_overflow[3], neg_overflow[2], neg_overflow[1], neg_overflow[0], 
-          iDUT.pos_Ovfl[3], iDUT.pos_Ovfl[2], iDUT.pos_Ovfl[1], iDUT.pos_Ovfl[0], 
-          iDUT.neg_Ovfl[3], iDUT.neg_Ovfl[2], iDUT.neg_Ovfl[1], iDUT.neg_Ovfl[0]);
+        $display("\nERROR: Error flag does not match expected error flag. A: 0x%h, B: 0x%h.\nExpected_Pos_Ovfl[3]: 0x%h, Expected_Pos_Ovfl[2]: 0x%h, Expected_Pos_Ovfl[1]: 0x%h, Expected_Pos_Ovfl[0]: 0x%h.\nExpected_Neg_Ovfl[3]: 0x%h, Expected_Neg_Ovfl[2]: 0x%h, Expected_Neg_Ovfl[1]: 0x%h, Expected_Neg_Ovfl[0]: 0x%h.\nDUT_Pos_Ovfl[3]: 0x%h, DUT_Pos_Ovfl[2]: 0x%h, DUT_Pos_Ovfl[1]: 0x%h, DUT_Pos_Ovfl[0]: 0x%h.\nDUT_Neg_Ovfl[3]: 0x%h, DUT_Neg_Ovfl[2]: 0x%h, DUT_Neg_Ovfl[1]: 0x%h, DUT_Neg_Ovfl[0]: 0x%h.", 
+            stim[31:16], stim[15:0], 
+            pos_overflow[3], pos_overflow[2], pos_overflow[1], pos_overflow[0], 
+            neg_overflow[3], neg_overflow[2], neg_overflow[1], neg_overflow[0], 
+            iDUT.pos_Ovfl[3], iDUT.pos_Ovfl[2], iDUT.pos_Ovfl[1], iDUT.pos_Ovfl[0], 
+            iDUT.neg_Ovfl[3], iDUT.neg_Ovfl[2], iDUT.neg_Ovfl[1], iDUT.neg_Ovfl[0]);
         error = 1'b1;
       end
 

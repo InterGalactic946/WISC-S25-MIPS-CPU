@@ -21,7 +21,7 @@ module PSA_16bit (Sum, Error, A, B);
   ////////////////////////////////////////////////
   // Declare any internal signals as type wire //
   //////////////////////////////////////////////
-  wire [3:0] pos_Ovfl, neg_Ovfl; // Overflow for each 4-bit nibble.
+  wire [3:0] overflows, pos_Ovfl, neg_Ovfl; // Overflows for each 4-bit nibble.
   wire [15:0] Sum_operand; // Stores each 4-bit nibble's sum..
   ///////////////////////////////////////////////////////
   
@@ -29,7 +29,7 @@ module PSA_16bit (Sum, Error, A, B);
   // Implement PSA_16bit as dataflow verilog //
   ////////////////////////////////////////////
   // Vector instantiate 4 4-bit CLA adder blocks for the PSA_16bit.                      
-  CLA_4bit iCLA [3:0] (.A(A),.B(B), .sub(4'h0), .Cin(4'h0), .Sum(Sum_operand), .pos_Ovfl(pos_Ovfl), .neg_Ovfl(neg_Ovfl), .Cin_MSB(), .P_group(), .G_group());
+  CLA_4bit iCLA [3:0] (.A(A),.B(B), .sub(4'h0), .Cin(4'h0), .Sum(Sum_operand), .Ovfl(overflows), .pos_Ovfl(pos_Ovfl), .neg_Ovfl(neg_Ovfl), .P_group(), .G_group());
 
   // Saturate to the most positve/negative number in 4-bits based on the overflow condition.
   assign Sum[3:0]   = (pos_Ovfl[0]) ? 4'h7 : 
@@ -42,7 +42,7 @@ module PSA_16bit (Sum, Error, A, B);
                       (neg_Ovfl[3]) ? 4'h8 : Sum_operand[15:12];
   
   // The 'Error' flag is set when any of the individual nibble sums result in overflow.
-  assign Error = |pos_Ovfl | |neg_Ovfl;
+  assign Error = |overflows;
 
 endmodule
 

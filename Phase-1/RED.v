@@ -11,12 +11,10 @@
 // by utilizing the propagate and generate signals from   //
 // each 4-bit CLA block.                                  //
 ////////////////////////////////////////////////////////////
-module RED(Sum, Ovfl, A, B, sub);
+module RED(Sum, A, B);
 
   input wire [15:0] A,B;   // 4-bit input bits to be added
-  input wire sub;	         // add-sub indicator
   output wire [15:0] Sum;  // 4-bit sum output
-  output wire Ovfl;        // overflow indicator
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //

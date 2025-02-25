@@ -11,8 +11,10 @@ module CLA_4bit_tb();
   reg [8:0] stim;	                   // stimulus vector of type reg
   wire [3:0] Sum;                    // 4-bit sum formed on addition/subtraction of the given operands
   wire pos_overflow, neg_overflow;	 // overflow indicator of the addition/subtraction
+  wire overflow;                     // overall overflow indicator
   reg expected_pos_overflow;         // expected positive overflow
   reg expected_neg_overflow;         // expected negative overflow
+  reg expected_overflow;             // expected overflow
   reg [3:0] expected_sum;            // expected sum
   reg [16:0] addition_operations;    // number of addition operations performed
   reg [16:0] subtraction_operations; // number of subtraction operations performed
@@ -21,7 +23,7 @@ module CLA_4bit_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  CLA_4bit iDUT(.A(stim[8:5]),.B(stim[4:1]),.sub(stim[0]), .Cin(1'b0), .Sum(Sum), .Cin_MSB(), .P_group(), .G_group(), .pos_Ovfl(pos_overflow), .neg_Ovfl(neg_overflow));
+  CLA_4bit iDUT(.A(stim[8:5]),.B(stim[4:1]),.sub(stim[0]), .Cin(1'b0), .Sum(Sum), .P_group(), .G_group(), .Ovfl(overflow), .pos_Ovfl(pos_overflow), .neg_Ovfl(neg_overflow));
   
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin
@@ -29,6 +31,7 @@ module CLA_4bit_tb();
     expected_sum = 4'h0; // initialize expected sum
     expected_pos_overflow = 1'b0; // initialize expected positive overflow
     expected_neg_overflow = 1'b0; // initialize expected negative overflow
+    expected_overflow = 1'b0; // initialize expected overflow
     addition_operations = 17'h00000; // initialize addition operation count
     subtraction_operations = 17'h00000; // initialize subtraction operation count
     error = 1'b0; // initialize error flag
@@ -69,6 +72,9 @@ module CLA_4bit_tb();
               expected_neg_overflow = 1'b0;   // No negative overflow
           end
 
+          // Get the expected overflow indicator.
+          expected_overflow = expected_pos_overflow | expected_neg_overflow;
+
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin
             $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Sum expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_sum, Sum);
@@ -83,6 +89,11 @@ module CLA_4bit_tb();
 
           if (neg_overflow !== expected_neg_overflow) begin
             $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Negative Overflow expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_neg_overflow, neg_overflow);
+            error = 1'b1;
+          end
+
+          if (overflow !== expected_overflow) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Overflow expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_overflow, overflow);
             error = 1'b1;
           end
 
@@ -107,6 +118,9 @@ module CLA_4bit_tb();
               expected_neg_overflow = 1'b0;  // No negative overflow
           end
 
+          // Get the expected overflow indicator.
+          expected_overflow = expected_pos_overflow | expected_neg_overflow;
+
           /* Validate the Sum. */
           if ($signed(Sum) !== $signed(expected_sum)) begin
             $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Sum expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_sum, Sum);
@@ -121,6 +135,11 @@ module CLA_4bit_tb();
 
           if (neg_overflow !== expected_neg_overflow) begin
             $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Negative Overflow expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_neg_overflow, neg_overflow);
+            error = 1'b1;
+          end
+
+          if (overflow !== expected_overflow) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: SUB. Overflow expected 0x%h, got 0x%h.", stim[8:5], stim[4:1], expected_overflow, overflow);
             error = 1'b1;
           end
 

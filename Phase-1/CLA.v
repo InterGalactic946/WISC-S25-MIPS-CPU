@@ -13,18 +13,16 @@
 ////////////////////////////////////////////////////////////
 module CLA(Sum, pos_Ovfl, neg_Ovfl, A, B, sub);
 
-  input wire [15:0] A,B;          // 4-bit input bits to be added
-  input wire sub;	                // add-sub indicator
-  output wire [15:0] Sum;         // 4-bit sum output
-  output wire pos_Ovfl, neg_Ovfl; // overflow indicator
+  input wire [15:0] A,B;                // 16-bit input bits to be added
+  input wire sub;	                      // add-sub indicator
+  output wire [15:0] Sum;               // 16-bit sum output
+  output wire Ovfl, pos_Ovfl, neg_Ovfl; // overflow indicators
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
   wire [15:0] B_operand;       // Operand B or its complement.
 	wire [3:0] Carries;	         // Carry chain logic of the 16-bit CLA.
-  wire Ovfl;                   // Overflow indicator.
-  wire [3:0] Carries_MSB;	     // Carry-in of MSB of each nibble.
   wire [3:0] P_group, G_group; // 4-bit propagate and generate signals of each CLA_4bit adder.
   ///////////////////////////////////////////////
 
@@ -41,16 +39,16 @@ module CLA(Sum, pos_Ovfl, neg_Ovfl, A, B, sub);
   assign Carries[3] = G_group[3] | (P_group[3] & G_group[2]) | (P_group[3] & P_group[2] & G_group[1]) | (P_group[3] & P_group[2] & P_group[1] & G_group[0]) | (P_group[3] & P_group[2] & P_group[1] & P_group[0] & sub);
 
   // Vector instantiate 4 4-bit CLA blocks.
-  CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin({Carries[2:0], sub}), .Sum(Sum), .Cin_MSB(Carries_MSB), .P_group(P_group), .G_group(G_group), .neg_Ovfl(), .pos_Ovfl());
-
-  // Overflow when carry-in to the MSB is not the same as carry-out of MSB.
-  assign Ovfl = Carries_MSB[3] ^ Carries[3];
+  CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin({Carries[2:0], sub}), .Sum(Sum), .P_group(P_group), .G_group(G_group), .neg_Ovfl(), .pos_Ovfl(), .Ovfl());
 
   // Used to know if it is positive overflow.
-  assign pos_Ovfl = ~A[15] & ~B_operand[15] & Ovfl;
+  assign pos_Ovfl = ~A[15] & ~B_operand[15] & Sum[15];
 
   // Used to know if it is negative overflow.
-  assign neg_Ovfl = A[15] & B_operand[15] & Ovfl;
+  assign neg_Ovfl = A[15] & B_operand[15] & ~Sum[15];
+
+  // Overflow when either positive or negative overflow occurs.
+  assign Ovfl = pos_Ovfl | neg_Ovfl;
 
 endmodule
 

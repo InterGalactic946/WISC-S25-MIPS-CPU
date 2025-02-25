@@ -1,7 +1,7 @@
 `default_nettype none // Set the default as none to avoid errors
 
 ////////////////////////////////////////////////////////////
-// CLA.v: 16-bit Hierarchical Carry Lookahead Adder       //
+// RED.v: 16-bit Hierarchical Carry Lookahead Adder       //
 //                                                        //
 // This module implements a 16-bit Carry Lookahead Adder  //
 // using four 4-bit CLA blocks. It performs addition or   //

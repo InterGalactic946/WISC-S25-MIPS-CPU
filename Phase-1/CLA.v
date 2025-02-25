@@ -11,7 +11,7 @@
 // by utilizing the propagate and generate signals from   //
 // each 4-bit CLA block.                                  //
 ////////////////////////////////////////////////////////////
-module CLA(Sum, pos_Ovfl, neg_Ovfl, A, B, sub);
+module CLA(Sum, Ovfl, pos_Ovfl, neg_Ovfl, A, B, sub);
 
   input wire [15:0] A,B;                // 16-bit input bits to be added
   input wire sub;	                      // add-sub indicator

@@ -27,7 +27,7 @@ module cpu (
   wire [3:0] reg_rt;
 
   wire [3:0] ALU_imm;
-  wire [3:0] mem_offset;
+  wire [3:0] Mem_offset;
   wire [7:0] LB_imm;
   wire [8:0] Brnch_imm;
 
@@ -44,13 +44,17 @@ module cpu (
   wire ConMet;
   wire MemWrite;
   wire MemEnable; // not sure if needed
-  wre MemToReg;
+  wire MemToReg;
 
   // ALU signals
   wire [15:0] ALU_in2;
   wire [15:0] ALU_out;
 
+  // Branch signals
+  wire [15:0] Brnch_ex_imm;
+
   // Memory signals
+  wire [15:0] Mem_ex_offset;
   wire [15:0] RegWriteData;
   wire [15:0] MemData;
 
@@ -89,7 +93,7 @@ module cpu (
   assign reg_rt = pc_inst[3:0];
 
   assign ALU_imm = pc_inst[3:0];
-  assign mem_offset = pc_inst[3:0];
+  assign Mem_offset = pc_inst[3:0];
   assign LB_imm = pc_inst[7:0];
   assign Brnch_imm = pc_inst[8:0];
 
@@ -113,6 +117,9 @@ module cpu (
   // determine 2nd ALU input
   assign ALU_in2 = ALUSrc ? {12'h000, ALU_imm} : rt_data;
 
+  // sign extend memory offset immediate
+  SignExtender iMSE #(5)(.in(Mem_offset << 1), .out(Mem_ex_offset));
+
   // TODO: ALU UNIT
   // with ALU_out as rslt
 
@@ -125,8 +132,9 @@ module cpu (
                     .Z(Z),
                     .V(V),
                     .N(N)
-                    )
+                    );
 
+  SignExtender iBSE #(9)(.in(Brnch_imm), .out(Brnch_ex_imm));
   // TODO: BRANCH ADDER
   // with brnch_pc rslt
 

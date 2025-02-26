@@ -1,17 +1,19 @@
+`default_nettype none // Set the default as none to avoid errors
+
 /////////////////////////////////////////////////////////
 // flag_register.v                                    //
 // This module infers a 3-bit register to hold and   //
 // change the values of Z, V, and N signals.        //
 /////////////////////////////////////////////////////
 module flag_register(
-  input clk,          // System clock
-  input rst,          // active high reset signal
-  input Z_en, Z_set,  // enable signal and set signal for Z
-  input V_en, V_set,  // enable signal and set signal for V
-  input N_en, N_set,  // enable signal and set signal for N
-  output Z,           // Z (Zero) signal
-  output V,           // V (Overflow) signal
-  output N            // N (Sign) signal
+  input wire clk,          // System clock
+  input wire rst,          // active high reset signal
+  input wire Z_en, Z_set,  // enable signal and set signal for Z
+  input wire V_en, V_set,  // enable signal and set signal for V
+  input wire N_en, N_set,  // enable signal and set signal for N
+  output wire Z,           // Z (Zero) signal
+  output wire V,           // V (Overflow) signal
+  output wire N            // N (Sign) signal
 );
 
   ///////////////////////////////////////
@@ -27,3 +29,5 @@ module flag_register(
   dff iFFN (.q(N), .d(N_set), .wen(N_en), .clk(clk), .rst(rst));
 
 endmodule
+
+`default_nettype wire  // Reset default behavior at the end

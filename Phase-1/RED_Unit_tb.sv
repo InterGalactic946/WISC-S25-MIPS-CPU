@@ -55,8 +55,6 @@ module RED_Unit_tb();
 
       // Get the expected sum.
       expected_sum = $signed(expected_second_level_sum[1]) + $signed(expected_second_level_sum[0]);
-
-      $display("A: 0x%h, B: 0x%h. Sum expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], expected_sum, Sum);
           
       /* Validate the Sum. */
       if ($signed(Sum) !== $signed(expected_sum)) begin

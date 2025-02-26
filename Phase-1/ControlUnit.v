@@ -15,7 +15,7 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemRead, MemWrite
     // ALUSrc must be 1 for SLL, SRA, ROR, LW, SW, LLB, and LHB
     assign ALUSrc = (Opcode[3]) | (Opcode[2] & ~Opcode[1]) | (Opcode[2] & Opcode[1] & ~Opcode[0]);
 
-    // MemtoReg must be 1 for LW
+    // MemtoReg must be 1 for LW instruction
     assign MemtoReg = Opcode[3] & ~Opcode[1];
 
     // RegWrite must be 1 for ADD, SUB, XOR, RED, SLL, SRA, ROR, PADDSB, LW, LLB, LHB, and PCS

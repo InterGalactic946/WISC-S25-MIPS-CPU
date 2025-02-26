@@ -1,0 +1,42 @@
+`default_nettype none
+
+module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemRead, MemWrite, Branch, ALUOp);
+
+    input wire [3:0] Opcode; // Opcode of the current instruction
+    output wire ALUSrc; // Determines whether to use the immediate or register-value as the ALU input
+    output wire MemtoReg; // Allows for choosing between writing from the ALU or memory output to the register file
+    output wire RegWrite; // Determines if the register file is being written to
+    output wire RegSrc; // Determines if the read register port should use rs or rd, which is read from for LLB/LHB operations
+    output wire MemRead; // Looks for whether the memory unit is read in this operation
+    output wire MemWrite; // Looks for whether the memory unit is written to in this operation
+    output wire Branch; // Used to signal that the PC should take the value from the branch adder
+    output wire [3:0] ALUOp; // Control lines into the ALU to allow for the unit to determine its operation
+
+    // ALUSrc must be 1 for SLL, SRA, ROR, LW, SW, LLB, and LHB
+    assign ALUSrc = (Opcode[3]) | (Opcode[2] & ~Opcode[1]) | (Opcode[2] & Opcode[1] & ~Opcode[0]);
+
+    // MemtoReg must be 1 for LW instruction
+    assign MemtoReg = Opcode[3] & ~Opcode[1];
+
+    // RegWrite must be 1 for ADD, SUB, XOR, RED, SLL, SRA, ROR, PADDSB, LW, LLB, LHB, and PCS
+    assign RegWrite = (~Opcode[3]) | (Opcode[1]) | (Opcode[3] & ~Opcode[2] & ~Opcode[0]);
+
+    // RegSrc must be 1 for LLB and LHB
+    assign RegSrc = Opcode[3] & Opcode[1];
+
+    // MemRead is only 1 for LW
+    assign MemRead = Opcode[3] & ~Opcode[2] & ~Opcode[1] & ~Opcode[0];
+
+    // MemRead is only 1 for SW
+    assign MemWrite = Opcode[3] & ~Opcode[2] & ~Opcode[1] & Opcode[0];
+
+    // Branch is only 1 for B and BR
+    assign Branch = Opcode[3] & Opcode[2] & ~Opcode[1];
+    
+    // The ALU control lines are set to the opcode to allow it to perform the
+    // necessary operation for the given instruction
+    assign ALUOp = Opcode;
+
+endmodule
+
+`default_nettype wire

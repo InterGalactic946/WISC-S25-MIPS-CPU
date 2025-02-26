@@ -61,17 +61,6 @@ module Shifter_tb();
 
       // Get the correct expected result based on the mode.
       case(stim[21:20])
-        2'h3: begin 
-          expected_result = stim[15:0]; // no operation
-          if(result !== expected_result) begin
-            $display("ERROR: Shift_In: 0x%h, Shift_Val: 0x%h, Mode: No-op. Expectd shifted result was: 0x%h, but actual was: 0x%h.", stim[15:0], stim[19:16], expected_result, result);
-            error = 1'b1;
-          end
-
-          // Count up the number of successful no-ops operations performed.
-          if (!error)
-            noop_operations = noop_operations + 1'b1; 
-        end
         2'h0: begin 
           expected_result = stim[15:0] << stim[19:16]; // logical shift left
           if(result !== expected_result) begin
@@ -106,6 +95,17 @@ module Shifter_tb();
           // Count up the number of successful ror operations performed.
           if (!error)
             ror_operations = ror_operations + 1'b1; 
+        end
+        2'h3: begin 
+          expected_result = stim[15:0]; // no operation
+          if(result !== expected_result) begin
+            $display("ERROR: Shift_In: 0x%h, Shift_Val: 0x%h, Mode: No-op. Expectd shifted result was: 0x%h, but actual was: 0x%h.", stim[15:0], stim[19:16], expected_result, result);
+            error = 1'b1;
+          end
+
+          // Count up the number of successful no-ops operations performed.
+          if (!error)
+            noop_operations = noop_operations + 1'b1; 
         end
         default: begin
           // When the stimulus vector bits are x's or z's we assert an error condition.

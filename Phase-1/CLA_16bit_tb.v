@@ -1,15 +1,14 @@
 `default_nettype none // Set the default as none to avoid errors
 
 /////////////////////////////////////////////////////////////////////
-// CLA_tb.v: Testbench for the 16-bit hierarchical Carry Lookahead //
-// Adder (CLA) using 4-bit CLA blocks                              //
+// CLA_16bit_tb.v: Testbench for the 16-bit hierarchical (CLA)     //
 // This testbench verifies the functionality of the 16-bit CLA     //
 // by applying various test cases for addition and subtraction.    //
 // The 16-bit CLA is instantiated by connecting four 4-bit CLA     //
 // blocks, and the outputs (Sum and Overflow) are monitored for    //
 // correctness.                                                    //
 /////////////////////////////////////////////////////////////////////
-module CLA_tb();
+module CLA_16bit_tb();
 
   reg [33:0] stim;	                 // stimulus vector of type reg
   wire [15:0] Sum;                   // 16-bit sum formed on addition/subtraction of the given operands
@@ -26,7 +25,7 @@ module CLA_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  CLA iDUT(.A(stim[32:17]), .B(stim[16:1]), .sub(stim[0]), .Sum(Sum), .Ovfl(overflow), .pos_Ovfl(pos_overflow), .neg_Ovfl(neg_overflow));
+  CLA_16bit iDUT(.A(stim[32:17]), .B(stim[16:1]), .sub(stim[0]), .Sum(Sum), .Cout(), .Ovfl(overflow), .pos_Ovfl(pos_overflow), .neg_Ovfl(neg_overflow));
   
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin

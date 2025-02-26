@@ -10,14 +10,14 @@
 // and generate signals for use in higher-level carry     //
 // lookahead adders.                                      //
 ////////////////////////////////////////////////////////////
-module CLA_4bit(Sum, Ovfl, pos_Ovfl, neg_Ovfl, P_group, G_group, A, B, Cin, sub);
+module CLA_4bit(Sum, Ovfl, pos_Ovfl, neg_Ovfl, Cout, P_group, G_group, A, B, Cin, sub);
 
   input wire [3:0] A,B;                  // 4-bit input bits to be added
   input wire sub;	                       // add-sub indicator
   input wire Cin;	                       // carry-in to the CLA
   output wire [3:0]	Sum;                 // 4-bit sum output
   output wire Ovfl, pos_Ovfl, neg_Ovfl;  // overflow indicators
-  output wire P_group, G_group;          // group propagate and generate signals
+  output wire Cout, P_group, G_group;    // carry-out, group propagate and generate signals
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
@@ -62,6 +62,9 @@ module CLA_4bit(Sum, Ovfl, pos_Ovfl, neg_Ovfl, P_group, G_group, A, B, Cin, sub)
 
   // Overflow when either positive or negative overflow occurs.
   assign Ovfl = pos_Ovfl | neg_Ovfl;
+
+  // Output the carry out signal.
+  assign Cout = C[3];
 
   // Get the group's propagate signal as a whole.
   assign P_group = &P;

@@ -54,7 +54,7 @@ module RED_Unit_tb();
       expected_second_level_sum[0] = $signed(expected_first_level_sum[1]) + $signed(expected_first_level_sum[0]);
 
       // Get the expected sum.
-      expected_final = $signed(expected_second_level_sum[1]) + $signed(expected_second_level_sum[0]);
+      expected_sum = $signed(expected_second_level_sum[1]) + $signed(expected_second_level_sum[0]);
           
       /* Validate the Sum. */
       if ($signed(Sum) !== $signed(expected_sum)) begin

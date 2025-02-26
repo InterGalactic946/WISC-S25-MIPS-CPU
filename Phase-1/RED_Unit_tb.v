@@ -44,7 +44,7 @@ module RED_Unit_tb();
           
       /* Validate the Sum. */
       if ($signed(Sum) !== $signed(expected_sum)) begin
-        $display("ERROR: A: 0x%h, B: 0x%h, Mode: ADD. Sum expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], expected_sum, Sum);
+        $display("ERROR: A: 0x%h, B: 0x%h. Sum expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], expected_sum, Sum);
         error = 1'b1;
       end
 

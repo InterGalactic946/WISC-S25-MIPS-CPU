@@ -61,7 +61,7 @@ module Shifter_tb();
 
       // Get the correct expected result based on the mode.
       case(stim[21:20])
-        2'h0: begin 
+        2'h3: begin 
           expected_result = stim[15:0]; // no operation
           if(result !== expected_result) begin
             $display("ERROR: Shift_In: 0x%h, Shift_Val: 0x%h, Mode: No-op. Expectd shifted result was: 0x%h, but actual was: 0x%h.", stim[15:0], stim[19:16], expected_result, result);
@@ -72,7 +72,7 @@ module Shifter_tb();
           if (!error)
             noop_operations = noop_operations + 1'b1; 
         end
-        2'h1: begin 
+        2'h0: begin 
           expected_result = stim[15:0] << stim[19:16]; // logical shift left
           if(result !== expected_result) begin
             $display("ERROR: Shift_In: 0x%h, Shift_Val: 0x%h, Mode: SLL. Expectd shifted result was: 0x%h, but actual was: 0x%h.", stim[15:0], stim[19:16], expected_result, result);
@@ -83,7 +83,7 @@ module Shifter_tb();
           if (!error)
             sll_operations = sll_operations + 1'b1; 
         end
-        2'h2: begin
+        2'h1: begin
           expected_result = $signed(stim[15:0]) >>> stim[19:16]; // arithmetic right shift
           // Validate that the result is the expected result.
           if($signed(result) !== $signed(expected_result)) begin
@@ -95,7 +95,7 @@ module Shifter_tb();
           if (!error)
             asr_operations = asr_operations + 1'b1; 
         end
-        2'h3: begin
+        2'h2: begin
           expected_result = expected_ror(stim[15:0], stim[19:16]); // rotate right shift
           // Validate that the result is the expected result.
           if($signed(result) !== $signed(expected_result)) begin

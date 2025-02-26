@@ -11,11 +11,13 @@
 ////////////////////////////////////////////////////////////////////////
 module RED_Unit_tb();
 
-  reg [31:0] stim;	                 // stimulus vector of type reg
-  wire [15:0] Sum;                   // 16-bit sum formed on addition/subtraction of the given operands
-  reg [15:0] expected_sum;           // expected sum
-  reg [16:0] addition_operations;    // number of addition operations performed
-  reg error;                         // set an error flag on error
+  reg [31:0] stim;	                        // stimulus vector of type reg
+  wire [15:0] Sum;                          // 16-bit sum formed on addition/subtraction of the given operands
+  reg [4:0] expected_first_level_sum[0:3];  // expected first level sums
+  reg [5:0] expected_second_level_sum[0:1]; // expected second level sums
+  reg [15:0] expected_sum;                  // expected sum
+  reg [16:0] addition_operations;           // number of addition operations performed
+  reg error;                                // set an error flag on error
 
   //////////////////////
   // Instantiate DUT //
@@ -25,6 +27,8 @@ module RED_Unit_tb();
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin
     stim = 32'h00000000; // initialize stimulus
+    expected_first_level_sum = '{default: 5'h0}; // initialize expected first level sum
+    expected_second_level_sum = '{default: 6'h0}; // initialize expected second level sum
     expected_sum = 16'h0000; // initialize expected sum
     addition_operations = 17'h00000; // initialize addition operation count
     error = 1'b0; // initialize error flag
@@ -39,8 +43,18 @@ module RED_Unit_tb();
       // Wait to process the change in the input.
       #1;
 
+      // Get the expected first level sums.
+      expected_first_level_sum[3] = stim[31:28] + stim[15:12];
+      expected_first_level_sum[2] = stim[27:24] + stim[11:8];
+      expected_first_level_sum[1] = stim[23:20] + stim[7:4];
+      expected_first_level_sum[0] = stim[19:16] + stim[3:0];
+
+      // Get the expected second level sums.
+      expected_second_level_sum[1] = expected_first_level_sum[3] + expected_first_level_sum[2];
+      expected_second_level_sum[0] = expected_first_level_sum[1] + expected_first_level_sum[0];
+
       // Get the expected sum.
-      expected_sum = stim[31:16] + stim[15:0];
+      expected_sum = expected_second_level_sum[1] + expected_second_level_sum[0];
           
       /* Validate the Sum. */
       if ($signed(Sum) !== $signed(expected_sum)) begin

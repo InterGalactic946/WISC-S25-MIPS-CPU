@@ -74,16 +74,16 @@ module RED_Unit (Sum, A, B);
   // Second Level: Use (2) 8-bit CLAs to compute sum_aebf and sum cgdh //
   //////////////////////////////////////////////////////////////////////
   // Get the sum of input_ae + input_bf in sum_aebf.
-  CLA_8bit iCLA_second_level_1 (.A(input_ae), .B(input_bf), .sub(1'b0), .Cin(1'b0), .Sum(sum_aebf));
+  CLA_8bit iCLA_second_level_1 (.A(input_ae), .B(input_bf), .sub(1'b0), .Sum(sum_aebf));
 
   // Get the sum of input_cg + input_dh in sum_cgdh.
-  CLA_8bit iCLA_second_level_2 (.A(input_cg), .B(input_dh), .sub(1'b0), .Cin(1'b0), .Sum(sum_cgdh));
+  CLA_8bit iCLA_second_level_2 (.A(input_cg), .B(input_dh), .sub(1'b0), .Sum(sum_cgdh));
 
   ////////////////////////////////////////
   // Third Level: Final 8-bit Addition //
   //////////////////////////////////////
   // Get the sum of sum_aebf + sum_cgdh in sum_final.
-  CLA_8bit iCLA_third_level (.A(sum_aebf), .B(sum_cgdh), .sub(1'b0), .Cin(1'b0), .Sum(sum_final));
+  CLA_8bit iCLA_third_level (.A(sum_aebf), .B(sum_cgdh), .sub(1'b0), .Sum(sum_final));
 
   // Assign the final sum to the output.
   assign Sum = {{8{sum_final[7]}}, sum_final};

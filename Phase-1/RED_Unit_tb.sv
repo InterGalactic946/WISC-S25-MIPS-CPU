@@ -44,17 +44,17 @@ module RED_Unit_tb();
       #1;
 
       // Get the expected first level sums.
-      expected_first_level_sum[3] = stim[31:28] + stim[15:12];
-      expected_first_level_sum[2] = stim[27:24] + stim[11:8];
-      expected_first_level_sum[1] = stim[23:20] + stim[7:4];
-      expected_first_level_sum[0] = stim[19:16] + stim[3:0];
+      expected_first_level_sum[3] = $signed(stim[31:28]) + $signed(stim[15:12]);
+      expected_first_level_sum[2] = $signed(stim[27:24]) + $signed(stim[11:8]);
+      expected_first_level_sum[1] = $signed(stim[23:20]) + $signed(stim[7:4]);
+      expected_first_level_sum[0] = $signed(stim[19:16]) + $signed(stim[3:0]);
 
       // Get the expected second level sums.
-      expected_second_level_sum[1] = expected_first_level_sum[3] + expected_first_level_sum[2];
-      expected_second_level_sum[0] = expected_first_level_sum[1] + expected_first_level_sum[0];
+      expected_second_level_sum[1] = $signed(expected_first_level_sum[3]) + $signed(expected_first_level_sum[2]);
+      expected_second_level_sum[0] = $signed(expected_first_level_sum[1]) + $signed(expected_first_level_sum[0]);
 
       // Get the expected sum.
-      expected_sum = expected_second_level_sum[1] + expected_second_level_sum[0];
+      expected_final = $signed(expected_second_level_sum[1]) + $signed(expected_second_level_sum[0]);
           
       /* Validate the Sum. */
       if ($signed(Sum) !== $signed(expected_sum)) begin

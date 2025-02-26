@@ -23,7 +23,7 @@ module WriteDecoder_4_16(RegId, WriteReg, Wordline);
   // Implement WriteDecoder as structural/dataflow verilog //
   //////////////////////////////////////////////////////////
   // Decode the ID by shifting 1 left by RegID amount, only if WriteReg is high otherwise it is zero.
-  Shifter iSHIFT (.Shift_In(16'h0001), .Mode(2'h1), .Shift_Val(RegId), .Shift_Out(Wordline_operand));
+  Shifter iSHIFT (.Shift_In(16'h0001), .Mode(2'h0), .Shift_Val(RegId), .Shift_Out(Wordline_operand));
 
   // Wordline is only one hot high if WriteReg is high.
   assign Wordline = (WriteReg) ? Wordline_operand : 16'h0000;

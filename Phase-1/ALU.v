@@ -78,12 +78,12 @@ module ALU (ALU_Out, Error, ALU_In1, ALU_In2, Opcode);
   always @(*) begin
       error = 1'b0;  // Default error state.
       case (Opcode)
-          4'b0000, 4'b0001, 4'b1000, 4'b1001:  ALU_Out = SUM_Out; // ADD/SUB/LW/SW
-          4'b0010: ALU_Out = XOR_Out;         // XOR
-          4'b0011: ALU_Out = RED_Out;         // RED
-          4'b0100, 4'b0101, 4'b0110: ALU_Out = Shift_Out; // SLL/SRA/ROR
-          4'b0111: ALU_Out = PADDSB_Out;      // PADDSB
-          default: error = 1'b1;              // Invalid opcode
+          4'h0, 4'h1, 4'h8, 4'h9: ALU_Out = SUM_Out; // ADD/SUB/LW/SW
+          4'h2: ALU_Out = XOR_Out; // XOR
+          4'h3: ALU_Out = RED_Out; // RED
+          4'h4, 4'h5, 4'h6: ALU_Out = Shift_Out; // SLL/SRA/ROR
+          4'h7: ALU_Out = PADDSB_Out; // PADDSB
+          default: error = 1'b1; // Invalid opcode
       endcase
   end
   ////////////////////////////////////////////////////////////////////////////////////

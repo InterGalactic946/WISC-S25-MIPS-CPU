@@ -106,7 +106,7 @@ module cpu (
                    .WriteReg(RegWrite),
                    .DstData(RegWriteData),
                    .SrcData1(rs_data),
-                   .SrcData2(rt_data),
+                   .SrcData2(rt_data)
                    );
 
   // TODO: CONTROL UNIT
@@ -118,7 +118,7 @@ module cpu (
   assign ALU_in2 = ALUSrc ? {12'h000, ALU_imm} : rt_data;
 
   // sign extend memory offset immediate
-  SignExtender iMSE #(5)(.in(Mem_offset << 1), .out(Mem_ex_offset));
+  SignExtender #(5) iMSE (.in(Mem_offset << 1), .out(Mem_ex_offset));
 
   // TODO: ALU UNIT
   // with ALU_out as rslt
@@ -134,7 +134,7 @@ module cpu (
                     .N(N)
                     );
 
-  SignExtender iBSE #(9)(.in(Brnch_imm), .out(Brnch_ex_imm));
+  SignExtender #(9) iBSE (.in(Brnch_imm), .out(Brnch_ex_imm));
   // TODO: BRANCH ADDER
   // with brnch_pc rslt
 
@@ -148,7 +148,7 @@ module cpu (
   // TODO: Finish memory signals
   // Read or Write to Memory
   memory1c iMEM(.data_out(MemData),
-                .data_in(),
+                .data_in(rt_data),
                 .addr(ALU_out),
                 .enable(MemEnable),
                 .wr(MemWrite),

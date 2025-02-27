@@ -40,14 +40,14 @@ module ALU (ALU_Out, Error, ALU_In1, ALU_In2, Opcode);
   //////////////////////////////////////////////////////////
   // Implement ADD/SUB functionality of ALU using a CLA  //
   ////////////////////////////////////////////////////////
-  // Modify inputs for LW/SW instructions vs. normal ADD
+  // Modify inputs for LW/SW instructions vs. normal ADD.
   assign Input_A = (Opcode[3:1] == 3'h4) ? ALU_In1 & 16'hFFFE : ALU_In1;
   assign Input_B = (Opcode[3:1] == 3'h4) ? ALU_In2 << 1'b1 : ALU_In2;
 
-  // Instantiate a 16-bit CLA for ADD/SUB instructions
+  // Instantiate a 16-bit CLA for ADD/SUB instructions.
   CLA_16bit iCLA (.A(Input_A), .B(Input_B), .sub(Opcode == 4'h1), .Sum(SUM_step), .Cout(), .Ovfl(ov), .pos_Ovfl(pos_ov), .neg_Ovfl(neg_ov));
 
-  // Saturate result based on overflow condition
+  // Saturate result based on overflow condition.
   assign SUM_Out = (pos_ov) ? 16'h7FFF : 
                    (neg_ov) ? 16'h8000 : SUM_step;
   /////////////////////////////////////////////////////////////////////////
@@ -77,7 +77,6 @@ module ALU (ALU_Out, Error, ALU_In1, ALU_In2, Opcode);
   ////////////////////////////////////////////
   always @(*) begin
       error = 1'b0;  // Default error state.
-
       case (Opcode)
           4'b0000, 4'b0001, 4'b1000, 4'b1001:  ALU_Out = SUM_Out; // ADD/SUB/LW/SW
           4'b0010: ALU_Out = XOR_Out;         // XOR

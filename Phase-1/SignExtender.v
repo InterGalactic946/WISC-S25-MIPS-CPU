@@ -5,15 +5,15 @@
 // extend it                                     //
 //////////////////////////////////////////////////
 module SignExtender #(
-  parameter BIT_WIDTH = 4
+  parameter MSB = 15 // bit number of the MSB (zero indexed)
 )(
-  input [BIT_WIDTH - 1:0] in,
+  input [15:0] in,
   output [15:0] out
 );
 
   ///////////////////////////////////
   // Sign extend input to 16 bits //
   /////////////////////////////////
-  assign out = {{(16 - BIT_WIDTH){in[BIT_WIDTH - 1]}}, in};
+  assign out = {16{in[MSB]}, in[MSB:0]};
 
 endmodule

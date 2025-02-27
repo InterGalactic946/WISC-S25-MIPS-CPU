@@ -118,7 +118,7 @@ module cpu (
   assign ALU_in2 = ALUSrc ? {12'h000, ALU_imm} : rt_data;
 
   // sign extend memory offset immediate
-  SignExtender #(5) iMSE (.in(Mem_offset << 1), .out(Mem_ex_offset));
+  SignExtender #(4) iMSE (.in(Mem_offset << 1), .out(Mem_ex_offset));
 
   // TODO: ALU UNIT
   // with ALU_out as rslt
@@ -134,7 +134,7 @@ module cpu (
                     .N(N)
                     );
 
-  SignExtender #(9) iBSE (.in(Brnch_imm), .out(Brnch_ex_imm));
+  SignExtender #(8) iBSE (.in(Brnch_imm), .out(Brnch_ex_imm));
   // TODO: BRANCH ADDER
   // with brnch_pc rslt
 

@@ -7,7 +7,7 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemRead, MemWrite
     output wire MemtoReg; // Allows for choosing between writing from the ALU or memory output to the register file
     output wire RegWrite; // Determines if the register file is being written to
     output wire RegSrc; // Determines if the read register port should use rs or rd, which is read from for LLB/LHB operations
-    output wire MemRead; // Looks for whether the memory unit is read in this operation
+    output wire MemEnable; // Looks for whether the memory unit is used in this operation
     output wire MemWrite; // Looks for whether the memory unit is written to in this operation
     output wire Branch; // Used to signal that the PC should take the value from the branch adder
     output wire [3:0] ALUOp; // Control lines into the ALU to allow for the unit to determine its operation
@@ -24,10 +24,10 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemRead, MemWrite
     // RegSrc must be 1 for LLB and LHB
     assign RegSrc = Opcode[3] & Opcode[1];
 
-    // MemRead is only 1 for LW
-    assign MemRead = Opcode[3] & ~Opcode[2] & ~Opcode[1] & ~Opcode[0];
+    // MemEnable is on for SW or LW
+    assign MemEnable = Opcode[3] & ~Opcode[2] & ~Opcode[1];
 
-    // MemRead is only 1 for SW
+    // MemWrite is only 1 for SW
     assign MemWrite = Opcode[3] & ~Opcode[2] & ~Opcode[1] & Opcode[0];
 
     // Branch is only 1 for B and BR

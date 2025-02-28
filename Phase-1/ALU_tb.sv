@@ -108,19 +108,18 @@ module ALU_tb();
       ov = pos_ov | neg_ov;
 
       // Set the flags based on the stim_op.
-      if (stim_op === 4'h0 || stim_op === 4'h1 || stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6)
-        expected_ZF = zero;
-      else
-        expected_ZF = 1'b0;
-      
-      // Set the flags based on the stim_op.
       if (stim_op === 4'h0 || stim_op === 4'h1) begin
+        expected_ZF = zero;
         expected_NF = neg;
         expected_VF = ov;
+      end else if (stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
+        expected_ZF = zero;
+        expected_NF = 1'b0;
+        expected_VF = 1'b0;
       end else begin
         expected_ZF = 1'b0;
-        expected_VF = 1'b0;
         expected_NF = 1'b0;
+        expected_VF = 1'b0;
       end
 
       // Verify that the zero set flag is working correctly.

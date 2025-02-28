@@ -80,12 +80,14 @@ module ALU_tb();
         // Overflow occurs in addition when both operands have the same sign and the result has a different sign.
         if (~A[15] & ~B[15]) begin
           // Case when both operands are positive
-          if (result[15])
+          if (result[15]) begin
             expected_pos_overflow = 1'b1;  // Positive overflow detected
+          end
         end else if (A[15] & B[15]) begin
           // Case when both operands are negative
-          if (~result[15])
+          if (~result[15]) begin
             expected_neg_overflow = 1'b1;  // Negative overflow detected
+          end
         end
       end
 

@@ -29,8 +29,6 @@ module PC_control(C, I, F, Branch, BR, PC_in, PC_out);
   ///////////////////////////////////////////////
   wire [15:0] offset;          // Offset to add to the current PC.
   wire [15:0] PC_next;         // The next PC value.
-  wire pos_next, neg_next;     // Indicates overflow for the PC+2 adder.
-  wire pos_branch, neg_branch; // Indicates overflow for the branch adder.
   wire [15:0] PC_B;            // The PC value in case branch is taken (for B).
   wire Branch_taken;           // Signal used to determine whether branch is taken.
   //////////////////////////////////////////////////////////////////

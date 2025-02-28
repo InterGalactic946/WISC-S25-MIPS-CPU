@@ -183,7 +183,7 @@ initial begin
         $stop();
     end
 
-    $display("YIPPEE :3 !!! All tests passed!");
+    $display("YAHOO!! All tests passed!");
     $stop();
 end
 

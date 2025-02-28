@@ -27,20 +27,32 @@ module PC_control(C, I, F, Branch, BR, PC_in, PC_out);
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire [15:0] offset;    // Offset to add to the current PC.
-  wire [15:0] PC_next;   // The next PC value.
-  wire [15:0] PC_B;      // The PC value in case branch is taken (for B).
-  wire Branch_taken;     // Signal used to determine whether branch is taken.
+  wire [15:0] offset;          // Offset to add to the current PC.
+  wire [15:0] PC_next_step;    // The step next PC value.
+  wire [15:0] PC_next;         // The next PC value.
+  wire pos_next, neg_next;     // Indicates overflow for the PC+2 adder.
+  wire pos_branch, neg_branch; // Indicates overflow for the branch adder.
+  wire [15:0] PC_B_step;       // The step PC value in case branch is taken (for B).
+  wire [15:0] PC_B;            // The PC value in case branch is taken (for B).
+  wire Branch_taken;           // Signal used to determine whether branch is taken.
   //////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
   // Implement PC_control as structural/dataflow verilog //
   ////////////////////////////////////////////////////////
   // Instantiate the PC+2 adder.
-  CLA_16bit iCLA_next (.A(PC_in), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
+  CLA_16bit iCLA_next (.A(PC_in), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(pos_next), .neg_Ovfl(neg_next));
 
   // Instantiate the Branch adder.
-  CLA_16bit iCLA_branch (.A(PC_next), .B(offset), .sub(1'b0), .Sum(PC_B), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
+  CLA_16bit iCLA_branch (.A(PC_next), .B(offset), .sub(1'b0), .Sum(PC_B), .Cout(), .Ovfl(), .pos_Ovfl(pos_branch), .neg_Ovfl(neg_branch));
+
+  // Saturate PC address based on overflow condition.
+  assign PC_next = (pos_next) ? 16'h7FFF : 
+                   (neg_next) ? 16'h8000 : PC_next_step;
+  
+  // Saturate PC address based on overflow condition.
+  assign PC_B = (pos_next) ? 16'h7FFF : 
+                (neg_next) ? 16'h8000 : PC_next_step;
 
   // The offset is the signed offset left shifted by 1.
   assign offset = I << 1'b1;

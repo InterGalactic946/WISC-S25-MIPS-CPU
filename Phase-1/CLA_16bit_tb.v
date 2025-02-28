@@ -59,6 +59,7 @@ module CLA_16bit_tb();
               // Case when both operands are positive
               if (expected_sum[15])
                   expected_pos_overflow = 1'b1;  // Positive overflow detected
+                  expected_sum = 16'h7FFF; // saturate the sum
               else
                 expected_pos_overflow = 1'b0;  // No Positive overflow
               expected_neg_overflow = 1'b0; // No negative overflow
@@ -66,6 +67,7 @@ module CLA_16bit_tb();
               // Case when both operands are negative 
               if (~expected_sum[15])
                   expected_neg_overflow = 1'b1;  // Negative overflow detected
+                  expected_sum = 16'h8000; // saturate the sum
               else
                 expected_neg_overflow = 1'b0; // No negative overflow
               expected_pos_overflow = 1'b0; // No positive overflow
@@ -112,9 +114,11 @@ module CLA_16bit_tb();
           // 2. A is negative and B is positive but the result is positive.
           if ((stim[32] === 1'b0) && (stim[16] === 1'b1) && (expected_sum[15] === 1'b1)) begin
               expected_pos_overflow = 1'b1;  // Positive overflow detected (positive - negative giving positive result)
+              expected_sum = 16'h7FFF; // saturate the sum
               expected_neg_overflow = 1'b0;  // No negative overflow
           end else if ((stim[32] === 1'b1) && (stim[16] === 1'b0) && (expected_sum[15] === 1'b0)) begin
               expected_neg_overflow = 1'b1;  // Negative overflow detected (negative - positive giving negative result)
+              expected_sum = 16'h8000; // saturate the sum
               expected_pos_overflow = 1'b0;  // No positive overflow
           end else begin
               expected_pos_overflow = 1'b0;  // No positive overflow

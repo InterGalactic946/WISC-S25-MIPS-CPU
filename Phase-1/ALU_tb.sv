@@ -576,7 +576,7 @@ module ALU_tb();
       // Print out a status message when the error flag is set.
       if (error) begin
           // Print out the total number of operations performed.
-          $display("\nTotal operations performed: 0x%h.", 
+          $display("\nTotal operations performed: %d.", 
                   addition_operations + subtraction_operations + 
                   xor_operations + reduction_operations + 
                   asr_operations + ror_operations + 
@@ -584,19 +584,19 @@ module ALU_tb();
                   lw_operations + sw_operations + llb_operations + lhb_operations + 
                   nop_operations);
           // Print individual operation counts.
-          $display("Number of Successful Additions Performed: 0x%h.", addition_operations);
-          $display("Number of Successful Subtractions Performed: 0x%h.", subtraction_operations);
-          $display("Number of Successful XORs Performed: 0x%h.", xor_operations);
-          $display("Number of Successful Reductions Performed: 0x%h.", reduction_operations);
-          $display("Number of Successful ASRs Performed: 0x%h.", asr_operations);
-          $display("Number of Successful RORs Performed: 0x%h.", ror_operations);
-          $display("Number of Successful SLLs Performed: 0x%h.", sll_operations);
-          $display("Number of Successful PADDSBs Performed: 0x%h.", paddsb_operations);
-          $display("Number of Successful Load Word Operations Performed: 0x%h.", lw_operations);
-          $display("Number of Successful Store Word Operations Performed: 0x%h.", sw_operations);
-          $display("Number of Successful LLB Operations Performed: 0x%h.", llb_operations);
-          $display("Number of Successful LHB Operations Performed: 0x%h.", lhb_operations);
-          $display("Number of NOPs Performed: 0x%h.", nop_operations);
+          $display("Number of Successful Additions Performed: %d.", addition_operations);
+          $display("Number of Successful Subtractions Performed: %d.", subtraction_operations);
+          $display("Number of Successful XORs Performed: %d.", xor_operations);
+          $display("Number of Successful Reductions Performed: %d.", reduction_operations);
+          $display("Number of Successful ASRs Performed: %d.", asr_operations);
+          $display("Number of Successful RORs Performed: %d", ror_operations);
+          $display("Number of Successful SLLs Performed: %d.", sll_operations);
+          $display("Number of Successful PADDSBs Performed: %d.", paddsb_operations);
+          $display("Number of Successful Load Word Operations Performed: %d.", lw_operations);
+          $display("Number of Successful Store Word Operations Performed: %d.", sw_operations);
+          $display("Number of Successful LLB Operations Performed: %d.", llb_operations);
+          $display("Number of Successful LHB Operations Performed: %d.", lhb_operations);
+          $display("Number of NOPs Performed: %d.", nop_operations);
           $stop();
       end
 
@@ -604,27 +604,26 @@ module ALU_tb();
     end
 
     // Print out the total number of operations performed.
-    $display("\nTotal operations performed: 0x%h.", 
+    $display("\nTotal operations performed: %d.", 
             addition_operations + subtraction_operations + 
             xor_operations + reduction_operations + 
             asr_operations + ror_operations + 
             sll_operations + paddsb_operations + 
             lw_operations + sw_operations + llb_operations + lhb_operations + 
             nop_operations);
-    $display("Number of Successful Additions Performed: 0x%h.", addition_operations);
-    $display("Number of Successful Subtractions Performed: 0x%h.", subtraction_operations);
-    $display("Number of Successful XORs Performed: 0x%h.", xor_operations);
-    $display("Number of Successful Reductions Performed: 0x%h.", reduction_operations);
-    $display("Number of Successful ASRs Performed: 0x%h.", asr_operations);
-    $display("Number of Successful RORs Performed: 0x%h.", ror_operations);
-    $display("Number of Successful SLLs Performed: 0x%h.", sll_operations);
-    $display("Number of Successful PADDSBs Performed: 0x%h.", paddsb_operations);
-    $display("Number of Successful Load Word Operations Performed: 0x%h.", lw_operations);
-    $display("Number of Successful Store Word Operations Performed: 0x%h.", sw_operations);
-    $display("Number of Successful LLB Operations Performed: 0x%h.", llb_operations);
-    $display("Number of Successful LHB Operations Performed: 0x%h.", lhb_operations);
-    $display("Number of NOPs Performed: 0x%h.", nop_operations);
-
+          $display("Number of Successful Additions Performed: %d.", addition_operations);
+          $display("Number of Successful Subtractions Performed: %d.", subtraction_operations);
+          $display("Number of Successful XORs Performed: %d.", xor_operations);
+          $display("Number of Successful Reductions Performed: %d.", reduction_operations);
+          $display("Number of Successful ASRs Performed: %d.", asr_operations);
+          $display("Number of Successful RORs Performed: %d", ror_operations);
+          $display("Number of Successful SLLs Performed: %d.", sll_operations);
+          $display("Number of Successful PADDSBs Performed: %d.", paddsb_operations);
+          $display("Number of Successful Load Word Operations Performed: %d.", lw_operations);
+          $display("Number of Successful Store Word Operations Performed: %d.", sw_operations);
+          $display("Number of Successful LLB Operations Performed: %d.", llb_operations);
+          $display("Number of Successful LHB Operations Performed: %d.", lhb_operations);
+          $display("Number of NOPs Performed: %d.", nop_operations);
 
     // If we reached here, it means that all tests passed.
     $display("YAHOO!! All tests passed.");

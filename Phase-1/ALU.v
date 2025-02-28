@@ -98,7 +98,7 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   assign v_flag = ov;
 
   // n_flag is set when the sum result is negative, only for ADD/SUB.
-  assign n_flag = SUM_Out[15];
+  assign n_flag = ALU_Out[15];
 
   // Assign conditionally set flags.
   assign N_set = (Opcode == 4'h0 | Opcode == 4'h1) ? n_flag : 1'b0;

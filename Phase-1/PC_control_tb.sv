@@ -91,7 +91,7 @@ initial begin
             I = $random%(1'b1 << 10);
 
             // Choose a random base PC addr
-            PC_in = %random%(1'b1 << 16);
+            PC_in = $random%(1'b1 << 16);
             
             // Reset expected PC addr
             expected_PC = 0;
@@ -150,7 +150,7 @@ initial begin
             Rs = $random%(1'b1 << 16);
 
             // Choose a random base PC addr
-            PC_in = %random%(1'b1 << 16);
+            PC_in = $random%(1'b1 << 16);
             
             // Reset expected PC addr
             expected_PC = 0;

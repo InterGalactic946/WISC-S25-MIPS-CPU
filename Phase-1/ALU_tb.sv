@@ -435,6 +435,8 @@ module ALU_tb();
     asr_operations = 20'h00000; // initialize asr operation count
     ror_operations = 20'h00000; // initialize ror operation count
     sll_operations = 20'h00000; // initialize sll operation count
+    llb_operations = 20'h00000; // initialize llb operation count
+    lhb_operations = 20'h00000; // initialize lhb operation count
     paddsb_operations = 20'h00000; // initialize parallel sub-addition count
     nop_operations = 20'h00000; // initialize nop operation count
     error = 1'b0; // initialize error flag

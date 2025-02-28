@@ -44,7 +44,7 @@ reg branched;           // Indicates if a branch should be taken
 // Instantiate DUT //
 /////////////////////
 assign F = {Z,V,N};
-PC_control PCC(.C(C), .I(I), .F(F), .Branch(Branch), .BR(BR), .PC_in(PC_in), .PC_out(PC_out));
+PC_control PCC(.C(C), .I(I), .F(F), .Rs(Rs), .Branch(Branch), .BR(BR), .PC_in(PC_in), .PC_out(PC_out));
 
 // Initialize the inputs and expected outputs and wait till all tests finish.
 initial begin

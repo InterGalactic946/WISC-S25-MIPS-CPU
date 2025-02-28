@@ -159,7 +159,7 @@ module ALU_tb();
         sum = (A & 16'hFFFE) + (B << 1'b1);
       
       // Get the expected overflow based on addition/subtraction.
-      get_overflow(.A(A), .B(B), .result(sum), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)); 
+      get_overflow(.A(A), .B(B), .result($signed(sum)), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)); 
 
       // Modify the result based on overflow.
       if (pos_ov)

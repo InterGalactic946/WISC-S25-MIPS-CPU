@@ -148,7 +148,6 @@ module ALU_tb();
   task automatic verify_sum(input [15:0] A, input [15:0] B);
     begin
       reg [15:0] sum;
-      reg pos_ov, neg_ov;
 
       // Expected result and for ADD/SUB/LW/SW.
       if (stim_op === 4'h0)

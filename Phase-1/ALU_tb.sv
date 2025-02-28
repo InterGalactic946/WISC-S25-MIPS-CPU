@@ -55,7 +55,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the flag set signals.
-  task verify_flags(input [15:0] A, input [15:0] B, input [15:0] ALU_out);
+  task automatic verify_flags(input [15:0] A, input [15:0] B, input [15:0] ALU_out);
     begin
       // Get the actual flag results.
       reg ov;
@@ -120,7 +120,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the normal sum for ADD/SUB/LW/SW instructions.
-  task verify_sum(input [15:0] A, input [15:0] B);
+  task automatic verify_sum(input [15:0] A, input [15:0] B);
     begin
       // Expected result and for ADD/SUB/LW/SW.
       if (stim_op === 4'h0)
@@ -142,7 +142,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the reduction unit sum.
-  task verify_red_sum(input [15:0] A, input [15:0] B);
+  task automatic verify_red_sum(input [15:0] A, input [15:0] B);
     begin
       reg [4:0] expected_first_level_sum[0:3];  // expected first level sums
       reg [5:0] expected_second_level_sum[0:1]; // expected second level sums
@@ -188,7 +188,7 @@ module ALU_tb();
   endfunction
 
     // Task: Verify the reduction unit sum.
-  task verify_shift(input [15:0] A, input [15:0] B);
+  task automatic verify_shift(input [15:0] A, input [15:0] B);
     begin
       // Expected result and for SLL/SRA/ROR.
       if (stim_op === 4'h4)
@@ -210,7 +210,7 @@ module ALU_tb();
   endtask
 
   // Task: Check for positive or negative overflow for each 4-bit sub-word.
-  task check_overflow(input [15:0] A, input [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
+  task automatic check_overflow(input [15:0] A, input [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
     begin
       // Declare the sum variables for each nibble addition.
       reg [3:0] sum; // 4 bits to store the result of adding two 4-bit nibbles
@@ -305,7 +305,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the PADDSB instruction.
-  task verify_paddsb_sum(input [15:0] A, input [15:0] B);
+  task automatic verify_paddsb_sum(input [15:0] A, input [15:0] B);
       // Apply saturation based on the overflow flags for each nibble in the expected_sum array
     begin
       reg pos_overflow[0:3];

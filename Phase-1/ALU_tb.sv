@@ -88,6 +88,8 @@ module ALU_tb();
             expected_neg_overflow = 1'b1;  // Negative overflow detected
         end
       end
+
+      $display("Neg overflow: 0x%h, Pos overflow: 0x%h", expected_neg_overflow, expected_pos_overflow);
     end
   endtask
 

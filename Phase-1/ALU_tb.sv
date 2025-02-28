@@ -12,6 +12,7 @@ module ALU_tb();
   reg [3:0] stim_op;    		         // stimulus opcode vector of type reg
   wire [15:0] result; 		           // 16-bit result of the ALU
   wire ZF, VF, NF;     		           // zero, overflow, and signed flag set signasls of the ALU
+  reg pos_ov, neg_ov;                // positive and negative overflow flags
   reg expected_ZF; 	                 // expected z_set flag
   reg expected_VF;                   // expected v_set flag
   reg expected_NF;                   // expected n_set flag
@@ -54,6 +55,42 @@ module ALU_tb();
       end
   endtask
 
+  // Task: Get positive and negative overflow for addition or subtraction.
+  task automatic get_overflow(
+    input [15:0] A,               // Operand A (16-bit)
+    input [15:0] B,               // Operand B (16-bit)
+    input signed [15:0] result,   // Expected result (ALU result)
+    output reg expected_pos_overflow, // Positive overflow flag
+    output reg expected_neg_overflow  // Negative overflow flag
+  );
+    begin
+      // Initialize the overflow flags to 0 (no overflow)
+      expected_pos_overflow = 1'b0;
+      expected_neg_overflow = 1'b0;
+
+      if (stim_op === 4'h1) begin
+        // Subtraction (stim_op = 4'h1)
+        if ((A[15] === 1'b0) && (B[15] === 1'b1) && (result[15] === 1'b1)) begin
+          expected_pos_overflow = 1'b1;  // Positive overflow detected (positive - negative giving positive result)
+        end else if ((A[15] === 1'b1) && (B[15] === 1'b0) && (result[15] === 1'b0)) begin
+          expected_neg_overflow = 1'b1;  // Negative overflow detected (negative - positive giving negative result)
+        end
+      end else begin
+        // Addition (stim_op is not 4'h1)
+        // Overflow occurs in addition when both operands have the same sign and the result has a different sign.
+        if (~A[15] & ~B[15]) begin
+          // Case when both operands are positive
+          if (result[15])
+            expected_pos_overflow = 1'b1;  // Positive overflow detected
+        end else if (A[15] & B[15]) begin
+          // Case when both operands are negative
+          if (~result[15])
+            expected_neg_overflow = 1'b1;  // Negative overflow detected
+        end
+      end
+    end
+  endtask
+
   // Task: Verify the flag set signals.
   task automatic verify_flags(input [15:0] A, input [15:0] B, input signed [15:0] ALU_out);
     begin
@@ -68,24 +105,8 @@ module ALU_tb();
       // It is negative when the MSB of the output is zero.
       neg = ALU_out[15];
 
-      // Get the expected overflow based on addition/subtraction.
-      if (stim_op === 4'h1) begin
-        if ((A[15] === 1'b0) && (B[15] === 1'b1) && (ALU_out[15] === 1'b1)) 
-          ov = 1'b1; // Overflow detected (positive - negative giving negative)
-        else if ((A[15] === 1'b1) && (B[15] === 1'b0) && (ALU_out[15] === 1'b0)) 
-          ov = 1'b1; // Overflow detected (negative - positive giving positive)
-        else 
-          ov = 1'b0; // No overflow in other cases
-      end else begin
-        if (A[15] === B[15]) begin
-          if (ALU_out[15] !== A[15]) 
-            ov = 1'b1; // Overflow detected
-          else 
-            ov = 1'b0; // No overflow
-        end else begin
-            ov = 1'b0; // No overflow when operands have different signs
-        end
-      end 
+      // Get the positive/negative overflow.
+      ov = pos_ov | neg_ov;
 
       // Set the flags based on the stim_op.
       if (stim_op === 4'h0 || stim_op === 4'h1 || stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6)
@@ -126,14 +147,28 @@ module ALU_tb();
   // Task: Verify the normal sum for ADD/SUB/LW/SW instructions.
   task automatic verify_sum(input [15:0] A, input [15:0] B);
     begin
+      reg [15:0] sum;
+      reg pos_ov, neg_ov;
+
       // Expected result and for ADD/SUB/LW/SW.
       if (stim_op === 4'h0)
-        expected_result = A + B;
+        sum = A + B;
       else if (stim_op === 4'h1)
-        expected_result = A - B;
+        sum = A - B;
       else if (stim_op === 4'h8 || stim_op === 4'h9)
-        expected_result = (A & 16'hFFFE) + (B << 1'b1);
+        sum = (A & 16'hFFFE) + (B << 1'b1);
       
+      // Get the expected overflow based on addition/subtraction.
+      get_overflow(.A(A), .B(B), .result(sum), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)) 
+
+      // Modify the result based on overflow.
+      if (pos_ov)
+        expected_result = 16'h7FFF;
+      else if (neg_ov)
+        expected_result = 16'h8000;
+      else
+        expected_result = sum;
+
       // Validate that the result is the expected result.
       if ($signed(result) !== $signed(expected_result)) begin
           $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Sum expected 0x%h, got 0x%h.", A, B, instr_name, expected_result, result);
@@ -214,7 +249,7 @@ module ALU_tb();
   endtask
 
   // Task: Check for positive or negative overflow for each 4-bit sub-word.
-  task automatic check_overflow(input [15:0] A, input [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
+  task automatic check_pad_overflow(input [15:0] A, input [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
     begin
       // Declare the sum variables for each nibble addition.
       reg [3:0] sum; // 4 bits to store the result of adding two 4-bit nibbles
@@ -317,7 +352,7 @@ module ALU_tb();
       reg [3:0] expected_sum[0:3];
 
       // Get the overflow of the sum.
-      check_overflow(.A(A), .B(B), .pos_overflow(pos_overflow), .neg_overflow(neg_overflow));
+      check_pad_overflow(.A(A), .B(B), .pos_overflow(pos_overflow), .neg_overflow(neg_overflow));
 
       // Handle Most Significant Nibble (MSN)
       if (pos_overflow[3] === 1) begin
@@ -376,6 +411,8 @@ module ALU_tb();
     expected_ZF = 1'b0;                  // initialize expected z_set flag
     expected_VF = 1'b0;                  // initialize expected v_set flag
     expected_NF = 1'b0;                  // initialize expected n_set flag
+    pos_ov = 1'b0;                       // initialize positive overflow
+    neg_ov = 1'b0;                       // initialize negative overflow
     expected_result = 16'h0000;          // initialize expected result
     instr_name = "NULL";                 // initialize the instruction name
     addition_operations = 20'h00000; // initialize addition operation count

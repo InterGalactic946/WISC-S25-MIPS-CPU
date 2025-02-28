@@ -5,7 +5,7 @@
 // This design performs arithmetic and logical              //
 // operations on two 16-bit vectors based on the opcode.    //
 //////////////////////////////////////////////////////////////
-module ALU (ALU_Out, Error, ALU_In1, ALU_In2, Opcode);
+module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
 
   input wire [15:0] ALU_In1, ALU_In2;  // First and second ALU operands
   input wire [3:0]  Opcode;            // Opcode field of the ALU

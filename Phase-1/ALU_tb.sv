@@ -55,7 +55,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the flag set signals.
-  task verify_flags(input wire [15:0] A, input wire [15:0] B, input wire [15:0] ALU_out);
+  task verify_flags(input [15:0] A, input [15:0] B, input [15:0] ALU_out);
     begin
       // Get the actual flag results.
       reg ov, V_flag;
@@ -120,7 +120,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the normal sum for ADD/SUB/LW/SW instructions.
-  task verify_sum(input wire [15:0] A, input wire [15:0] B);
+  task verify_sum(input [15:0] A, input [15:0] B);
     begin
       // Expected result and for ADD/SUB/LW/SW.
       if (stim_op === 4'h0)
@@ -142,7 +142,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the reduction unit sum.
-  task verify_red_sum(input wire [15:0] A, input wire [15:0] B);
+  task verify_red_sum(input [15:0] A, input [15:0] B);
     begin
       reg [4:0] expected_first_level_sum[0:3];  // expected first level sums
       reg [5:0] expected_second_level_sum[0:1]; // expected second level sums
@@ -188,7 +188,7 @@ module ALU_tb();
   endfunction
 
     // Task: Verify the reduction unit sum.
-  task verify_shift(input wire [15:0] A, input wire [15:0] B);
+  task verify_shift(input [15:0] A, input [15:0] B);
     begin
       // Expected result and for SLL/SRA/ROR.
       if (stim_op === 4'h4)
@@ -210,7 +210,7 @@ module ALU_tb();
   endtask
 
   // Task: Check for positive or negative overflow for each 4-bit sub-word.
-  task check_overflow(input wire [15:0] A, input wire [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
+  task check_overflow(input [15:0] A, input [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
     begin
       // Declare the sum variables for each nibble addition.
       reg [3:0] sum; // 4 bits to store the result of adding two 4-bit nibbles
@@ -407,13 +407,13 @@ module ALU_tb();
 
           // Count up the number of successful operations performed.
           if (!error) begin
-            if (opcode === 4'h0)
+            if (stim_op === 4'h0)
               addition_operations = addition_operations + 1'b1;
-            else if (opcode === 4'h1)
+            else if (stim_op === 4'h1)
               subtraction_operations = subtraction_operations + 1'b1;
-            else if (opcode === 4'h8)
+            else if (stim_op === 4'h8)
               lw_operations = lw_operations + 1'b1;
-            else if (opcode === 4'h9)
+            else if (stim_op === 4'h9)
               sw_operations = sw_operations + 1'b1;
           end
         end

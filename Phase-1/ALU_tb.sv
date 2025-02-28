@@ -92,6 +92,7 @@ module ALU_tb();
         expected_ZF = zero;
       end else if (stim_op === 4'h0 || stim_op === 4'h1) begin
         expected_NF = neg;
+        $display("Signed flag is %h", expected_NF);
         expected_VF = ov;
       end else begin
         expected_ZF = 1'b0;

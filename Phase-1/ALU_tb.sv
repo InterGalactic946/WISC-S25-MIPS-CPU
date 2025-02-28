@@ -55,7 +55,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the flag set signals.
-  task automatic verify_flags(input [15:0] A, input [15:0] B, input [15:0] ALU_out);
+  task automatic verify_flags(input [15:0] A, input [15:0] B, input signed [15:0] ALU_out);
     begin
       // Get the actual flag results.
       reg ov;

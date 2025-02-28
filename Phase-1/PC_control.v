@@ -27,7 +27,7 @@ module PC_control(C, I, F, PC_in, PC_out);
   wire [15:0] offset;    // Offset to add to the current PC.
   wire [15:0] PC_next;   // The next PC value.
   wire [15:0] PC_branch; // The PC value in case branch is taken.
-  wire Branch;           // Signal used to determine whether branch is taken.
+  wire Branch_taken;     // Signal used to determine whether branch is taken.
   //////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -43,18 +43,18 @@ module PC_control(C, I, F, PC_in, PC_out);
   assign offset = I << 1'b1;
 
   // The branch is taken either unconditionally when C = 3'b111 or when the conditon code matches the flag register setting.
-  assign Branch = (C == 3'b000) ? ~F[2]                    : // Not Equal (Z = 0)
-                  (C == 3'b001) ? F[2]                     : // Equal (Z = 1)
-                  (C == 3'b010) ? (~F[2] & ~F[0])          : // Greater Than (Z = N = 0)
-                  (C == 3'b011) ? F[0]                     : // Less Than (N = 1)
-                  (C == 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
-                  (C == 3'b101) ? (F[2] | F[0])            : // Less Than or Equal (Z = 1 or N = 1)
-                  (C == 3'b110) ? F[1]                     : // Overflow (V = 1)
-                  (C == 3'b111) ? 1'b1                     : // Unconditional (always executes)
-                  1'b0;                                      // Default: Condition not met (shouldn't happen if ccc is valid)
+  assign Branch_taken = (C == 3'b000) ? ~F[2]                    : // Not Equal (Z = 0)
+                        (C == 3'b001) ? F[2]                     : // Equal (Z = 1)
+                        (C == 3'b010) ? (~F[2] & ~F[0])          : // Greater Than (Z = N = 0)
+                        (C == 3'b011) ? F[0]                     : // Less Than (N = 1)
+                        (C == 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
+                        (C == 3'b101) ? (F[2] | F[0])            : // Less Than or Equal (Z = 1 or N = 1)
+                        (C == 3'b110) ? F[1]                     : // Overflow (V = 1)
+                        (C == 3'b111) ? 1'b1                     : // Unconditional (always executes)
+                        1'b0;                                      // Default: Condition not met (shouldn't happen if ccc is valid)
 
   // Update the PC_out with the next PC or branched PC based on conditional check.
-  assign PC_out = (Branch) ? PC_branch : PC_next;
+  assign PC_out = (Branch_taken) ? PC_branch : PC_next;
 
 endmodule
 

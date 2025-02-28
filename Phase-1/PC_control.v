@@ -13,12 +13,14 @@
 // condition code (`C`) and flags (`F`) dictate whether a   //
 // branch should be taken using the signed offset `I`.      //
 //////////////////////////////////////////////////////////////
-module PC_control(C, I, F, Branch, PC_in, PC_out);
+module PC_control(C, I, F, Branch, BR, PC_in, PC_out);
   
   input wire [2:0] C;        // 3-bit condition code
   input wire [8:0] I;        // 9-bit signed offset right shifted by one
   input wire [2:0] F;        // 3-bit flag register inputs for (F[2] = Z, F[1] = V, F[0] = N)
+  input wire [15:0] Rs;      // Register source input for the BR instruction
   input wire Branch;         // Indicates a branch instruction.
+  input wire BR;             // indicates a BR instruction vs a B instruction
   input wire [15:0] PC_in;   // 16-bit address of the current instruction
   output wire [15:0] PC_out; // 16-bit address of the new instruction
 
@@ -27,7 +29,7 @@ module PC_control(C, I, F, Branch, PC_in, PC_out);
   ///////////////////////////////////////////////
   wire [15:0] offset;    // Offset to add to the current PC.
   wire [15:0] PC_next;   // The next PC value.
-  wire [15:0] PC_branch; // The PC value in case branch is taken.
+  wire [15:0] PC_B;      // The PC value in case branch is taken (for B).
   wire Branch_taken;     // Signal used to determine whether branch is taken.
   //////////////////////////////////////////////////////////////////
 
@@ -38,7 +40,7 @@ module PC_control(C, I, F, Branch, PC_in, PC_out);
   CLA_16bit iCLA_next (.A(PC_in), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
 
   // Instantiate the Branch adder.
-  CLA_16bit iCLA_branch (.A(PC_next), .B(offset), .sub(1'b0), .Sum(PC_branch), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
+  CLA_16bit iCLA_branch (.A(PC_next), .B(offset), .sub(1'b0), .Sum(PC_B), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
 
   // The offset is the signed offset left shifted by 1.
   assign offset = I << 1'b1;
@@ -54,8 +56,8 @@ module PC_control(C, I, F, Branch, PC_in, PC_out);
                         (C == 3'b111) ? 1'b1                     : // Unconditional (always executes)
                         1'b0;                                      // Default: Condition not met (shouldn't happen if ccc is valid)
 
-  // Update the PC_out with the next PC or branched PC based on conditional check.
-  assign PC_out = (Branch_taken & Branch) ? PC_branch : PC_next;
+  // Update the PC_out with the next PC or branched PC (BR or B) based on conditional check.
+  assign PC_out = (Branch_taken & Branch) ? ((BR) ? Rs : PC_B) : PC_next;
 
 endmodule
 

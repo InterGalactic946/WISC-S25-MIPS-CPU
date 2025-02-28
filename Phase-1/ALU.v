@@ -60,7 +60,7 @@ module ALU (ALU_Out, Error, ALU_In1, ALU_In2, Opcode);
   ///////////////////////////////////////////////////////////////
   // Implement PADDSB functionality using a PSA_16bit module  //
   /////////////////////////////////////////////////////////////
-  PSA_16bit iPSA (.A(ALU_In1), .B(ALU_In2), .Sum(PADDSB_Out), .Error());
+  PSA_16bit iPSA (.A(ALU_In1), .B(ALU_In2), .Sum(PADDSB_Out));
 
   //////////////////////////////////////////////////////////
   // Implement RED functionality using a RED_Unit module //

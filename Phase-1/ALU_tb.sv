@@ -136,6 +136,8 @@ module ALU_tb();
           error = 1'b1;
       end
       
+      $display("A: 0x%h, B: 0x%h, Mode: %s. Sum expected 0x%h, got 0x%h.", A, B, instr_name, expected_result, result);
+      
       // Verify expected ZF/NF/VF for ADD/SUB/LW/SW.
       verify_flags(.A(A), .B(B), .ALU_out($signed(expected_result)));
     end

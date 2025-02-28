@@ -148,10 +148,10 @@ module ALU_tb();
       reg [5:0] expected_second_level_sum[0:1]; // expected second level sums
 
       // Get the expected first level sums.
-      expected_first_level_sum[3] = $signed(A[15:12]); + $signed(B[15:12]);
-      expected_first_level_sum[2] = $signed(A[11:8]); + $signed(B[11:8]);
-      expected_first_level_sum[1] = $signed(A[7:4]); + $signed(B[7:4]);
-      expected_first_level_sum[0] = $signed(A[3:0]); + $signed(B[3:0]);
+      expected_first_level_sum[3] = $signed(A[15:12]) + $signed(B[15:12]);
+      expected_first_level_sum[2] = $signed(A[11:8]) + $signed(B[11:8]);
+      expected_first_level_sum[1] = $signed(A[7:4]) + $signed(B[7:4]);
+      expected_first_level_sum[0] = $signed(A[3:0]) + $signed(B[3:0]);
 
       // Get the expected second level sums.
       expected_second_level_sum[1] = $signed(expected_first_level_sum[3]) + $signed(expected_first_level_sum[2]);
@@ -305,7 +305,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the PADDSB instruction.
-  task verify_paddsb_sum(input wire [15:0] A, input wire [15:0] B);
+  task verify_paddsb_sum(input [15:0] A, input [15:0] B);
       // Apply saturation based on the overflow flags for each nibble in the expected_sum array
     begin
       reg pos_overflow[0:3];

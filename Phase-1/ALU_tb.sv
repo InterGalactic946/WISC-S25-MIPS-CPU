@@ -89,7 +89,7 @@ module ALU_tb();
         end
       end
 
-      $display("A: 0x%h, B: 0x%h, Sum: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  A, B, result, expected_neg_overflow, expected_pos_overflow);
+      $display("A: 0x%h, B: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  A, B, result[15], expected_neg_overflow, expected_pos_overflow);
     end
   endtask
 

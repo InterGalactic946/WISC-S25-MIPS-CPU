@@ -1,0 +1,10 @@
+# vlib ./work/CLA_8bit_tb
+#  vlog +acc -work ./work/CLA_8bit_tb -stats=none /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/CLA_4bit.v /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/CLA_8bit.v /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/CLA_8bit_tb.v 
+# QuestaSim vlog 2023.2_1 Compiler 2023.05 May 12 2023
+# -- Compiling module CLA_4bit
+# -- Compiling module CLA_8bit
+# -- Compiling module CLA_8bit_tb
+# 
+# Top level modules:
+# 	CLA_8bit_tb
+#  quit -f

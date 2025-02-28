@@ -1,0 +1,9 @@
+# vlib ./work/Shifter_tb
+#  vlog +acc -work ./work/Shifter_tb -stats=none /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/Shifter.v /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/Shifter_tb.v 
+# QuestaSim vlog 2023.2_1 Compiler 2023.05 May 12 2023
+# -- Compiling module Shifter
+# -- Compiling module Shifter_tb
+# 
+# Top level modules:
+# 	Shifter_tb
+#  quit -f

@@ -1,0 +1,11 @@
+# vlib ./work/RED_Unit_tb
+#  vlog +acc -work ./work/RED_Unit_tb -stats=none /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/CLA_4bit.v /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/CLA_8bit.v /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/RED_Unit.v /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/RED_Unit_tb.sv 
+# QuestaSim vlog 2023.2_1 Compiler 2023.05 May 12 2023
+# -- Compiling module CLA_4bit
+# -- Compiling module CLA_8bit
+# -- Compiling module RED_Unit
+# -- Compiling module RED_Unit_tb
+# 
+# Top level modules:
+# 	RED_Unit_tb
+#  quit -f

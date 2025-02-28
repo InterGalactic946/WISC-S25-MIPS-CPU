@@ -88,9 +88,9 @@ module ALU_tb();
       end 
 
       // Set the flags based on the stim_op.
-      if (stim_op === 4'h0 || stim_op === 4'h1 || stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6)
+      if (stim_op === 4'h0 || stim_op === 4'h1 || stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
         Z_flag = zero;
-      else if (stim_op === 4'h0 || stim_op === 4'h1) begin
+      end else if (stim_op === 4'h0 || stim_op === 4'h1) begin
         N_flag = neg;
         V_flag = ov;
       end else begin

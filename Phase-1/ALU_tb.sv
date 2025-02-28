@@ -92,12 +92,12 @@ module ALU_tb();
         expected_ZF = zero;
       end else if (stim_op === 4'h0 || stim_op === 4'h1) begin
         expected_NF = neg;
-        $display("Signed flag is %h", expected_NF);
         expected_VF = ov;
       end else begin
         expected_ZF = 1'b0;
         expected_VF = 1'b0;
         expected_NF = 1'b0;
+        $display("Here");
       end
 
       // Verify that the zero set flag is working correctly.

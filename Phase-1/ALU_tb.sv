@@ -137,7 +137,7 @@ module ALU_tb();
       end
       
       // Verify expected ZF/NF/VF for ADD/SUB/LW/SW.
-      verify_flags(.A(A), .B(B), .ALU_out(expected_result));
+      verify_flags(.A(A), .B(B), .ALU_out($signed(expected_result)));
     end
   endtask
 

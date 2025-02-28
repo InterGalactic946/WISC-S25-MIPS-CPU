@@ -272,7 +272,7 @@ module ALU_tb();
           else
               pos_overflow[3] = 0;  // No Positive overflow
           neg_overflow[3] = 0;  // No negative overflow
-      end else if (A[31] & B[15]) begin  // Both operands are negative 
+      end else if (A[15] & B[15]) begin  // Both operands are negative 
           // If sum[3] (sign bit) is 0, it means negative overflow occurred
           if (~sum[3]) 
               neg_overflow[3] = 1;  // Negative overflow
@@ -459,7 +459,7 @@ module ALU_tb();
       case(stim_op)
         4'h0, 4'h1, 4'h8, 4'h9: begin 
           // Verify the ADD/SUB/LW/SW sums.
-          verify_sum(.A(stim[31:16]), .B(stim[15:0]));
+          verify_sum(.A(stim[31:16]), .B(B_operand));
 
           // Count up the number of successful operations performed.
           if (!error) begin

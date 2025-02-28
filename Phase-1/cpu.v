@@ -16,8 +16,6 @@ module cpu (
 
   wire [15:0] pc_addr;
   wire [15:0] nxt_pc;
-  wire [15:0] brnch_pc;
-  wire [15:0] pc_taken;
   wire [15:0] pc_inst;
 
   // signals from instruction
@@ -30,21 +28,27 @@ module cpu (
   wire [3:0] Mem_offset;
   wire [7:0] LB_imm;
   wire [8:0] Brnch_imm;
+  wire [2:0] Condition;
 
+  // signals to determine which registers are read
+  wire [3:0] SrcReg1;
+  wire [3:0] SrcReg2;
+  
   // data from registers
   wire [15:0] rs_data;
   wire [15:0] rt_data;
 
   // Control signals
+  wire RegSrc;
   wire RegWrite;
   wire Branch;
   wire ALUSrc;
   wire [2:0] ALUOp;
   wire Z_en, V_en, N_en;
-  wire ConMet;
   wire MemWrite;
   wire MemEnable; // not sure if needed
   wire MemToReg;
+  wire HLT;
 
   // ALU signals
   wire [15:0] ALU_in2;
@@ -59,9 +63,7 @@ module cpu (
   wire [15:0] MemData;
 
   // flag signals
-  wire Z;
-  wire V;
-  wire N;
+  wire Z, V, N;
 
   /////////////////////////////////////////
   // Make reset active high for modules //
@@ -80,8 +82,7 @@ module cpu (
                .rst(rst)
                );
 
-  // TODO: PC ADDER
-  // with nxt_pc rslt
+  // TODO: Create PC Register
 
   /////////////////////////////////////////////////////
   // Decode instruction and get data from registers //
@@ -96,6 +97,11 @@ module cpu (
   assign Mem_offset = pc_inst[3:0];
   assign LB_imm = pc_inst[7:0];
   assign Brnch_imm = pc_inst[8:0];
+  assign Condition = pc_inst[11:9];
+
+  // determine which register we are reading
+  assign SrcReg1 = (RegSrc) ? reg_rd : reg_rs;
+  assign SrcReg2 = (MemWrite) ? reg_rd : reg_rt;
 
   // Read and Write data from registers
   RegisterFile iRF(.clk(clk),
@@ -118,7 +124,7 @@ module cpu (
   assign ALU_in2 = ALUSrc ? {12'h000, ALU_imm} : rt_data;
 
   // sign extend memory offset immediate
-  SignExtender #(4) iMSE (.in(Mem_offset << 1), .out(Mem_ex_offset));
+  SignExtender #(5) iMSE (.in(Mem_offset << 1), .out(Mem_ex_offset));
 
   // TODO: ALU UNIT
   // with ALU_out as rslt
@@ -134,17 +140,20 @@ module cpu (
                     .N(N)
                     );
 
-  SignExtender #(8) iBSE (.in(Brnch_imm), .out(Brnch_ex_imm));
-  // TODO: BRANCH ADDER
-  // with brnch_pc rslt
-
-  assign pc_taken = (Branch & ConMet) ? brnch_pc : nxt_pc;
+  // determines what the next pc address is
+  PC_control iPCC (.C(Condition),
+                   .I(Branch_imm),
+                   .F({Z, V, N}),
+                   .Rs(rs_data),
+                   .Branch(Branch),
+                   .BR(pc_inst[12]),
+                   .PC_in(pc_addr),
+                   .PC_out(nxt_pc)
+                  );
 
   ///////////////////////////////////////////////////////////////////////
   // Read or Write to Memory and write back to Register if applicable //
   /////////////////////////////////////////////////////////////////////
-  assign RegWriteData = MemToReg ? MemData : ALU_out;
-
   // TODO: Finish memory signals
   // Read or Write to Memory
   memory1c iMEM(.data_out(MemData),
@@ -155,6 +164,11 @@ module cpu (
                 .clk(clk),
                 .rst(rst)
                 );
+
+  ///////////////////////////////////////////////////////////
+  // Determine what is being written back to the register //
+  /////////////////////////////////////////////////////////
+  assign RegWriteData = MemToReg ? MemData : ALU_out;
 
 
 endmodule

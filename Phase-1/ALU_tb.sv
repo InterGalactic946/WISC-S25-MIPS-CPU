@@ -493,7 +493,7 @@ module ALU_tb();
         end   
         4'h4, 4'h5, 4'h6: begin
           // Verify the SLL/SRA/ROR output.
-          verify_shift(.A($signed(stim[31:16])), .B($signed(stim[15:0])));
+          verify_shift(.A($signed(stim[31:16])), .B($signed({{12{stim[3]}},stim[3:0]})));
 
           // Count up the number of successful shift operations performed.
           if (!error) begin

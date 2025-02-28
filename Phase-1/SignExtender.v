@@ -8,12 +8,12 @@
 //////////////////////////////////////////////////
 module SignExtender (input wire [15:0] signed_in, output wire [15:0] signed_out);
 
-  parameter MSB = 15 // bit number of the MSB (zero indexed)
+  parameter MSB = 15; // bit number of the MSB (zero indexed)
 
   ///////////////////////////////////
   // Sign extend input to 16 bits //
   /////////////////////////////////
-  assign signed_out = {16{signed_in[MSB]}, signed_in[MSB:0]};
+  assign signed_out = {{16{signed_in[MSB]}}, signed_in[MSB:0]};
 
 endmodule
 

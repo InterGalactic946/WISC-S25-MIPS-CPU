@@ -1,0 +1,1 @@
+add wave /RED_Unit_tb/iDUT/iCLA_first_level_1/A; add wave /RED_Unit_tb/iDUT/iCLA_first_level_1/B; add wave /RED_Unit_tb/expected_sum; add wave /RED_Unit_tb/iDUT/iCLA_first_level_4/Sum;

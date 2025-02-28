@@ -9,6 +9,7 @@
 module ALU_tb();
 
   reg [31:0] stim;    		           // stimulus input vector of type reg
+  reg [15:0] B_operand;              // B operand of the ALu
   reg [3:0] stim_op;    		         // stimulus opcode vector of type reg
   wire [15:0] result; 		           // 16-bit result of the ALU
   wire ZF, VF, NF;     		           // zero, overflow, and signed flag set signasls of the ALU
@@ -34,7 +35,7 @@ module ALU_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  ALU iDUT(.ALU_In1(stim[31:16]),.ALU_In2(stim[15:0]),.Opcode(stim_op),.ALU_Out(result),.Z_set(ZF),.N_set(NF), .V_set(VF));
+  ALU iDUT(.ALU_In1(stim[31:16]),.ALU_In2(B_operand),.Opcode(stim_op),.ALU_Out(result),.Z_set(ZF),.N_set(NF), .V_set(VF));
 
   // Decodes opcodes based on the instruction.
   task automatic decode_opcode();
@@ -413,6 +414,7 @@ module ALU_tb();
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin
     stim = 32'h00000000; // Initialize stimulus
+    B_operand = 16'h0000; // initialize B operand.
     stim_op = 4'h0; // Initialize opcode
     expected_ZF = 1'b0;                  // initialize expected z_set flag
     expected_VF = 1'b0;                  // initialize expected v_set flag
@@ -441,6 +443,12 @@ module ALU_tb();
     repeat (1000000) begin
       stim = $random; // Generate random stimulus
       stim_op = $random & 4'hF; // generate random opcode.
+
+      // Modify the B_operand input based on a shift instruction.
+      if (stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6)
+        B_operand = {{12{stim[3]}}, stim[3:0]};
+      else
+        B_operand = stim[15:0];
 
       // Wait to process the change in the input.
       #1;

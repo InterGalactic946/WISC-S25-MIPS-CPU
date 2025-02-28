@@ -57,8 +57,8 @@ module ALU_tb();
 
   // Task: Get positive and negative overflow for addition or subtraction.
   task automatic get_overflow(
-    input [15:0] A,               // Operand A (16-bit)
-    input [15:0] B,               // Operand B (16-bit)
+    input signed [15:0] A,               // Operand A (16-bit)
+    input signed [15:0] B,               // Operand B (16-bit)
     input signed [15:0] result,   // Expected result (ALU result)
     output reg expected_pos_overflow, // Positive overflow flag
     output reg expected_neg_overflow  // Negative overflow flag
@@ -85,15 +85,15 @@ module ALU_tb();
           // Case when both operands are negative
           expected_neg_overflow = 1'b1;  // Negative overflow detected
         end
-        $display("A: 0x%h, B: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  A, B, result[15], expected_neg_overflow, expected_pos_overflow);
+        $display("A[15]: 0x%h, B[15]: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  A, B, result[15], expected_neg_overflow, expected_pos_overflow);
       end
 
-      $display("Op: 0x%h, A: 0x%h, B: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  stim_op, A, B, result[15], expected_neg_overflow, expected_pos_overflow);
+      $display("Op: 0x%h, A[15]: 0x%h, B[15]: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  stim_op, A[15], B[15], result[15], expected_neg_overflow, expected_pos_overflow);
     end
   endtask
 
   // Task: Verify the flag set signals.
-  task automatic verify_flags(input [15:0] A, input [15:0] B, input signed [15:0] ALU_out);
+  task automatic verify_flags(input signed [15:0] A, input signed [15:0] B, input signed [15:0] ALU_out);
     begin
       // Get the actual flag results.
       reg ov;
@@ -159,7 +159,7 @@ module ALU_tb();
         sum = (A & 16'hFFFE) + (B << 1'b1);
       
       // Get the expected overflow based on addition/subtraction.
-      get_overflow(.A(A), .B(B), .result($signed(sum)), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)); 
+      get_overflow(.A($signed(A)), .B($signed(B)), .result($signed(sum)), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)); 
 
       // Modify the result based on overflow.
       if (pos_ov)

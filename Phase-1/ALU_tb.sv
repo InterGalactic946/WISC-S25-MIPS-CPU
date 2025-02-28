@@ -528,7 +528,7 @@ module ALU_tb();
         end
         4'hA: begin
           // Verify the LLB computation.
-          expected_result = (stim[31:16] & 16'hFF00) | B_operand[7:0];
+          expected_result = (stim[31:16] & 16'hFF00) | (B_operand[7:0]);
 
           // Validate that the result is the expected result.
           if ($signed(result) !== $signed(expected_result)) begin
@@ -558,7 +558,7 @@ module ALU_tb();
 
           // Count up the number of successful XOR operations performed.
           if (!error)
-            llb_operations = llb_operations + 1'b1;
+            lhb_operations = lhb_operations + 1'b1;
         end           
         default: begin
           // Validate that the error flag internal to the ALU is set for invalid opcode.

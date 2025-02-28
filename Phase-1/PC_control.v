@@ -13,7 +13,7 @@
 // condition code (`C`) and flags (`F`) dictate whether a   //
 // branch should be taken using the signed offset `I`.      //
 //////////////////////////////////////////////////////////////
-module PC_control(C, I, F, Branch, BR, PC_in, PC_out);
+module PC_control(C, I, F, Branch, Rs, BR, PC_in, PC_out);
   
   input wire [2:0] C;        // 3-bit condition code
   input wire [8:0] I;        // 9-bit signed offset right shifted by one

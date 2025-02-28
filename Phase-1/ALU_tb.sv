@@ -56,7 +56,6 @@ module ALU_tb();
 
   // Task: Verify the flag set signals.
   task automatic verify_flags(input [15:0] A, input [15:0] B, input [15:0] ALU_out);
-    begin
       // Get the actual flag results.
       reg ov;
       reg zero;
@@ -116,7 +115,6 @@ module ALU_tb();
           $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Overflow set signal expected 0x%h, got 0x%h.", A, B, instr_name, V_flag, VF);
           error = 1'b1;
       end
-    end
   endtask
 
   // Task: Verify the normal sum for ADD/SUB/LW/SW instructions.

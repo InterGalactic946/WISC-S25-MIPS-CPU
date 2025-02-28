@@ -514,7 +514,7 @@ module ALU_tb();
         end
         4'h7: begin
           // Verify the PADDSB sum.
-          verify_paddsb_sum(.A($signed(stim[31:16])), .B($signed(stim[15:0])));
+          verify_paddsb_sum(.A($signed(stim[31:16])), .B($signed(B_operand));
 
           // Count up the number of successful parallel subword operations performed.
           if (!error)

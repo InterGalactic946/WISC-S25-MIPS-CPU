@@ -368,6 +368,7 @@ module ALU_tb();
   // Initialize the inputs and expected outputs and wait till all tests finish.
   initial begin
     stim = 32'h00000000; // Initialize stimulus
+    stim_op = 4'h0; // Initialize opcode
     expected_ZF = 1'b0;                  // initialize expected z_set flag
     expected_VF = 1'b0;                  // initialize expected v_set flag
     expected_NF = 1'b0;                  // initialize expected n_set flag
@@ -392,6 +393,7 @@ module ALU_tb();
     // Apply stimulus as 100000 random input vectors.
     repeat (1000000) begin
       stim = $random; // Generate random stimulus
+      stim_op = $random & 4'hF; // generate random opcode.
 
       // Wait to process the change in the input.
       #1;

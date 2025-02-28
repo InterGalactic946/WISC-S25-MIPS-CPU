@@ -117,7 +117,7 @@ module ALU_tb();
           error = 1'b1;
       end
 
-      $display("A: 0x%h, B: 0x%h, Mode: %s. Sum expected 0x%h, got 0x%h.", A, B, instr_name, expected_result, ALU_Out);
+      $display("A: 0x%h, B: 0x%h, Mode: %s. Sum expected 0x%h, got 0x%h.", A, B, instr_name, expected_result, ALU_out);
     end
   endtask
 

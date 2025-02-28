@@ -467,7 +467,7 @@ module ALU_tb();
         default: begin
           // Validate that the error flag internal to the ALU is set for invalid opcode.
           if (iDUT.error !== 1'b1) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Error flag expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], iDUT.error, 1'h0);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Error flag expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], instr_name, iDUT.error, 1'h0);
             error = 1'b1;
           end
 

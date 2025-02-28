@@ -31,6 +31,7 @@ default:
 	@echo "  make run <mode> [a] - Run tests in a specified directory with a selected mode (c,s,g,v)."
 	@echo "  make log <log_type> - Display logs for a specified directory and log type."
 	@echo "  make clean 	      - Clean up generated files in a specified directory."
+	./venv/Scripts/activate
 
 # Handle different goals (run, log, clean) by parsing arguments passed to make.
 ifeq ($(firstword $(MAKECMDGOALS)), run)

@@ -44,7 +44,7 @@ reg branched;           // Indicates if a branch should be taken
 // Instantiate DUT //
 /////////////////////
 assign F = {Z,V,N};
-PC_control PCC(.C(C), .I(I), .F(F), .Branch(Branch), .BR(BR), .PC_in(PC_in), .PC_out(PC_out));
+PC_control PCC(.C(C), .I(I), .F(F), .Rs(Rs), .Branch(Branch), .BR(BR), .PC_in(PC_in), .PC_out(PC_out));
 
 // Initialize the inputs and expected outputs and wait till all tests finish.
 initial begin
@@ -153,7 +153,7 @@ initial begin
             determineCondition(.C(C), .Z(Z), .V(V), .N(N), .take(branched));
             
             expected_PC = PC_in + 2;
-            expected_PC = (branched) ? expected_PC + Rs : expected_PC;
+            expected_PC = (branched) ? Rs : expected_PC;
             
             #1; // wait for values to be set
 
@@ -183,7 +183,7 @@ initial begin
         $stop();
     end
 
-    $display("YIPPEE :3 !!! All tests passed!");
+    $display("YAHOO!! All tests passed!");
     $stop();
 end
 

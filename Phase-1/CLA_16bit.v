@@ -43,10 +43,10 @@ module CLA_16bit(Sum, Cout, Ovfl, pos_Ovfl, neg_Ovfl, A, B, sub);
   CLA_4bit iCLA [3:0] (.A(A),.B(B_operand), .sub(4'h0), .Cin({Carries[2:0], sub}), .Sum(Sum_step), .P_group(P_group), .G_group(G_group), .neg_Ovfl(), .pos_Ovfl(), .Ovfl(), .Cout());
 
   // Used to know if it is positive overflow.
-  assign pos_Ovfl = ~A[15] & ~B_operand[15] & Sum[15];
+  assign pos_Ovfl = ~A[15] & ~B_operand[15] & Sum_step[15];
 
   // Used to know if it is negative overflow.
-  assign neg_Ovfl = A[15] & B_operand[15] & ~Sum[15];
+  assign neg_Ovfl = A[15] & B_operand[15] & ~Sum_step[15];
 
   // Output the carry out signal.
   assign Cout = Carries[3];

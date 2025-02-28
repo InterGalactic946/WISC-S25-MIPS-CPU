@@ -12,9 +12,9 @@ module ALU_tb();
   reg [3:0] stim_op;    		         // stimulus opcode vector of type reg
   wire [15:0] result; 		           // 16-bit result of the ALU
   wire ZF, VF, NF;     		           // zero, overflow, and signed flag set signasls of the ALU
-  reg Z_flag; 	                     // expected z_set flag
-  reg V_flag;                        // expected v_set flag
-  reg N_flag;                        // expected n_set flag
+  reg expected_ZF; 	                 // expected z_set flag
+  reg expected_VF;                   // expected v_set flag
+  reg expected_NF;                   // expected n_set flag
   string instr_name;                 // name of the instruction
   reg [15:0] expected_result;        // expected result
   reg [19:0] addition_operations;    // number of addition operations performed
@@ -89,31 +89,31 @@ module ALU_tb();
 
       // Set the flags based on the stim_op.
       if (stim_op === 4'h0 || stim_op === 4'h1 || stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
-        Z_flag = zero;
+        expected_ZF = zero;
       end else if (stim_op === 4'h0 || stim_op === 4'h1) begin
-        N_flag = neg;
-        V_flag = ov;
+        expected_NF = neg;
+        expected_VF = ov;
       end else begin
-        Z_flag = 1'b0;
-        N_flag = 1'b0;
-        V_flag = 1'b0;
+        expected_ZF = 1'b0;
+        expected_VF = 1'b0;
+        expected_NF = 1'b0;
       end
 
       // Verify that the zero set flag is working correctly.
-      if (ZF !== Z_flag) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Zero set signal expected 0x%h, got 0x%h.", A, B, instr_name, Z_flag, ZF);
+      if (ZF !== expected_ZF) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Zero set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_ZF, ZF);
           error = 1'b1;
       end
       
       // Verify that the signed set flag is working correctly.
-      if (NF !== N_flag) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Signed set signal expected 0x%h, got 0x%h.", A, B, instr_name, N_flag, NF);
+      if (NF !== expected_NF) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Signed set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_NF, NF);
           error = 1'b1;
       end
 
       // Verify that the overflow set flag is working correctly.
-      if (VF !== V_flag) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Overflow set signal expected 0x%h, got 0x%h.", A, B, instr_name, V_flag, VF);
+      if (VF !== expected_VF) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Overflow set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_VF, VF);
           error = 1'b1;
       end
     end
@@ -369,9 +369,9 @@ module ALU_tb();
   initial begin
     stim = 32'h00000000; // Initialize stimulus
     stim_op = 4'h0; // Initialize opcode
-    Z_flag = 1'b0;                  // initialize expected z_set flag
-    V_flag = 1'b0;                  // initialize expected v_set flag
-    N_flag = 1'b0;                  // initialize expected n_set flag
+    expected_ZF = 1'b0;                  // initialize expected z_set flag
+    expected_VF = 1'b0;                  // initialize expected v_set flag
+    expected_NF = 1'b0;                  // initialize expected n_set flag
     expected_result = 16'h0000;          // initialize expected result
     instr_name = "NULL";                 // initialize the instruction name
     addition_operations = 20'h00000; // initialize addition operation count

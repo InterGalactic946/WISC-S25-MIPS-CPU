@@ -13,11 +13,12 @@
 // condition code (`C`) and flags (`F`) dictate whether a   //
 // branch should be taken using the signed offset `I`.      //
 //////////////////////////////////////////////////////////////
-module PC_control(C, I, F, PC_in, PC_out);
+module PC_control(C, I, F, Branch, PC_in, PC_out);
   
   input wire [2:0] C;        // 3-bit condition code
   input wire [8:0] I;        // 9-bit signed offset right shifted by one
   input wire [2:0] F;        // 3-bit flag register inputs for (F[2] = Z, F[1] = V, F[0] = N)
+  input wire Branch;         // Indicates a branch instruction.
   input wire [15:0] PC_in;   // 16-bit address of the current instruction
   output wire [15:0] PC_out; // 16-bit address of the new instruction
 
@@ -54,7 +55,7 @@ module PC_control(C, I, F, PC_in, PC_out);
                         1'b0;                                      // Default: Condition not met (shouldn't happen if ccc is valid)
 
   // Update the PC_out with the next PC or branched PC based on conditional check.
-  assign PC_out = (Branch_taken) ? PC_branch : PC_next;
+  assign PC_out = (Branch_taken & Branch) ? PC_branch : PC_next;
 
 endmodule
 

@@ -89,6 +89,9 @@ initial begin
 
             // Choose random immediate value
             I = $random%(1'b1 << 10);
+
+            // Choose a random base PC addr
+            PC_in = %random%(1'b1 << 16);
             
             // Reset expected PC addr
             expected_PC = 0;
@@ -145,6 +148,9 @@ initial begin
 
             // Choose random register value (multiple of 2)
             Rs = $random%(1'b1 << 16);
+
+            // Choose a random base PC addr
+            PC_in = %random%(1'b1 << 16);
             
             // Reset expected PC addr
             expected_PC = 0;
@@ -183,7 +189,7 @@ initial begin
         $stop();
     end
 
-    $display("YAHOO!! All tests passed!");
+    $display("YIPEE :3 !! All tests passed!");
     $stop();
 end
 

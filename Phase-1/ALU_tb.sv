@@ -448,11 +448,11 @@ module ALU_tb();
 
           // Count up the number of successful shift operations performed.
           if (!error) begin
-            if (opcode === 4'h4)
+            if (stim_op === 4'h4)
               sll_operations = sll_operations + 1'b1;
-            else if (opcode === 4'h5)
+            else if (stim_op === 4'h5)
               asr_operations = asr_operations + 1'b1;
-            else if (opcode === 4'h6)
+            else if (stim_op === 4'h6)
               ror_operations = ror_operations + 1'b1;
           end
         end

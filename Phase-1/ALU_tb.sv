@@ -428,7 +428,7 @@ module ALU_tb();
           end
 
           // Verify flags for XOR.
-          verify_flags(.A(A), .B(B), .ALU_out(expected_result));
+          verify_flags(.A(stim[31:16]), .B(stim[15:0]), .ALU_out(expected_result));
 
           // Count up the number of successful XOR operations performed.
           if (!error)

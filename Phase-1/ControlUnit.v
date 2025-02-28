@@ -3,15 +3,15 @@
 module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc1, MemRead, MemWrite, Branch, HLT, PCS, ALUOp);
 
     input wire [3:0] Opcode; // Opcode of the current instruction
-    output wire ALUSrc; // Determines whether to use the immediate or register-value as the ALU input
-    output wire MemtoReg; // Allows for choosing between writing from the ALU or memory output to the register file
-    output wire RegWrite; // Determines if the register file is being written to
-    output wire RegSrc1; // Determines if the read register port 1 should use rs or rd, which is read from for LLB/LHB operations
-    output wire MemEnable; // Looks for whether the memory unit is used in this operation
-    output wire MemWrite; // Looks for whether the memory unit is written to in this operation
-    output wire Branch; // Used to signal that the PC should take the value from the branch adder
-    output wire HLT; // Used to signal an HLT instruction
-    output wire PCS; // Used to signal a PCS instruction
+    output wire ALUSrc;      // Determines whether to use the immediate or register-value as the ALU input
+    output wire MemtoReg;    // Allows for choosing between writing from the ALU or memory output to the register file
+    output wire RegWrite;    // Determines if the register file is being written to
+    output wire RegSrc1;     // Determines if the read register port 1 should use rs or rd, which is read from for LLB/LHB operations
+    output wire MemEnable;   // Looks for whether the memory unit is used in this operation
+    output wire MemWrite;    // Looks for whether the memory unit is written to in this operation
+    output wire Branch;      // Used to signal that the PC should take the value from the branch adder
+    output wire HLT;         // Used to signal an HLT instruction
+    output wire PCS;         // Used to signal a PCS instruction
     output wire [3:0] ALUOp; // Control lines into the ALU to allow for the unit to determine its operation
 
     // ALUSrc must be 1 for SLL, SRA, ROR, LW, SW, LLB, and LHB

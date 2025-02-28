@@ -85,7 +85,6 @@ module ALU_tb();
           // Case when both operands are negative
           expected_neg_overflow = 1'b1;  // Negative overflow detected
         end
-        $display("A[15]: 0x%h, B[15]: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  A, B, result[15], expected_neg_overflow, expected_pos_overflow);
       end
 
       $display("Op: 0x%h, A[15]: 0x%h, B[15]: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  stim_op, A[15], B[15], result[15], expected_neg_overflow, expected_pos_overflow);
@@ -146,20 +145,29 @@ module ALU_tb();
   endtask
 
   // Task: Verify the normal sum for ADD/SUB/LW/SW instructions.
-  task automatic verify_sum(input [15:0] A, input [15:0] B);
+  task automatic verify_sum(input signed [15:0] A, input signed [15:0] B);
     begin
       reg [15:0] sum;
+      reg signed [15:0] A_op, B_op;
 
-      // Expected result and for ADD/SUB/LW/SW.
-      if (stim_op === 4'h0)
-        sum = A + B;
-      else if (stim_op === 4'h1)
-        sum = A - B;
-      else if (stim_op === 4'h8 || stim_op === 4'h9)
-        sum = (A & 16'hFFFE) + (B << 1'b1);
+      // By default A_op, B_op are A, B except in case of LW/SW.
+      A_op = A;
+      B_op = B;
+
+      // Expected operands for LW/SW.
+      if (stim_op === 4'h8 || stim_op === 4'h9) begin
+        A_op = (A & 16'hFFFE);
+        B_op = (B << 1'b1);
+      end
+
+      // Form the sum based on the opcode.
+      if (stim_op === 4'h1)
+        sum = A_op - B_op;
+      else 
+        sum = A_op + B_op;
       
       // Get the expected overflow based on addition/subtraction.
-      get_overflow(.A($signed(A)), .B($signed(B)), .result($signed(sum)), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)); 
+      get_overflow(.A($signed(A_op)), .B($signed(B_op)), .result($signed(sum)), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)); 
 
       // Modify the result based on overflow.
       if (pos_ov)
@@ -176,12 +184,12 @@ module ALU_tb();
       end
             
       // Verify expected ZF/NF/VF for ADD/SUB/LW/SW.
-      verify_flags(.A(A), .B(B), .ALU_out($signed(expected_result)));
+      verify_flags(.A($signed(A)), .B($signed(B)), .ALU_out($signed(expected_result)));
     end
   endtask
 
   // Task: Verify the reduction unit sum.
-  task automatic verify_red_sum(input [15:0] A, input [15:0] B);
+  task automatic verify_red_sum(input signed [15:0] A, input signed [15:0] B);
     begin
       reg [4:0] expected_first_level_sum[0:3];  // expected first level sums
       reg [5:0] expected_second_level_sum[0:1]; // expected second level sums
@@ -206,7 +214,7 @@ module ALU_tb();
       end
 
       // Verify flags for RED sum.
-      verify_flags(.A(A), .B(B), .ALU_out($signed(expected_result)));
+      verify_flags(.A($signed(A)), .B($signed(B)), .ALU_out($signed(expected_result)));
     end
   endtask
 
@@ -227,7 +235,7 @@ module ALU_tb();
   endfunction
 
     // Task: Verify the reduction unit sum.
-  task automatic verify_shift(input [15:0] A, input [15:0] B);
+  task automatic verify_shift(input signed [15:0] A, input [15:0] B);
     begin
       // Expected result and for SLL/SRA/ROR.
       if (stim_op === 4'h4)
@@ -244,12 +252,12 @@ module ALU_tb();
       end
 
       // Verify flags for shift.
-      verify_flags(.A(A), .B(B), .ALU_out($signed(expected_result)));
+      verify_flags(.A($signed(A)), .B($signed(B)), .ALU_out($signed(expected_result)));
     end
   endtask
 
   // Task: Check for positive or negative overflow for each 4-bit sub-word.
-  task automatic check_pad_overflow(input [15:0] A, input [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
+  task automatic check_pad_overflow(input signed [15:0] A, input signed [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
     begin
       // Declare the sum variables for each nibble addition.
       reg [3:0] sum; // 4 bits to store the result of adding two 4-bit nibbles
@@ -344,7 +352,7 @@ module ALU_tb();
   endtask
 
   // Task: Verify the PADDSB instruction.
-  task automatic verify_paddsb_sum(input [15:0] A, input [15:0] B);
+  task automatic verify_paddsb_sum(input signed [15:0] A, input signed [15:0] B);
       // Apply saturation based on the overflow flags for each nibble in the expected_sum array
     begin
       reg pos_overflow[0:3];
@@ -400,7 +408,7 @@ module ALU_tb();
       end
 
       // Verify flags for PADDSB.
-      verify_flags(.A(A), .B(B), .ALU_out($signed(expected_result)));
+      verify_flags(.A($signed(A)), .B($signed(B)), .ALU_out($signed(expected_result)));
     end
   endtask
 
@@ -471,7 +479,7 @@ module ALU_tb();
           end
 
           // Verify flags for XOR.
-          verify_flags(.A(stim[31:16]), .B(stim[15:0]), .ALU_out($signed(expected_result)));
+          verify_flags(.A($signed(stim[31:16])), .B($signed(stim[15:0])), .ALU_out($signed(expected_result)));
 
           // Count up the number of successful XOR operations performed.
           if (!error)
@@ -479,7 +487,7 @@ module ALU_tb();
         end
         4'h3: begin
           // Verify the RED sum.
-          verify_red_sum(.A(stim[31:16]), .B(stim[15:0]));
+          verify_red_sum(.A($signed(stim[31:16])), .B($signed(stim[15:0])));
 
           // Count up the number of successful reduction operations performed.
           if (!error)
@@ -487,7 +495,7 @@ module ALU_tb();
         end   
         4'h4, 4'h5, 4'h6: begin
           // Verify the SLL/SRA/ROR output.
-          verify_shift(.A(stim[31:16]), .B(stim[15:0]));
+          verify_shift(.A($signed(stim[31:16])), .B($signed(stim[15:0])));
 
           // Count up the number of successful shift operations performed.
           if (!error) begin
@@ -501,7 +509,7 @@ module ALU_tb();
         end
         4'h7: begin
           // Verify the PADDSB sum.
-          verify_paddsb_sum(.A(stim[31:16]), .B(stim[15:0]));
+          verify_paddsb_sum(.A($signed(stim[31:16])), .B($signed(stim[15:0])));
 
           // Count up the number of successful parallel subword operations performed.
           if (!error)

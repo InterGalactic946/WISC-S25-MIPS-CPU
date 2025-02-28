@@ -392,15 +392,15 @@ def check_logs(logfile, mode):
             content = file.read()
 
             # Check for specific success or failure strings in the transcript
-            if ["ERROR", "FAIL"] in content:
+            if any(word in content for word in ["ERROR", "FAIL"]):
                 return "error"
-            elif ["YAHOO!!", "YIPPEE"] in content:
+            elif any(word in content for word in ["YAHOO!!", "YIPPEE"]):
                 return "success"
             elif "Warning:" in content:
                 return "warning"
             else:
                 return "unknown"
-                
+
     # Direct to the appropriate check function based on the mode
     if mode == "t":
         return check_transcript(logfile)

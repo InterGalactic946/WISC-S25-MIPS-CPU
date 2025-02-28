@@ -78,17 +78,14 @@ module ALU_tb();
       end else begin
         // Addition (stim_op is not 4'h1)
         // Overflow occurs in addition when both operands have the same sign and the result has a different sign.
-        if (~A[15] & ~B[15]) begin
+        if (~A[15] & ~B[15] & result[15]) begin
           // Case when both operands are positive
-          if (result[15]) begin
-            expected_pos_overflow = 1'b1;  // Positive overflow detected
-          end
-        end else if (A[15] & B[15]) begin
+          expected_pos_overflow = 1'b1;  // Positive overflow detected
+        end else if (A[15] & B[15] & ~result[15]) begin
           // Case when both operands are negative
-          if (~result[15]) begin
-            expected_neg_overflow = 1'b1;  // Negative overflow detected
-          end
+          expected_neg_overflow = 1'b1;  // Negative overflow detected
         end
+        $display("A: 0x%h, B: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  A, B, result[15], expected_neg_overflow, expected_pos_overflow);
       end
 
       $display("A: 0x%h, B: 0x%h, Sum[15]: 0x%h, Neg overflow: 0x%h, Pos overflow: 0x%h",  A, B, result[15], expected_neg_overflow, expected_pos_overflow);

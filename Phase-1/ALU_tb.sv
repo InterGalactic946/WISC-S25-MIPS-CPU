@@ -367,7 +367,7 @@ module ALU_tb();
       end else if (neg_overflow[3] === 1) begin
           expected_sum[3] = 4'h8;  // Saturate to max negative value for most significant nibble
       end else begin
-          expected_sum[3] = stim[31:28] + stim[15:12];  // No overflow, use the actual sum
+          expected_sum[3] = stim[31:28] + B_operand[15:12];  // No overflow, use the actual sum
       end
 
       // Handle second Most Significant Nibble (MSMN)
@@ -376,7 +376,7 @@ module ALU_tb();
       end else if (neg_overflow[2] === 1) begin
           expected_sum[2] = 4'h8;  // Saturate to max negative value for second most significant nibble
       end else begin
-          expected_sum[2] = stim[27:24] + stim[11:8];  // No overflow, use the actual sum
+          expected_sum[2] = stim[27:24] + B_operand[11:8];  // No overflow, use the actual sum
       end
 
       // Handle second Least Significant Nibble (LSMN)
@@ -385,7 +385,7 @@ module ALU_tb();
       end else if (neg_overflow[1] === 1) begin
           expected_sum[1] = 4'h8;  // Saturate to max negative value for second least significant nibble
       end else begin
-          expected_sum[1] = stim[23:20] + stim[7:4];  // No overflow, use the actual sum
+          expected_sum[1] = stim[23:20] + B_operand[7:4];  // No overflow, use the actual sum
       end
 
       // Handle Least Significant Nibble (LSN)
@@ -394,7 +394,7 @@ module ALU_tb();
       end else if (neg_overflow[0] === 1) begin
           expected_sum[0] = 4'h8;  // Saturate to max negative value for least significant nibble
       end else begin
-          expected_sum[0] = stim[19:16] + stim[3:0];  // No overflow, use the actual sum
+          expected_sum[0] = stim[19:16] + B_operand[3:0];  // No overflow, use the actual sum
       end
       
       // Form the expected_PSA_sum.
@@ -480,12 +480,12 @@ module ALU_tb();
 
           // Validate that the result is the expected result.
           if ($signed(result) !== $signed(expected_result)) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: XOR. Result expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], expected_result, result);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: XOR. Result expected 0x%h, got 0x%h.", stim[31:16], B_operand, expected_result, result);
             error = 1'b1;
           end
 
           // Verify flags for XOR.
-          verify_flags(.A($signed(stim[31:16])), .B($signed(stim[15:0])), .ALU_out($signed(expected_result)));
+          verify_flags(.A($signed(stim[31:16])), .B($signed(B_operand)), .ALU_out($signed(expected_result)));
 
           // Count up the number of successful XOR operations performed.
           if (!error)
@@ -493,7 +493,7 @@ module ALU_tb();
         end
         4'h3: begin
           // Verify the RED sum.
-          verify_red_sum(.A($signed(stim[31:16])), .B($signed(stim[15:0])));
+          verify_red_sum(.A($signed(stim[31:16])), .B($signed(B_operand)));
 
           // Count up the number of successful reduction operations performed.
           if (!error)
@@ -501,7 +501,7 @@ module ALU_tb();
         end   
         4'h4, 4'h5, 4'h6: begin
           // Verify the SLL/SRA/ROR output.
-          verify_shift(.A($signed(stim[31:16])), .B($signed({{12{stim[3]}},stim[3:0]})));
+          verify_shift(.A($signed(stim[31:16])), .B($signed(B_operand)));
 
           // Count up the number of successful shift operations performed.
           if (!error) begin
@@ -524,7 +524,7 @@ module ALU_tb();
         default: begin
           // Validate that the error flag internal to the ALU is set for invalid opcode.
           if (iDUT.error !== 1'b1) begin
-            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Error flag expected 0x%h, got 0x%h.", stim[31:16], stim[15:0], instr_name, iDUT.error, 1'h0);
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Error flag expected 0x%h, got 0x%h.", stim[31:16], B_operand, instr_name, iDUT.error, 1'h0);
             error = 1'b1;
           end
 

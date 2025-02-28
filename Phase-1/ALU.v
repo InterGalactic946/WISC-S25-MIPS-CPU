@@ -18,7 +18,7 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   // ADD/SUB signals
   wire ov;                       // Overflow indicator for addition/subtraction
   wire [15:0] Input_A, Input_B;  // 16-bit inputs to the CLA adder
-  wire [15:0] SUM_Out, SUM_step; // Sum result with saturation handling
+  wire [15:0] SUM_Out;           // Sum result with saturation handling
 
   // XOR signals
   wire [15:0] XOR_Out;
@@ -48,7 +48,7 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   assign Input_B = (Opcode[3:1] == 3'h4) ? ALU_In2 << 1'b1 : ALU_In2;
 
   // Instantiate a 16-bit CLA for ADD/SUB instructions.
-  CLA_16bit iCLA (.A(Input_A), .B(Input_B), .sub(Opcode == 4'h1), .Sum(SUM_step), .Cout(), .Ovfl(ov), .pos_Ovfl(), .neg_Ovfl());
+  CLA_16bit iCLA (.A(Input_A), .B(Input_B), .sub(Opcode == 4'h1), .Sum(SUM_Out), .Cout(), .Ovfl(ov), .pos_Ovfl(), .neg_Ovfl());
   /////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////

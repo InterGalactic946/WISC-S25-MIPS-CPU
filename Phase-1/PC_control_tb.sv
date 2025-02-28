@@ -14,15 +14,15 @@ task determineCondition;
     input V;
     input N;
     output take;
-    assign take =   (C == 3'b000) ? ~Z                    : // Not Equal (Z = 0)
-                    (C == 3'b001) ? Z                     : // Equal (Z = 1)
-                    (C == 3'b010) ? (~Z & ~N)          : // Greater Than (Z = N = 0)
-                    (C == 3'b011) ? N                    : // Less Than (N = 1)
-                    (C == 3'b100) ? (Z | (~Z & ~N)) : // Greater Than or Equal (Z = 1 or Z = N = 0)
-                    (C == 3'b101) ? (Z | N)            : // Less Than or Equal (Z = 1 or N = 1)
-                    (C == 3'b110) ? V                     : // Overflow (V = 1)
-                    (C == 3'b111) ? 1'b1                     : // Unconditional (always executes)
-                    1'b0;                                      // Default: Condition not met (shouldn't happen if ccc is valid)
+    assign take =   (C == 3'b000) ? ~Z                  : // Not Equal (Z = 0)
+                    (C == 3'b001) ? Z                   : // Equal (Z = 1)
+                    (C == 3'b010) ? (~Z & ~N)           : // Greater Than (Z = N = 0)
+                    (C == 3'b011) ? N                   : // Less Than (N = 1)
+                    (C == 3'b100) ? (Z | (~Z & ~N))     : // Greater Than or Equal (Z = 1 or Z = N = 0)
+                    (C == 3'b101) ? (Z | N)             : // Less Than or Equal (Z = 1 or N = 1)
+                    (C == 3'b110) ? V                   : // Overflow (V = 1)
+                    (C == 3'b111) ? 1'b1                : // Unconditional (always executes)
+                    1'b0;                                 // Default: Condition not met (shouldn't happen if ccc is valid)
 
 endtask
 
@@ -35,7 +35,7 @@ reg BR;                 // Indicates a BR instruction vs a B instruction
 reg [15:0] PC_in;       // 16-bit address of the current instruction
 wire [15:0] PC_out;     // 16-bit address of the new instruction
 reg [15:0] expected_PC; // expected PC address given the conditions
-integer operations;  // number of successful operations preformed
+integer operations;     // number of successful operations preformed
 reg error;              // error flag if any test fails to pass
 reg Z, V, N;            // (Z)ero, O(V)erflow, and Sig(N) flags to set F
 reg branched;           // Indicates if a branch should be taken
@@ -48,19 +48,19 @@ PC_control PCC(.C(C), .I(I), .F(F), .Rs(Rs), .Branch(Branch), .BR(BR), .PC_in(PC
 
 // Initialize the inputs and expected outputs and wait till all tests finish.
 initial begin
-    C = 3'b000;     // Not-equal condition
-    I = 9'b0000000;       // No offset
-    Z = 1'b0;       // No flags set 
+    C = 3'b000;             // Not-equal condition
+    I = 9'b0000000;         // No offset
+    Z = 1'b0;               // No flags set 
     V = 1'b0;
     N = 1'b0;
-    Rs = 16'h0000;     // No base value for offset
-    Branch = 1'b0;  // Immediate branching
-    BR = 1'b0;      // Conditional branching
-    PC_in = 16'h0000;  // Start PC addr at mem 0
-    expected_PC = 16'h0000;// Initialize expected PC addr
-    error = 1'b0;   // Initialize no error
-    operations = 0; // Initialize operation counter
-    branched = 1'b0;   // Initialize a non-branched operation
+    Rs = 16'h0000;          // No base value for offset
+    Branch = 1'b0;          // Immediate branching
+    BR = 1'b0;              // Conditional branching
+    PC_in = 16'h0000;       // Start PC addr at mem 0
+    expected_PC = 16'h0000; // Initialize expected PC addr
+    error = 1'b0;           // Initialize no error
+    operations = 0;         // Initialize operation counter
+    branched = 1'b0;        // Initialize a non-branched operation
 
     #5; // wait to initial inputs
 
@@ -89,6 +89,9 @@ initial begin
 
             // Choose random immediate value
             I = $random%(1'b1 << 10);
+
+            // Choose a random base PC addr
+            PC_in = $random%(1'b1 << 16);
             
             // Reset expected PC addr
             expected_PC = 0;
@@ -145,6 +148,9 @@ initial begin
 
             // Choose random register value (multiple of 2)
             Rs = $random%(1'b1 << 16);
+
+            // Choose a random base PC addr
+            PC_in = $random%(1'b1 << 16);
             
             // Reset expected PC addr
             expected_PC = 0;
@@ -183,7 +189,7 @@ initial begin
         $stop();
     end
 
-    $display("YAHOO!! All tests passed!");
+    $display("YIPPEE :3 !! All tests passed!");
     $stop();
 end
 

@@ -32,6 +32,9 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   // SLL/SRA/ROR signals
   wire [15:0] Shift_Out;
 
+  // LLB/LHB signals
+  wire [15:0] LLB_Out, LHB_Out;
+
   // Flag signals
   reg error;                   // Error flag raised when opcode is invalid.
   wire z_flag, v_flag, n_flag; // z, v, n flags set based on the result of the operation.
@@ -72,6 +75,12 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   ////////////////////////////////////////////////////////
   Shifter iSHIFT (.Shift_In(ALU_In1), .Mode(Opcode[1:0]), .Shift_Val(ALU_In2[3:0]), .Shift_Out(Shift_Out));
 
+  ///////////////////////////////////////////////////
+  // Implement LLB/LHB functionality using a MUX  //
+  /////////////////////////////////////////////////
+  assign LLB_Out = (Opcode[3:0] == 4'hA) ? (ALU_In1 & 16'hFF00 | ALU_In2[7:0]) : 16'h0000;
+  assign LHB_Out = (Opcode[3:0] == 4'hB) ? (ALU_In1 & 16'h00FF | ALU_In2[7:0] << 4'h8) : 16'h0000;
+
   //////////////////////////////////////////////
   // Generate ALU output based on the opcode //
   ////////////////////////////////////////////
@@ -83,6 +92,8 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
           4'h3: ALU_Out = RED_Out; // RED
           4'h4, 4'h5, 4'h6: ALU_Out = Shift_Out; // SLL/SRA/ROR
           4'h7: ALU_Out = PADDSB_Out; // PADDSB
+          4'hA: ALU_Out = LLB_Out; // LLB
+          4'hB: ALU_Out = LHB_Out; // LHB
           default: error = 1'b1; // Invalid opcode
       endcase
   end

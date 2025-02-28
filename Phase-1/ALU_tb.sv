@@ -29,6 +29,8 @@ module ALU_tb();
   reg [19:0] ror_operations;         // number of ror operations performed
   reg [19:0] sll_operations;         // number of sll operations performed
   reg [19:0] paddsb_operations;      // number of parallel sub-additions performed
+  reg [19:0] llb_operations;         // number of llb operations performed
+  reg [19:0] lhb_operations;         // number of lhb operations performed
   reg [19:0] nop_operations;         // number of nops performed
   reg error;                         // set an error flag on error
   
@@ -51,6 +53,8 @@ module ALU_tb();
               4'h7: instr_name = "PADDSB";  // Parallel Sub-word Addition
               4'h8: instr_name = "LW";      // Load Word
               4'h9: instr_name = "SW";      // Store Word
+              4'hA: instr_name = "LLB";     // Load Word
+              4'hB: instr_name = "LHB";     // Store Word
               default: instr_name = "INVALID"; // Invalid opcode
           endcase
       end
@@ -475,7 +479,7 @@ module ALU_tb();
         end
         4'h2: begin
           // Get the XOR.
-          expected_result = stim[31:16] ^ stim[15:0];
+          expected_result = stim[31:16] ^ B_operand;
 
           // Validate that the result is the expected result.
           if ($signed(result) !== $signed(expected_result)) begin
@@ -519,7 +523,41 @@ module ALU_tb();
           // Count up the number of successful parallel subword operations performed.
           if (!error)
             paddsb_operations = paddsb_operations + 1'b1;
-        end        
+        end
+        4'hA: begin
+          // Verify the LLB computation.
+          expected_result = (stim[31:16] & 16'hFF00) | B_operand[7:0];
+
+          // Validate that the result is the expected result.
+          if ($signed(result) !== $signed(expected_result)) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Result expected 0x%h, got 0x%h.", stim[31:16], B_operand, instr_name, expected_result, result);
+            error = 1'b1;
+          end
+
+          // Verify flags for LLB.
+          verify_flags(.A($signed(stim[31:16])), .B($signed(B_operand)), .ALU_out($signed(expected_result)));
+
+          // Count up the number of successful XOR operations performed.
+          if (!error)
+            llb_operations = llb_operations + 1'b1;
+        end           
+        4'hB: begin
+          // Verify the LHB computation.
+          expected_result = (stim[31:16] & 16'h00FF) | (B_operand[7:0] << 4'h8);
+
+          // Validate that the result is the expected result.
+          if ($signed(result) !== $signed(expected_result)) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Result expected 0x%h, got 0x%h.", stim[31:16], B_operand, instr_name, expected_result, result);
+            error = 1'b1;
+          end
+
+          // Verify flags for LLB.
+          verify_flags(.A($signed(stim[31:16])), .B($signed(B_operand)), .ALU_out($signed(expected_result)));
+
+          // Count up the number of successful XOR operations performed.
+          if (!error)
+            llb_operations = llb_operations + 1'b1;
+        end           
         default: begin
           // Validate that the error flag internal to the ALU is set for invalid opcode.
           if (iDUT.error !== 1'b1) begin
@@ -541,7 +579,7 @@ module ALU_tb();
                   xor_operations + reduction_operations + 
                   asr_operations + ror_operations + 
                   sll_operations + paddsb_operations + 
-                  lw_operations + sw_operations + 
+                  lw_operations + sw_operations + llb_operations + lhb_operations + 
                   nop_operations);
           // Print individual operation counts.
           $display("Number of Successful Additions Performed: 0x%h.", addition_operations);
@@ -554,6 +592,8 @@ module ALU_tb();
           $display("Number of Successful PADDSBs Performed: 0x%h.", paddsb_operations);
           $display("Number of Successful Load Word Operations Performed: 0x%h.", lw_operations);
           $display("Number of Successful Store Word Operations Performed: 0x%h.", sw_operations);
+          $display("Number of Successful LLB Operations Performed: 0x%h.", llb_operations);
+          $display("Number of Successful LHB Operations Performed: 0x%h.", lhb_operations);
           $display("Number of NOPs Performed: 0x%h.", nop_operations);
           $stop();
       end
@@ -567,7 +607,7 @@ module ALU_tb();
             xor_operations + reduction_operations + 
             asr_operations + ror_operations + 
             sll_operations + paddsb_operations + 
-            lw_operations + sw_operations + 
+            lw_operations + sw_operations + llb_operations + lhb_operations + 
             nop_operations);
     $display("Number of Successful Additions Performed: 0x%h.", addition_operations);
     $display("Number of Successful Subtractions Performed: 0x%h.", subtraction_operations);
@@ -579,6 +619,8 @@ module ALU_tb();
     $display("Number of Successful PADDSBs Performed: 0x%h.", paddsb_operations);
     $display("Number of Successful Load Word Operations Performed: 0x%h.", lw_operations);
     $display("Number of Successful Store Word Operations Performed: 0x%h.", sw_operations);
+    $display("Number of Successful LLB Operations Performed: 0x%h.", llb_operations);
+    $display("Number of Successful LHB Operations Performed: 0x%h.", lhb_operations);
     $display("Number of NOPs Performed: 0x%h.", nop_operations);
 
 

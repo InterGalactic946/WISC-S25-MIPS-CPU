@@ -189,7 +189,7 @@ initial begin
         $stop();
     end
 
-    $display("YIPEE :3 !! All tests passed!");
+    $display("YIPPEE :3 !! All tests passed!");
     $stop();
 end
 

@@ -12,9 +12,9 @@ module ALU_tb();
   reg [3:0] stim_op;    		         // stimulus opcode vector of type reg
   wire [15:0] result; 		           // 16-bit result of the ALU
   wire ZF, VF, NF;     		           // zero, overflow, and signed flag set signasls of the ALU
-  reg expected_ZF; 	                 // expected z_set flag
-  reg expected_VF;                   // expected v_set flag
-  reg expected_NF;                   // expected n_set flag
+  reg Z_flag; 	                     // expected z_set flag
+  reg V_flag;                        // expected v_set flag
+  reg N_flag;                        // expected n_set flag
   string instr_name;                 // name of the instruction
   reg [15:0] expected_result;        // expected result
   reg [19:0] addition_operations;    // number of addition operations performed
@@ -58,9 +58,9 @@ module ALU_tb();
   task verify_flags(input [15:0] A, input [15:0] B, input [15:0] ALU_out);
     begin
       // Get the actual flag results.
-      reg ov, V_flag;
-      reg zero, Z_flag;
-      reg neg, N_flag;
+      reg ov;
+      reg zero;
+      reg neg;
 
       // It is zero when the output is zero.
       zero = ALU_out === 16'h0000;
@@ -369,9 +369,9 @@ module ALU_tb();
   initial begin
     stim = 32'h00000000; // Initialize stimulus
     stim_op = 4'h0; // Initialize opcode
-    expected_ZF = 1'b0;                  // initialize expected z_set flag
-    expected_VF = 1'b0;                  // initialize expected v_set flag
-    expected_NF = 1'b0;                  // initialize expected n_set flag
+    Z_flag = 1'b0;                  // initialize expected z_set flag
+    V_flag = 1'b0;                  // initialize expected v_set flag
+    N_flag = 1'b0;                  // initialize expected n_set flag
     expected_result = 16'h0000;          // initialize expected result
     instr_name = "NULL";                 // initialize the instruction name
     addition_operations = 20'h00000; // initialize addition operation count

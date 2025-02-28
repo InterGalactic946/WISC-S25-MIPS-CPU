@@ -390,7 +390,7 @@ module ALU_tb();
     #5;
 
     // Apply stimulus as 100000 random input vectors.
-    repeat (100000) begin
+    repeat (1000000) begin
       stim = $random; // Generate random stimulus
 
       // Wait to process the change in the input.

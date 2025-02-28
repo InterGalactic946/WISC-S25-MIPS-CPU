@@ -153,7 +153,7 @@ initial begin
             determineCondition(.C(C), .Z(Z), .V(V), .N(N), .take(branched));
             
             expected_PC = PC_in + 2;
-            expected_PC = (branched) ? expected_PC + Rs : expected_PC;
+            expected_PC = (branched) ? Rs : expected_PC;
             
             #1; // wait for values to be set
 

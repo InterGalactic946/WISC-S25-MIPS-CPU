@@ -154,12 +154,12 @@ module cpu_tb();
       );
 
       // If the HLT instruction is encountered, stop the simulation.
-      if (opcode = 4'hF) begin
+      if (opcode === 4'hF) begin
         $display("HLT instruction encountered. Stopping simulation.");
         $stop();
       end
       
-      // Choose the correct operaands for the instruction based on the opcode.
+      // Choose the correct operands for the instruction based on the opcode.
       ChooseALUOperands(
         .opcode(opcode), // Pass opcode to choose operands
         .reg_rs(rs),         // Pass source register 1

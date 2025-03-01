@@ -3,10 +3,9 @@ package cpu_tasks;
   import ALU_tasks::*;
   
   // Task to initialize testbench signals.
-  task automatic Initialize(ref logic clk, ref logic rst_n, ref logic [15:0] pc);
+  task automatic Initialize(ref logic clk, ref logic rst_n);
     begin
       clk = 1'b0;
-      pc = 16'h0000;
       @(negedge clk) rst_n = 1'b0;
       repeat (2) @(posedge clk); // Wait for 2 clock cycles
       @(negedge clk) rst_n = 1'b1; // Deassert reset
@@ -64,7 +63,6 @@ package cpu_tasks;
 
   // Task to decode an instruction and display the decoded information.
   task automatic DecodeInstruction(
-      input logic [15:0] pc,          // The current program counter value
       input logic [15:0] instr,        // The instruction to decode
       output logic [3:0] opcode,       // The decoded opcode
       output string instr_name,        // The decoded instruction name
@@ -252,32 +250,21 @@ package cpu_tasks;
       N_set = result[15];            // Set N flag based on the sign bit
       V_set = expected_pos_overflow | expected_neg_overflow;  // Set V flag based on overflow
 
-      // Set the flags based on the opcode.
-      if (stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
-        Z_set = zero;
-        N_set = 1'b0;
-        V_set = 1'b0;
-      end else begin
-        Z_set = 1'b0;
-        N_set = 1'b0;
-        V_set = 1'b0;
-      end
-      
       $display("Model Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
     end
   endtask
 
   // Task to simulate memory access (for LW and SW)
-  task automatic AccessMemory(input logic [15:0] addr, input logic [15:0] data_in, output logic [15:0] data_out, input logic mem_read, input logic mem_write, ref logic [15:0] data_memory [0:65535]);
+  task automatic AccessMemory(input logic [15:0] addr, input logic [15:0] data_in, output logic [15:0] data_out, input logic MemEnable, input logic MemWrite, ref logic [15:0] data_memory [0:65535]);
     begin
       // Read from memory if mem_read is enabled.
-      if (mem_read) begin
+      if (MemEnable) begin
         data_out = data_memory[addr];  // Read from memory
         $display("Model Acessed data memory at address: 0x%h and read data as: 0x%h", addr, data_out);
       end
 
       // Write to memory if mem_write is enabled.
-      if (mem_write) begin
+      if (MemWrite) begin
         data_memory[addr] = data_in;   // Write to memory
         $display("Model Acessed data memory at address: 0x%h: and wrote new data as 0x%h", addr, data_in);
       end
@@ -285,9 +272,9 @@ package cpu_tasks;
   endtask
 
   // Task to write back the result to the register file.
-  task automatic WriteBack(ref logic [15:0] regfile [0:15], input logic [3:0] rd, input logic [15:0] input_data, input logic wr_enable);
+  task automatic WriteBack(ref logic [15:0] regfile [0:15], input logic [3:0] rd, input logic [15:0] input_data, input logic RegWrite);
     begin
-      if (wr_enable) begin
+      if (RegWrite) begin
         regfile[rd] = input_data;  // Write back to register
         $display("Model Wrote back to register: 0x%h with data: 0x%h", rd, input_data);
       end
@@ -295,27 +282,32 @@ package cpu_tasks;
   endtask
 
   // TASK: It determines if the condition code is met based on the flags.
-  task DetermineNextPC(input logic Branch, input logic BR, input logic [15:0] Rs,  input [2:0] C, input Z, input V, input N, input [15:0] imm, input logic [15:0] PC_in, output [15:0] next_PC);
+  task DetermineNextPC(input logic Branch, input logic BR, input logic [15:0] Rs,  input [2:0] C, input [2:0] F, input [15:0] imm, input logic [15:0] PC_in, output [15:0] next_PC);
+  begin
+    logic taken; // Branch taken flag
+
     // Check if the condition code is invalid.
     if (C === 3'bx || C === 3'bz) begin
-        take = 1'b0;  // Set take to 0 as condition is invalid
+        taken = 1'b0;  // Set take to 0 as condition is invalid
         error = 1'b1; // Set error flag
         return;       // Exit the task early if C is invalid
     end    
     
-    // Determine if the condition is met based on the value of C
-    take = (C === 3'b000) ? ~Z                  : // Not Equal (Z = 0)
-           (C === 3'b001) ? Z                   : // Equal (Z = 1)
-           (C === 3'b010) ? (~Z & ~N)           : // Greater Than (Z = N = 0)
-           (C === 3'b011) ? N                   : // Less Than (N = 1)
-           (C === 3'b100) ? (Z | (~Z & ~N))     : // Greater Than or Equal (Z = 1 or Z = N = 0)
-           (C === 3'b101) ? (Z | N)             : // Less Than or Equal (Z = 1 or N = 1)
-           (C === 3'b110) ? V                   : // Overflow (V = 1)
-           (C === 3'b111) ? 1'b1                : // Unconditional (always executes)
-           1'b0;                                 // Default: Condition not met (shouldn't happen if C is valid)
+    // The branch is taken either unconditionally when C = 3'b111 
+    // or when the condition code matches the flag register setting.
+    taken = (C == 3'b000) ? ~F[2]               : // Not Equal (Z = 0)
+            (C == 3'b001) ?  F[2]               : // Equal (Z = 1)
+            (C == 3'b010) ? (~F[2] & ~F[0])     : // Greater Than (Z = N = 0)
+            (C == 3'b011) ?  F[0]               : // Less Than (N = 1)
+            (C == 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
+            (C == 3'b101) ? (F[2] | F[0])       : // Less Than or Equal (Z = 1 or N = 1)
+            (C == 3'b110) ?  F[1]               : // Overflow (V = 1)
+            (C == 3'b111) ?  1'b1               : // Unconditional (always executes)
+                            1'b0;                // Default: Condition not met (shouldn't happen if C is valid)
     
     // The expected PC addr is the current PC addr + 2 or PC addr + 2 + (I << 1) if branch is taken, or Rs if BR.
-    next_PC = (take & Branch) ? ((BR) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1))) : (PC_in + 16'h0002);
+    next_PC = (taken & Branch) ? ((BR) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1))) : (PC_in + 16'h0002);
+  end
   endtask
 
 endpackage

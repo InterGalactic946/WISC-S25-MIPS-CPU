@@ -2,7 +2,8 @@
 
 module cpu_tb();
 
-  import tb_tasks::*;
+  import Model_tasks::*;
+  import Verification_tasks::*;
 
   ///////////////////////////
   // Stimulus of type reg //
@@ -23,71 +24,26 @@ module cpu_tb();
   logic [3:0] rd;
   logic [15:0] imm;
   logic [15:0] A, B;
-  logic MemRead, MemWrite, RegWrite, Branch, BR;
+  logic ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, ALUOp, Z_en, NV_en; // Control signals
   logic [15:0] reg_data;
   logic [15:0] result;
   logic [15:0] data_memory_output;
   string instr_name;
   logic [2:0] cc;            // Condition code for branch instructions
   logic [15:0] regfile [0:15];        // Register file to verify during execution
-  logic [15:0] instr_memory [0:1023]; // Instruction Memory to be loaded
-  logic [15:0] instr_memory [0:1023]; // Data Memory to be loaded
-  logic flag_reg [2:0];               // Flag register to verify during execution
-  logic error;                       // Error flag to indicate test failure
+  logic [15:0] instr_memory [0:65535]; // Instruction Memory to be loaded
+  logic [15:0] data_memory [0:65535]; // Data Memory to be loaded
+  logic [2:0] flag_reg;               // Flag register to verify during execution
+  logic Z_enable, V_enable, N_enable; // Enable flags for updating flag register
+  logic Z_set, V_set, N_set;          // Flags to be set based on the result of the operation
+  logic PCS;                          // Flag to determine if the next PC is the result of the ALU operation
+  logic error;                        // Error flag to indicate test failure
 
   //////////////////////
   // Instantiate DUT //
   ////////////////////
   cpu iDUT (.clk(clk), .rst_n(rst_n), .hlt(hlt), .pc(pc));
 
-  // Task to verify that all memory locations and registers are zero post initialization.
-  task VerifyPostInitialization();
-      integer addr;
-      reg [15:0] data;
-
-      // Verify that the PC is initialized to 0x0000.
-      if (pc !== expected_pc) begin
-        $display("ERROR: PC not initialized to 0x0000 after reset.");
-        error = 1'b1;
-      end
-
-      // Verify Data Memory (iDATA_MEM)
-      for (addr = 0; addr < 65536; addr = addr + 1) begin
-          data = iDUT.iDATA_MEM.mem[addr]; // Accessing memory array
-          if (data !== 16'h0000) begin
-              $display("ERROR: Data Memory at address %0d: Expected 0x0000, Found 0x%h.", addr, data);
-              error = 1'b1;
-          end
-      end
-
-      // Verify Instruction Memory (iINSTR_MEM)
-      for (addr = 0; addr < 65536; addr = addr + 1) begin
-          data = iDUT.iINSTR_MEM.mem[addr]; // Accessing memory array
-          if (data !== 16'h0000) begin
-              $display("ERROR: Instruction Memory at address %0d: Expected 0x0000, Found 0x%h.", addr, data);
-              error = 1'b1;
-          end
-      end
-
-      // Verify Register File (iRF)
-      for (addr = 0; addr < 16; addr = addr + 1) begin
-          // Set the source registers to each register address
-          iDUT.iRF.SrcReg1 = addr;
-          iDUT.iRF.SrcReg2 = addr;
-
-          // Read the data from both source registers
-          @(posedge clk); // wait for the next clock cycle
-
-          if (iDUT.iRF.SrcData1 !== 16'h0000) begin
-              $display("ERROR: Register File Error at register %0d (SrcData1): Expected 0x0000, Found 0x%h", addr, iDUT.iRF.SrcData1);
-              error = 1'b1;
-          end
-          if (iDUT.iRF.SrcData2 !== 16'h0000) begin
-              $display("ERROR: Register File Error at register %0d (SrcData2): Expected 0x0000, Found 0x%h", addr, iDUT.iRF.SrcData2);
-              error = 1'b1;
-          end
-      end
-  endtask
 
   // Task to initialize the testbench.
   task automatic Setup();
@@ -99,10 +55,10 @@ module cpu_tb();
       $display("Initializing CPU Testbench...");
 
       // Initialize all signals for the testbench.
-      Initialize(.clk(clk), .rst_n(rst_n), .pc(expected_pc));
+      Initialize(.clk(clk), .rst_n(rst_n));
 
       // Verify that all memory locations and registers are zero post initialization.
-      VerifyPostInitialization();
+      VerifyPostInitialization(.instr_memory(instr_memory), .data_memory(data_memory), .regfile(regfile), .pc(pc), .error(error));
 
       // Load instructions into memory for the CPU to execute.
       if (!error) begin
@@ -135,22 +91,58 @@ module cpu_tb();
       // Fetch the current instruction from memory.
       FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
-      // Decode the instruction to extract opcode, rs, rt, rd, imm, and cc.
+      // Verify that the instruction was fetched correctly.
+      VerifyInstructionFetched(.expected_instr(instr), .actual_instr(iDUT.pc_inst), .mem_unit(iDUT.iINSTR_MEM), .instr_memory(instr_memory), .expected_pc(expected_pc), .pc(pc), .error(error));
+
+      // Decode the instruction to extract opcode, rs, rt, rd, imm, and cc, and control signals.
       DecodeInstruction(
-        .pc(next_pc),            // Pass next PC value
-        .instr(instr),           // Pass instruction to decode
-        .instr_name(instr_name), // Pass output for decoded instruction name
-        .opcode(opcode),         // Pass output for decoded opcode
-        .rs(rs),                 // Pass output for decoded rs
-        .rt(rt),                 // Pass output for decoded rt
-        .rd(rd),                 // Pass output for decoded rd
-        .imm(imm),               // Pass output for decoded immediate value
-        .cc(cc)                  // Pass output for decoded condition code
-        .Branch(Branch)          // Pass output for branch flag
-        .BR(BR)                  // Pass output for branch flag
-        .MemRead(MemRead),
+          .instr(instr),
+          .opcode(opcode),
+          .instr_name(instr_name),
+          .rs(rs),
+          .rt(rt),
+          .rd(rd),
+          .imm(imm),
+          .ALUSrc(ALUSrc),
+          .MemtoReg(MemtoReg),
+          .RegWrite(RegWrite),
+          .RegSrc(RegSrc),
+          .MemEnable(MemEnable),
+          .MemWrite(MemWrite),
+          .Branch(Branch),
+          .BR(BR),
+          .HLT(HLT),
+          .PCS(PCS),
+          .ALUOp(ALUOp),
+          .Z_en(Z_en),
+          .NV_en(NV_en),
+          .cc(cc)
+      );
+
+      // Verify that the control signals are correctly decoded.
+      VerifyControlSignals(
+        .opcode(opcode),
+        .instr_name(instr_name),
+        .rs(rs),
+        .rt(rt),
+        .rd(rd),
+        .imm(imm),
+        .ALUSrc(ALUSrc),
+        .MemtoReg(MemtoReg),
+        .RegWrite(RegWrite),
+        .RegSrc(RegSrc),
+        .MemEnable(MemEnable),
         .MemWrite(MemWrite),
-        .RegWrite(RegWrite)
+        .Branch(Branch),
+        .BR(BR),
+        .HLT(HLT),
+        .PCS(PCS),
+        .ALUOp(ALUOp),
+        .Z_en(Z_en),
+        .NV_en(NV_en),
+        .cc(cc),
+        .control_unit(iDUT.iControlUnit),
+        .error(error)
       );
 
       // If the HLT instruction is encountered, stop the simulation.
@@ -171,6 +163,15 @@ module cpu_tb();
         .Input_B(B)
       );
 
+      // Verify that the correct operands were chosen.
+      VerifyALUOperands(
+        .instr_name(instr_name), // Pass instruction
+        .Input_A(A),
+        .Input_B(B),
+        .ALU(iDUT.iALU),
+        .error(error)
+      );
+
       // Execute the instruction based on the opcode and operands.
       ExecuteInstruction(
         .opcode(opcode), // Pass opcode to execute
@@ -178,31 +179,80 @@ module cpu_tb();
         .Input_A(A), // Pass source register 1 value
         .Input_B(B), // Pass source register 2 value
         .result(result), // Pass result of the operation
-        .Z_set(flag_reg[2]),
-        .V_set(flag_reg[1]),
-        .N_set(flag_reg[0])
+        .Z_set(Z_set),
+        .V_set(V_set),
+        .N_set(N_set)
+      );
+
+      // Verify the result of the operation.
+      VerifyExecutionResult(
+        .opcode(opcode), // Pass opcode to verify result
+        .instr_name(instr_name), // Pass instruction
+        .Input_A(A), // Pass source register 1 value
+        .Input_B(B), // Pass source register 2 value
+        .result(result), // Pass result of the operation
+        .Z_set(Z_set),
+        .V_set(V_set),
+        .N_set(N_set),
+        .ALU(iDUT.iALU),
+        .error(error)
       );
 
       // Access the memory based on the opcode and operands.
-      AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .mem_read(MemRead), .mem_write(MemWrite), .data_memory(data_memory));
+      AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .mem_read(MemEnable), .mem_write(MemWrite), .data_memory(data_memory));
+
+      // Verify the memory access operation.
+      VerifyMemoryAccess(
+        .addr(result), // Pass address to access memory
+        .instr_name(instr_name), // Pass instruction
+        .data_in(regfile[rd]), // Pass data to write to memory
+        .data_out(data_memory_output), // Pass data read from memory
+        .mem_read(MemEnable), // Pass memory read enable signal
+        .mem_write(MemWrite), // Pass memory write enable signal  
+        .model_memory(data_memory) // Pass expected data memory
+        .mem_unit(iDUT.iDATA_MEM),
+        .error(error)
+      )
 
       // Choose ALU_output or memory_output based on the opcode.
-      reg_data = (MemRead) ? data_memory_output : ((PCS) ? next_PC : result);
+      reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_PC : result);
 
       // Write the result back to the register file based on the opcode and operands.
-      WriteBack(.regfile(regfile), .reg_rd(rd), .input_data(reg_data), .wr_enable(RegWrite));
+      WriteBack(.regfile(regfile), .reg_rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
+
+      // Verify the write back operation.
+      VerifyWriteBack(
+        .model_regfile(regfile), // Pass register file
+        .instr_name(instr_name), // Pass instruction
+        .reg_rd(rd), // Pass destination register
+        .input_data(reg_data), // Pass data to write back
+        .wr_enable(RegWrite) // Pass write enable signal
+        .reg_file(iDUT.iRF),
+        .error(error)
+      );
 
       // Determine the next PC value based on the opcode and operands.
       DetermineNextPC(
         .Branch(Branch), // Pass branch flag
         .BR(BR), // Pass branch flag
         .cc(cc), // Pass condition code
-        .Z(flag_reg[2]), // Pass Z flag
-        .V(flag_reg[1]), // Pass V flag
-        .N(flag_reg[0]), // Pass N flag
+        .F(flag_reg), // Pass flag register
         .PC_in(expected_pc), // Pass current PC value 
         .imm(imm), // Pass immediate value
         .next_PC(next_pc)
+      );
+
+      // Verify the next PC value.
+      VerifyNextPC(
+        .Branch(Branch), // Pass branch flag
+        .BR(BR), // Pass branch flag
+        .cc(cc), // Pass condition code
+        .F(flag_reg), // Pass flag register
+        .PC_in(expected_pc), // Pass current PC value
+        .imm(imm), // Pass immediate value
+        .next_PC(next_pc),
+        .PC(iDUT.iPC),
+        .error(error)
       );
     end
 
@@ -211,13 +261,27 @@ module cpu_tb();
     $stop();
   end
 
-  // Generate clock signal with 10 ns period
+   // Expected PC value after each instruction.
+  always @(posedge clk)
+    if (!rst_n)
+      expected_pc <= 16'h0000;
+    else
+      expected_pc <= next_pc;
+  
+  // Expected flag register at the end of each instruction.
+  always @(posedge clk)
+    if (!rst_n)
+      flag_reg <= 3'b000;
+    else if (Z_enable)
+      flag_reg[2] <= Z_set;
+    else if (V_enable)
+      flag_reg[1] <= V_set;
+    else if (N_enable)
+      flag_reg[0] <= N_set;
+
+  // Generate clock signal with 10 ns period.
   always 
     #5 clk = ~clk;
-  
-  // Expected PC value after each instruction
-  always @(posedge clk)
-    expected_pc <= next_pc;
 
 endmodule
 

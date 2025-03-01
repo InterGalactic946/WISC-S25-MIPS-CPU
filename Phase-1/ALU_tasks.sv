@@ -35,6 +35,7 @@
     end
   endtask
 
+
   // Task: Return the reduction unit sum.
   task automatic get_red_sum(input signed [15:0] A, input signed [15:0] B);
     begin
@@ -59,6 +60,7 @@
     end
   endtask
 
+
   // Function to calculate the expected ROR result.
   function [15:0] get_ror(input [15:0] data, input [3:0] shift_val;);
     integer i;
@@ -72,6 +74,7 @@
       get_ror = result;
     end
   endfunction
+
 
   // Task: Get the shifted result based on the shift mode.
   task automatic get_shifted_result(input signed [15:0] A, input [15:0] B, input [1:0] mode);
@@ -187,6 +190,7 @@
     end
   endtask
 
+
   // Task: Get the PADDSB sum.
   task automatic get_paddsb_sum(input signed [15:0] A, input signed [15:0] B);
       // Apply saturation based on the overflow flags for each nibble in the expected_sum array
@@ -257,6 +261,7 @@
       return expected_result;
     end
   endtask
+
 
   // Task to select ALU operands based on the instruction opcode.
   task automatic ChooseALUOperands(

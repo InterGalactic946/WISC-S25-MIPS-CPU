@@ -158,7 +158,7 @@ module cpu_tb();
         .reg_rt(rt),         // Pass source register 2
         .reg_rd(rd),         // Pass destination register
         .imm(imm),       // Pass immediate value
-        .regfile(regfile) // Pass register file
+        .regfile(regfile), // Pass register file
         .Input_A(A),
         .Input_B(B)
       );
@@ -209,7 +209,7 @@ module cpu_tb();
         .data_out(data_memory_output), // Pass data read from memory
         .mem_read(MemEnable), // Pass memory read enable signal
         .mem_write(MemWrite), // Pass memory write enable signal  
-        .model_memory(data_memory) // Pass expected data memory
+        .model_memory(data_memory), // Pass expected data memory
         .mem_unit(iDUT.iDATA_MEM),
         .error(error)
       )
@@ -226,7 +226,7 @@ module cpu_tb();
         .instr_name(instr_name), // Pass instruction
         .reg_rd(rd), // Pass destination register
         .input_data(reg_data), // Pass data to write back
-        .wr_enable(RegWrite) // Pass write enable signal
+        .wr_enable(RegWrite), // Pass write enable signal
         .reg_file(iDUT.iRF),
         .error(error)
       );

@@ -62,7 +62,7 @@
 
 
   // Function to calculate the expected ROR result.
-  function [15:0] get_ror(input [15:0] data, input [3:0] shift_val;);
+  function [15:0] get_ror(input [15:0] data, input [3:0] shift_val);
     integer i;
     reg [15:0] result;
     begin
@@ -79,6 +79,8 @@
   // Task: Get the shifted result based on the shift mode.
   task automatic get_shifted_result(input signed [15:0] A, input [15:0] B, input [1:0] mode);
     begin
+      reg signed [15:0] expected_result; // Expected result for the shift operation
+
       // Expected result and for SLL/SRA/ROR.
       if (mode === 2'h0)
         expected_result = A << B[3:0];
@@ -198,6 +200,7 @@
       reg pos_overflow[0:3];
       reg neg_overflow[0:3];
       reg [3:0] expected_sum[0:3];
+      reg signed [15:0] expected_result;
 
       // Get the overflow of the sum.
       check_pad_overflow(.A(A), .B(B), .pos_overflow(pos_overflow), .neg_overflow(neg_overflow));
@@ -208,7 +211,7 @@
       end else if (neg_overflow[3] === 1) begin
           expected_sum[3] = 4'h8;  // Saturate to max negative value for most significant nibble
       end else begin
-          expected_sum[3] = stim[31:28] + B_operand[15:12];  // No overflow, use the actual sum
+          expected_sum[3] = A[15:12] + B[15:12];  // No overflow, use the actual sum
       end
 
       // Handle second Most Significant Nibble (MSMN)
@@ -217,7 +220,7 @@
       end else if (neg_overflow[2] === 1) begin
           expected_sum[2] = 4'h8;  // Saturate to max negative value for second most significant nibble
       end else begin
-          expected_sum[2] = stim[27:24] + B_operand[11:8];  // No overflow, use the actual sum
+          expected_sum[2] = A[11:8] + B[11:8];  // No overflow, use the actual sum
       end
 
       // Handle second Least Significant Nibble (LSMN)
@@ -226,7 +229,7 @@
       end else if (neg_overflow[1] === 1) begin
           expected_sum[1] = 4'h8;  // Saturate to max negative value for second least significant nibble
       end else begin
-          expected_sum[1] = stim[23:20] + B_operand[7:4];  // No overflow, use the actual sum
+          expected_sum[1] = A[11:8] + B[7:4];  // No overflow, use the actual sum
       end
 
       // Handle Least Significant Nibble (LSN)
@@ -235,7 +238,7 @@
       end else if (neg_overflow[0] === 1) begin
           expected_sum[0] = 4'h8;  // Saturate to max negative value for least significant nibble
       end else begin
-          expected_sum[0] = stim[19:16] + B_operand[3:0];  // No overflow, use the actual sum
+          expected_sum[0] = A[3:0] + B_operand[3:0];  // No overflow, use the actual sum
       end
       
       // Form the expected_PSA_sum.
@@ -249,6 +252,8 @@
   // Task: Get the result of the Load Byte (LB) or Load Half Byte (LHB) instruction.
   task automatic get_LB_result(input signed [15:0] A, input signed [15:0] B, input logic mode);
     begin
+      reg [15:0] expected_result; // Expected result for the LB/LHB operation
+
       // Get the expected result based on the mode (LB or LHB)
       if (mode === 1'b0) begin
         // Load Low Byte (LB)

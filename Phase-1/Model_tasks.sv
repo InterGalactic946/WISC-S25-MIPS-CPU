@@ -1,4 +1,4 @@
-package cpu_tasks;
+package Model_tasks;
 
   import ALU_tasks::*;
   

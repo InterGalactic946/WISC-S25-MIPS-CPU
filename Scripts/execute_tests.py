@@ -986,6 +986,7 @@ def execute_test(test_name, args):
 
     # Find all dependencies for the testbench.
     all_dependencies = find_dependencies(test_file)
+    print(all_dependencies)
     
     # Compile the necessary files (if needed) for the testbench.
     compile_files(test_name, all_dependencies, args)

@@ -39,6 +39,7 @@ integer operations;     // number of successful operations preformed
 reg error;              // error flag if any test fails to pass
 reg Z, V, N;            // (Z)ero, O(V)erflow, and Sig(N) flags to set F
 reg branched;           // Indicates if a branch should be taken
+reg [15:0] offset;      // Sign extended immediate offset
 
 /////////////////////
 // Instantiate DUT //
@@ -61,6 +62,7 @@ initial begin
     error = 1'b0;           // Initialize no error
     operations = 0;         // Initialize operation counter
     branched = 1'b0;        // Initialize a non-branched operation
+    offset = 16'h0000;      // Initialize offset
 
     #5; // wait to initial inputs
 
@@ -99,8 +101,9 @@ initial begin
             // Determine if branch is taken
             determineCondition(.C(C), .Z(Z), .V(V), .N(N), .take(branched));
             
+            offset = $signed(I) <<< 1;
             expected_PC = PC_in + 2;
-            expected_PC = (branched) ? expected_PC + (I << 1) : expected_PC;
+            expected_PC = (branched) ? ((I[8]) ? expected_PC - (~(offset-1)) : expected_PC + offset) : expected_PC;
             
             #1; // wait for values to be set
 
@@ -194,3 +197,5 @@ initial begin
 end
 
 endmodule
+
+`default_nettype wire // Set the default back to wire

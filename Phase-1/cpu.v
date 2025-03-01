@@ -1,15 +1,20 @@
 `default_nettype none // Set the default as none to avoid errors
 
-/////////////////////////////////////////////
-// cpu.v                                  //
-//                                       //
-//////////////////////////////////////////
-module cpu (
-  input wire clk,        // System clock
-  input wire rst_n,      // Active low synchronous reset
-  output wire hlt,       // Asserted once the processor finishes an instruction before a HLT instruction
-  output wire [15:0] pc  // PC value over the course of program execution
-);
+///////////////////////////////////////////////////////////
+// cpu.v: Central Processing Unit Module                 //  
+//                                                       //
+// This module represents the CPU core, responsible for  //
+// fetching, decoding, executing instructions, and       //
+// managing memory and registers. It integrates the      //
+// instruction memory, program counter, ALU, registers,  //
+// and control unit to facilitate program execution.     //
+///////////////////////////////////////////////////////////
+module cpu (clk, rst_n, hlt, pc);
+
+  input wire clk;         // System clock
+  input wire rst_n;       // Active low synchronous reset
+  output wire hlt;        // Asserted once the processor finishes an instruction before a HLT instruction
+  output wire [15:0] pc;  // PC value over the course of program execution
 
   ///////////////////////////////////
   // Declare any internal signals //

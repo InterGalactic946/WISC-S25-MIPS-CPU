@@ -1,5 +1,14 @@
-`default_nettype none
+`default_nettype none // Set the default as none to avoid errors
 
+///////////////////////////////////////////////////////////
+// ControlUnit.v: Control Unit Module                    //  
+//                                                       //
+// This module generates control signals for the         //
+// processor based on the given 4-bit opcode. It         //
+// determines ALU operation, memory access, register     //
+// writes, and branch behavior to facilitate execution   //
+// of various instructions.                              //
+///////////////////////////////////////////////////////////
 module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, HLT, PCS, ALUOp, Z_en, NV_en);
 
     input wire [3:0] Opcode; // Opcode of the current instruction
@@ -16,7 +25,9 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWri
     output wire Z_en;        // Signal to turn on the Z flag registers
     output wire NV_end;      // Signal to turn on the N and V flag registers
 
-
+    //////////////////////////////////////////////////////
+    // Generate control signals by decoding the opcode //
+    ////////////////////////////////////////////////////
     // ALUSrc must be 1 for SLL, SRA, ROR, LW, SW, LLB, and LHB
     assign ALUSrc = (Opcode[3]) | (Opcode[2] & ~Opcode[1]) | (Opcode[2] & Opcode[1] & ~Opcode[0]);
 
@@ -56,4 +67,4 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWri
 
 endmodule
 
-`default_nettype wire
+`default_nettype wire  // Reset default behavior at the end

@@ -238,7 +238,7 @@
       end else if (neg_overflow[0] === 1) begin
           expected_sum[0] = 4'h8;  // Saturate to max negative value for least significant nibble
       end else begin
-          expected_sum[0] = A[3:0] + B_operand[3:0];  // No overflow, use the actual sum
+          expected_sum[0] = A[3:0] + B[3:0];  // No overflow, use the actual sum
       end
       
       // Form the expected_PSA_sum.

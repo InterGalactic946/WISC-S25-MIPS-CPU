@@ -271,7 +271,7 @@
 );
     begin
         // Determine Input_A based on opcode
-        if (opcode == 4'hA || opcode == 4'hB) begin
+        if (opcode === 4'hA || opcode === 4'hB) begin
             // For LLB (opcode A) and LHB (opcode B), Input_A comes from rd
             Input_A = regfile[reg_rd];
         end else begin

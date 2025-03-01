@@ -111,36 +111,21 @@ module ALU_tb();
       // Get the positive/negative overflow.
       ov = pos_ov | neg_ov;
 
-      // Set the flags based on the stim_op.
-      if (stim_op === 4'h0 || stim_op === 4'h1) begin
-        expected_ZF = zero;
-        expected_NF = neg;
-        expected_VF = ov;
-      end else if (stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
-        expected_ZF = zero;
-        expected_NF = 1'b0;
-        expected_VF = 1'b0;
-      end else begin
-        expected_ZF = 1'b0;
-        expected_NF = 1'b0;
-        expected_VF = 1'b0;
-      end
-
       // Verify that the zero set flag is working correctly.
-      if (ZF !== expected_ZF) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Zero set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_ZF, ZF);
+      if (ZF !== zero) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Zero set signal expected 0x%h, got 0x%h.", A, B, instr_name, zero, ZF);
           error = 1'b1;
       end
       
       // Verify that the signed set flag is working correctly.
-      if (NF !== expected_NF) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Signed set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_NF, NF);
+      if (NF !== neg) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Signed set signal expected 0x%h, got 0x%h.", A, B, instr_name, neg, NF);
           error = 1'b1;
       end
 
       // Verify that the overflow set flag is working correctly.
-      if (VF !== expected_VF) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Overflow set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_VF, VF);
+      if (VF !== ov) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Overflow set signal expected 0x%h, got 0x%h.", A, B, instr_name, ov, VF);
           error = 1'b1;
       end
     end
@@ -159,7 +144,7 @@ module ALU_tb();
       // Expected operands for LW/SW.
       if (stim_op === 4'h8 || stim_op === 4'h9) begin
         A_op = (A & 16'hFFFE);
-        B_op = (B << 1'b1);
+        B_op = ({B[14:0], 1'b1});
       end
 
       // Form the sum based on the opcode.
@@ -419,9 +404,6 @@ module ALU_tb();
     stim = 32'h00000000; // Initialize stimulus
     B_operand = 16'h0000; // initialize B operand.
     stim_op = 4'h0; // Initialize opcode
-    expected_ZF = 1'b0;                  // initialize expected z_set flag
-    expected_VF = 1'b0;                  // initialize expected v_set flag
-    expected_NF = 1'b0;                  // initialize expected n_set flag
     pos_ov = 1'b0;                       // initialize positive overflow
     neg_ov = 1'b0;                       // initialize negative overflow
     expected_result = 16'h0000;          // initialize expected result
@@ -545,7 +527,7 @@ module ALU_tb();
         end           
         4'hB: begin
           // Verify the LHB computation.
-          expected_result = (stim[31:16] & 16'h00FF) | (B_operand[7:0] << 4'h8);
+          expected_result = (stim[31:16] & 16'h00FF) | ({B_operand[7:0], 8'h00});
 
           // Validate that the result is the expected result.
           if ($signed(result) !== $signed(expected_result)) begin

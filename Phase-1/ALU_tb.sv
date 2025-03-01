@@ -111,22 +111,40 @@ module ALU_tb();
       // Get the positive/negative overflow.
       ov = pos_ov | neg_ov;
 
-      // Verify that the zero set flag is working correctly.
-      if (ZF !== zero) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Zero set signal expected 0x%h, got 0x%h.", A, B, instr_name, zero, ZF);
-          error = 1'b1;
-      end
-      
-      // Verify that the signed set flag is working correctly.
-      if (NF !== neg) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Signed set signal expected 0x%h, got 0x%h.", A, B, instr_name, neg, NF);
-          error = 1'b1;
+      // Set the flags based on the stim_op.
+      if (stim_op === 4'h0 || stim_op === 4'h1) begin
+        expected_ZF = zero;
+        expected_NF = neg;
+        expected_VF = ov;
+      end else if (stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
+        expected_ZF = zero;
+        expected_NF = 1'b0;
+        expected_VF = 1'b0;
+      end else begin
+        expected_ZF = 1'b0;
+        expected_NF = 1'b0;
+        expected_VF = 1'b0;
       end
 
-      // Verify that the overflow set flag is working correctly.
-      if (VF !== ov) begin
-          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Overflow set signal expected 0x%h, got 0x%h.", A, B, instr_name, ov, VF);
-          error = 1'b1;
+      // Verify the correct flags only for ADD/SUB/SLL/SRA/ROR instructions and don't care about the rest as they will not be enabled.
+      if (stim_op === 4'h0 || stim_op === 4'h1 || stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
+        // Verify that the zero set flag is working correctly.
+        if (ZF !== expected_ZF) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Zero set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_ZF, ZF);
+            error = 1'b1;
+        end
+        
+        // Verify that the signed set flag is working correctly.
+        if (NF !== expected_NF) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Signed set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_NF, NF);
+            error = 1'b1;
+        end
+
+        // Verify that the overflow set flag is working correctly.
+        if (VF !== expected_VF) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Overflow set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_VF, VF);
+            error = 1'b1;
+        end
       end
     end
   endtask

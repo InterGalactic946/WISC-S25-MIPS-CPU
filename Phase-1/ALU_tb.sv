@@ -178,11 +178,14 @@ module ALU_tb();
       get_overflow(.A($signed(A_op)), .B($signed(B_op)), .result($signed(sum)), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)); 
 
       // Modify the result based on overflow.
-      if (pos_ov)
-        expected_result = 16'h7FFF;
-      else if (neg_ov)
-        expected_result = 16'h8000;
-      else
+      if (stim_op[3:1] === 4'h0) // ADD/SUB
+        if (pos_ov)
+          expected_result = 16'h7FFF;
+        else if (neg_ov)
+          expected_result = 16'h8000;
+        else
+          expected_result = sum;
+      else // LW/SW
         expected_result = sum;
 
       // Validate that the result is the expected result.

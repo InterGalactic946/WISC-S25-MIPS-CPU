@@ -49,9 +49,11 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   // Instantiate a 16-bit CLA for ADD/SUB instructions.
   CLA_16bit iCLA (.A(Input_A), .B(Input_B), .sub(Opcode == 4'h1), .Sum(SUM_step), .Cout(), .Ovfl(ov), .pos_Ovfl(pos_ov), .neg_Ovfl(neg_ov));
 
-  // Saturate result based on overflow condition.
-  assign SUM_Out = (pos_ov) ? 16'h7FFF : 
-                   (neg_ov) ? 16'h8000 : SUM_step;
+  // Saturate result based on overflow condition for ADD/SUB but wrap around if LW/SW.
+  assign SUM_Out = (opcode[3:0] == 4'h0) ? 
+                   ((pos_ov) ? 16'h7FFF : 
+                    (neg_ov) ? 16'h8000 : SUM_step) 
+                  : SUM_step;
   /////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////

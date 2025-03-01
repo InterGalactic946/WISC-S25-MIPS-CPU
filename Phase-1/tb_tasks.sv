@@ -225,14 +225,16 @@ package cpu_tasks;
           else
             result = 16'h0000; // Default to 0
 
-          // Check for overflow
-          get_overflow(.A(Input_A), .B(Input_B), .opcode(opcode), .result(result), .expected_pos_overflow(expected_pos_overflow), .expected_neg_overflow(expected_neg_overflow));
+          // Check for overflow only for ADD and SUB instructions.
+          if (opcode[3:1] === 3'h0) begin
+            get_overflow(.A(Input_A), .B(Input_B), .opcode(opcode), .result(result), .expected_pos_overflow(expected_pos_overflow), .expected_neg_overflow(expected_neg_overflow));
 
-          // Saturate the result if overflow occurs.
-          if (expected_pos_overflow) begin
-            result = 16'h7FFF;  // Saturate to maximum positive value
-          end else if (expected_neg_overflow) begin
-            result = 16'h8000;  // Saturate to maximum negative value
+            // Saturate the result if overflow occurs.
+            if (expected_pos_overflow) begin
+              result = 16'h7FFF;  // Saturate to maximum positive value
+            end else if (expected_neg_overflow) begin
+              result = 16'h8000;  // Saturate to maximum negative value
+            end
           end
         end
         4'h2: result = Input_A ^ Input_B;      // XOR

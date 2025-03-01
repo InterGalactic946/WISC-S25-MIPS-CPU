@@ -187,7 +187,7 @@ module cpu_tb();
       AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .mem_read(MemRead), .mem_write(MemWrite), .data_memory(data_memory));
 
       // Choose ALU_output or memory_output based on the opcode.
-      reg_data = (MemRead) ? data_memory_output : result;
+      reg_data = (MemRead) ? data_memory_output : ((PCS) ? next_PC : result);
 
       // Write the result back to the register file based on the opcode and operands.
       WriteBack(.regfile(regfile), .reg_rd(rd), .input_data(reg_data), .wr_enable(RegWrite));

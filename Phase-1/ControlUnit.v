@@ -23,7 +23,7 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWri
     output wire PCS;         // Used to signal a PCS instruction
     output wire [3:0] ALUOp; // Control lines into the ALU to allow for the unit to determine its operation
     output wire Z_en;        // Signal to turn on the Z flag registers
-    output wire NV_end;      // Signal to turn on the N and V flag registers
+    output wire NV_en;      // Signal to turn on the N and V flag registers
 
     //////////////////////////////////////////////////////
     // Generate control signals by decoding the opcode //

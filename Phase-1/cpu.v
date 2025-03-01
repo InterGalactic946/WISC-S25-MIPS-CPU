@@ -163,7 +163,7 @@ module cpu (
   assign ALU_In2_step = (ALUSrc) ? imm : SrcReg2_data;
 
   // Sign extend the immediate memory offset.
-  SignExtender #(4) iMSE (.in(Mem_offset << 1'b1), .out(Mem_ex_offset));
+  assign Mem_ex_offset = {{12{Mem_offset[3]}}, Mem_offset};
 
   // Get the second ALU input based on whether it is LW/SW instruction or not.
   assign ALU_In2 = (MemEnable) ? Mem_ex_offset : ALU_In2_step;

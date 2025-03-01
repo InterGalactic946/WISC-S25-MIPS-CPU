@@ -17,7 +17,7 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   //////////////////////////////////////////////
   // ADD/SUB signals
   wire ov, pos_ov, neg_ov;       // Overflow indicators for addition/subtraction
-  wire [15:0] Input_A, Input_B;  // 16-bit inputs to the CLA adder
+  wire [15:0] Input_A, Input_B;  // 16-bit inputs modified to the ALU
   wire [15:0] SUM_Out, SUM_step; // Sum result with saturation handling
 
   // XOR signals
@@ -37,16 +37,15 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
 
   // Flag signals
   reg error;                   // Error flag raised when opcode is invalid.
-  wire z_flag, v_flag, n_flag; // z, v, n flags set based on the result of the operation.
   /////////////////////////////////////////////////////////////////////////////////////////
+
+  // Modify inputs for LW/SW instructions vs. normal ADD.
+  assign Input_A = (Opcode[3:1] == 3'h4) ? ALU_In1 & 16'hFFFE : ALU_In1;
+  assign Input_B = (Opcode[3:1] == 3'h4) ? {ALU_In2[14:0], 1'b0} : ALU_In2;
 
   //////////////////////////////////////////////////////////
   // Implement ADD/SUB functionality of ALU using a CLA  //
   ////////////////////////////////////////////////////////
-  // Modify inputs for LW/SW instructions vs. normal ADD.
-  assign Input_A = (Opcode[3:1] == 3'h4) ? ALU_In1 & 16'hFFFE : ALU_In1;
-  assign Input_B = (Opcode[3:1] == 3'h4) ? ALU_In2 << 1'b1 : ALU_In2;
-
   // Instantiate a 16-bit CLA for ADD/SUB instructions.
   CLA_16bit iCLA (.A(Input_A), .B(Input_B), .sub(Opcode == 4'h1), .Sum(SUM_step), .Cout(), .Ovfl(ov), .pos_Ovfl(pos_ov), .neg_Ovfl(neg_ov));
 
@@ -58,28 +57,31 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   ///////////////////////////////////////////////////////////
   // Implement XOR functionality of ALU using bitwise XOR //
   /////////////////////////////////////////////////////////
-  assign XOR_Out = ALU_In1 ^ ALU_In2;
+  assign XOR_Out = Input_A ^ Input_B;
 
   ///////////////////////////////////////////////////////////////
   // Implement PADDSB functionality using a PSA_16bit module  //
   /////////////////////////////////////////////////////////////
-  PSA_16bit iPSA (.A(ALU_In1), .B(ALU_In2), .Sum(PADDSB_Out));
+  PSA_16bit iPSA (.A(Input_A), .B(Input_B), .Sum(PADDSB_Out));
 
   //////////////////////////////////////////////////////////
   // Implement RED functionality using a RED_Unit module //
   ////////////////////////////////////////////////////////
-  RED_Unit iRED (.A(ALU_In1), .B(ALU_In2), .Sum(RED_Out));
+  RED_Unit iRED (.A(Input_A), .B(Input_B), .Sum(RED_Out));
 
   //////////////////////////////////////////////////////////
   // Implement SLL/SRA/ROR functionality using a Shifter //
   ////////////////////////////////////////////////////////
-  Shifter iSHIFT (.Shift_In(ALU_In1), .Mode(Opcode[1:0]), .Shift_Val(ALU_In2[3:0]), .Shift_Out(Shift_Out));
+  Shifter iSHIFT (.Shift_In(Input_A), .Mode(Opcode[1:0]), .Shift_Val(Input_B[3:0]), .Shift_Out(Shift_Out));
 
   ///////////////////////////////////////////////////
   // Implement LLB/LHB functionality using a MUX  //
   /////////////////////////////////////////////////
-  assign LLB_Out = (Opcode[3:0] == 4'hA) ? (ALU_In1 & 16'hFF00 | ALU_In2[7:0]) : 16'h0000;
-  assign LHB_Out = (Opcode[3:0] == 4'hB) ? (ALU_In1 & 16'h00FF | ALU_In2[7:0] << 4'h8) : 16'h0000;
+  // Loads lower byte of Input_A register with 8-bits of the immediate value. 
+  assign LLB_Out = (Opcode[3:0] == 4'hA) ? ((Input_A & 16'hFF00) | (Input_B[7:0])) : 16'h0000;
+
+  // Loads higher byte of Input_A register with 8-bits of the immediate value, shifted left.
+  assign LHB_Out = (Opcode[3:0] == 4'hB) ? ((Input_A & 16'h00FF) | ({Input_B[7:0], 8'h00})) : 16'h0000;
 
   //////////////////////////////////////////////
   // Generate ALU output based on the opcode //
@@ -102,20 +104,14 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   ////////////////////////////////////////////
   // Set flag signals based on ALU output  //
   //////////////////////////////////////////
-  // z_flag is set when ALU_Out is zero, relevant for ADD/SUB/XOR/SLL/SRA/ROR.
-  assign z_flag = (ALU_Out == 16'h0000);
+  // Z_flag is set when ALU_Out is zero.
+  assign Z_set = (ALU_Out == 16'h0000);
 
-  // v_flag is set for overflow conditions in ADD/SUB operations.
-  assign v_flag = ov;
+  // V_flag is set for overflow conditions in ADD/SUB operations.
+  assign V_set = ov;
 
-  // n_flag is set when the sum result is negative, only for ADD/SUB.
-  assign n_flag = ALU_Out[15];
-
-  // Assign conditionally set flags.
-  assign N_set = (Opcode == 4'h0 | Opcode == 4'h1) ? n_flag : 1'b0;
-  assign V_set = (Opcode == 4'h0 | Opcode == 4'h1) ? v_flag : 1'b0;
-  assign Z_set = ((Opcode == 4'h0) | (Opcode == 4'h1) | (Opcode == 4'h2) |
-                 (Opcode == 4'h4)  | (Opcode == 4'h5) | (Opcode == 4'h6)) ? z_flag : 1'b0;
+  // N_flag is set when the sum result is negative.
+  assign N_set = ALU_Out[15];
   //////////////////////////////////////////////////////////////////////////////////////////
 
 endmodule

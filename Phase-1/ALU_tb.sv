@@ -165,7 +165,7 @@ module ALU_tb();
       // Expected operands for LW/SW.
       if (stim_op === 4'h8 || stim_op === 4'h9) begin
         A_op = (A & 16'hFFFE);
-        B_op = ({B[14:0], 1'b1});
+        B_op = ({B[14:0], 1'b0});
       end
 
       // Form the sum based on the opcode.

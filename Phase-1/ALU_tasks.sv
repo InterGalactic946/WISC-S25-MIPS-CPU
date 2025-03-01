@@ -17,9 +17,9 @@
       if (opcode === 4'h1) begin
         // Subtraction (stim_op = 4'h1)
         if ((A[15] === 1'b0) && (B[15] === 1'b1) && (result[15] === 1'b1)) begin
-          expected_pos_overflow = 1'b1;  // Positive overflow detected (positive - negative giving positive result)
+          expected_pos_overflow = 1'b1;  // Positive overflow detected (positive - negative giving negative result)
         end else if ((A[15] === 1'b1) && (B[15] === 1'b0) && (result[15] === 1'b0)) begin
-          expected_neg_overflow = 1'b1;  // Negative overflow detected (negative - positive giving negative result)
+          expected_neg_overflow = 1'b1;  // Negative overflow detected (negative - positive giving positive result)
         end
       end else begin
         // Addition (stim_op is not 4'h1)

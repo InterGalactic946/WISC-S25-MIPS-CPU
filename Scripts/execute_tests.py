@@ -463,6 +463,7 @@ def compile_files(test_name, dependencies, args):
 
     # Determine the files that need recompilation.
     files_to_compile = get_files_to_compile(dependencies, log_file)
+    print(files_to_compile)
 
     # If no files need recompilation, exit without performing compilation.
     if not files_to_compile:
@@ -986,7 +987,6 @@ def execute_test(test_name, args):
 
     # Find all dependencies for the testbench.
     all_dependencies = find_dependencies(test_file)
-    print(all_dependencies)
     
     # Compile the necessary files (if needed) for the testbench.
     compile_files(test_name, all_dependencies, args)

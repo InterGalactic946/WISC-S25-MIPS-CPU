@@ -259,7 +259,7 @@
   endtask
 
   // Task to select ALU operands based on the instruction opcode.
-  task automatic ChooseOperands(
+  task automatic ChooseALUOperands(
     input [3:0] opcode,         // The opcode for instruction type
     ref [15:0] regfile [0:15], // Register file with 16 registers
     input [3:0] reg_rs,         // Source register 1 (rs)

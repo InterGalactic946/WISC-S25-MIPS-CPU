@@ -404,6 +404,9 @@ module ALU_tb();
     stim = 32'h00000000; // Initialize stimulus
     B_operand = 16'h0000; // initialize B operand.
     stim_op = 4'h0; // Initialize opcode
+    expected_ZF = 1'b0;                  // initialize expected z_set flag
+    expected_VF = 1'b0;                  // initialize expected v_set flag
+    expected_NF = 1'b0;                  // initialize expected n_set flag
     pos_ov = 1'b0;                       // initialize positive overflow
     neg_ov = 1'b0;                       // initialize negative overflow
     expected_result = 16'h0000;          // initialize expected result

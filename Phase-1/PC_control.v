@@ -27,7 +27,8 @@ module PC_control(C, I, F, Branch, Rs, BR, PC_in, PC_out);
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire [15:0] offset;          // Offset to add to the current PC.
+  wire [8:0] offset;           // Offset to add to the current PC.
+  wire [15:0] sext_offset;     // Sign-extended offset.
   wire [15:0] PC_next;         // The next PC value.
   wire [15:0] PC_B;            // The PC value in case branch is taken (for B).
   wire Branch_taken;           // Signal used to determine whether branch is taken.
@@ -40,10 +41,13 @@ module PC_control(C, I, F, Branch, Rs, BR, PC_in, PC_out);
   CLA_16bit iCLA_next (.A(PC_in), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
 
   // Instantiate the Branch adder.
-  CLA_16bit iCLA_branch (.A(PC_next), .B(offset), .sub(1'b0), .Sum(PC_B), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
+  CLA_16bit iCLA_branch (.A(PC_next), .B(sext_offset), .sub(1'b0), .Sum(PC_B), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
 
   // The offset is the signed offset left shifted by 1.
   assign offset = I << 1'b1;
+
+  // Sign extend the offset to 16 bits.
+  assign sext_offset = {{8{offset[8]}}, offset}; // Sign extend the offset to 16 bits.
 
   // The branch is taken either unconditionally when C = 3'b111 or when the conditon code matches the flag register setting.
   assign Branch_taken = (C == 3'b000) ? ~F[2]                    : // Not Equal (Z = 0)

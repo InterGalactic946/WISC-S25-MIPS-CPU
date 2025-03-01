@@ -6,7 +6,7 @@
 //////////////////////////////////////////
 module cpu (
   input wire clk,        // System clock
-  input wire rst_n,      // Active low reset
+  input wire rst_n,      // Active low synchronous reset
   output wire hlt,       // Asserted once the processor finishes an instruction before a HLT instruction
   output wire [15:0] pc  // PC value over the course of program execution
 );
@@ -14,62 +14,60 @@ module cpu (
   ///////////////////////////////////
   // Declare any internal signals //
   /////////////////////////////////
-  wire rst;
+  wire rst; // Active high synchronous reset signal
 
-  wire [15:0] pc_addr;
-  wire [15:0] nxt_pc;
-  wire [15:0] pc_inst;
+  // Signals for the PC and instruction memory
+  wire [15:0] pc_addr; // Current PC address
+  wire [15:0] nxt_pc;  // Next PC address
+  wire [15:0] pc_inst; // Instruction at the current PC address
 
-  // signals from instruction
-  wire [3:0] opcode;
-  wire [3:0] reg_rd;
-  wire [3:0] reg_rs;
-  wire [3:0] reg_rt;
+  // Signals from the decoded instruction
+  wire [3:0] opcode;     // opcode of the instruction
+  wire [3:0] reg_rd;     // register ID of the destination register
+  wire [3:0] reg_rs;     // register ID of the first source register
+  wire [3:0] reg_rt;     // register ID of the second source register
+  wire [3:0] ALU_imm;    // immediate for ALU instructions (SLL/SRA/ROR)
+  wire [3:0] Mem_offset; // offset for memory instructions (LW/SW)
+  wire [7:0] LB_imm;     // immediate for LLB/LHB instructions
+  wire [8:0] Brnch_imm;  // immediate for branch instructions
+  wire [2:0] c_codes;    // condition codes for branch instructions
 
-  wire [3:0] ALU_imm;
-  wire [3:0] Mem_offset;
-  wire [7:0] LB_imm;
-  wire [8:0] Brnch_imm;
-  wire [2:0] c_codes;
-
-  // signals to determine which registers are read
-  wire [3:0] SrcReg1;
-  wire [3:0] SrcReg2;
+  // Register IDs of source registers
+  wire [3:0] SrcReg1; // Register ID of the first source register
+  wire [3:0] SrcReg2; // Register ID of the second source register
   
-  // data from registers
-  wire [15:0] SrcReg1_data;
-  wire [15:0] SrcReg2_data;
+  // Data from registers
+  wire [15:0] SrcReg1_data; // Data from the first source register
+  wire [15:0] SrcReg2_data; // Data from the second source register
 
   // Control signals
-  wire RegSrc;
-  wire RegWrite;
-  wire Branch;
-  wire ALUSrc;
-  wire [3:0] ALUOp;
-  wire Z_en, NV_en;
-  wire Z_set, V_set, N_set;
-  wire MemWrite;
-  wire MemEnable;
-  wire MemToReg;
-  wire HLT;
-  wire PCS;
+  wire RegSrc;               // Selects the register to read from based on LLB/LHB instructions and not
+  wire RegWrite;             // Enables writing to the register file        
+  wire Branch;               // Indicates a branch instruction
+  wire ALUSrc;               // Selects the second ALU input based on the instruction type
+  wire [3:0] ALUOp;          // ALU operation code
+  wire Z_en, NV_en;          // Enables setting the Z, N, and V flags
+  wire Z_set, V_set, N_set;  // Flags set by the ALU
+  wire MemWrite;             // Enables writing to memory
+  wire MemEnable;            // Enables reading from memory
+  wire MemToReg;             // Selects the data to write back to the register file
+  wire HLT;                  // Indicates a HLT instruction
+  wire PCS;                  // Indicates a PCS instruction
 
   // ALU signals
-  wire [15:0] imm; 
-  wire [15:0] ALU_In2_step;
-  wire [15:0] ALU_In2;
-  wire [15:0] ALU_out;
-
-  // Branch signals
-  wire [15:0] Brnch_ex_imm;
+  wire [15:0] imm;           // Sign extended immediate value for ALU operations
+  wire [15:0] ALU_In2_step;  // Second ALU input based on the instruction type
+  wire [15:0] ALU_In2;       // Second ALU input
+  wire [15:0] ALU_out;       // ALU output
 
   // Memory signals
-  wire [15:0] Mem_ex_offset;
-  wire [15:0] RegWriteData;
-  wire [15:0] MemData;
+  wire [15:0] Mem_ex_offset;  // Sign extended memory offset
+  wire [15:0] RegWriteData;   // Data to write back to the register file
+  wire [15:0] MemData;        // Data read from memory
 
-  // flag signals
+  // Flag signals
   wire ZF, VF, NF;
+  //////////////////////////////////////////////////
 
   /////////////////////////////////////////
   // Make reset active high for modules //
@@ -81,16 +79,16 @@ module cpu (
   //////////////////////////////
   // Infer the instruction memory, it is always read enabled and never write enabled.
   memory1c iINSTR_MEM (.data_out(pc_inst),
-               .data_in(16'h0000),
-               .addr(pc_addr),
-               .enable(1'b1),
-               .wr(1'b0),
-               .clk(clk),
-               .rst(rst)
-               );
+                       .data_in(16'h0000),
+                       .addr(pc_addr),
+                       .enable(1'b1),
+                       .wr(1'b0),
+                       .clk(clk),
+                       .rst(rst)
+                      );
 
   // Infer the PC Register.
-  PC_Register(.clk(clk), .rst(rst), .nxt_pc(nxt_pc), .curr_pc(pc_addr));
+  PC_Register iPC (.clk(clk), .rst(rst), .nxt_pc(nxt_pc), .curr_pc(pc_addr));
 
   // Determines what the next pc address is based on branch taken/not.
   PC_control iPCC (.C(c_codes),
@@ -102,7 +100,6 @@ module cpu (
                    .PC_in(pc_addr),
                    .PC_out(nxt_pc)
                   );
-
   /////////////////////////////////////////////////////
   // Decode instruction and get data from registers //
   ///////////////////////////////////////////////////
@@ -154,6 +151,8 @@ module cpu (
                   .NV_en(NV_en)
                   );
 
+  // Halts the processor if a HLT instruction is encountered.
+  assign hlt = HLT;
   ///////////////////////////////////////////////////
   // Execute Instruction based on control signals //
   /////////////////////////////////////////////////
@@ -189,7 +188,6 @@ module cpu (
                     .V(VF),
                     .N(NF)
                     );
-
   ///////////////////////////////////////////////////////////////////////
   // Read or Write to Memory and write back to Register if applicable //
   /////////////////////////////////////////////////////////////////////
@@ -202,14 +200,12 @@ module cpu (
                       .clk(clk),
                       .rst(rst)
                       );
-
   ///////////////////////////////////////////////////////////
   // Determine what is being written back to the register //
   /////////////////////////////////////////////////////////
   // Grab the data from memory for LW for write back or if it's PCS, we send (PC+2) for write back,
   // otherwise send the ALU output.
-  assign RegWriteData = (MemToReg) ? MemData : 
-                                      (PCS) ? nxt_pc : ALU_out;
+  assign RegWriteData = (MemToReg) ? MemData : ((PCS) ? nxt_pc : ALU_out);
 
 endmodule
 

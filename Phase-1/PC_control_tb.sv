@@ -66,8 +66,8 @@ initial begin
 
     // Validate initial base case -- should increment PC by 2
     expected_PC = PC_in + 2;
-    if (PC_out != expected_PC) begin
-        $display("Base Case failed -> Expected PC addr: 0x%h\tGot: ", expected_PC, PC_out);
+    if (PC_out !== expected_PC) begin
+        $display("ERROR: Base Case failed -> Expected PC addr: 0x%h\tGot: ", expected_PC, PC_out);
         error = 1'b1;
         $stop();
     end

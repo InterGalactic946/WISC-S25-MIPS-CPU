@@ -186,7 +186,7 @@ module cpu (clk, rst_n, hlt, pc);
   // Instantiate the flag_register.
   flag_register iFR (.clk(clk),
                     .rst(rst),
-                    .Z_en(Z_en, .Z_set(Z_set),
+                    .Z_en(Z_en), .Z_set(Z_set),
                     .V_en(NV_en), .V_set(N_set),
                     .N_en(NV_en), .N_set(V_set),
                     .Z(ZF),

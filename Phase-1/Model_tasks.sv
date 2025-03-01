@@ -124,7 +124,7 @@ package Model_tasks;
               ALUSrc = 1'b1;    // ALUSrc is 1 for LW
               MemtoReg = 1'b1;  // Memory to register operation
               MemEnable = 1'b1;  // Memory enable
-              MemRead = 1'b1;    // Memory read operation
+              MemWrite = 1'b0;    // Memory read operation
           end
           4'b1001: begin  // SW (opcode 9)
               imm = {{12{instr[3]}}, instr[3:0]};  // Lower 4 bits, sign-extended to 16 bits
@@ -207,7 +207,14 @@ package Model_tasks;
 
 
   // Task to execute an instruction
-  task automatic ExecuteInstruction(input logic [3:0] opcode, input string instr_name, input signed logic [15:0] Input_A, input signed logic [15:0] Input_B, output logic signed [15:0] result, output logic Z_set, output logic N_set, output logic V_set);
+  task automatic ExecuteInstruction(input logic [3:0] opcode,
+                                      input string instr_name,
+                                      input logic signed [15:0] Input_A,
+                                      input logic signed [15:0] Input_B,
+                                      output logic signed [15:0] result,
+                                      output logic Z_set,
+                                      output logic N_set,
+                                      output logic V_set);
     begin
       logic expected_pos_overflow, expected_neg_overflow;
 
@@ -236,6 +243,7 @@ package Model_tasks;
           end
         end
         4'h2: result = Input_A ^ Input_B;      // XOR
+        // TODO: A bunch of these are missing, though I presume you are still working on them
         4'h3: result = get_red_sum(.A(Input_A), .B(Input_B)); // RED
         4'h5, 4'h6, 4'h7: begin
           result = get_shifted_result(.A(Input_A), .shamt(Input_B[3:0]), .mode(opcode[1:0])); // SLL/SRA/ROR
@@ -289,6 +297,7 @@ package Model_tasks;
     // Check if the condition code is invalid.
     if (C === 3'bx || C === 3'bz) begin
         taken = 1'b0;  // Set take to 0 as condition is invalid
+        // TODO: error not declared
         error = 1'b1; // Set error flag
         return;       // Exit the task early if C is invalid
     end    

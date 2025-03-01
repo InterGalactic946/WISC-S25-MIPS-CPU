@@ -34,7 +34,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire [3:0] ALU_imm;    // immediate for ALU instructions (SLL/SRA/ROR)
   wire [3:0] Mem_offset; // offset for memory instructions (LW/SW)
   wire [7:0] LB_imm;     // immediate for LLB/LHB instructions
-  wire [8:0] Brnch_imm;  // immediate for branch instructions
+  wire [8:0] Branch_imm;  // immediate for branch instructions
   wire [2:0] c_codes;    // condition codes for branch instructions
 
   // Register IDs of source registers
@@ -98,7 +98,7 @@ module cpu (clk, rst_n, hlt, pc);
   // Determines what the next pc address is based on branch taken/not.
   PC_control iPCC (.C(c_codes),
                    .I(Branch_imm),
-                   .F({Z, V, N}),
+                   .F({ZF, VF, NF}),
                    .Rs(SrcReg1_data),
                    .Branch(Branch),
                    .BR(pc_inst[12]),
@@ -118,7 +118,7 @@ module cpu (clk, rst_n, hlt, pc);
   assign ALU_imm = pc_inst[3:0];
   assign Mem_offset = pc_inst[3:0];
   assign LB_imm = pc_inst[7:0];
-  assign Brnch_imm = pc_inst[8:0];
+  assign Branch_imm = pc_inst[8:0];
   assign c_codes = pc_inst[11:9];
 
   /* Determine which register we are reading. */
@@ -174,7 +174,7 @@ module cpu (clk, rst_n, hlt, pc);
   assign ALU_In2 = (MemEnable) ? Mem_ex_offset : ALU_In2_step;
 
   // Instantiate ALU.
-  ALU iALU (.ALU_In1(SrcData1),
+  ALU iALU (.ALU_In1(SrcReg1_data),
             .ALU_In2(ALU_In2),
             .Opcode(ALUOp),
             .ALU_Out(ALU_out),

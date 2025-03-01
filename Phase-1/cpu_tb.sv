@@ -199,7 +199,7 @@ module cpu_tb();
       );
 
       // Access the memory based on the opcode and operands.
-      AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .mem_read(MemEnable), .mem_write(MemWrite), .data_memory(data_memory));
+      AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .MemEnable(MemEnable), .MemWrite(MemWrite), .data_memory(data_memory));
 
       // Verify the memory access operation.
       VerifyMemoryAccess(
@@ -212,13 +212,13 @@ module cpu_tb();
         .model_memory(data_memory), // Pass expected data memory
         .mem_unit(iDUT.iDATA_MEM),
         .error(error)
-      )
+      );
 
       // Choose ALU_output or memory_output based on the opcode.
-      reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_PC : result);
+      reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
 
       // Write the result back to the register file based on the opcode and operands.
-      WriteBack(.regfile(regfile), .reg_rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
+      WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
 
       // Verify the write back operation.
       VerifyWriteBack(
@@ -235,11 +235,12 @@ module cpu_tb();
       DetermineNextPC(
         .Branch(Branch), // Pass branch flag
         .BR(BR), // Pass branch flag
-        .cc(cc), // Pass condition code
+        .C(cc), // Pass condition code
         .F(flag_reg), // Pass flag register
         .PC_in(expected_pc), // Pass current PC value 
         .imm(imm), // Pass immediate value
-        .next_PC(next_pc)
+        .next_PC(next_pc),
+        .Rs(reg_data) // TODO: I think this is the right net but it was missing, so double check
       );
 
       // Verify the next PC value.

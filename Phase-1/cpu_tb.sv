@@ -153,7 +153,7 @@ module cpu_tb();
         .RegWrite(RegWrite)
       );
 
-      // If the HLT instruction is encountered, stop the simulation
+      // If the HLT instruction is encountered, stop the simulation.
       if (opcode = 4'hF) begin
         $display("HLT instruction encountered. Stopping simulation.");
         $stop();

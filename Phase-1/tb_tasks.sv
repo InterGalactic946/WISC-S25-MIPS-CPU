@@ -270,13 +270,13 @@ package cpu_tasks;
     begin
       // Read from memory if mem_read is enabled.
       if (mem_read) begin
-        data_out = memory[addr];  // Read from memory
+        data_out = data_memory[addr];  // Read from memory
         $display("Model Acessed data memory at address: 0x%h and read data as: 0x%h", addr, data_out);
       end
 
       // Write to memory if mem_write is enabled.
       if (mem_write) begin
-        memory[addr] = data_in;   // Write to memory
+        data_memory[addr] = data_in;   // Write to memory
         $display("Model Acessed data memory at address: 0x%h: and wrote new data as 0x%h", addr, data_in);
       end
     end

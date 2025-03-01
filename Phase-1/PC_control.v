@@ -47,7 +47,7 @@ module PC_control(C, I, F, Branch, Rs, BR, PC_in, PC_out);
   assign offset = I << 1'b1;
 
   // Sign extend the offset to 16 bits.
-  assign sext_offset = {{8{offset[8]}}, offset}; // Sign extend the offset to 16 bits.
+  assign sext_offset = {{7{offset[8]}}, offset};
 
   // The branch is taken either unconditionally when C = 3'b111 or when the conditon code matches the flag register setting.
   assign Branch_taken = (C == 3'b000) ? ~F[2]                    : // Not Equal (Z = 0)

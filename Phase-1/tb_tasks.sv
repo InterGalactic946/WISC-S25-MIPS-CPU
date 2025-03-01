@@ -1,221 +1,92 @@
 package tb_tasks;
 
-  localparam CAL_GYRO = 16'h2000;
-
-  localparam POS_ACK = 8'hA5;
-  localparam ACK = 8'h5A;
-
-  // Knight board heading directions.
-  typedef enum logic signed [11:0] {NORTH = 12'h000, WEST = 12'h3FF, SOUTH = 12'h7FF, EAST = 12'hBFF} heading_t;
-  
-  // Task to initialize all input signals to default values.
-  task automatic Initialize(ref clk, ref RST_n, ref send_cmd, ref [15:0] cmd);
+  // Task to initialize testbench signals
+  task automatic Initialize(ref logic clk, ref logic rst_n);
     begin
-        // Initialize all signals to the default values.
-        clk = 1'b0;
-        RST_n = 1'b0;
-        send_cmd = 1'b0;
-        cmd = 16'h0000;
-        repeat (2) @(posedge clk); // Wait for a full clock cycle for system to reset.
-        @(negedge clk); 
-        RST_n = 1'b1; // Deassert RST_n on negative edge of clock.
-        repeat (500) @(negedge clk); // Wait for a while.
+      clk = 1'b0;
+      @(negedge clk) rst_n = 1'b0;
+      repeat (2) @(posedge clk); // Wait for 2 clock cycles
+      @(negedge clk) rst_n = 1'b1; // Deassert reset
+      repeat (10) @(posedge clk); // Allow system to stabilize
     end
   endtask
 
-  // Task to wait for a signal to be asserted, otherwise times out.
-  task automatic TimeoutTask(ref sig, ref clk, input int clks2wait, input string signal);
-    fork
-      begin : timeout
-        repeat(clks2wait) @(posedge clk);
-        $display("ERROR: %s not getting asserted and/or held at its value.", signal);
-        $stop(); // Stop simulation on error.
-      end : timeout
-      begin
-        @(posedge sig) disable timeout; // Disable timeout if sig is asserted.
-      end
-    join
-  endtask
-  
-  // Task to send a command to the DUT and verify that the command is sent.
-  task automatic SendCmd(input [15:0] cmd_to_send, ref [15:0] cmd, ref clk, ref send_cmd, ref cmd_sent);
+  // Task to load an instruction image into memory
+  task automatic LoadImage(input string filename, ref logic [31:0] memory [0:1023]);
     begin
-        // cmd is the command to send.
-        cmd = cmd_to_send;
-
-        @(negedge clk) send_cmd = 1'b1; // Assert snd_cmd and begin transmission.
-        @(negedge clk) send_cmd = 1'b0; // Deassert snd_cmd after one clock cycle.
-
-        // Wait for 60000 clocks for cmd_sent to be asserted, else timeout.
-        TimeoutTask(.sig(cmd_sent), .clk(clk), .clks2wait(60000), .signal("cmd_sent"));
+      // Use $readmemh to load the file contents into memory
+      $readmemh(filename, memory);
     end
   endtask
 
-  // Task to check that a move was processed by cmd_proc.
-  task automatic WaitForMove(ref send_resp, ref clk);
-    // Wait till the move is complete and check that send_resp is asserted.
-    TimeoutTask(.sig(send_resp), .clk(clk), .clks2wait(6000000), .signal("send_resp"));
-  endtask
-
-  // Task to wait till a tour move is complete (2 individual moves).
-  task automatic WaitTourMove(ref clk, ref send_resp, ref resp_rdy, ref [7:0] resp, ref [14:0] actual_xx, ref [14:0] actual_yy, ref [4:0] mv_indx, ref fanfare_go);
-      // Wait for the first component of the tour move to be complete.
-      WaitForMove(.send_resp(send_resp), .clk(clk));
-
-      // Check that an ACK is received after the first component of each move.
-      ChkAck(.resp_rdy(resp_rdy), .clk(clk), .resp(resp));
-
-      // Check that fanfare go is asserted after the second component of each move.
-      TimeoutTask(.sig(fanfare_go), .clk(clk), .clks2wait(5000000), .signal("fanfare_go"));
-
-      // Wait for the second component of the tour move to be complete.
-      TimeoutTask(.sig(send_resp), .clk(clk), .clks2wait(1000000), .signal("send_resp"));
-
-      // If it is not the last move, check that an ACK is received after the second component of each move, otherwise check that a POS_ACK is received.
-      if (mv_indx !== 5'h17) begin
-        // Check that an ACK is received after the second component of each move.
-        ChkAck(.resp_rdy(resp_rdy), .clk(clk), .resp(resp));
-      end else begin
-        // Check that an POS_ACK is received after the second component of the last move.
-        ChkPosAck(.resp_rdy(resp_rdy), .clk(clk), .resp(resp));
-      end
-
-      // Verify that the Knight is near the middle of the square after completing a tour move.
-      ChkPos(.clk(clk), .target_xx(actual_xx[14:12]), .target_yy(actual_yy[14:12]), .actual_xx(actual_xx), .actual_yy(actual_yy));
-      
-      $display("Coordinate on the board: (%d, %d)", actual_xx[14:12], actual_yy[14:12]);
-  endtask
-
-  // Task to wait till all moves of the tour are complete.
-  task automatic WaitTourDone(ref clk, ref send_resp, ref resp_rdy, ref [7:0] resp, ref [14:0] actual_xx, ref [14:0] actual_yy, ref [4:0] mv_indx, ref fanfare_go);
-    // Wait till all 24 moves are done.
-    repeat(24) WaitTourMove(.clk(clk), .send_resp(send_resp), .resp_rdy(resp_rdy), .resp(resp), .actual_xx(actual_xx), .actual_yy(actual_yy), .mv_indx(mv_indx), .fanfare_go(fanfare_go));
-  endtask
-
-  // Task to wait till the y offset of the Knight is found and validates the position.
-  task automatic ChkOffset(ref clk, ref tour_go, input [2:0] target_xx, input [2:0] target_yy, ref [14:0] actual_xx, ref [14:0] actual_yy);
+  // Task to fetch an instruction from memory
+  task automatic FetchInstruction(ref logic [31:0] memory [0:1023], ref logic [31:0] pc, output logic [31:0] instr);
     begin
-      // Wait till the calibration of the Y offset is complete (worst case takes 30000000 clocks).
-      TimeoutTask(.sig(tour_go), .clk(clk), .clks2wait(30000000), .signal("tour_go"));
-
-      // Check that the Knight found the correct (x,y) position that it was placed on the board.
-      ChkPos(.clk(clk), .target_xx(target_xx), .target_yy(target_yy), .actual_xx(actual_xx), .actual_yy(actual_yy));
+      // Fetch instruction from memory at PC
+      instr = memory[pc >> 2]; // Assuming PC is byte-addressed and memory is word-addressed
+      $display("Fetching instruction at PC = %h: %h", pc, instr);
     end
   endtask
 
-  // Task to check that we are not off the board.
-  task automatic ChkOffBoard(ref clk, ref RST_n, ref [14:0] actual_xx, ref [14:0] actual_yy);
+  // Task to decode an instruction and identify its opcode and operands
+  task automatic DecodeInstruction(input logic [31:0] instr, output logic [3:0] opcode, output logic [4:0] rs, output logic [4:0] rt, output logic [4:0] rd, output logic [15:0] imm);
     begin
-      // Ignore when we are resetting the DUT.
-      if (RST_n) begin 
-        // If we are not resetting the DUT, check that the actual_xx position is within the 5x5 board.
-        if ((actual_xx < 15'h0000) || (actual_xx > 15'h5000)) begin
-          $display("ERROR: Knight is off the board.");
-          $stop();
-        end
-
-        // If we are not resetting the DUT, check that the actual_yy position is within the 5x5 board.
-        if ((actual_yy < 15'h0000) || (actual_yy > 15'h5000)) begin
-          $display("ERROR: Knight is off the board.");
-          $stop();
-        end
-      end
+      // Decode the instruction
+      opcode = instr[31:28];   // Opcode (4 bits)
+      rs = instr[27:23];       // rs (5 bits)
+      rt = instr[22:18];       // rt (5 bits)
+      rd = instr[17:13];       // rd (5 bits)
+      imm = instr[15:0];       // immediate value (16 bits)
+      $display("Decoded instruction: Opcode = %b, rs = %d, rt = %d, rd = %d, imm = %h", opcode, rs, rt, rd, imm);
     end
   endtask
 
-  // Task to wait for the solution to the KnightsTour to be completed, otherwise times out.
-  task automatic WaitComputeSol(ref start_tour, ref clk);
-    // Wait 8000000 clock cycles for the solution to the KnightsTour to be computed.
-    TimeoutTask(.sig(start_tour), .clk(clk), .clks2wait(8000000), .signal("start_tour"));
-  endtask
-
-  // Task to check if a positive acknowledge is received from the DUT.
-  task automatic ChkPosAck(ref resp_rdy, ref clk, ref [7:0] resp);
-    // Wait 60000 clock cycles, and ensure that a response is received.
-    TimeoutTask(.sig(resp_rdy), .clk(clk), .clks2wait(60000), .signal("resp_rdy"));
-
-    // Check that a positive acknowledge of 0xA5 is received.
-    @(negedge clk) begin
-      if (resp !== POS_ACK) begin
-        $display("ERROR: resp should have been 8'hA5 but was 0x%h", resp);
-        $stop(); 
-      end
-    end
-  endtask
-
-  // Task to check if an acknowledge is received from the DUT.
-  task automatic ChkAck(ref resp_rdy, ref clk, ref [7:0] resp);
-    // Wait 60000 clock cycles, and ensure that a response is received.
-    TimeoutTask(.sig(resp_rdy), .clk(clk), .clks2wait(60000), .signal("resp_rdy"));
-
-    // Check that an acknowledge of 0x5A is received.
-    @(negedge clk) begin
-      if (resp !== ACK) begin
-        $display("ERROR: resp should have been 8'h5A but was 0x%h", resp);
-        $stop(); 
-      end
-    end
-  endtask
-
-  // Task to check if the Knight moved to the correct position within a range.
-  task automatic ChkPos(ref clk, input [2:0] target_xx, input [2:0] target_yy, ref [14:0] actual_xx, ref [14:0] actual_yy);
-    @(negedge clk) begin
-      // Check xx within KnightPhysics +/- 0x200.
-      if ((actual_xx < {target_xx, 12'h600}) || (actual_xx > {target_xx, 12'hA00}) ) begin
-        $display("ERROR: xx position is more than 0x200 outside of target position\ntarget: 0x%h\nactual: 0x%h", {target_xx, 12'h800}, actual_xx);
-        $stop();
-      end
-
-      // Check yy within KnightPhysics +/- 0x200.
-      if ((actual_yy < {target_yy, 12'h600}) || (actual_yy > {target_yy, 12'hA00}) ) begin
-        $display("ERROR: yy position is more than 0x200 outside of target position\ntarget: 0x%h\nactual: 0x%h", {target_yy, 12'h800}, actual_yy);
-        $stop();
-      end
-    end
-  endtask
-
-  // Task to check if the Knight heading is pointed in the correct direction.
-  task automatic ChkHeading(ref clk, input heading_t target_heading, ref signed [19:0] actual_heading);
+  // Task to execute an instruction
+  task automatic ExecuteInstruction(input logic [3:0] opcode, input logic [31:0] rs_data, input logic [31:0] rt_data, input logic [15:0] imm, output logic [31:0] result);
     begin
-      logic signed [11:0] error;
-      logic [11:0] error_abs;
+      case (opcode)
+        4'b0000: result = rs_data + rt_data;          // ADD
+        4'b0001: result = rs_data - rt_data;          // SUB
+        4'b0010: result = rs_data ^ rt_data;          // XOR
+        4'b0011: result = rs_data * rt_data;          // RED (for example, can be any special operation)
+        4'b0100: result = rt_data << imm;             // SLL
+        4'b0101: result = rt_data >>> imm;            // SRA
+        4'b0110: result = {rt_data[0], rt_data[31:1]}; // ROR (example)
+        4'b0111: result = rt_data;                    // PADDSB (example)
+        4'b1000: result = rs_data + imm;              // LW
+        4'b1001: result = rs_data + imm;              // SW
+        4'b1010: result = rs_data;                    // LLB
+        4'b1011: result = rt_data;                    // LHB
+        4'b1100: result = 0;                          // B (branch - will not calculate a result here)
+        4'b1101: result = rs_data;                    // BR (branch)
+        4'b1110: result = rs_data;                    // PCS
+        4'b1111: result = 32'b0;                      // HLT (halt)
+        default: result = 32'b0;                      // Default to 0 if unknown opcode
+      endcase
+      $display("Executed instruction with result: %h", result);
+    end
+  endtask
 
-      // Compute the error.
-      error = actual_heading[19:8] - target_heading;
-
-      // Compute the absolute difference of the error.
-      error_abs = (error[11]) ? -error : error;
-
-      // Check if the absolute error exceeds the threshold.
-      @(negedge clk) begin
-        if (error_abs > 12'h02C) begin
-          $display("ERROR: heading is more than 0x2C outside of target heading\ntarget: 0x%h\nactual: 0x%h", target_heading, actual_heading[19:8]);
-          $stop();
-        end
+  // Task to simulate memory access (for LW and SW)
+  task automatic MemoryAccess(input logic [31:0] addr, input logic [31:0] data_in, output logic [31:0] data_out, input logic mem_read, input logic mem_write, ref logic [31:0] memory [0:1023]);
+    begin
+      if (mem_read) begin
+        data_out = memory[addr >> 2];  // Read from memory
+        $display("Read from memory at address %h: %h", addr, data_out);
+      end
+      if (mem_write) begin
+        memory[addr >> 2] = data_in;   // Write to memory
+        $display("Written to memory at address %h: %h", addr, data_in);
       end
     end
   endtask
 
-
-  // Task to check if the Knight is actively moving forward after a certain time.
-  task automatic WaitMoving(ref clk, ref signed [16:0] velocity_sum);
+  // Task to write back the result to the register file
+  task automatic WriteBack(ref logic [31:0] regfile [0:31], input logic [4:0] rd, input logic [31:0] result);
     begin
-      fork
-        begin : wait_moving
-          repeat(6000000) @(negedge clk);
-          // Never crossed threshold.
-          $display("ERROR: velocity sum is not crossing 0xC000 threshold\nvelocity sum: 0x%h", velocity_sum);
-          $stop();
-        end : wait_moving
-        begin : check_moving
-          repeat(6000000) @(negedge clk) begin
-            if (velocity_sum >= $signed(17'h0C000)) begin
-              disable wait_moving;
-              disable check_moving;
-            end
-          end
-        end : check_moving
-      join
+      regfile[rd] = result;
+      $display("Written back to register x%0d: %h", rd, result);
     end
   endtask
+
 endpackage

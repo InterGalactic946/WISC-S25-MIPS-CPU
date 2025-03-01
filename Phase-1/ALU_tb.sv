@@ -126,14 +126,17 @@ module ALU_tb();
         expected_VF = 1'b0;
       end
 
-      // Verify the correct flags only for ADD/SUB/SLL/SRA/ROR instructions and don't care about the rest as they will not be enabled.
+      // Verify the correct Z flags only for ADD/SUB/XOR/SLL/SRA/ROR instructions and don't care about the rest as they will not be enabled.
       if (stim_op === 4'h0 || stim_op === 4'h1 || stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
         // Verify that the zero set flag is working correctly.
         if (ZF !== expected_ZF) begin
             $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Zero set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_ZF, ZF);
             error = 1'b1;
         end
-        
+      end
+
+      // Verify correct N/V flags only for ADD/SUB instructions and don't care about the rest as they will not be enabled.
+      if (stim_op === 4'h0 || stim_op === 4'h1) begin   
         // Verify that the signed set flag is working correctly.
         if (NF !== expected_NF) begin
             $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Signed set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_NF, NF);

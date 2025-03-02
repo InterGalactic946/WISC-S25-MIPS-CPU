@@ -290,6 +290,7 @@ module cpu_tb();
     else if (Z_en)
       flag_reg[2] <= Z_set;
     else if (NV_en) begin
+      $display("Model V Flag: %b; Model N Flag: %b", V_set, N_set);
       flag_reg[1] <= V_set;
       flag_reg[0] <= N_set;
   end

@@ -41,7 +41,6 @@
     begin
       reg [4:0] expected_first_level_sum[0:3];  // expected first level sums
       reg [5:0] expected_second_level_sum[0:1]; // expected second level sums
-      reg [15:0] expected_sum;                  // expected sum
 
       // Get the expected first level sums.
       expected_first_level_sum[3] = $signed(A[15:12]) + $signed(B[15:12]);

@@ -276,7 +276,8 @@ package Model_tasks;
       N_set = result[15];            // Set N flag based on the sign bit
       V_set = expected_pos_overflow | expected_neg_overflow;  // Set V flag based on overflow
 
-      $display("Model Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
+      if (opcode !== 4'hC && opcode !== 4'hD && opcode !== 4'hE)
+        $display("Model Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
     end
   endtask
 

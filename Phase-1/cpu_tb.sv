@@ -19,6 +19,8 @@ module cpu_tb();
   logic taken;
   logic [15:0] expected_pc;
   logic [15:0] pc;
+  logic [15:0] pc_plus_2;
+  logic signed [15:0] branch_target;
   logic normal_inc, b_inc, br_inc;
   logic [15:0] next_pc;
   logic [15:0] instr;
@@ -265,41 +267,26 @@ module cpu_tb();
             (cc == 3'b110) ?  flag_reg[1]               : // Overflow (V = 1)
             (cc == 3'b111) ?  1'b1               : // Unconditional (always executes)
                             1'b0;                // Default: Condition not met
-
-    // Compute next PC
-    if (taken === 1'b1 && Branch === 1'b1) begin
-      if (BR === 1'b1) begin
-        br_inc = 1'b1;
-        normal_inc = 1'b0;
-        b_inc = 1'b0;
-      end else begin
-        b_inc = 1'b1;
-        normal_inc = 1'b0;
-        br_inc = 1'b0;
-      end
-    end else begin
-      normal_inc = 1'b1;
-      b_inc = 1'b0;
-      br_inc = 1'b0;
-    end
   end
 
-  always @(posedge clk)
-    if (!rst_n)
-      next_pc <= 16'h0000;
-    else
-      next_pc <= expected_pc + 16'h0002;
 
-   // Expected PC value after each instruction.
-  always @(posedge clk)
-    if (!rst_n)
-      expected_pc <= 16'h0000;
-    else if (normal_inc)
-      expected_pc <= next_pc;
-    else if (b_inc)
-      expected_pc <= next_pc + ($signed(imm) <<< 1'b1);
-    else if (br_inc)
-      expected_pc <= regfile[rs];
+  // Incrementer logic (PC + 2)
+  assign pc_plus_2 = expected_pc + 16'h0002;
+
+  // Compute branch target (PC + offset)
+  assign branch_target = pc_plus_2 + ($signed(imm) <<< 1'b1);
+
+  // Select the next PC value based on whether the branch is taken or not
+  assign next_pc = (branch_taken & Branch) ? ((BR) ? regfile[rs] : branch_target) : pc_plus_2;
+
+  // Sequential logic to update PC on the rising edge of the clock
+  always_ff @(posedge clk) begin
+      if (!rst_n) begin
+        expected_pc <= 16'h0000;  // Initialize PC to 0 on reset
+      end else begin
+        expected_pc <= next_pc;  // Update PC to the next address (either normal or branch)
+      end
+  end
   
   // Expected flag register at the end of each instruction.
   always @(posedge clk)

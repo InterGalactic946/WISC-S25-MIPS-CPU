@@ -271,6 +271,8 @@ module cpu_tb();
     end else begin
       next_pc = expected_pc + 16'h0002;
     end
+
+    $display("Instruction Memory at location: ",instr_memory[expected_pc]);
   end
 
    // Expected PC value after each instruction.

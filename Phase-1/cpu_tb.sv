@@ -242,8 +242,6 @@ module cpu_tb();
         if (RegWrite)
           $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
 
-        @(posedge clk); // Wait for the next clock cycle       
-
         // Stop the simulation if an error is detected.
         if(error) begin
           $stop();

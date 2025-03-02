@@ -27,7 +27,8 @@ module cpu_tb();
   logic [3:0] rd;
   logic [15:0] imm;
   logic [15:0] A, B;
-  logic ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, ALUOp, Z_en, NV_en; // Control signals
+  logic ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, Z_en, NV_en; // Control signals
+  logic [3:0] ALUOp;
   logic [15:0] reg_data;
   logic [15:0] result;
   logic [15:0] data_memory_output;
@@ -255,7 +256,12 @@ module cpu_tb();
 
         // Update the PC register with the next PC value.
         expected_pc = next_pc;
-        
+
+        // Update flag register.
+        flag_reg[2] = (Z_enable) ? Z_set;
+        flag_reg[1] = (V_enable) ? V_set;
+        flag_reg[0] = (N_enable) ? N_set;
+
         // Stop the simulation if an error is detected.
         if(error) begin
           $stop();
@@ -267,16 +273,6 @@ module cpu_tb();
       $stop();
     end
   
-  // Expected flag register at the end of each instruction.
-  always @(posedge clk)
-    if (!rst_n)
-      flag_reg <= 3'b000;
-    else if (Z_enable)
-      flag_reg[2] <= Z_set;
-    else if (V_enable)
-      flag_reg[1] <= V_set;
-    else if (N_enable)
-      flag_reg[0] <= N_set;
   
   // Expected register file at the end of each instruction.
   always @(posedge clk)

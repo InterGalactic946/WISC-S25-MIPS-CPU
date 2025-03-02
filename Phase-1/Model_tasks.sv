@@ -205,9 +205,9 @@ package Model_tasks;
   task automatic display_decoded_info(input logic [3:0] opcode, input string instr_name, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] imm, input logic [2:0] cc);
       begin
           case (opcode)
-              4'h0, 4'h1, 4'h2, 4'h3, 4'h4, 4'h5, 4'h6, 4'h7: // Instructions with 2 registers (like ADD, SUB, XOR, etc.)
+              4'h0, 4'h1, 4'h2, 4'h3, 4'h4: // Instructions with 2 registers (like ADD, SUB, XOR, etc.)
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, rd = 0x%h.", opcode, instr_name, rs, rt, rd);
-              4'h8, 4'h9: // LW and SW have an immediate but no rt register
+              4'h5, 4'h6, 4'h7, 4'h8, 4'h9: // LW and SW have an immediate but no rt register
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rs, rd, imm);
               4'hA, 4'hB: // LLB and LHB have an immediate but no rt register
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rd, imm);

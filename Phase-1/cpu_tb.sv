@@ -1,6 +1,4 @@
 `default_nettype none // Set the default as none to avoid errors
-`include "Phase-1/insructions.img"
-`include "Phase-1/data.img"
 
 module cpu_tb();
 
@@ -69,10 +67,10 @@ module cpu_tb();
       // Load instructions into memory for the CPU to execute.
       if (!error) begin
         // Load instructions into memory for the CPU to execute.
-        LoadImage("instructions.img", instr_memory);
+        LoadImage("/filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/instructions.img", instr_memory);
 
         // Load instructions into data memory for the CPU to perform memory operations.
-        LoadImage("data.img", data_memory);
+        LoadImage("/filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU/Phase-1/data.img", data_memory);
         
         // Print a message to indicate successful initialization.
         $display("CPU Testbench initialized successfully.");

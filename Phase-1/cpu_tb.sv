@@ -244,11 +244,6 @@ module cpu_tb();
         if (RegWrite)
           $display("DUT wrote back to register 0x%h with data 0x%h", iDUT.reg_rd, iDUT.RegWriteData);
         
-        // Update flag register.
-        flag_reg[2] = (Z_en) ? Z_set : 1'b0;
-        flag_reg[1] = (NV_en) ? V_set : 1'b0;
-        flag_reg[0] = (NV_en) ? N_set : 1'b0;
-        
         // Determine the next PC value based on the opcode and operands.
         DetermineNextPC(
           .Branch(Branch), // Pass branch flag
@@ -268,7 +263,7 @@ module cpu_tb();
         if(error) begin
           $stop();
         end
-        
+
         // Print a new line between instructions.
         $display("\n");
       end
@@ -290,6 +285,17 @@ module cpu_tb();
       // Verify the flag register at the begining of each instruction.
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
     end
+  
+  // Models the flag register.
+  always @(posedge clk)
+    if(rst_n)
+      flag_reg <= 3'h0;
+    else if (Z_en)
+      flag_reg[2] <= Z_set;
+    else if (NV_en) begin
+      flag_reg[1] <= V_set;
+      flag_reg[0] <= N_set;
+  end
 
   // Generate clock signal with 10 ns period.
   always 

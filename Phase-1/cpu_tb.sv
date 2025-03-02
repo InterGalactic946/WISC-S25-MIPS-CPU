@@ -1,6 +1,6 @@
 `default_nettype none // Set the default as none to avoid errors
-`include Phase-1/insructions.img
-`include Phase-1/data.img
+`include "Phase-1/insructions.img"
+`include "Phase-1/data.img"
 
 module cpu_tb();
 

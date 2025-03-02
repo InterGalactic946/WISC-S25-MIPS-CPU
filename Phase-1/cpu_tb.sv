@@ -288,7 +288,7 @@ module cpu_tb();
   
   // Models the flag register.
   always @(posedge clk)
-    if(rst_n)
+    if(!rst_n)
       flag_reg <= 3'h0;
     else if (Z_en)
       flag_reg[2] <= Z_set;

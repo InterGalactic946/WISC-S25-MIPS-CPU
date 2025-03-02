@@ -221,7 +221,7 @@
       end else if (neg_overflow[1] === 1) begin
           expected_sum[1] = 4'h8;  // Saturate to max negative value for second least significant nibble
       end else begin
-          expected_sum[1] = A[11:8] + B[7:4];  // No overflow, use the actual sum
+          expected_sum[1] = A[7:4] + B[7:4];  // No overflow, use the actual sum
       end
 
       // Handle Least Significant Nibble (LSN)

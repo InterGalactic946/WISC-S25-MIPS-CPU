@@ -19,6 +19,7 @@ module cpu_tb();
   logic taken;
   logic [15:0] expected_pc;
   logic [15:0] pc;
+  logic normal_inc, b_inc, br_inc;
   logic [15:0] next_pc;
   logic [15:0] instr;
   logic [3:0] opcode;
@@ -268,9 +269,13 @@ module cpu_tb();
 
     // Compute next PC
     if (taken === 1'b1 && Branch === 1'b1) begin
-      next_pc = (BR === 1'b1) ? regfile[rs] : (expected_pc + 16'h0002 + ($signed(imm) <<< 1'b1)); 
+      if (BR === 1'b1) begin
+        br_inc = 1'b1;
+      end else begin
+        b_inc = 1'b1;
+      end
     end else begin
-      next_pc = expected_pc + 16'h0002;
+      normal_inc = 1'b1;
     end
   end
 
@@ -278,8 +283,12 @@ module cpu_tb();
   always @(posedge clk)
     if (!rst_n)
       expected_pc <= 16'h0000;
-    else
-      expected_pc <= next_pc;
+    else if (normal_inc)
+      expected_pc <= expected_pc + 16'h0002;
+    else if (b_inc)
+      expected_pc <= expected_pc + 16'h0002 + ($signed(imm) <<< 1'b1);
+    else if (br_inc)
+      expected_pc <= regfile[rs];
   
   // Expected flag register at the end of each instruction.
   always @(posedge clk)

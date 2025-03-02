@@ -39,7 +39,7 @@
       input  logic [3:0] rs, rt, rd, // Register IDs are 4 bits
       input  logic [15:0] imm,       // Immediate value is 16 bits
       input  logic ALUSrc, MemtoReg, RegWrite, RegSrc,
-      input  logic MemEnable, MemWrite, Branch,
+      input  logic MemEnable, MemWrite, Branch, BR
       input  logic [3:0] ALUOp,
       input  logic Z_en, NV_en,
       input  logic [3:0] cc,         // Condition codes

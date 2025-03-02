@@ -350,32 +350,34 @@
       ref logic error                    // Error flag
   );
 
-      // Verify ALU result
-      if (result !== ALU_Out) begin
-          $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected result = 0x%h, but got 0x%h", instr_name, opcode, result, ALU_Out);
-          error = 1'b1;
-      end
-
-      // Verify Z flag for ADD/SUB/SLL/SRA/ROR.
-      if (opcode === 4'h0 || opcode === 4'h1 || opcode === 4'h2 || opcode === 4'h4 || opcode === 4'h5 || opcode === 4'h6) begin
-        if (Z_set !== ALU_Z) begin
-            $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected Z flag = %b, but got %b", instr_name, opcode, Z_set, ALU_Z);
-            error = 1'b1;
-        end
-      end
-
-      // Verify the NV flags for ADD/SUB.
-      if (opcode === 4'h0 || opcode === 4'h1) begin
-        // Verify N flag
-        if (N_set !== ALU_N) begin
-            $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected N flag = %b, but got %b", instr_name, opcode, N_set, ALU_N);
+      // Verify ALU result if not PCS.
+      if (opcode !== 4'hE) begin
+        if (result !== ALU_Out) begin
+            $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected result = 0x%h, but got 0x%h", instr_name, opcode, result, ALU_Out);
             error = 1'b1;
         end
 
-        // Verify V flag
-        if (V_set !== ALU_V) begin
-            $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected V flag = %b, but got %b", instr_name, opcode, V_set, ALU_V);
-            error = 1'b1;
+        // Verify Z flag for ADD/SUB/SLL/SRA/ROR.
+        if (opcode === 4'h0 || opcode === 4'h1 || opcode === 4'h2 || opcode === 4'h4 || opcode === 4'h5 || opcode === 4'h6) begin
+          if (Z_set !== ALU_Z) begin
+              $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected Z flag = %b, but got %b", instr_name, opcode, Z_set, ALU_Z);
+              error = 1'b1;
+          end
+        end
+
+        // Verify the NV flags for ADD/SUB.
+        if (opcode === 4'h0 || opcode === 4'h1) begin
+          // Verify N flag
+          if (N_set !== ALU_N) begin
+              $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected N flag = %b, but got %b", instr_name, opcode, N_set, ALU_N);
+              error = 1'b1;
+          end
+
+          // Verify V flag
+          if (V_set !== ALU_V) begin
+              $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected V flag = %b, but got %b", instr_name, opcode, V_set, ALU_V);
+              error = 1'b1;
+          end
         end
       end
 

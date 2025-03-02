@@ -242,8 +242,6 @@
   // Task: Get the result of the Load Byte (LB) or Load Half Byte (LHB) instruction.
   task automatic get_LB_result(input logic signed [15:0] A, input logic signed [15:0] B, input logic mode, output logic signed [15:0] expected_result);
     begin
-      reg [15:0] expected_result; // Expected result for the LB/LHB operation
-
       // Get the expected result based on the mode (LB or LHB)
       if (mode === 1'b0) begin
         // Load Low Byte (LB)

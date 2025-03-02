@@ -267,6 +267,9 @@ module cpu_tb();
         if(error) begin
           $stop();
         end
+
+        // Print a new line between instructions.
+        $display("\n");
       end
 
       // If we reached here, that means all test cases were successful

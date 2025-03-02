@@ -287,7 +287,7 @@ package Model_tasks;
     begin
       // Read from memory if mem_read is enabled.
       if (MemEnable) begin
-        data_out = data_memory[addr];  // Read from memory
+        data_out = data_memory[addr/2];  // Read from memory
         $display("Model Acessed data memory at address: 0x%h and read data as: 0x%h", addr, data_out);
       end
 

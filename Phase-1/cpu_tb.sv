@@ -56,7 +56,8 @@ module cpu_tb();
       // Initialize the PC to a starting value (e.g., 0)
       $display("Initializing CPU Testbench...");
       instr_memory = '{default: 16'h0000};
-      regfile <= '{default: 16'h0000};
+      regfile = '{default: 16'h0000};
+      flag_reg = 3'h0;
       next_pc = 16'h0000;
       expected_pc = 16'h0000;
 

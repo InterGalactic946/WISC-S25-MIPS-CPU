@@ -76,12 +76,12 @@ module cpu_tb();
 					
 					// Verify that the register file entries are all initialized to 0x0000
 					if (iDUT.SrcReg1_data !== 16'h0000) begin
-							$display("ERROR: Register File Error at SrcReg1 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData1);
+							$display("ERROR: Register File Error at SrcReg1 = %0d: Expected 0x0000, Found 0x%h", addr, iDUT.SrcReg1_data);
 							error = 1'b1;
 					end
 
 					if (iDUT.SrcReg2_data !== 16'h0000) begin
-							$display("ERROR: Register File Error at SrcReg2 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData2);
+							$display("ERROR: Register File Error at SrcReg2 = %0d: Expected 0x0000, Found 0x%h", addr, iDUT.SrcReg2_data);
 							error = 1'b1;
 					end
 			end

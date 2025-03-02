@@ -312,7 +312,7 @@ module cpu_tb();
     else if (MemEnable & MemWrite) // Store operation
       data_memory[result/2] <= regfile[rd];
   
-  always @(negedge clk)
+  always @(posedge clk)
     if (rst_n)
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
 

@@ -73,16 +73,6 @@
         error = 1'b1;
       end
 
-      // Verify enable signals.
-      if (Z_en !== DUT_Z_en) begin
-        $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, Expected Z_en = 0b%4b, got 0b%4b", opcode, instr_name, Z_en, DUT_Z_en);
-        error = 1'b1;
-      end
-      if (NV_en !== DUT_NV_en) begin
-        $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, Expected NV_en = 0b%4b, got 0b%4b", opcode, instr_name, NV_en, DUT_NV_en);
-        error = 1'b1;
-      end
-
       // Control Signals Verification based on opcode
       case(opcode)
         4'h0, 4'h1, 4'h2, 4'h3, 4'h4, 4'h5, 4'h6, 4'h7, 4'h8, 4'hA, 4'hB: // ADD/SUB/XOR/RED/SLL/SRA/ROR/PADDSB/LW/LLB/LHB

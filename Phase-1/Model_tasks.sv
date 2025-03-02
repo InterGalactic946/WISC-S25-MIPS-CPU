@@ -284,7 +284,7 @@ package Model_tasks;
   task automatic AccessMemory(input logic [15:0] addr, input logic [15:0] data_in, output logic [15:0] data_out, input logic MemEnable, input logic MemWrite, ref logic [15:0] data_memory [0:65535]);
     begin
       // Read from memory if mem_read is enabled.
-      if (MemEnable) begin
+      if (MemEnable && !MemWrite) begin
         data_out = data_memory[addr/2];  // Read from memory
         $display("Model Acessed data memory at address: 0x%h and read data as: 0x%h", addr, data_out);
       end

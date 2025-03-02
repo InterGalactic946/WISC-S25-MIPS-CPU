@@ -2,9 +2,9 @@
 
   // Task to verify the instruction fetched from the instruction memory.
 	task automatic VerifyInstructionFetched(
-			ref logic [15:0] expected_instr,       // Expected instruction
-			ref logic [15:0] actual_instr,         // Actual instruction fetched from the DUT
-			ref logic [15:0] instr_memory [0:65535], // The instruction memory array
+			input logic [15:0] expected_instr,       // Expected instruction
+			input logic [15:0] actual_instr,         // Actual instruction fetched from the DUT
+			input logic [15:0] instr_memory [0:65535], // The instruction memory array
 			input logic [15:0] expected_pc,        // Expected PC value
 			input logic [15:0] pc,                 // Actual PC value
 			ref logic error                        // Error flag

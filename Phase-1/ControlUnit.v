@@ -35,7 +35,7 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWri
     assign MemtoReg = Opcode[3] & ~Opcode[1];
 
     // RegWrite must be 1 for ADD, SUB, XOR, RED, SLL, SRA, ROR, PADDSB, LW, LLB, LHB, and PCS
-    assign RegWrite = (~Opcode[3]) | (Opcode[1]) | (Opcode[3] & ~Opcode[2] & ~Opcode[0]);
+    assign RegWrite = ((~Opcode[3]) | (Opcode[1]) | (Opcode[3] & ~Opcode[2] & ~Opcode[0])) & ~(Opcode[3] | Opcode[2] | Opcode[1] | Opcode[0]);
 
     // RegSrc must be 1 for LLB and LHB
     assign RegSrc = Opcode[3] & Opcode[1];

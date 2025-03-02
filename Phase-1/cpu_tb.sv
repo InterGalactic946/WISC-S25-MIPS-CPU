@@ -198,7 +198,9 @@ module cpu_tb();
       // Run the simulation for each instruction in the instruction memory.
       // Fetch the current instruction from memory.
       FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
+  end
 
+  always_comb begin
         // Decode the instruction to extract opcode, rs, rt, rd, imm, and cc, and control signals.
         DecodeInstruction(
             .instr(instr),

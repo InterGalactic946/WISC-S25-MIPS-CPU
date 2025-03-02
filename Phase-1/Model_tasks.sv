@@ -293,6 +293,7 @@ package Model_tasks;
 
       // Write to memory if mem_write is enabled.
       if (MemEnable && MemWrite) begin
+        data_memory[addr/2] = data_in;  // Write to memory
         $display("Model Acessed data memory at address: 0x%h: and wrote new data as 0x%h", addr, data_in);
       end
     end

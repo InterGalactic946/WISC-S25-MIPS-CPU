@@ -56,6 +56,7 @@ module cpu_tb();
       // Initialize the PC to a starting value (e.g., 0)
       $display("Initializing CPU Testbench...");
       instr_memory = '{default: 16'h0000};
+      data_memory <= '{default: 16'h0000};
       regfile = '{default: 16'h0000};
       flag_reg = 3'h0;
       next_pc = 16'h0000;
@@ -164,6 +165,8 @@ module cpu_tb();
             error = 1'b1;
           end else begin
             $display("HLT instruction encountered. Stopping simulation.");
+            // If we reached here, that means all test cases were successful
+            $display("YAHOO!! All tests passed.");
           end
           $stop();
         end
@@ -259,9 +262,12 @@ module cpu_tb();
         // Update the PC register with the next PC value.
         expected_pc = next_pc;
 
-        flag_reg[2] = (Z_en)  ? Z_set : flag_reg[2];  // Update Z flag if enabled, otherwise hold
-        flag_reg[1] = (NV_en) ? V_set : flag_reg[1];  // Update V flag if enabled, otherwise hold
-        flag_reg[0] = (NV_en) ? N_set : flag_reg[0];  // Update N flag if enabled, otherwise hold
+        // Update Z flag if enabled, otherwise hold
+        flag_reg[2] = (Z_en)  ? Z_set : flag_reg[2];
+        // Update V flag if enabled, otherwise hold  
+        flag_reg[1] = (NV_en) ? V_set : flag_reg[1];
+        // Update N flag if enabled, otherwise hold  
+        flag_reg[0] = (NV_en) ? N_set : flag_reg[0];
 
         // Stop the simulation if an error is detected.
         if(error) begin
@@ -276,13 +282,6 @@ module cpu_tb();
       $display("YAHOO!! All tests passed.");
       $stop();
     end
-
-  // Expected data memory.
-  always @(posedge clk)
-    if (!rst_n)
-      data_memory <= '{default: 16'h0000};
-    else if (MemEnable & MemWrite) // Store operation
-      data_memory[result/2] <= regfile[rd];
   
   always @(posedge clk)
     if (rst_n)

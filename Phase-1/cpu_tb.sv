@@ -34,8 +34,8 @@ module cpu_tb();
   string instr_name;
   logic [2:0] cc;            // Condition code for branch instructions
   logic [15:0] regfile [0:15];        // Register file to verify during execution
-  logic [15:0] instr_memory [0:65535]; // Instruction Memory to be loaded
-  logic [15:0] data_memory [0:65535]; // Data Memory to be loaded
+  reg [15:0] instr_memory [0:65535]; // Instruction Memory to be loaded
+  reg [15:0] data_memory [0:65535]; // Data Memory to be loaded
   logic [2:0] flag_reg;               // Flag register to verify during execution
   logic Z_enable, V_enable, N_enable; // Enable flags for updating flag register
   logic Z_set, V_set, N_set;          // Flags to be set based on the result of the operation

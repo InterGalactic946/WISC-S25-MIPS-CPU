@@ -188,8 +188,8 @@ module cpu_tb();
             .instr_name(instr_name),
             .Input_A(A),
             .Input_B(B),
-            .ALU_Input_A(iDUT.iALU.ALU_In1), // ALU internal operand A
-            .ALU_Input_B(iDUT.iALU.ALU_In2), // ALU internal operand B
+            .ALU_Input_A(iDUT.iALU.Input_A), // ALU internal operand A
+            .ALU_Input_B(iDUT.iALU.Input_B), // ALU internal operand B
             .error(error)
         );
 

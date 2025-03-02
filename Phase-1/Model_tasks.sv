@@ -244,10 +244,8 @@ package Model_tasks;
           // ADD or SUB
           if (opcode === 4'h1)
             result = Input_A - Input_B;
-          else if (opcode === 4'h0)
+          else if (opcode === 4'h0 || opcode === 4'h8 || opcode === 4'h9)
             result = Input_A + Input_B;
-          else if (opcode === 4'h8 || opcode === 4'h9)
-            result = (Input_A & 16'hFFFE + {Input_B[14:0], 1'b0}); // Load Word (LW) or Store Word (SW)
           else
             result = 16'h0000; // Default to 0
 

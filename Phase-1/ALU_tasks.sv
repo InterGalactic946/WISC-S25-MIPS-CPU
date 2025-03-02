@@ -273,6 +273,10 @@
         end else begin
             // For all other opcodes, Input_A comes from reg_rs
             Input_A = regfile[reg_rs];
+
+            // Mask it for SW/LW.
+            if (opcode === 4'h8 || opcode === 4'h9)
+              Input_A = Input_A & 16'hFFFE;
         end
 
         // Determine Input_B based on opcode
@@ -281,6 +285,10 @@
                 // SLL, SRA, ROR, LW, SW, B, BR, LLB, LHB (opcode 4, 5, 6, 8, 9, A, B, C, D)
                 // Input_B comes from the immediate
                 Input_B = imm;
+
+                // Modify it for SW/LW.
+                if (opcode === 4'h8 || opcode === 4'h9)
+                  Input_B = {Input_B[14:0], 1'b0};
             end
             default: begin
                 // For all other opcodes, Input_B comes from reg_rt

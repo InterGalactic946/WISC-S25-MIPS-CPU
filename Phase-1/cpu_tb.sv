@@ -277,7 +277,7 @@ module cpu_tb();
   assign branch_target = pc_plus_2 + ($signed(imm) <<< 1'b1);
 
   // Select the next PC value based on whether the branch is taken or not
-  assign next_pc = (branch_taken & Branch) ? ((BR) ? regfile[rs] : branch_target) : pc_plus_2;
+  assign next_pc = (taken & Branch) ? ((BR) ? regfile[rs] : branch_target) : pc_plus_2;
 
   // Sequential logic to update PC on the rising edge of the clock
   always_ff @(posedge clk) begin

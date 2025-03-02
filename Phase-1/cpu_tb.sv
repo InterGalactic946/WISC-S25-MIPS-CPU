@@ -57,7 +57,6 @@ module cpu_tb();
       $display("Initializing CPU Testbench...");
       instr_memory = '{default: 16'h0000};
       regfile <= '{default: 16'h0000};
-      flag_reg = '{default: 3'h0};
       next_pc = 16'h0000;
       expected_pc = 16'h0000;
 
@@ -96,6 +95,8 @@ module cpu_tb();
 
       // Run the simulation for each instruction in the instruction memory.
       repeat ($size(instr_memory)) @(posedge clk) begin
+        VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
+
         // Fetch the current instruction from memory.
         FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
@@ -279,12 +280,6 @@ module cpu_tb();
       data_memory <= '{default: 16'h0000};
     else if (MemEnable & MemWrite) // Store operation
       data_memory[result/2] <= regfile[rd];
-  
-  always @(posedge clk)
-    if(rst_n) begin // Only check when not being reset. 
-      // Verify the flag register at the begining of each instruction.
-      VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
-    end
   
   // Models the flag register.
   always @(posedge clk)

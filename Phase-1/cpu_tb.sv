@@ -223,7 +223,6 @@ module cpu_tb();
             .enable(MemEnable),           // Pass the memory enable signal
             .data_in(regfile[rd]),        // Pass the data to write to memory
             .instr_name(instr_name),      // Pass the instruction name
-            .enable(MemEnable),           // Pass the memory enable signal
             .wr(MemWrite),             // Pass the memory write signal
             .model_memory(data_memory),  // Pass the memory model from DUT
             .mem_unit(iDUT.iDATA_MEM.mem),     // Pass the actual memory from DUT

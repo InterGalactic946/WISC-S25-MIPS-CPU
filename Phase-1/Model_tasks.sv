@@ -9,7 +9,6 @@ package Model_tasks;
       @(negedge clk) rst_n = 1'b0;
       repeat (2) @(posedge clk); // Wait for 2 clock cycles
       @(negedge clk) rst_n = 1'b1; // Deassert reset
-      repeat (10) @(posedge clk); // Allow system to stabilize
     end
   endtask
 
@@ -129,6 +128,7 @@ package Model_tasks;
           4'b1001: begin  // SW (opcode 9)
               imm = {{12{instr[3]}}, instr[3:0]};  // Lower 4 bits, sign-extended to 16 bits
               ALUSrc = 1'b1;    // ALUSrc is 1 for SW
+              MemtoReg = 1'bx;  // MemtoReg is x for SW operations
               RegWrite = 1'b0;    // No register write
               MemEnable = 1'b1;  // Memory enable
               MemWrite = 1'b1;    // Memory write operation
@@ -141,30 +141,44 @@ package Model_tasks;
           4'b1100: begin  // Branch instruction (opcode 12)
               imm = {{7{instr[8]}}, instr[8:0]};  // Lower 9 bits, sign-extended to 16 bits
               cc = instr[11:9];  // Extract the condition code for branch (bits 11:9)
+              ALUSrc = 1'bx;     // ALUSrc is  a don't care for B instructions
+              MemtoReg = 1'bx;  // MemtoReg is x for B operations
               RegWrite = 1'b0;    // No register write
               Branch = 1'b1;     // Branch operation
+              RegSrc = 1'bx;     // Register source is x for B operations
           end
           4'b1101: begin  // BR instruction (opcode 13)
               imm = {{7{instr[8]}}, instr[8:0]};  // Lower 9 bits, sign-extended to 16 bits
+              ALUSrc = 1'bx;     // ALUSrc is  a don't care for BR instructions
+              MemtoReg = 1'bx;  // MemtoReg is x for BR operations
               RegWrite = 1'b0;    // No register write
               Branch = 1'b1;     // Branch operation
+              RegSrc = 1'bx;     // Register source is x for B operations
               BR = 1'b1;         // BR instruction (unconditional branch)
               cc = instr[11:9];  // Extract the condition code for BR (bits 11:9)
           end
           4'b1110: begin  // PCS instruction (opcode 14)
+              ALUSrc = 1'bx;    // ALUSrc is a don't care for PCS operation
               PCS = 1'b1;       // PCS operation
           end
           4'b1111: begin  // HLT instruction (opcode 15)
               HLT = 1'b1;       // HLT operation
+              ALUSrc = 1'bx;   // ALUSrc is 0 for register-register operations
+              MemtoReg = 1'bx; // MemtoReg is 0 for non LW operations
+              RegWrite = 1'bx; // Register write
+              MemEnable = 1'bx;  // Memory enable is off
+              MemWrite = 1'bx; // No memory write
+              Branch = 1'bx;   // No branch
+              RegSrc = 1'bx;   // Register source is 0 for non LLB/LHB operations
           end
           default: begin
               ALUSrc = 1'b0;   // ALUSrc is 0 for register-register operations
               MemtoReg = 1'b0; // MemtoReg is 0 for non LW operations
               RegWrite = 1'b1; // Register write
-              RegSrc = 1'b0;   // Register source is 0 for non LLB/LHB operations
               MemEnable = 1'b0;  // Memory enable is off
               MemWrite = 1'b0; // No memory write
               Branch = 1'b0;   // No branch
+              RegSrc = 1'b0;   // Register source is 0 for non LLB/LHB operations
               BR = 1'b0;       // No BR
               PCS = 1'b0;      // No PCS
               HLT = 1'b0;      // No HLT

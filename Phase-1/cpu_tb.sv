@@ -286,8 +286,9 @@ module cpu_tb();
       data_memory[result/2] <= regfile[rd];
   
   always @(posedge clk)
-    // Verify the flag register at the begining of each instruction.
-    VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
+    if(rst_n) // Only check when not being reset.
+      // Verify the flag register at the begining of each instruction.
+      VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
 
   // Generate clock signal with 10 ns period.
   always 

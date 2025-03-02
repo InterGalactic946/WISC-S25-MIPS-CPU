@@ -350,8 +350,8 @@
       ref logic error                    // Error flag
   );
 
-      // Verify ALU result if not PCS.
-      if (opcode !== 4'hE) begin
+      // Verify ALU result if not PCS or B or BR.
+      if (opcode !== 4'hC || opcode !== 4'hD || opcode !== 4'hE) begin
         if (result !== ALU_Out) begin
             $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected result = 0x%h, but got 0x%h", instr_name, opcode, result, ALU_Out);
             error = 1'b1;
@@ -379,12 +379,12 @@
               error = 1'b1;
           end
         end
-      end
 
       // Display the execution result if no errors are found.
       if (!error)
           $display("DUT Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", 
                   opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
+      end
   endtask
 
 

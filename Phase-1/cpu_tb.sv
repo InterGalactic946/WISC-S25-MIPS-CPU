@@ -92,8 +92,6 @@ module cpu_tb();
 
       // Run the simulation for each instruction in the instruction memory.
       repeat ($size(instr_memory)) begin
-        @(posedge clk); // Wait for the next clock cycle
-
         // Fetch the current instruction from memory.
         FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
@@ -240,7 +238,9 @@ module cpu_tb();
 
         // (Assuming regfile is updated after the write operation).
         if (RegWrite)
-          $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);        
+          $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
+
+        @(posedge clk); // Wait for the next clock cycle       
 
         // Stop the simulation if an error is detected.
         if(error) begin
@@ -267,13 +267,11 @@ module cpu_tb();
                             1'b0;                // Default: Condition not met
 
     // Compute next PC
-    if (taken & Branch) begin
-      next_pc = (BR) ? regfile[rs] : (expected_pc + 16'h0002 + ($signed(imm) <<< 1'b1)); 
+    if (taken === 1'b1 && Branch === 1'b1) begin
+      next_pc = (BR === 1'b1) ? regfile[rs] : (expected_pc + 16'h0002 + ($signed(imm) <<< 1'b1)); 
     end else begin
       next_pc = expected_pc + 16'h0002;
     end
-
-    $display("Instruction Memory at location: ",instr_memory[expected_pc]);
   end
 
    // Expected PC value after each instruction.

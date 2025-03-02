@@ -241,7 +241,7 @@ module cpu_tb();
 
         // (Assuming regfile is updated after the write operation).
         if (RegWrite)
-          $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
+          $display("DUT wrote back to register 0x%h with data 0x%h", iDUT.reg_rd, RegWriteData);
         
         // Update flag register.
         flag_reg[2] = (Z_en) ? Z_set : 1'b0;

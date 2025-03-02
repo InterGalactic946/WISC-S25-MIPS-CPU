@@ -285,13 +285,13 @@ package Model_tasks;
     begin
       // Read from memory if mem_read is enabled.
       if (MemEnable && !MemWrite) begin
-        data_out = data_memory[addr/2];  // Read from memory
+        data_out = data_memory[addr[15:1]];  // Read from memory
         $display("Model Acessed data memory at address: 0x%h and read data as: 0x%h", addr, data_out);
       end
 
       // Write to memory if mem_write is enabled.
       if (MemEnable && MemWrite) begin
-        data_memory[addr/2] = data_in;  // Write to memory
+        data_memory[addr[15:1]] = data_in;  // Write to memory
         $display("Model Acessed data memory at address: 0x%h: and wrote new data as 0x%h", addr, data_in);
       end
     end

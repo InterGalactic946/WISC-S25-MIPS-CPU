@@ -396,9 +396,9 @@
 			// Compare the model memory and the actual memory in the CPU.
       if (enable) begin
         if (!wr) begin
-          if (mem_unit[addr] !== model_memory[addr/2]) begin
+          if (mem_unit[addr] !== model_memory[addr[15:1]]) begin
               $display("ERROR (VerifyMemoryAccess): Memory Mismatch at address 0x%h: Expected 0x%h, Found 0x%h. Instruction: %s", 
-                      addr, model_memory[addr/2], mem_unit[addr], instr_name);
+                      addr, model_memory[addr[15:1]], mem_unit[addr], instr_name);
               error = 1'b1;
           end
           $display("DUT attempted to access data memory at address: 0x%h and attempted to read data as: 0x%h", addr, mem_unit[addr]);

@@ -83,10 +83,11 @@ module cpu (clk, rst_n, hlt, pc);
   // Fetch Instruction from PC //
   //////////////////////////////
   // Infer the instruction memory, it is always read enabled and never write enabled.
-  memory1c #(1, 16) iINSTR_MEM (.data_out(pc_inst),
+  memory1c iINSTR_MEM (.data_out(pc_inst),
                               .data_in(16'h0000),
                               .addr(pc_addr),
                               .enable(1'b1),
+                              .data(1'b0),
                               .wr(1'b0),
                               .clk(clk),
                               .rst(rst)
@@ -197,9 +198,10 @@ module cpu (clk, rst_n, hlt, pc);
   // Read or Write to Memory and write back to Register if applicable //
   /////////////////////////////////////////////////////////////////////
   // Instantiate the data memory. 
-  memory1c #(2, 16) iDATA_MEM (.data_out(MemData),
+  memory1c iDATA_MEM (.data_out(MemData),
                               .data_in(SrcReg2_data),
                               .addr(ALU_out),
+                              .data(1'b1),
                               .enable(MemEnable),
                               .wr(MemWrite),
                               .clk(clk),

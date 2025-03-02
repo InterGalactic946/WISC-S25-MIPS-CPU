@@ -90,7 +90,7 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   ////////////////////////////////////////////
   always @(*) begin
       error = 1'b0;  // Default error state.
-      ALU_Out = 16'h0000;
+      ALU_Out = 16'h0000; // Default output.
       case (Opcode)
           4'h0, 4'h1, 4'h8, 4'h9: ALU_Out = SUM_Out; // ADD/SUB/LW/SW
           4'h2: ALU_Out = XOR_Out; // XOR
@@ -100,7 +100,7 @@ module ALU (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
           4'hA: ALU_Out = LLB_Out; // LLB
           4'hB: ALU_Out = LHB_Out; // LHB
           default: begin
-            ALU_Out = 16'h0000;
+            ALU_Out = 16'h0000; // Default output.
             error = 1'b1; // Invalid opcode
           end
       endcase

@@ -54,7 +54,8 @@ module cpu_tb();
       
       // Initialize the PC to a starting value (e.g., 0)
       $display("Initializing CPU Testbench...");
-      next_pc = 16'h0000;
+      // next_pc = 16'h0000;
+      instr_memory <= '{default: 16'h0000};
 
       // Initialize all signals for the testbench.
       Initialize(.clk(clk), .rst_n(rst_n));
@@ -299,11 +300,6 @@ module cpu_tb();
       regfile <= '{default: 16'h0000};
     else if (RegWrite)
       regfile[rd] <= reg_data;
-  
-  // Expected instruction memory.
-  always @(posedge clk)
-    if (!rst_n)
-      instr_memory <= '{default: 16'h0000};
   
   // Expected data memory.
   always @(posedge clk)

@@ -271,11 +271,17 @@ module cpu_tb();
     if (taken === 1'b1 && Branch === 1'b1) begin
       if (BR === 1'b1) begin
         br_inc = 1'b1;
+        normal_inc = 1'b0;
+        b_inc = 1'b0;
       end else begin
         b_inc = 1'b1;
+        normal_inc = 1'b0;
+        br_inc = 1'b0;
       end
     end else begin
       normal_inc = 1'b1;
+      b_inc = 1'b0;
+      br_inc = 1'b0;
     end
   end
 

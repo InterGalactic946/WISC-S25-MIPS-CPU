@@ -119,6 +119,9 @@ package Model_tasks;
               ALUSrc = 1'b1;    // ALUSrc is 1 for shift operations
               Z_en = 1'b1;      // Z flag enable
           end
+          4'b0111: begin // PADDSB (opcode 7)
+            // Has all the default values.
+          end
           4'b1000: begin  // LW (opcode 8)
               imm = {{12{instr[3]}}, instr[3:0]};  // Lower 4 bits, sign-extended to 16 bits
               ALUSrc = 1'b1;    // ALUSrc is 1 for LW

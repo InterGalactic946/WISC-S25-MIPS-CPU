@@ -192,7 +192,7 @@
     begin
       reg pos_overflow[0:3];
       reg neg_overflow[0:3];
-      reg [3:0] expected_sum[0:3];
+      reg signed [3:0] expected_sum[0:3];
 
       // Get the overflow of the sum.
       check_pad_overflow(.A(A), .B(B), .pos_overflow(pos_overflow), .neg_overflow(neg_overflow));

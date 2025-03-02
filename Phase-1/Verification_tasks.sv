@@ -75,11 +75,11 @@
 
       // Verify enable signals.
       if (Z_en !== DUT_Z_en) begin
-        $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, Expected rt = 0b%4b, got 0b%4b", opcode, instr_name, Z_en, DUT_Z_en);
+        $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, Expected Z_en = 0b%4b, got 0b%4b", opcode, instr_name, Z_en, DUT_Z_en);
         error = 1'b1;
       end
       if (NV_en !== DUT_NV_en) begin
-        $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, Expected rd = 0b%4b, got 0b%4b", opcode, instr_name, NV_en, DUT_NV_en);
+        $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, Expected NV_en = 0b%4b, got 0b%4b", opcode, instr_name, NV_en, DUT_NV_en);
         error = 1'b1;
       end
 

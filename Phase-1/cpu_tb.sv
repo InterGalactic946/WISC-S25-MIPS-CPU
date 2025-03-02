@@ -91,6 +91,11 @@ module cpu_tb();
       /////////////////////////////
       Setup();
 
+      for (int i = 0; i < 10; i++) begin
+        // Display the current instruction being executed
+        $display("Instrction: 0x%h", instr_memory[16'h0000 + i*2]);
+      end
+
       // Run the simulation for each instruction in the instruction memory.
       repeat ($size(instr_memory)) @(posedge clk) begin
         // Fetch the current instruction from memory.

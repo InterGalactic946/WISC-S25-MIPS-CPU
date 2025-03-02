@@ -319,7 +319,7 @@ package Model_tasks;
                             1'b0;                // Default: Condition not met (shouldn't happen if C is valid)
     
     // The expected PC addr is the current PC addr + 2 or PC addr + 2 + (I << 1) if branch is taken, or Rs if BR.
-    next_PC = (taken & Branch) ? ((BR) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1))) : (PC_in + 16'h0002);
+    next_PC = (taken === 1'b1 && Branch === 1'b1) ? ((BR === 1'b1) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1))) : (PC_in + 16'h0002);
   end
   endtask
 

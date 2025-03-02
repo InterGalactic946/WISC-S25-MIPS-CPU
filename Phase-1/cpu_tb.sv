@@ -117,6 +117,8 @@ module cpu_tb();
             .rt(rt),
             .rd(rd),
             .imm(imm),
+            .Z_en(Z_en),
+            .NV_en(NV_en),
             .ALUSrc(ALUSrc),
             .MemtoReg(MemtoReg),
             .RegWrite(RegWrite),
@@ -256,6 +258,10 @@ module cpu_tb();
         // Update the PC register with the next PC value.
         expected_pc = next_pc;
 
+        flag_reg[2] = (Z_en)  ? Z_set : flag_reg[2];  // Update Z flag if enabled, otherwise hold
+        flag_reg[1] = (NV_en) ? V_set : flag_reg[1];  // Update V flag if enabled, otherwise hold
+        flag_reg[0] = (NV_en) ? N_set : flag_reg[0];  // Update N flag if enabled, otherwise hold
+
         // Stop the simulation if an error is detected.
         if(error) begin
           $stop();
@@ -270,41 +276,6 @@ module cpu_tb();
       $stop();
     end
 
-
-  always_comb begin
-    // Default: No flag updates
-    Z_en  = 1'b0;
-    NV_en = 1'b0;
-
-    case (opcode)
-        4'b0000: begin // ADD -> Affects N, Z, V
-            Z_en  = 1'b1;
-            NV_en = 1'b1;
-        end
-        4'b0001: begin // SUB -> Affects N, Z, V
-            Z_en  = 1'b1;
-            NV_en = 1'b1;
-        end
-        4'b0010: begin // XOR -> Affects Z
-            Z_en  = 1'b1;
-        end
-        4'b0100: begin // SLL -> Affects Z
-            Z_en  = 1'b1;
-        end
-        4'b0101: begin // SRA -> Affects Z
-            Z_en  = 1'b1;
-        end
-        4'b0110: begin // ROR -> Affects Z
-            Z_en  = 1'b1;
-        end
-        default: begin
-          Z_en = 1'b0;
-          NV_en = 1'b0;
-        end
-    endcase
-  end
-
-
   // Expected data memory.
   always @(posedge clk)
     if (!rst_n)
@@ -315,17 +286,6 @@ module cpu_tb();
   always @(posedge clk)
     if (rst_n)
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
-
-  // Models the flag register.
-  always @(posedge clk)
-    if(!rst_n)
-      flag_reg <= 3'h0;
-    else if (Z_en)
-      flag_reg[2] <= Z_set;
-    else if (NV_en) begin
-      flag_reg[1] <= V_set;
-      flag_reg[0] <= N_set;
-  end
 
   // Generate clock signal with 10 ns period.
   always 

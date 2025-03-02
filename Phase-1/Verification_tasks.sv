@@ -39,14 +39,14 @@
       input  logic [3:0] rs, rt, rd, // Register IDs are 4 bits
       input  logic [15:0] imm,       // Immediate value is 16 bits
       input  logic ALUSrc, MemtoReg, RegWrite, RegSrc,
-      input  logic MemEnable, MemWrite, Branch, BR,
+      input  logic MemEnable, MemWrite, Branch, BR, HLT, PCS
       input  logic [3:0] ALUOp,
       input  logic Z_en, NV_en,
       input  logic [3:0] cc,         // Condition codes
       input  logic [3:0] DUT_opcode, // DUT opcode
       input  logic [3:0] DUT_reg_rs, DUT_reg_rt, DUT_reg_rd, // DUT register IDs
       input  logic DUT_ALUSrc, DUT_MemtoReg, DUT_RegWrite, DUT_RegSrc,
-      input  logic DUT_MemEnable, DUT_MemWrite, DUT_Branch, DUT_BR,
+      input  logic DUT_MemEnable, DUT_MemWrite, DUT_Branch, DUT_BR, DUT_HLT, DUT_PCS,
       input  logic [3:0] DUT_ALUOp,
       input  logic DUT_Z_en, DUT_NV_en,
       input  logic [3:0] DUT_c_codes, // DUT condition codes

@@ -102,7 +102,7 @@ module cpu_tb();
 
         // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(
-            .expected_instr(expected_instr),      // Expected instruction
+            .expected_instr(instr),      // Expected instruction
             .actual_instr(iDUT.pc_inst),          // Fetched instruction from DUT
             .instr_memory(iDUT.iINSTR_MEM.mem),          // Instruction memory array
             .expected_pc(expected_pc),            // Expected PC value

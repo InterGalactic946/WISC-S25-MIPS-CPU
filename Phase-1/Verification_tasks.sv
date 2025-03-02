@@ -351,7 +351,7 @@
   );
 
       // Verify ALU result if not PCS or B or BR.
-      if (opcode !== 4'hC || opcode !== 4'hD || opcode !== 4'hE) begin
+      if (opcode !== 4'hC && opcode !== 4'hD && opcode !== 4'hE) begin
         if (result !== ALU_Out) begin
             $display("ERROR (VerifyExecutionResult): Instr: %s, Opcode: 0b%4b, Expected result = 0x%h, but got 0x%h", instr_name, opcode, result, ALU_Out);
             error = 1'b1;

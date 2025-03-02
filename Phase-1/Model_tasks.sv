@@ -102,7 +102,7 @@ package Model_tasks;
       ALUOp = opcode;                  // ALUOp is the opcode for all instructions
       Z_en = 1'b0;                     // Z flag enable is 0 for all instructions
       NV_en = 1'b0;                    // N/V flag enable is 0 for all instructions
-      cc = 3'b000;                     // Default condition code (not used)
+      cc = 3'bxxx;                     // Default condition code (not used)
       imm = 16'h000;                   // Default immediate value
 
       // Decode the immediate (imm) based on the opcode

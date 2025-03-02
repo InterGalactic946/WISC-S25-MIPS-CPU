@@ -186,7 +186,7 @@ package Model_tasks;
               Z_en = 1'b0;     // Z flag enable is off
               NV_en = 1'b0;    // N/V flag enable is off
               imm = 16'h0000;  // Default case if opcode is not recognized
-              cc = 3'b000;     // Default condition code (not used)
+              cc = 3'bxxx;     // Default condition code don't care
           end
       endcase
 

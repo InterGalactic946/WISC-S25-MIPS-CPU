@@ -218,6 +218,8 @@ module cpu_tb();
             .error(error)
         );
 
+        $display("Model NV Enable: %b.", NV_en);
+
         // Access the memory based on the opcode and operands.
         AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .MemEnable(MemEnable), .MemWrite(MemWrite), .data_memory(data_memory));
 
@@ -271,6 +273,8 @@ module cpu_tb();
       $display("YAHOO!! All tests passed.");
       $stop();
     end
+
+
   
   // Expected data memory.
   always @(posedge clk)
@@ -290,7 +294,6 @@ module cpu_tb();
     else if (Z_en)
       flag_reg[2] <= Z_set;
     else if (NV_en) begin
-      $display("Model V Flag: %b; Model N Flag: %b", V_set, N_set);
       flag_reg[1] <= V_set;
       flag_reg[0] <= N_set;
   end

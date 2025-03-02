@@ -230,27 +230,12 @@ module cpu_tb();
             .error(error)                 // Pass the error flag
         );
 
-        // Choose ALU_output or memory_output based on the opcode.
-        reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
-
         // Write the result back to the register file based on the opcode and operands.
         WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
 
         // (Assuming regfile is updated after the write operation).
         if (RegWrite)
-          $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
-
-        // Determine the next PC value based on the opcode and operands.
-        DetermineNextPC(
-          .Branch(Branch), // Pass branch flag
-          .BR(BR), // Pass branch flag
-          .C(cc), // Pass condition code
-          .F(flag_reg), // Pass flag register
-          .PC_in(expected_pc), // Pass current PC value 
-          .imm(imm), // Pass immediate value
-          .next_PC(next_pc),
-          .Rs(regfile[rs])
-        );
+          $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);        
 
         // Stop the simulation if an error is detected.
         if(error) begin
@@ -262,6 +247,30 @@ module cpu_tb();
       $display("YAHOO!! All tests passed.");
       $stop();
     end
+
+    // Models the behavior of the CPU PC control.
+    always_comb begin
+    // Determine if branch should be taken
+    taken = (C == 3'b000) ? ~F[2]               : // Not Equal (Z = 0)
+            (C == 3'b001) ?  F[2]               : // Equal (Z = 1)
+            (C == 3'b010) ? (~F[2] & ~F[0])     : // Greater Than (Z = N = 0)
+            (C == 3'b011) ?  F[0]               : // Less Than (N = 1)
+            (C == 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
+            (C == 3'b101) ? (F[2] | F[0])       : // Less Than or Equal (Z = 1 or N = 1)
+            (C == 3'b110) ?  F[1]               : // Overflow (V = 1)
+            (C == 3'b111) ?  1'b1               : // Unconditional (always executes)
+                            1'b0;                // Default: Condition not met
+
+    // Compute next PC
+    if (taken & Branch) begin
+      next_PC = (BR) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1)); 
+    end else begin
+      next_PC = PC_in + 16'h0002;
+    end
+
+    // Choose ALU_output or memory_output based on the opcode.
+    reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
+  end
 
    // Expected PC value after each instruction.
   always @(posedge clk)

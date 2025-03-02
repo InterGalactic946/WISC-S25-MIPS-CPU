@@ -247,6 +247,8 @@ module cpu_tb();
           .Rs(regfile[rs])
         );
 
+        cycle_done = 1'b1; // Indicate that the current cycle is done.
+
         // Stop the simulation if an error is detected.
         if(error) begin
           $stop();
@@ -262,7 +264,7 @@ module cpu_tb();
   always @(posedge clk)
     if (!rst_n)
       expected_pc <= 16'h0000;
-    else
+    else if (cycle_done)
       expected_pc <= next_pc;
   
   // Expected flag register at the end of each instruction.

@@ -54,9 +54,9 @@ module memory1c (data_out, data_in, data, addr, enable, wr, clk, rst);
          //load loadfile_all.img
          if (!loaded) begin
             if (data)
-              $readmemh("data.hex", mem);
+              $readmemh("./data.hex", mem);
             else
-              $readmemh("instructions.hex", mem);
+              $readmemh("./instructions.hex", mem);
             loaded = 1;
          end
           

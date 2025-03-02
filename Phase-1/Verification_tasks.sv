@@ -321,7 +321,7 @@
     ref logic error
   );
     // Verify ALU operands if not PCS or B or BR.
-    if (opcode !== 4'hC && opcode !== 4'hD && opcode !== 4'hE) begin
+    if (instr_name !== "B" && instr_name !== "BR" && instr_name !== "PCS") begin
       // Verify operand A
       if (Input_A !== ALU_Input_A) begin
           $display("ERROR (VerifyALUOperands): Instr: %s, Expected Input_A = 0x%h, but got 0x%h", instr_name, Input_A, ALU_Input_A);

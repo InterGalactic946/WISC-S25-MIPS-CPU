@@ -19,6 +19,7 @@ module cpu_tb();
   logic [15:0] expected_pc;
   logic [15:0] pc;
   logic [15:0] next_pc;
+  logic cycle_done;
   logic [15:0] instr;
   logic [3:0] opcode;
   logic [3:0] rs;

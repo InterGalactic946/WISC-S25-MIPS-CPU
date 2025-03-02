@@ -156,12 +156,12 @@ package Model_tasks;
               MemtoReg = 1'bx;  // MemtoReg is x for BR operations
               RegWrite = 1'b0;    // No register write
               Branch = 1'b1;     // Branch operation
-              RegSrc = 1'bx;     // Register source is x for B operations
               BR = 1'b1;         // BR instruction (unconditional branch)
               cc = instr[11:9];  // Extract the condition code for BR (bits 11:9)
           end
           4'b1110: begin  // PCS instruction (opcode 14)
               ALUSrc = 1'bx;    // ALUSrc is a don't care for PCS operation
+              RegSrc = 1'bx;
               PCS = 1'b1;       // PCS operation
           end
           4'b1111: begin  // HLT instruction (opcode 15)

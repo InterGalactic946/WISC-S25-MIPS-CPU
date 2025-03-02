@@ -239,7 +239,7 @@
               $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, Branch mismatch (Expected %b, got %b)", opcode, instr_name, Branch, DUT_Branch);
               error = 1'b1;
             end
-            if (RegSrc !== DUT_RegSrc) begin
+            if (RegSrc !=? DUT_RegSrc) begin
               $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, RegSrc mismatch (Expected %b, got %b)", opcode, instr_name, RegSrc, DUT_RegSrc);
               error = 1'b1;
             end

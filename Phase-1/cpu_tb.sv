@@ -237,16 +237,6 @@ module cpu_tb();
             .error(error)                 // Pass the error flag
         );
 
-        // Choose ALU_output or memory_output based on the opcode.
-        reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
-
-        // Write the result back to the register file based on the opcode and operands.
-        WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
-
-        // (Assuming regfile is updated after the write operation).
-        if (RegWrite)
-          $display("DUT wrote back to register 0x%h with data 0x%h", iDUT.reg_rd, iDUT.RegWriteData);
-        
         // Determine the next PC value based on the opcode and operands.
         DetermineNextPC(
           .Branch(Branch), // Pass branch flag
@@ -258,6 +248,16 @@ module cpu_tb();
           .next_PC(next_pc),
           .Rs(regfile[rs])
         );
+
+        // Choose ALU_output or memory_output based on the opcode.
+        reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
+
+        // Write the result back to the register file based on the opcode and operands.
+        WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
+
+        // (Assuming regfile is updated after the write operation).
+        if (RegWrite)
+          $display("DUT wrote back to register 0x%h with data 0x%h", iDUT.reg_rd, iDUT.RegWriteData);
 
         // Update the PC register with the next PC value.
         expected_pc = next_pc;

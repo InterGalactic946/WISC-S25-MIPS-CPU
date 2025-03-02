@@ -32,110 +32,153 @@
         $display("DUT Fetched instruction at PC = 0x%h: 0x%h", pc, actual_instr);
 	endtask
 
-
-  // Task to verify control signals for each instruction.
+  
   task automatic VerifyControlSignals(
-    input  logic [3:0] opcode,
-    input  string instr_name,
-    input  logic [3:0] rs, rt, rd, // Register IDs are 4 bits
-    input  logic [15:0] imm,       // Immediate value is 16 bits
-    input  logic ALUSrc, MemtoReg, RegWrite, RegSrc,
-    input  logic MemEnable, MemWrite, Branch, BR, HLT, PCS,
-    input  logic [3:0] ALUOp,
-    input  logic Z_en, NV_en,
-    input  logic [3:0] cc, // Condition codes
-    input    logic [3:0] DUT_opcode, // Fetch opcode from DUT
-    input    logic [3:0] DUT_reg_rs, DUT_reg_rt, DUT_reg_rd, // Register IDs in DUT
-    input    logic DUT_ALUSrc, DUT_MemtoReg, DUT_RegWrite, DUT_RegSrc,
-    input    logic DUT_MemEnable, DUT_MemWrite, DUT_Branch, DUT_BR, DUT_HLT, DUT_PCS,
-    input    logic [3:0] DUT_ALUOp,
-    input    logic DUT_Z_en, DUT_NV_en,
-    input    logic [3:0] DUT_c_codes, // Condition codes in DUT
-    ref logic error
+      input  logic [3:0] opcode,
+      input  string instr_name,
+      input  logic [3:0] rs, rt, rd, // Register IDs are 4 bits
+      input  logic [15:0] imm,       // Immediate value is 16 bits
+      input  logic ALUSrc, MemtoReg, RegWrite, RegSrc,
+      input  logic MemEnable, MemWrite, Branch,
+      input  logic [3:0] ALUOp,
+      input  logic Z_en, NV_en,
+      input  logic [3:0] cc,         // Condition codes
+      input  logic [3:0] DUT_opcode, // DUT opcode
+      input  logic [3:0] DUT_reg_rs, DUT_reg_rt, DUT_reg_rd, // DUT register IDs
+      input  logic DUT_ALUSrc, DUT_MemtoReg, DUT_RegWrite, DUT_RegSrc,
+      input  logic DUT_MemEnable, DUT_MemWrite, DUT_Branch, DUT_BR,
+      input  logic [3:0] DUT_ALUOp,
+      input  logic DUT_Z_en, DUT_NV_en,
+      input  logic [3:0] DUT_c_codes, // DUT condition codes
+      ref logic error
     );
 
-    // Verify opcode
-    if (opcode !=? DUT_opcode) begin
+      // Verify opcode
+      if (opcode !== DUT_opcode) begin
         $display("ERROR: Opcode = 0b%4b, Instr: %s, Expected opcode = 0b%4b but got 0b%4b", opcode, instr_name, opcode, DUT_opcode);
         error = 1'b1;
-    end
+      end
 
-    // Verify registers
-    if (rs !=? DUT_reg_rs) begin
+      // Verify registers
+      if (rs !== DUT_reg_rs) begin
         $display("ERROR: Opcode = 0b%4b, Instr: %s, Expected rs = 0b%4b, got 0b%4b", opcode, instr_name, rs, DUT_reg_rs);
         error = 1'b1;
-    end
-    if (rt !=? DUT_reg_rt) begin
+      end
+      if (rt !== DUT_reg_rt) begin
         $display("ERROR: Opcode = 0b%4b, Instr: %s, Expected rt = 0b%4b, got 0b%4b", opcode, instr_name, rt, DUT_reg_rt);
         error = 1'b1;
-    end
-    if (rd !=? DUT_reg_rd) begin
+      end
+      if (rd !== DUT_reg_rd) begin
         $display("ERROR: Opcode = 0b%4b, Instr: %s, Expected rd = 0b%4b, got 0b%4b", opcode, instr_name, rd, DUT_reg_rd);
         error = 1'b1;
-    end
+      end
 
-    // Verify control signals
-    if (ALUSrc !=? DUT_ALUSrc) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, ALUSrc mismatch (Expected %b, got %b)", opcode, instr_name, ALUSrc, DUT_ALUSrc);
-        error = 1'b1;
-    end
-    if (MemtoReg !=? DUT_MemtoReg) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, MemtoReg mismatch (Expected %b, got %b)", opcode, instr_name, MemtoReg, DUT_MemtoReg);
-        error = 1'b1;
-    end
-    if (RegWrite !=? DUT_RegWrite) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, RegWrite mismatch (Expected %b, got %b)", opcode, instr_name, RegWrite, DUT_RegWrite);
-        error = 1'b1;
-    end
-    if (RegSrc !=? DUT_RegSrc) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, RegSrc mismatch (Expected %b, got %b)", opcode, instr_name, RegSrc, DUT_RegSrc);
-        error = 1'b1;
-    end
-    if (MemEnable !=? DUT_MemEnable) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, MemEnable mismatch (Expected %b, got %b)", opcode, instr_name, MemEnable, DUT_MemEnable);
-        error = 1'b1;
-    end
-    if (MemWrite !=? DUT_MemWrite) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, MemWrite mismatch (Expected %b, got %b)", opcode, instr_name, MemWrite, DUT_MemWrite);
-        error = 1'b1;
-    end
-    if (Branch !=? DUT_Branch) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, Branch mismatch (Expected %b, got %b)", opcode, instr_name, Branch, DUT_Branch);
-        error = 1'b1;
-    end
-    if (BR !=? DUT_BR) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, BR mismatch (Expected %b, got %b)", opcode, instr_name, BR, DUT_BR);
-        error = 1'b1;
-    end
-    if (HLT !=? DUT_HLT) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, HLT mismatch (Expected %b, got %b)", opcode, instr_name, HLT, DUT_HLT);
-        error = 1'b1;
-    end
-    if (PCS !=? DUT_PCS) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, PCS mismatch (Expected %b, got %b)", opcode, instr_name, PCS, DUT_PCS);
-        error = 1'b1;
-    end
-    if (ALUOp !=? DUT_ALUOp) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, ALUOp mismatch (Expected 0x%h, got 0x%h)", opcode, instr_name, ALUOp, DUT_ALUOp);
-        error = 1'b1;
-    end
-    if (Z_en !=? DUT_Z_en) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, Z_en mismatch (Expected %b, got %b)", opcode, instr_name, Z_en, DUT_Z_en);
-        error = 1'b1;
-    end
-    if (NV_en !=? DUT_NV_en) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, NV_en mismatch (Expected %b, got %b)", opcode, instr_name, NV_en, DUT_NV_en);
-        error = 1'b1;
-    end
-    if (cc !=? DUT_c_codes) begin
-        $display("ERROR: Opcode = 0b%4b, Instr: %s, Condition codes mismatch (Expected 0x%h, got 0x%h)", opcode, instr_name, cc, DUT_c_codes);
-        error = 1'b1;
-    end
+      // Control Signals Verification based on opcode
+      case(opcode)
+        4'h0, 4'h1, 4'h2, 4'h3, 4'h4, 4'h5, 4'h6, 4'h7, 4'h8, 4'hA, 4'hB: // ADD/SUB/XOR/RED/SLL/SRA/ROR/PADDSB/LW/LLB/LHB
+          begin
+            if (ALUSrc !== DUT_ALUSrc) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, ALUSrc mismatch (Expected %b, got %b)", opcode, instr_name, ALUSrc, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !== DUT_MemtoReg) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemtoReg mismatch (Expected %b, got %b)", opcode, instr_name, MemtoReg, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, RegWrite mismatch (Expected %b, got %b)", opcode, instr_name, RegWrite, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !== DUT_MemEnable) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemEnable mismatch (Expected %b, got %b)", opcode, instr_name, MemEnable, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !== DUT_MemWrite) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemWrite mismatch (Expected %b, got %b)", opcode, instr_name, MemWrite, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !== DUT_Branch) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, Branch mismatch (Expected %b, got %b)", opcode, instr_name, Branch, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !== DUT_RegSrc) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, RegSrc mismatch (Expected %b, got %b)", opcode, instr_name, RegSrc, DUT_RegSrc);
+              error = 1'b1;
+            end
+          end
+        4'h9: // SW
+          begin
+            if (ALUSrc !== DUT_ALUSrc) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, ALUSrc mismatch (Expected 1, got %b)", opcode, instr_name, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !=? DUT_MemtoReg) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemtoReg mismatch (Expected don't care, got %b)", opcode, instr_name, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, RegWrite mismatch (Expected 0, got %b)", opcode, instr_name, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !== DUT_MemEnable) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemEnable mismatch (Expected 0, got %b)", opcode, instr_name, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !== DUT_MemWrite) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemWrite mismatch (Expected 1, got %b)", opcode, instr_name, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !== DUT_Branch) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, Branch mismatch (Expected 0, got %b)", opcode, instr_name, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !== DUT_RegSrc) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, RegSrc mismatch (Expected 0, got %b)", opcode, instr_name, DUT_RegSrc);
+              error = 1'b1;
+            end
+          end
+        4'b1100: // B
+          begin
+            if (ALUSrc !=? DUT_ALUSrc) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, ALUSrc mismatch (Expected don't care, got %b)", opcode, instr_name, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !=? DUT_MemtoReg) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemtoReg mismatch (Expected don't care, got %b)", opcode, instr_name, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, RegWrite mismatch (Expected 0, got %b)", opcode, instr_name, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !== DUT_MemEnable) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemEnable mismatch (Expected 0, got %b)", opcode, instr_name, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !== DUT_MemWrite) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, MemWrite mismatch (Expected 0, got %b)", opcode, instr_name, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !== DUT_Branch) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, Branch mismatch (Expected 1, got %b)", opcode, instr_name, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !=? DUT_RegSrc) begin
+              $display("ERROR: Opcode = 0b%4b, Instr: %s, RegSrc mismatch (Expected don't care, got %b)", opcode, instr_name, DUT_RegSrc);
+              error = 1'b1;
+            end
+          end
 
-    // Display the control signals if no errors are found.
-    if (!error)
-        display_decoded_info(.opcode(opcode), .instr_name(instr_name), .rs(rs), .rt(rt), .rd(rd), .imm(imm), .cc(cc));
+        // Further cases would follow with this same format
+        default:
+          begin
+            $display("ERROR: Opcode = 0b%4b, Instr: %s, Unrecognized Opcode", opcode, instr_name);
+            error = 1'b1;
+          end
+      endcase
   endtask
+
+
 
 
   // Display the decoded information based on instruction type

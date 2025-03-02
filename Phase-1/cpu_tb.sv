@@ -268,9 +268,6 @@ module cpu_tb();
         if(error) begin
           $stop();
         end
-
-        // Print a new line between instructions.
-        $display("\n");
       end
 
       // If we reached here, that means all test cases were successful
@@ -289,6 +286,8 @@ module cpu_tb();
     if(rst_n) begin // Only check when not being reset. 
       // Verify the flag register at the begining of each instruction.
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
+      
+      // Print a new line between instructions.
       $display("\n");
     end
 

@@ -576,6 +576,12 @@ module ALU_tb();
             error = 1'b1;
           end
 
+          // Validate that the result is correct.
+          if (result !== 16'h0000) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Result expected 0x%h, got 0x%h.", stim[31:16], B_operand, instr_name, expected_result, result);
+            error = 1'b1;
+          end
+
           // Count up the number of successful nops performed.
           if (!error)
             nop_operations = nop_operations + 1'b1;

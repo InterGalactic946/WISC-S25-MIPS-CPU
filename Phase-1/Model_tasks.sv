@@ -104,6 +104,7 @@ package Model_tasks;
       Z_en = 1'b0;                     // Z flag enable is 0 for all instructions
       NV_en = 1'b0;                    // N/V flag enable is 0 for all instructions
       cc = 3'b000;                     // Default condition code (not used)
+      imm = 16'h000;                   // Default immediate value
 
       // Decode the immediate (imm) based on the opcode
       case (opcode)
@@ -124,7 +125,6 @@ package Model_tasks;
               ALUSrc = 1'b1;    // ALUSrc is 1 for LW
               MemtoReg = 1'b1;  // Memory to register operation
               MemEnable = 1'b1;  // Memory enable
-              MemWrite = 1'b0;    // Memory read operation
           end
           4'b1001: begin  // SW (opcode 9)
               imm = {{12{instr[3]}}, instr[3:0]};  // Lower 4 bits, sign-extended to 16 bits
@@ -176,9 +176,10 @@ package Model_tasks;
           end
       endcase
 
+      // Decode the instruction name.
       decode_opcode(.opcode(opcode), .instr_name(instr_name));  // Decode the opcode to instruction name
 
-      // Display the decoded information (including condition code)
+      // Display the decoded information (including condition code).
       display_decoded_info(.opcode(opcode), .instr_name(instr_name), .rs(rs), .rt(rt), .rd(rd), .imm(imm), .cc(cc));
   endtask
 
@@ -243,13 +244,12 @@ package Model_tasks;
           end
         end
         4'h2: result = Input_A ^ Input_B;      // XOR
-        // TODO: A bunch of these are missing, though I presume you are still working on them
-        4'h3: result = get_red_sum(.A(Input_A), .B(Input_B)); // RED
+        4'h3: get_red_sum(.A(Input_A), .B(Input_B), .expected_sum(result)); // RED
         4'h5, 4'h6, 4'h7: begin
-          result = get_shifted_result(.A(Input_A), .shamt(Input_B[3:0]), .mode(opcode[1:0])); // SLL/SRA/ROR
+          get_shifted_result(.A(Input_A), .B(Input_B[3:0]), .mode(opcode[1:0]), .expected_result(result)); // SLL/SRA/ROR
         end
-        4'h7: result = get_paddsb_sum(.A(Input_A), .B(Input_B)); // PADDSB
-        4'hA, 4'hB: result = get_LB_result(.A(Input_A), .B(Input_B), .mode(opcode[0]));    // LLB/LHB
+        4'h7: get_paddsb_sum(.A(Input_A), .B(Input_B), .expected_result(result)); // PADDSB
+        4'hA, 4'hB: get_LB_result(.A(Input_A), .B(Input_B), .mode(opcode[0]), .expected_result(result));    // LLB/LHB
         default: result = 16'h0000;              // Default to 0
       endcase
       
@@ -273,7 +273,6 @@ package Model_tasks;
 
       // Write to memory if mem_write is enabled.
       if (MemWrite) begin
-        data_memory[addr] = data_in;   // Write to memory
         $display("Model Acessed data memory at address: 0x%h: and wrote new data as 0x%h", addr, data_in);
       end
     end
@@ -283,7 +282,6 @@ package Model_tasks;
   task automatic WriteBack(ref logic [15:0] regfile [0:15], input logic [3:0] rd, input logic [15:0] input_data, input logic RegWrite);
     begin
       if (RegWrite) begin
-        regfile[rd] = input_data;  // Write back to register
         $display("Model Wrote back to register: 0x%h with data: 0x%h", rd, input_data);
       end
     end
@@ -293,25 +291,17 @@ package Model_tasks;
   task DetermineNextPC(input logic Branch, input logic BR, input logic [15:0] Rs,  input [2:0] C, input [2:0] F, input [15:0] imm, input logic [15:0] PC_in, output [15:0] next_PC);
   begin
     logic taken; // Branch taken flag
-
-    // Check if the condition code is invalid.
-    if (C === 3'bx || C === 3'bz) begin
-        taken = 1'b0;  // Set take to 0 as condition is invalid
-        // TODO: error not declared
-        error = 1'b1; // Set error flag
-        return;       // Exit the task early if C is invalid
-    end    
     
     // The branch is taken either unconditionally when C = 3'b111 
     // or when the condition code matches the flag register setting.
-    taken = (C == 3'b000) ? ~F[2]               : // Not Equal (Z = 0)
-            (C == 3'b001) ?  F[2]               : // Equal (Z = 1)
-            (C == 3'b010) ? (~F[2] & ~F[0])     : // Greater Than (Z = N = 0)
-            (C == 3'b011) ?  F[0]               : // Less Than (N = 1)
-            (C == 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
-            (C == 3'b101) ? (F[2] | F[0])       : // Less Than or Equal (Z = 1 or N = 1)
-            (C == 3'b110) ?  F[1]               : // Overflow (V = 1)
-            (C == 3'b111) ?  1'b1               : // Unconditional (always executes)
+    taken = (C === 3'b000) ? ~F[2]               : // Not Equal (Z = 0)
+            (C === 3'b001) ?  F[2]               : // Equal (Z = 1)
+            (C === 3'b010) ? (~F[2] & ~F[0])     : // Greater Than (Z = N = 0)
+            (C === 3'b011) ?  F[0]               : // Less Than (N = 1)
+            (C === 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
+            (C === 3'b101) ? (F[2] | F[0])       : // Less Than or Equal (Z = 1 or N = 1)
+            (C === 3'b110) ?  F[1]               : // Overflow (V = 1)
+            (C === 3'b111) ?  1'b1               : // Unconditional (always executes)
                             1'b0;                // Default: Condition not met (shouldn't happen if C is valid)
     
     // The expected PC addr is the current PC addr + 2 or PC addr + 2 + (I << 1) if branch is taken, or Rs if BR.

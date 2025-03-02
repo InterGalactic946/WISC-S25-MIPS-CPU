@@ -37,7 +37,7 @@
 
 
   // Task: Return the reduction unit sum.
-  task automatic get_red_sum(input signed [15:0] A, input signed [15:0] B);
+  task automatic get_red_sum(input logic signed [15:0] A, input logic signed [15:0] B, output logic signed [15:0] expected_sum);
     begin
       reg [4:0] expected_first_level_sum[0:3];  // expected first level sums
       reg [5:0] expected_second_level_sum[0:1]; // expected second level sums
@@ -55,14 +55,12 @@
 
       // Get the expected sum.
       expected_sum = $signed(expected_second_level_sum[1]) + $signed(expected_second_level_sum[0]);
-
-      return expected_sum;
     end
   endtask
 
 
   // Function to calculate the expected ROR result.
-  function [15:0] get_ror(input [15:0] data, input [3:0] shift_val);
+  function [15:0] get_ror(input logic signed [15:0] data, input logic [3:0] shift_val);
     integer i;
     reg [15:0] result;
     begin
@@ -77,10 +75,8 @@
 
 
   // Task: Get the shifted result based on the shift mode.
-  task automatic get_shifted_result(input signed [15:0] A, input [15:0] B, input [1:0] mode);
+  task automatic get_shifted_result(input logic signed [15:0] A, input logic [15:0] B, input logic [1:0] mode, output logic signed [15:0] expected_result);
     begin
-      reg signed [15:0] expected_result; // Expected result for the shift operation
-
       // Expected result and for SLL/SRA/ROR.
       if (mode === 2'h0)
         expected_result = A << B[3:0];
@@ -90,15 +86,12 @@
         expected_result = get_ror(.data(A), .shift_val(B[3:0]));
       else
         expected_result = A; // Default to A
-      
-      // Return the expected result
-      return expected_result;
     end
   endtask
 
 
   // Task: Check for positive or negative overflow for each 4-bit sub-word.
-  task automatic check_pad_overflow(input signed [15:0] A, input signed [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
+  task automatic check_pad_overflow(input logic signed [15:0] A, input logic signed [15:0] B, output logic pos_overflow[0:3], output logic neg_overflow[0:3]);
     begin
       // Declare the sum variables for each nibble addition.
       reg [3:0] sum; // 4 bits to store the result of adding two 4-bit nibbles
@@ -194,13 +187,12 @@
 
 
   // Task: Get the PADDSB sum.
-  task automatic get_paddsb_sum(input signed [15:0] A, input signed [15:0] B);
+  task automatic get_paddsb_sum(input logic signed [15:0] A, input logic signed [15:0] B, output logic signed [15:0] expected_result);
       // Apply saturation based on the overflow flags for each nibble in the expected_sum array
     begin
       reg pos_overflow[0:3];
       reg neg_overflow[0:3];
       reg [3:0] expected_sum[0:3];
-      reg signed [15:0] expected_result;
 
       // Get the overflow of the sum.
       check_pad_overflow(.A(A), .B(B), .pos_overflow(pos_overflow), .neg_overflow(neg_overflow));
@@ -243,14 +235,12 @@
       
       // Form the expected_PSA_sum.
       expected_result = {expected_sum[3], expected_sum[2], expected_sum[1], expected_sum[0]};
-
-      return expected_result;
     end
   endtask
 
 
   // Task: Get the result of the Load Byte (LB) or Load Half Byte (LHB) instruction.
-  task automatic get_LB_result(input signed [15:0] A, input signed [15:0] B, input logic mode);
+  task automatic get_LB_result(input logic signed [15:0] A, input logic signed [15:0] B, input logic mode, output logic signed [15:0] expected_result);
     begin
       reg [15:0] expected_result; // Expected result for the LB/LHB operation
 
@@ -262,22 +252,20 @@
         // Load High Byte (LHB)
         expected_result = (A & 16'h00FF) | ({B[7:0], 8'h00});
       end
-
-      return expected_result;
     end
   endtask
 
 
   // Task to select ALU operands based on the instruction opcode.
   task automatic ChooseALUOperands(
-    input [3:0] opcode,         // The opcode for instruction type
-    ref [15:0] regfile [0:15], // Register file with 16 registers
-    input [3:0] reg_rs,         // Source register 1 (rs)
-    input [3:0] reg_rt,         // Source register 2 (rt)
-    input [3:0] reg_rd,         // Destination register (rd)
-    input [15:0] imm,           // Immediate value
-    output reg [15:0] Input_A,  // Operand A for ALU
-    output reg [15:0] Input_B   // Operand B for ALU
+    input logic [3:0] opcode,         // The opcode for instruction type
+    ref logic [15:0] regfile [0:15], // Register file with 16 registers
+    input logic [3:0] reg_rs,         // Source register 1 (rs)
+    input logic [3:0] reg_rt,         // Source register 2 (rt)
+    input logic [3:0] reg_rd,         // Destination register (rd)
+    input logic signed [15:0] imm,           // Immediate value
+    output logic signed [15:0] Input_A,  // Operand A for ALU
+    output logic signed [15:0] Input_B   // Operand B for ALU
 );
     begin
         // Determine Input_A based on opcode

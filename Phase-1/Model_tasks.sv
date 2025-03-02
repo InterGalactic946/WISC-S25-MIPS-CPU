@@ -263,7 +263,7 @@ package Model_tasks;
         end
         4'h2: result = Input_A ^ Input_B;      // XOR
         4'h3: get_red_sum(.A(Input_A), .B(Input_B), .expected_sum(result)); // RED
-        4'h5, 4'h6, 4'h7: begin
+        4'h4, 4'h5, 4'h6: begin
           get_shifted_result(.A(Input_A), .B(Input_B[3:0]), .mode(opcode[1:0]), .expected_result(result)); // SLL/SRA/ROR
         end
         4'h7: get_paddsb_sum(.A(Input_A), .B(Input_B), .expected_result(result)); // PADDSB

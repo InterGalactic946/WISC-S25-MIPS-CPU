@@ -231,6 +231,9 @@ module cpu_tb();
             .error(error)                 // Pass the error flag
         );
 
+        // Choose ALU_output or memory_output based on the opcode.
+        reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
+
         // Write the result back to the register file based on the opcode and operands.
         WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
 
@@ -268,9 +271,6 @@ module cpu_tb();
     end else begin
       next_pc = expected_pc + 16'h0002;
     end
-
-    // Choose ALU_output or memory_output based on the opcode.
-    reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
   end
 
    // Expected PC value after each instruction.

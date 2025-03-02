@@ -295,7 +295,7 @@ module cpu_tb();
     if (!rst_n)
       expected_pc <= 16'h0000;
     else if (normal_inc)
-      expected_pc <= next_pc
+      expected_pc <= next_pc;
     else if (b_inc)
       expected_pc <= next_pc + ($signed(imm) <<< 1'b1);
     else if (br_inc)

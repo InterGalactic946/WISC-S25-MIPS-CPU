@@ -55,7 +55,8 @@ module cpu_tb();
       
       // Initialize the PC to a starting value (e.g., 0)
       $display("Initializing CPU Testbench...");
-      instr_memory <= '{default: 16'h0000};
+      instr_memory = '{default: 16'h0000};
+      flag_reg =3'b000;
       next_pc = 16'h0000;
       expected_pc = 16'h0000;
 
@@ -258,9 +259,9 @@ module cpu_tb();
         expected_pc = next_pc;
 
         // Update flag register.
-        flag_reg[2] = (Z_enable) ? Z_set;
-        flag_reg[1] = (V_enable) ? V_set;
-        flag_reg[0] = (N_enable) ? N_set;
+        flag_reg[2] = (Z_en) ? Z_set : 1'b0;
+        flag_reg[1] = (NV_en) ? V_set : 1'b0;
+        flag_reg[0] = (NV_en) ? N_set : 1'b0;
 
         // Stop the simulation if an error is detected.
         if(error) begin
@@ -272,7 +273,6 @@ module cpu_tb();
       $display("YAHOO!! All tests passed.");
       $stop();
     end
-  
   
   // Expected register file at the end of each instruction.
   always @(posedge clk)

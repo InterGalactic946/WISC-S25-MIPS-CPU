@@ -160,7 +160,7 @@ module cpu_tb();
 
         // If the HLT instruction is encountered, stop the simulation.
         if (opcode === 4'hF) begin
-          if (!hlt) begin
+          if (hlt !== 1'b1) begin
             $display("ERROR: HLT signal not set after HLT instruction.");
             error = 1'b1;
           end else begin

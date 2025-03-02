@@ -150,7 +150,7 @@ module cpu_tb();
             .DUT_ALUSrc(iDUT.iCC.ALUSrc), .DUT_MemtoReg(iDUT.iCC.MemtoReg),
             .DUT_RegWrite(iDUT.iCC.RegWrite), .DUT_RegSrc(iDUT.iCC.RegSrc),
             .DUT_MemEnable(iDUT.iCC.MemEnable), .DUT_MemWrite(iDUT.iCC.MemWrite),
-            .DUT_Branch(iDUT.iCC.Branch), .DUT_BR(iDUT.iCC.BR),
+            .DUT_Branch(iDUT.iCC.Branch), .DUT_BR(iDUT.iPCC.BR),
             .DUT_HLT(iDUT.iCC.HLT), .DUT_PCS(iDUT.iCC.PCS),
             .DUT_ALUOp(iDUT.iCC.ALUOp),
             .DUT_Z_en(iDUT.iCC.Z_en), .DUT_NV_en(iDUT.iCC.NV_en),

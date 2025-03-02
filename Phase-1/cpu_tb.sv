@@ -94,7 +94,7 @@ module cpu_tb();
       Setup();
 
       // Run the simulation for each instruction in the instruction memory.
-      repeat (instr_memory.size) begin
+      repeat ($size(instr_memory)) begin
         @(posedge clk); // Wait for the next clock cycle
 
         // Fetch the current instruction from memory.

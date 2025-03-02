@@ -54,9 +54,9 @@ module memory1c (data_out, data_in, data, addr, enable, wr, clk, rst);
          //load loadfile_all.img
          if (!loaded) begin
             if (data)
-              $readmemh("/WISC-S25-MIPS-CPU/Phase-1/data.img", mem);
+              $readmemh("./data.img", mem);
             else
-              $readmemh("/WISC-S25-MIPS-CPU/Phase-1/instructions.img", mem);
+              $readmemh("./instructions.img", mem);
             loaded = 1;
          end
           

@@ -56,6 +56,7 @@ module cpu_tb();
       // Initialize the PC to a starting value (e.g., 0)
       $display("Initializing CPU Testbench...");
       instr_memory = '{default: 16'h0000};
+      regfile <= '{default: 16'h0000};
       flag_reg = '{default: 3'h0};
       next_pc = 16'h0000;
       expected_pc = 16'h0000;
@@ -276,13 +277,6 @@ module cpu_tb();
       $display("YAHOO!! All tests passed.");
       $stop();
     end
-  
-  // Expected register file at the end of each instruction.
-  always @(posedge clk)
-    if (!rst_n)
-      regfile <= '{default: 16'h0000};
-    else if (RegWrite)
-      regfile[rd] <= reg_data;
   
   // Expected data memory.
   always @(posedge clk)

@@ -302,6 +302,7 @@ package Model_tasks;
   task automatic WriteBack(ref logic [15:0] regfile [0:15], input logic [3:0] rd, input logic [15:0] input_data, input logic RegWrite);
     begin
       if (RegWrite) begin
+        regfile[rd] = reg_data;
         $display("Model Wrote back to register: 0x%h with data: 0x%h", rd, input_data);
       end
     end

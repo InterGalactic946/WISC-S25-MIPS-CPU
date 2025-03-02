@@ -245,7 +245,7 @@
 	// Task to verify if the memory contents match between the model and the CPU's memory.
 	task automatic VerifyMemoryAccess(
 			input logic [15:0] addr,               // Address to access memory
-			input logic [15:0] instr_name,         // Instruction name
+			input string instr_name,         // Instruction name
 			ref logic [15:0] model_memory [0:65535],  // Expected data memory model
 			ref logic [15:0] mem_unit [0:65535],   // Actual memory in DUT (CPU memory)
 			ref logic error                       // Error flag

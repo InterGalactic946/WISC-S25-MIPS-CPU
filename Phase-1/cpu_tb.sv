@@ -208,9 +208,9 @@ module cpu_tb();
             .instr_name(instr_name),
             .opcode(opcode),
             .result(expected_result),
-            .Z_set(expected_Z_flag),
-            .N_set(expected_N_flag),
-            .V_set(expected_V_flag),
+            .Z_set(Z_set),
+            .N_set(N_set),
+            .V_set(V_set),
             .ALU_Out(iDUT.iALU.ALU_Out),  // ALU's result output
             .ALU_Z(iDUT.iALU.Z_set),       // ALU's Z flag
             .ALU_N(iDUT.iALU.N_set),       // ALU's N flag

@@ -22,7 +22,6 @@ module cpu (clk, rst_n, hlt, pc);
   wire rst; // Active high synchronous reset signal
 
   // Signals for the PC and instruction memory
-  wire [15:0] pc_addr; // Current PC address
   wire [15:0] nxt_pc;  // Next PC address
   wire [15:0] pc_inst; // Instruction at the current PC address
 
@@ -85,7 +84,7 @@ module cpu (clk, rst_n, hlt, pc);
   // Infer the instruction memory, it is always read enabled and never write enabled.
   memory1c iINSTR_MEM (.data_out(pc_inst),
                               .data_in(16'h0000),
-                              .addr(pc_addr),
+                              .addr(pc),
                               .enable(1'b1),
                               .data(1'b0),
                               .wr(1'b0),
@@ -94,7 +93,7 @@ module cpu (clk, rst_n, hlt, pc);
                               );
 
   // Infer the PC Register.
-  PC_Register iPC (.clk(clk), .rst(rst), .nxt_pc(nxt_pc), .curr_pc(pc_addr));
+  PC_Register iPC (.clk(clk), .rst(rst), .nxt_pc(nxt_pc), .curr_pc(pc));
 
   // Determines what the next pc address is based on branch taken/not.
   PC_control iPCC (.C(c_codes),
@@ -103,7 +102,7 @@ module cpu (clk, rst_n, hlt, pc);
                    .Rs(SrcReg1_data),
                    .Branch(Branch),
                    .BR(pc_inst[12]),
-                   .PC_in(pc_addr),
+                   .PC_in(pc),
                    .PC_out(nxt_pc)
                   );
   /////////////////////////////////////////////////////

@@ -7,7 +7,6 @@ package Model_tasks;
     begin
       clk = 1'b0;
       @(negedge clk) rst_n = 1'b0;
-      repeat (2) @(posedge clk); // Wait for 2 clock cycles
       @(negedge clk) rst_n = 1'b1; // Deassert reset
     end
   endtask

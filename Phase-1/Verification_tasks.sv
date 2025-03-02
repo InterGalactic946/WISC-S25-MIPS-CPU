@@ -405,4 +405,31 @@
       end
 	endtask
 
+  // Task to verify flag register.
+  task automatic VerifyFlagRegister(
+      input  logic [2:0] flag_reg,      // Expected flag register {N, V, Z}
+      input  logic [2:0] DUT_flag_reg,  // DUT's actual flag register {N, V, Z}
+      ref logic error
+  );
+  begin
+      // Check Z flag (flag_reg[0])
+      if (flag_reg[0] !== DUT_flag_reg[0]) begin
+          $error("ERROR: Z_flag mismatch. Expected: %b, Found: %b", flag_reg[0], DUT_flag_reg[0]);
+          error = 1'b1;
+      end
+      
+      // Check V flag (flag_reg[1])
+      if (flag_reg[1] !== DUT_flag_reg[1]) begin
+          $error("ERROR: V_flag mismatch. Expected: %b, Found: %b", flag_reg[1], DUT_flag_reg[1]);
+          error = 1'b1;
+      end
+      
+      // Check N flag (flag_reg[2])
+      if (flag_reg[2] !== DUT_flag_reg[2]) begin
+          $error("ERROR: N_flag mismatch. Expected: %b, Found: %b", flag_reg[2], DUT_flag_reg[2]);
+          error = 1'b1;
+      end
+  end
+  endtask
+
 endpackage  

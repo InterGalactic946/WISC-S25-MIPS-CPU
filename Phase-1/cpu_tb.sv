@@ -241,6 +241,18 @@ module cpu_tb();
         // (Assuming regfile is updated after the write operation).
         if (RegWrite)
           $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
+        
+        // Determine the next PC value based on the opcode and operands.
+        DetermineNextPC(
+          .Branch(Branch), // Pass branch flag
+          .BR(BR), // Pass branch flag
+          .C(cc), // Pass condition code
+          .F(flag_reg), // Pass flag register
+          .PC_in(expected_pc), // Pass current PC value 
+          .imm(imm), // Pass immediate value
+          .next_PC(next_pc),
+          .Rs(regfile[rs])
+        );
 
         // Stop the simulation if an error is detected.
         if(error) begin

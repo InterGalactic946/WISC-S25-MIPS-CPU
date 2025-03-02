@@ -60,7 +60,7 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWri
     assign PCS = Opcode[3] & Opcode[2] & Opcode[1] & ~Opcode[0];
     
     // Z_en is enabled for all ALU instructions except PADDSB.
-    assign Z_en = ~Opcode[3] & (~Opcode[2] | ~Opcode[1] | ~Opcode[0]);
+    assign Z_en = ~Opcode[3] & (Opcode[2] | ~Opcode[1] | ~Opcode[0]);
   
     // NV_en is enabled for just ADD and SUB instructions.
     assign NV_en = Opcode[3:1] == 3'h0;

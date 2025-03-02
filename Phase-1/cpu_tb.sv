@@ -16,6 +16,7 @@ module cpu_tb();
   // Declare internal signals //
   /////////////////////////////
   logic hlt;
+  logic taken;
   logic [15:0] expected_pc;
   logic [15:0] pc;
   logic [15:0] next_pc;

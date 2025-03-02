@@ -207,7 +207,7 @@ module cpu_tb();
         VerifyExecutionResult(
             .instr_name(instr_name),
             .opcode(opcode),
-            .result(expected_result),
+            .result(result),
             .Z_set(Z_set),
             .N_set(N_set),
             .V_set(V_set),

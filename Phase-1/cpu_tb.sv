@@ -83,40 +83,21 @@ module cpu_tb();
         $stop();
       end
     end
-  endtask
+  endtask 
 
+  // Test procedure to apply stimulus and check responses.
   initial begin
-    // Call the Setup task to initialize the testbench.
-    Setup();
-    
-    // Run the simulation for 1000 ns.
-    repeat($size(instr_memory)) begin
-              // If the HLT instruction is encountered, stop the simulation.
-        if (opcode === 4'hF) begin
-          if (!hlt) begin
-            $display("ERROR: HLT signal not set after HLT instruction.");
-            error = 1'b1;
-          end else begin
-            $display("HLT instruction encountered. Stopping simulation.");
-          end
-          $stop();
-        end
+      ///////////////////////////////
+      // Initialize the testbench //
+      /////////////////////////////
+      Setup();
 
+      // Run the simulation for each instruction in the instruction memory.
+      repeat ($size(instr_memory)) begin
+        // Fetch the current instruction from memory.
+        FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
-      // Stop the simulation if an error is detected.
-      if(error) begin
-          $stop();
-      end
-    
-    end
-    
-    // If we reached here, that means all test cases were successful
-    $display("YAHOO!! All tests passed.");
-    $stop();
-  end
-
-  always @(negedge clk) begin
-      // Verify that the instruction was fetched correctly.
+        // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(
             .expected_instr(instr),      // Expected instruction
             .actual_instr(iDUT.pc_inst),          // Fetched instruction from DUT
@@ -125,82 +106,7 @@ module cpu_tb();
             .pc(pc),                              // Actual PC value
             .error(error)                         // Error flag
         );
-      
-             // Verify that the control signals are correctly decoded.
-        VerifyControlSignals(
-            .opcode(opcode),
-            .instr_name(instr_name),
-            .rs(rs), .rt(rt), .rd(rd),
-            .imm(imm),
-            .ALUSrc(ALUSrc), .MemtoReg(MemtoReg), .RegWrite(RegWrite), .RegSrc(RegSrc),
-            .MemEnable(MemEnable), .MemWrite(MemWrite), .Branch(Branch), .BR(BR),
-            .HLT(HLT), .PCS(PCS),
-            .ALUOp(ALUOp), .Z_en(Z_en), .NV_en(NV_en), .cc(cc),
-            .DUT_opcode(iDUT.opcode),
-            .DUT_reg_rs(iDUT.reg_rs), .DUT_reg_rt(iDUT.reg_rt), .DUT_reg_rd(iDUT.reg_rd),
-            .DUT_ALUSrc(iDUT.iCC.ALUSrc), .DUT_MemtoReg(iDUT.iCC.MemtoReg),
-            .DUT_RegWrite(iDUT.iCC.RegWrite), .DUT_RegSrc(iDUT.iCC.RegSrc),
-            .DUT_MemEnable(iDUT.iCC.MemEnable), .DUT_MemWrite(iDUT.iCC.MemWrite),
-            .DUT_Branch(iDUT.iCC.Branch), .DUT_BR(iDUT.iPCC.BR),
-            .DUT_HLT(iDUT.iCC.HLT), .DUT_PCS(iDUT.iCC.PCS),
-            .DUT_ALUOp(iDUT.iCC.ALUOp),
-            .DUT_Z_en(iDUT.iCC.Z_en), .DUT_NV_en(iDUT.iCC.NV_en),
-            .DUT_c_codes(iDUT.c_codes),
-            .error(error)
-        );
-      
-      // Verify that the correct operands were chosen.
-        VerifyALUOperands(
-            .instr_name(instr_name),
-            .Input_A(A),
-            .Input_B(B),
-            .ALU_Input_A(iDUT.iALU.Input_A), // ALU internal operand A
-            .ALU_Input_B(iDUT.iALU.Input_B), // ALU internal operand B
-            .error(error)
-        );
-      
-      // Verify the result of the operation.
-        VerifyExecutionResult(
-            .instr_name(instr_name),
-            .opcode(opcode),
-            .result(result),
-            .Z_set(Z_set),
-            .N_set(N_set),
-            .V_set(V_set),
-            .Input_A(iDUT.iALU.Input_A), // ALU internal operand A
-            .Input_B(iDUT.iALU.Input_B), // ALU internal operand B
-            .ALU_Out(iDUT.iALU.ALU_Out),  // ALU's result output
-            .ALU_Z(iDUT.iALU.Z_set),       // ALU's Z flag
-            .ALU_N(iDUT.iALU.N_set),       // ALU's N flag
-            .ALU_V(iDUT.iALU.V_set),       // ALU's V flag
-            .error(error)
-        );
-      
-              // Verify the memory access operation.
-        VerifyMemoryAccess(
-            .addr(result),                // Pass the address to access memory
-            .enable(MemEnable),           // Pass the memory enable signal
-            .data_in(regfile[rd]),        // Pass the data to write to memory
-            .instr_name(instr_name),      // Pass the instruction name
-            .wr(MemWrite),             // Pass the memory write signal
-            .model_memory(data_memory),  // Pass the memory model from DUT
-            .mem_unit(iDUT.iDATA_MEM.mem),     // Pass the actual memory from DUT
-            .error(error)                 // Pass the error flag
-        );
-      
-      // (Assuming regfile is updated after the write operation).
-      if (RegWrite)
-        $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
-    end 
 
-  // Test procedure to apply stimulus and check responses.
-  always @(posedge clk) begin
-      // Run the simulation for each instruction in the instruction memory.
-      // Fetch the current instruction from memory.
-      FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
-  end
-
-  always_comb begin
         // Decode the instruction to extract opcode, rs, rt, rd, imm, and cc, and control signals.
         DecodeInstruction(
             .instr(instr),
@@ -225,6 +131,40 @@ module cpu_tb();
             .NV_en(NV_en),
             .cc(cc)
         );
+
+        // Verify that the control signals are correctly decoded.
+        VerifyControlSignals(
+            .opcode(opcode),
+            .instr_name(instr_name),
+            .rs(rs), .rt(rt), .rd(rd),
+            .imm(imm),
+            .ALUSrc(ALUSrc), .MemtoReg(MemtoReg), .RegWrite(RegWrite), .RegSrc(RegSrc),
+            .MemEnable(MemEnable), .MemWrite(MemWrite), .Branch(Branch), .BR(BR),
+            .HLT(HLT), .PCS(PCS),
+            .ALUOp(ALUOp), .Z_en(Z_en), .NV_en(NV_en), .cc(cc),
+            .DUT_opcode(iDUT.opcode),
+            .DUT_reg_rs(iDUT.reg_rs), .DUT_reg_rt(iDUT.reg_rt), .DUT_reg_rd(iDUT.reg_rd),
+            .DUT_ALUSrc(iDUT.iCC.ALUSrc), .DUT_MemtoReg(iDUT.iCC.MemtoReg),
+            .DUT_RegWrite(iDUT.iCC.RegWrite), .DUT_RegSrc(iDUT.iCC.RegSrc),
+            .DUT_MemEnable(iDUT.iCC.MemEnable), .DUT_MemWrite(iDUT.iCC.MemWrite),
+            .DUT_Branch(iDUT.iCC.Branch), .DUT_BR(iDUT.iPCC.BR),
+            .DUT_HLT(iDUT.iCC.HLT), .DUT_PCS(iDUT.iCC.PCS),
+            .DUT_ALUOp(iDUT.iCC.ALUOp),
+            .DUT_Z_en(iDUT.iCC.Z_en), .DUT_NV_en(iDUT.iCC.NV_en),
+            .DUT_c_codes(iDUT.c_codes),
+            .error(error)
+        );
+
+        // If the HLT instruction is encountered, stop the simulation.
+        if (opcode === 4'hF) begin
+          if (!hlt) begin
+            $display("ERROR: HLT signal not set after HLT instruction.");
+            error = 1'b1;
+          end else begin
+            $display("HLT instruction encountered. Stopping simulation.");
+          end
+          $stop();
+        end
         
         // Choose the correct operands for the instruction based on the opcode.
         ChooseALUOperands(
@@ -236,6 +176,16 @@ module cpu_tb();
           .regfile(regfile), // Pass register file
           .Input_A(A),
           .Input_B(B)
+        );
+
+        // Verify that the correct operands were chosen.
+        VerifyALUOperands(
+            .instr_name(instr_name),
+            .Input_A(A),
+            .Input_B(B),
+            .ALU_Input_A(iDUT.iALU.Input_A), // ALU internal operand A
+            .ALU_Input_B(iDUT.iALU.Input_B), // ALU internal operand B
+            .error(error)
         );
 
         // Execute the instruction based on the opcode and operands.
@@ -250,11 +200,57 @@ module cpu_tb();
           .N_set(N_set)
         );
 
+        // Verify the result of the operation.
+        VerifyExecutionResult(
+            .instr_name(instr_name),
+            .opcode(opcode),
+            .result(result),
+            .Z_set(Z_set),
+            .N_set(N_set),
+            .V_set(V_set),
+            .Input_A(iDUT.iALU.Input_A), // ALU internal operand A
+            .Input_B(iDUT.iALU.Input_B), // ALU internal operand B
+            .ALU_Out(iDUT.iALU.ALU_Out),  // ALU's result output
+            .ALU_Z(iDUT.iALU.Z_set),       // ALU's Z flag
+            .ALU_N(iDUT.iALU.N_set),       // ALU's N flag
+            .ALU_V(iDUT.iALU.V_set),       // ALU's V flag
+            .error(error)
+        );
+
         // Access the memory based on the opcode and operands.
         AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .MemEnable(MemEnable), .MemWrite(MemWrite), .data_memory(data_memory));
 
+        // Verify the memory access operation.
+        VerifyMemoryAccess(
+            .addr(result),                // Pass the address to access memory
+            .enable(MemEnable),           // Pass the memory enable signal
+            .data_in(regfile[rd]),        // Pass the data to write to memory
+            .instr_name(instr_name),      // Pass the instruction name
+            .wr(MemWrite),             // Pass the memory write signal
+            .model_memory(data_memory),  // Pass the memory model from DUT
+            .mem_unit(iDUT.iDATA_MEM.mem),     // Pass the actual memory from DUT
+            .error(error)                 // Pass the error flag
+        );
+
+        // Choose ALU_output or memory_output based on the opcode.
+        reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
+
         // Write the result back to the register file based on the opcode and operands.
         WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
+
+        // (Assuming regfile is updated after the write operation).
+        if (RegWrite)
+          $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
+
+        // Stop the simulation if an error is detected.
+        if(error) begin
+          $stop();
+        end
+      end
+
+      // If we reached here, that means all test cases were successful
+      $display("YAHOO!! All tests passed.");
+      $stop();
     end
 
     // Models the behavior of the CPU PC control.
@@ -274,9 +270,6 @@ module cpu_tb();
 
   // Incrementer logic (PC + 2)
   assign pc_plus_2 = expected_pc + 16'h0002;
-
-  // Select the data to write back to the register file based on the control signals.
-  assign reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
 
   // Compute branch target (PC + offset)
   assign branch_target = pc_plus_2 + ($signed(imm) <<< 1'b1);

@@ -3,7 +3,9 @@
 module cpu_tb();
 
   import Model_tasks::*;
+  import ALU_tasks::*;
   import Verification_tasks::*;
+
 
   ///////////////////////////
   // Stimulus of type reg //

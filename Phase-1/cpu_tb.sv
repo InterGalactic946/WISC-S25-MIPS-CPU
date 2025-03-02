@@ -53,6 +53,7 @@ module cpu_tb();
       
       // Initialize the PC to a starting value (e.g., 0)
       $display("Initializing CPU Testbench...");
+      next_pc = 16'h0000;
 
       // Initialize all signals for the testbench.
       Initialize(.clk(clk), .rst_n(rst_n));

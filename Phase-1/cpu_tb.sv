@@ -115,7 +115,7 @@ module cpu_tb();
     $stop();
   end
 
-  always @(posedge clk) begin
+  always @(negedge clk) begin
       // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(
             .expected_instr(instr),      // Expected instruction
@@ -174,6 +174,18 @@ module cpu_tb();
             .ALU_N(iDUT.iALU.N_set),       // ALU's N flag
             .ALU_V(iDUT.iALU.V_set),       // ALU's V flag
             .error(error)
+        );
+      
+              // Verify the memory access operation.
+        VerifyMemoryAccess(
+            .addr(result),                // Pass the address to access memory
+            .enable(MemEnable),           // Pass the memory enable signal
+            .data_in(regfile[rd]),        // Pass the data to write to memory
+            .instr_name(instr_name),      // Pass the instruction name
+            .wr(MemWrite),             // Pass the memory write signal
+            .model_memory(data_memory),  // Pass the memory model from DUT
+            .mem_unit(iDUT.iDATA_MEM.mem),     // Pass the actual memory from DUT
+            .error(error)                 // Pass the error flag
         );
       
       // (Assuming regfile is updated after the write operation).
@@ -238,18 +250,6 @@ module cpu_tb();
 
         // Access the memory based on the opcode and operands.
         AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .MemEnable(MemEnable), .MemWrite(MemWrite), .data_memory(data_memory));
-
-        // Verify the memory access operation.
-        VerifyMemoryAccess(
-            .addr(result),                // Pass the address to access memory
-            .enable(MemEnable),           // Pass the memory enable signal
-            .data_in(regfile[rd]),        // Pass the data to write to memory
-            .instr_name(instr_name),      // Pass the instruction name
-            .wr(MemWrite),             // Pass the memory write signal
-            .model_memory(data_memory),  // Pass the memory model from DUT
-            .mem_unit(iDUT.iDATA_MEM.mem),     // Pass the actual memory from DUT
-            .error(error)                 // Pass the error flag
-        );
 
         // Write the result back to the register file based on the opcode and operands.
         WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));

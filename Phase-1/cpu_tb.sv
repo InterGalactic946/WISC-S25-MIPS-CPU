@@ -59,7 +59,7 @@ module cpu_tb();
 
       // Verify that the PC is initialized to 0x0000.
 			if (pc !== expected_pc) begin
-					$display("ERROR: PC not initialized to 0x0000 after reset.");
+					$display("ERROR: PC: 0x%h does not match Expected_PC: 0x%h after reset.", pc, expected_pc);
 					error = 1'b1;
 			end
 

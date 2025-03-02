@@ -69,18 +69,18 @@ module cpu_tb();
 			// Apply SrcReg1 and SrcReg2 for every clock cycle to verify register file initialization
 			for (addr = 0; addr < 16; addr = addr + 1) begin
 					// Apply SrcReg1 and SrcReg2 at every posedge of the clock and check if the data is 0x0000
-					iDUT.iRF.SrcReg1 = addr;  // Set the first source register to the current address
-					iDUT.iRF.SrcReg2 = addr;  // Set the second source register to the current address
+					iDUT.SrcReg1 = addr;  // Set the first source register to the current address
+					iDUT.SrcReg2 = addr;  // Set the second source register to the current address
 
 					@(posedge clk);  // Wait for the next positive edge of the clock
 					
 					// Verify that the register file entries are all initialized to 0x0000
-					if (iDUT.iRF.SrcData1 !== 16'h0000) begin
+					if (iDUT.SrcReg1_data !== 16'h0000) begin
 							$display("ERROR: Register File Error at SrcReg1 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData1);
 							error = 1'b1;
 					end
 
-					if (iDUT.iRF.SrcData2 !== 16'h0000) begin
+					if (iDUT.SrcReg2_data !== 16'h0000) begin
 							$display("ERROR: Register File Error at SrcReg2 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData2);
 							error = 1'b1;
 					end

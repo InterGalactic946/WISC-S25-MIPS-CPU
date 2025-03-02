@@ -75,12 +75,12 @@ module cpu_tb();
 					@(posedge clk);  // Wait for the next positive edge of the clock
 					
 					// Verify that the register file entries are all initialized to 0x0000
-					if (SrcData1 !== 16'h0000) begin
+					if (iDUT.iRF.SrcData1 !== 16'h0000) begin
 							$display("ERROR: Register File Error at SrcReg1 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData1);
 							error = 1'b1;
 					end
 
-					if (SrcData2 !== 16'h0000) begin
+					if (iDUT.iRF.SrcData2 !== 16'h0000) begin
 							$display("ERROR: Register File Error at SrcReg2 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData2);
 							error = 1'b1;
 					end

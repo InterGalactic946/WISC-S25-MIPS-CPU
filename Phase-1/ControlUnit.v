@@ -54,7 +54,7 @@ module ControlUnit(Opcode, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWri
     assign ALUOp = Opcode;
 
     // HLT Opcode = 0x1111
-    assign HLT = &Opcode[3:0];
+    assign HLT = &Opcode;
 
     // PCS Opcode = 0x1110
     assign PCS = Opcode[3] & Opcode[2] & Opcode[1] & ~Opcode[0];

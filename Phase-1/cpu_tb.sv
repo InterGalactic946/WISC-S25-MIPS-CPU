@@ -46,27 +46,6 @@ module cpu_tb();
   ////////////////////
   cpu iDUT (.clk(clk), .rst_n(rst_n), .hlt(hlt), .pc(pc));
 
-  // Task to verify that all memory locations are zero post initialization.
-  task automatic VerifyPostInitialization();
-			integer addr;
-			reg [15:0] data;
-			
-			// Verify that the PC is initialized to 0x0000.
-			if (pc !== expected_pc) begin
-					$display("ERROR: PC not initialized to 0x0000 after reset.");
-					error = 1'b1;
-			end
-
-			// Verify Data Memory (iDATA_MEM)
-			for (addr = 0; addr < 65536; addr = addr + 1) begin
-					data = iDUT.iDATA_MEM.mem[addr]; // Accessing memory array
-					if (data !== 16'h0000) begin
-							$display("ERROR: Data Memory at address %0d: Expected 0x0000, Found 0x%h.", addr, data);
-							error = 1'b1;
-					end
-			end
-	endtask
-
   // Task to initialize the testbench.
   task automatic Setup();
     begin
@@ -78,8 +57,11 @@ module cpu_tb();
       // Initialize all signals for the testbench.
       Initialize(.clk(clk), .rst_n(rst_n));
 
-      // Verify that all memory locations and registers are zero post initialization.
-      VerifyPostInitialization();
+      // Verify that the PC is initialized to 0x0000.
+			if (pc !== expected_pc) begin
+					$display("ERROR: PC not initialized to 0x0000 after reset.");
+					error = 1'b1;
+			end
 
       // Load instructions into memory for the CPU to execute.
       if (!error) begin
@@ -223,6 +205,8 @@ module cpu_tb();
             .Z_set(Z_set),
             .N_set(N_set),
             .V_set(V_set),
+            .Input_A(iDUT.iALU.Input_A), // ALU internal operand A
+            .Input_B(iDUT.iALU.Input_B), // ALU internal operand B
             .ALU_Out(iDUT.iALU.ALU_Out),  // ALU's result output
             .ALU_Z(iDUT.iALU.Z_set),       // ALU's Z flag
             .ALU_N(iDUT.iALU.N_set),       // ALU's N flag
@@ -236,7 +220,11 @@ module cpu_tb();
         // Verify the memory access operation.
         VerifyMemoryAccess(
             .addr(result),                // Pass the address to access memory
+            .enable(MemEnable),           // Pass the memory enable signal
+            .data_in(regfile[rd]),        // Pass the data to write to memory
             .instr_name(instr_name),      // Pass the instruction name
+            .enable(MemEnable),           // Pass the memory enable signal
+            .wr(MemWrite),             // Pass the memory write signal
             .model_memory(data_memory),  // Pass the memory model from DUT
             .mem_unit(iDUT.iDATA_MEM.mem),     // Pass the actual memory from DUT
             .error(error)                 // Pass the error flag

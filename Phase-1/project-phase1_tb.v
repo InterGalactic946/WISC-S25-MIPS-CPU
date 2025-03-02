@@ -1,4 +1,4 @@
-module cpu_tb();
+module project_phase1_tb();
   
 
    wire [15:0] PC;

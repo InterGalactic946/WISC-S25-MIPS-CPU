@@ -188,8 +188,8 @@ module cpu_tb();
             .instr_name(instr_name),
             .Input_A(A),
             .Input_B(B),
-            .ALU_Input_A(iDUT.iALU.Input_A), // ALU internal operand A
-            .ALU_Input_B(iDUT.iALU.Input_B), // ALU internal operand B
+            .ALU_Input_A(iDUT.iALU.ALU_In1), // ALU internal operand A
+            .ALU_Input_B(iDUT.iALU.ALU_In2), // ALU internal operand B
             .error(error)
         );
 
@@ -213,8 +213,8 @@ module cpu_tb();
             .Z_set(Z_set),
             .N_set(N_set),
             .V_set(V_set),
-            .Input_A(iDUT.iALU.ALU_In1), // ALU internal operand A
-            .Input_B(iDUT.iALU.ALU_In2), // ALU internal operand B
+            .Input_A(iDUT.iALU.Input_A), // ALU internal operand A
+            .Input_B(iDUT.iALU.Input_B), // ALU internal operand B
             .ALU_Out(iDUT.iALU.ALU_Out),  // ALU's result output
             .ALU_Z(iDUT.iALU.Z_set),       // ALU's Z flag
             .ALU_N(iDUT.iALU.N_set),       // ALU's N flag

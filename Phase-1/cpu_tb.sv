@@ -55,7 +55,6 @@ module cpu_tb();
       
       // Initialize the PC to a starting value (e.g., 0)
       $display("Initializing CPU Testbench...");
-      // next_pc = 16'h0000;
       instr_memory <= '{default: 16'h0000};
 
       // Initialize all signals for the testbench.
@@ -285,14 +284,20 @@ module cpu_tb();
     end
   end
 
+  always @(posedge clk)
+    if (!rst_n)
+      next_pc <= 16'h0000;
+    else
+      next_pc <= expected_pc + 16'h0002;
+
    // Expected PC value after each instruction.
   always @(posedge clk)
     if (!rst_n)
       expected_pc <= 16'h0000;
     else if (normal_inc)
-      expected_pc <= expected_pc + 16'h0002;
+      expected_pc <= next_pc
     else if (b_inc)
-      expected_pc <= expected_pc + 16'h0002 + ($signed(imm) <<< 1'b1);
+      expected_pc <= next_pc + ($signed(imm) <<< 1'b1);
     else if (br_inc)
       expected_pc <= regfile[rs];
   

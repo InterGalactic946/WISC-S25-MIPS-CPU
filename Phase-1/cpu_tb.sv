@@ -46,6 +46,46 @@ module cpu_tb();
   ////////////////////
   cpu iDUT (.clk(clk), .rst_n(rst_n), .hlt(hlt), .pc(pc));
 
+  // Task to verify that all memory locations and registers are zero post initialization.
+  task automatic VerifyPostInitialization();
+			integer addr;
+			reg [15:0] data;
+			
+			// Verify that the PC is initialized to 0x0000.
+			if (pc !== expected_pc) begin
+					$display("ERROR: PC not initialized to 0x0000 after reset.");
+					error = 1'b1;
+			end
+
+			// Verify Data Memory (iDATA_MEM)
+			for (addr = 0; addr < 65536; addr = addr + 1) begin
+					data = data_memory[addr]; // Accessing memory array
+					if (data !== 16'h0000) begin
+							$display("ERROR: Data Memory at address %0d: Expected 0x0000, Found 0x%h.", addr, data);
+							error = 1'b1;
+					end
+			end
+
+			// Apply SrcReg1 and SrcReg2 for every clock cycle to verify register file initialization
+			for (addr = 0; addr < 16; addr = addr + 1) begin
+					// Apply SrcReg1 and SrcReg2 at every posedge of the clock and check if the data is 0x0000
+					iDUT.iRF.SrcReg1 = addr;  // Set the first source register to the current address
+					iDUT.iRF.SrcReg2 = addr;  // Set the second source register to the current address
+
+					@(posedge clk);  // Wait for the next positive edge of the clock
+					
+					// Verify that the register file entries are all initialized to 0x0000
+					if (SrcData1 !== 16'h0000) begin
+							$display("ERROR: Register File Error at SrcReg1 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData1);
+							error = 1'b1;
+					end
+
+					if (SrcData2 !== 16'h0000) begin
+							$display("ERROR: Register File Error at SrcReg2 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData2);
+							error = 1'b1;
+					end
+			end
+	endtask
 
   // Task to initialize the testbench.
   task automatic Setup();
@@ -59,17 +99,7 @@ module cpu_tb();
       Initialize(.clk(clk), .rst_n(rst_n));
 
       // Verify that all memory locations and registers are zero post initialization.
-      VerifyPostInitialization(
-          .clk(clk),                          // Clock signal
-          .data_memory(iDUT.iDATA_MEM.mem),    // Data memory from the DUT
-          .expected_pc(expected_pc),           // Expected PC value
-          .pc(pc),                             // Actual PC value
-          .error(error),                       // Error flag
-          .SrcReg1(iDUT.iRF.SrcReg1),          // Pass SrcReg1 as a reference
-          .SrcReg2(iDUT.iRF.SrcReg2),          // Pass SrcReg2 as a reference
-          .SrcData1(iDUT.iRF.SrcData1),        // Pass SrcData1 as a reference
-          .SrcData2(iDUT.iRF.SrcData2)         // Pass SrcData2 as a reference
-      );
+      VerifyPostInitialization();
 
       // Load instructions into memory for the CPU to execute.
       if (!error) begin

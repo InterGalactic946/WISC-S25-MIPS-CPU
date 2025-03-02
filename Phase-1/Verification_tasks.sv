@@ -1,57 +1,5 @@
   package Verification_tasks;
 
-  // Task to verify that all memory locations and registers are zero post initialization.
-  task automatic VerifyPostInitialization(
-    ref logic clk,                          // Clock signal
-    ref logic [15:0] data_memory [0:65535], // Data memory array
-    input logic [15:0] expected_pc,           // Expected PC value
-    input logic [15:0] pc,                    // Actual PC value
-    ref logic error,                       // Error flag
-    ref logic [3:0] SrcReg1,                  // Register 1 reference (4-bit)
-    ref logic [3:0] SrcReg2,                  // Register 2 reference (4-bit)
-    ref logic [15:0] SrcData1,                // Data from register 1 reference (16-bit)
-    ref logic [15:0] SrcData2                 // Data from register 2 reference (16-bit)
-	);
-			integer addr;
-			reg [15:0] data;
-			
-			// Verify that the PC is initialized to 0x0000.
-			if (pc !== expected_pc) begin
-					$display("ERROR: PC not initialized to 0x0000 after reset.");
-					error = 1'b1;
-			end
-
-			// Verify Data Memory (iDATA_MEM)
-			for (addr = 0; addr < 65536; addr = addr + 1) begin
-					data = data_memory[addr]; // Accessing memory array
-					if (data !== 16'h0000) begin
-							$display("ERROR: Data Memory at address %0d: Expected 0x0000, Found 0x%h.", addr, data);
-							error = 1'b1;
-					end
-			end
-
-			// Apply SrcReg1 and SrcReg2 for every clock cycle to verify register file initialization
-			for (addr = 0; addr < 16; addr = addr + 1) begin
-					// Apply SrcReg1 and SrcReg2 at every posedge of the clock and check if the data is 0x0000
-					SrcReg1 = addr;  // Set the first source register to the current address
-					SrcReg2 = addr;  // Set the second source register to the current address
-
-					@(posedge clk);  // Wait for the next positive edge of the clock
-					
-					// Verify that the register file entries are all initialized to 0x0000
-					if (SrcData1 !== 16'h0000) begin
-							$display("ERROR: Register File Error at SrcReg1 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData1);
-							error = 1'b1;
-					end
-
-					if (SrcData2 !== 16'h0000) begin
-							$display("ERROR: Register File Error at SrcReg2 = %0d: Expected 0x0000, Found 0x%h", addr, SrcData2);
-							error = 1'b1;
-					end
-			end
-	endtask
-
-
   // Task to verify the instruction fetched from the instruction memory.
 	task automatic VerifyInstructionFetched(
 			ref logic [15:0] expected_instr,       // Expected instruction

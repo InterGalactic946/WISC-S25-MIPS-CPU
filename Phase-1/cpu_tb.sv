@@ -91,17 +91,10 @@ module cpu_tb();
       /////////////////////////////
       Setup();
 
-      for (int i = 0; i < 10; i++) begin
-        // Display the current instruction being executed
-        $display("Instrction: 0x%h", instr_memory[16'h0000 + i*2]);
-      end
-
       // Run the simulation for each instruction in the instruction memory.
       repeat ($size(instr_memory)) @(posedge clk) begin
         // Fetch the current instruction from memory.
         FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
-
-        $display("Instruction: 0x%h", instr_memory[expected_pc]);
 
         // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(
@@ -262,8 +255,7 @@ module cpu_tb();
 
         // Update the PC register with the next PC value.
         expected_pc = next_pc;
-        $display("Expected PC: 0x%h", expected_pc);
-
+        
         // Stop the simulation if an error is detected.
         if(error) begin
           $stop();
@@ -298,7 +290,7 @@ module cpu_tb();
     if (!rst_n)
       data_memory <= '{default: 16'h0000};
     else if (MemEnable & MemWrite) // Store operation
-      data_memory[result] <= regfile[rd];
+      data_memory[result/2] <= regfile[rd];
 
   // Generate clock signal with 10 ns period.
   always 

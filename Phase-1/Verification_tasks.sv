@@ -22,8 +22,8 @@
 			end
 
 			// Verify that the instruction fetched matches what is in the instruction memory
-			if (instr_memory[pc] !== actual_instr) begin
-				$display("ERROR: Instruction at PC 0x%h does not match memory: Expected 0x%h, Found 0x%h.", pc, instr_memory[pc], actual_instr);
+			if (instr_memory[pc/2] !== actual_instr) begin
+				$display("ERROR: Instruction at PC 0x%h does not match memory: Expected 0x%h, Found 0x%h.", pc, instr_memory[pc/2], actual_instr);
 				error = 1'b1;
 			end
 

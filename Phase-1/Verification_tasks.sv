@@ -414,19 +414,19 @@
   begin
       // Check Z flag (flag_reg[0])
       if (flag_reg[0] !== DUT_flag_reg[0]) begin
-          $error("ERROR: Z_flag mismatch. Expected: %b, Found: %b", flag_reg[0], DUT_flag_reg[0]);
+          $display("ERROR: Z_flag mismatch. Expected: %b, Found: %b", flag_reg[0], DUT_flag_reg[0]);
           error = 1'b1;
       end
       
       // Check V flag (flag_reg[1])
       if (flag_reg[1] !== DUT_flag_reg[1]) begin
-          $error("ERROR: V_flag mismatch. Expected: %b, Found: %b", flag_reg[1], DUT_flag_reg[1]);
+          $display("ERROR: V_flag mismatch. Expected: %b, Found: %b", flag_reg[1], DUT_flag_reg[1]);
           error = 1'b1;
       end
       
       // Check N flag (flag_reg[2])
       if (flag_reg[2] !== DUT_flag_reg[2]) begin
-          $error("ERROR: N_flag mismatch. Expected: %b, Found: %b", flag_reg[2], DUT_flag_reg[2]);
+          $display("ERROR: N_flag mismatch. Expected: %b, Found: %b", flag_reg[2], DUT_flag_reg[2]);
           error = 1'b1;
       end
   end

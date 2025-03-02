@@ -165,7 +165,7 @@ module cpu_tb();
    assign WriteData = iDUT.iRF.DstData;
    // Data being written to the register. (16 bits)
    
-   assign MemRead =  iDUT.iCC.MemToReg;
+	assign MemRead =  (iDUT.iCC.MemEnable & ~iDUT.iCC.MemWrite);
    // Is memory being read, one bit signal (1 means yes, 0 means no)
    
    assign MemWrite = (iDUT.iCC.MemEnable & iDUT.iCC.MemWrite);

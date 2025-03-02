@@ -251,21 +251,21 @@ module cpu_tb();
     // Models the behavior of the CPU PC control.
     always_comb begin
     // Determine if branch should be taken
-    taken = (C == 3'b000) ? ~F[2]               : // Not Equal (Z = 0)
-            (C == 3'b001) ?  F[2]               : // Equal (Z = 1)
-            (C == 3'b010) ? (~F[2] & ~F[0])     : // Greater Than (Z = N = 0)
-            (C == 3'b011) ?  F[0]               : // Less Than (N = 1)
-            (C == 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
-            (C == 3'b101) ? (F[2] | F[0])       : // Less Than or Equal (Z = 1 or N = 1)
-            (C == 3'b110) ?  F[1]               : // Overflow (V = 1)
-            (C == 3'b111) ?  1'b1               : // Unconditional (always executes)
+    taken = (cc == 3'b000) ? ~flag_reg[2]               : // Not Equal (Z = 0)
+            (cc == 3'b001) ?  flag_reg[2]               : // Equal (Z = 1)
+            (cc == 3'b010) ? (~flag_reg[2] & ~flag_reg[0])     : // Greater Than (Z = N = 0)
+            (cc == 3'b011) ?  flag_reg[0]               : // Less Than (N = 1)
+            (cc == 3'b100) ? (flag_reg[2] | (~flag_reg[2] & ~flag_reg[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
+            (cc == 3'b101) ? (flag_reg[2] | flag_reg[0])       : // Less Than or Equal (Z = 1 or N = 1)
+            (cc == 3'b110) ?  flag_reg[1]               : // Overflow (V = 1)
+            (cc == 3'b111) ?  1'b1               : // Unconditional (always executes)
                             1'b0;                // Default: Condition not met
 
     // Compute next PC
     if (taken & Branch) begin
-      next_PC = (BR) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1)); 
+      next_pc = (BR) ? regfile[rs] : (expected_pc + 16'h0002 + ($signed(imm) <<< 1'b1)); 
     end else begin
-      next_PC = PC_in + 16'h0002;
+      next_pc = expected_pc + 16'h0002;
     end
 
     // Choose ALU_output or memory_output based on the opcode.

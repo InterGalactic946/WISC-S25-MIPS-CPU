@@ -305,7 +305,7 @@ package Model_tasks;
   endtask
 
   // TASK: It determines if the condition code is met based on the flags.
-  task DetermineNextPC(input logic Branch, input logic BR, input logic [15:0] Rs,  input logic [2:0] C, input logic F[0:2], input logic [15:0] imm, input logic [15:0] PC_in, output logic [15:0] next_PC);
+  task DetermineNextPC(input logic Branch, input logic BR, input logic [15:0] Rs,  input logic [2:0] C, input logic [2:0] F, input logic [15:0] imm, input logic [15:0] PC_in, output logic [15:0] next_PC);
   begin
     logic taken; // Branch taken flag
     

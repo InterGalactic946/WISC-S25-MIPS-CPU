@@ -222,6 +222,7 @@
           expected_sum[1] = 4'h8;  // Saturate to max negative value for second least significant nibble
       end else begin
           expected_sum[1] = A[7:4] + B[7:4];  // No overflow, use the actual sum
+          $display("Expected Sum[1]", expected_sum[1]);
       end
 
       // Handle Least Significant Nibble (LSN)
@@ -235,6 +236,7 @@
       
       // Form the expected_PSA_sum.
       expected_result = {expected_sum[3], expected_sum[2], expected_sum[1], expected_sum[0]};
+      $display("Expected Result", expected_result);
     end
   endtask
 

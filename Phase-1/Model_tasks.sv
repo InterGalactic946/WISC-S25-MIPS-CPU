@@ -79,7 +79,7 @@ package Model_tasks;
       output logic BR,                 // The decoded BR signal
       output logic HLT,                // The decoded HLT signal
       output logic PCS,                // The decoded PCS signal
-      output logic ALUOp,              // The decoded ALUOp signal
+      output logic [3:0] ALUOp,              // The decoded ALUOp signal
       output logic Z_en,               // The decoded Z flag enable
       output logic NV_en,              // The decoded N/V flag enable
       output logic [2:0] cc            // The decoded condition code (only for B and BR instructions)

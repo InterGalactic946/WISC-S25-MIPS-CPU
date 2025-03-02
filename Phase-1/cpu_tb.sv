@@ -289,6 +289,7 @@ module cpu_tb();
     if(rst_n) // Only check when not being reset.
       // Verify the flag register at the begining of each instruction.
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
+      $display("\n");
 
   // Generate clock signal with 10 ns period.
   always 

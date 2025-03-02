@@ -236,6 +236,9 @@ package Model_tasks;
     begin
       logic expected_pos_overflow, expected_neg_overflow;
 
+      expected_pos_overflow = 1'b0;
+      expected_neg_overflow = 1'b0;
+
       case (opcode)
         4'h0, 4'h1, 4'h8, 4'h9: begin // ADD, SUB, LW, SW
           // ADD or SUB
@@ -290,7 +293,7 @@ package Model_tasks;
       end
 
       // Write to memory if mem_write is enabled.
-      if (MemWrite) begin
+      if (MemEnable && MemWrite) begin
         $display("Model Acessed data memory at address: 0x%h: and wrote new data as 0x%h", addr, data_in);
       end
     end

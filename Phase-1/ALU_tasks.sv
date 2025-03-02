@@ -244,7 +244,7 @@
     begin
       // Get the expected result based on the mode (LB or LHB)
       if (mode === 1'b0) begin
-        // Load Low Byte (LB)
+        // Load Low Byte (LLB)
           expected_result = (A & 16'hFF00) | (B[7:0]);
       end else begin
         // Load High Byte (LHB)

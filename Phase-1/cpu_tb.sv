@@ -83,19 +83,31 @@ module cpu_tb();
         $stop();
       end
     end
-  endtask 
+  endtask
+
+  initial begin
+    // Call the Setup task to initialize the testbench.
+    Setup();
+    
+    // Run the simulation for 1000 ns.
+    repeat($size(instr_memory)) begin
+      // Stop the simulation if an error is detected.
+      if(error) begin
+          $stop();
+      end
+    
+    end
+    
+    // If we reached here, that means all test cases were successful
+    $display("YAHOO!! All tests passed.");
+    $stop();
+  end 
 
   // Test procedure to apply stimulus and check responses.
-  initial begin
-      ///////////////////////////////
-      // Initialize the testbench //
-      /////////////////////////////
-      Setup();
-
+  always @(posedge clk) begin
       // Run the simulation for each instruction in the instruction memory.
-      repeat ($size(instr_memory)) begin
-        // Fetch the current instruction from memory.
-        FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
+      // Fetch the current instruction from memory.
+      FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
         // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(
@@ -242,15 +254,6 @@ module cpu_tb();
         if (RegWrite)
           $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
 
-        // Stop the simulation if an error is detected.
-        if(error) begin
-          $stop();
-        end
-      end
-
-      // If we reached here, that means all test cases were successful
-      $display("YAHOO!! All tests passed.");
-      $stop();
     end
 
     // Models the behavior of the CPU PC control.

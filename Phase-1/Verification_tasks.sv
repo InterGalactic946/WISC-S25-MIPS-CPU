@@ -281,6 +281,9 @@
           error = 1'b1;
         end
       endcase
+
+      // Display the decoded information (including condition code).
+      display_decoded_info(.opcode(opcode), .instr_name(instr_name), .rs(rs), .rt(rt), .rd(rd), .imm(imm), .cc(cc));
   endtask
 
 

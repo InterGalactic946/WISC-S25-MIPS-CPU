@@ -92,13 +92,13 @@
     input  logic [3:0] ALUOp,
     input  logic Z_en, NV_en,
     input  logic [3:0] cc, // Condition codes
-    ref    logic [3:0] DUT_opcode, // Fetch opcode from DUT
-    ref    logic [3:0] DUT_reg_rs, DUT_reg_rt, DUT_reg_rd, // Register IDs in DUT
-    ref    logic DUT_ALUSrc, DUT_MemtoReg, DUT_RegWrite, DUT_RegSrc,
-    ref    logic DUT_MemEnable, DUT_MemWrite, DUT_Branch, DUT_BR, DUT_HLT, DUT_PCS,
-    ref    logic [3:0] DUT_ALUOp,
-    ref    logic DUT_Z_en, DUT_NV_en,
-    ref    logic [3:0] DUT_c_codes, // Condition codes in DUT
+    input    logic [3:0] DUT_opcode, // Fetch opcode from DUT
+    input    logic [3:0] DUT_reg_rs, DUT_reg_rt, DUT_reg_rd, // Register IDs in DUT
+    input    logic DUT_ALUSrc, DUT_MemtoReg, DUT_RegWrite, DUT_RegSrc,
+    input    logic DUT_MemEnable, DUT_MemWrite, DUT_Branch, DUT_BR, DUT_HLT, DUT_PCS,
+    input    logic [3:0] DUT_ALUOp,
+    input    logic DUT_Z_en, DUT_NV_en,
+    input    logic [3:0] DUT_c_codes, // Condition codes in DUT
     ref logic error
     );
 

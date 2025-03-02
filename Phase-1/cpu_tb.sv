@@ -19,7 +19,6 @@ module cpu_tb();
   logic [15:0] expected_pc;
   logic [15:0] pc;
   logic [15:0] next_pc;
-  logic cycle_done;
   logic [15:0] instr;
   logic [3:0] opcode;
   logic [3:0] rs;
@@ -236,6 +235,10 @@ module cpu_tb();
         // Write the result back to the register file based on the opcode and operands.
         WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
 
+        // (Assuming regfile is updated after the write operation).
+        if (RegWrite)
+          $display("DUT wrote back to register %d with data 0x%h", rd, reg_data);
+
         // Determine the next PC value based on the opcode and operands.
         DetermineNextPC(
           .Branch(Branch), // Pass branch flag
@@ -247,8 +250,6 @@ module cpu_tb();
           .next_PC(next_pc),
           .Rs(regfile[rs])
         );
-
-        cycle_done = 1'b1; // Indicate that the current cycle is done.
 
         // Stop the simulation if an error is detected.
         if(error) begin
@@ -265,7 +266,7 @@ module cpu_tb();
   always @(posedge clk)
     if (!rst_n)
       expected_pc <= 16'h0000;
-    else if (cycle_done)
+    else
       expected_pc <= next_pc;
   
   // Expected flag register at the end of each instruction.

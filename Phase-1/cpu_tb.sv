@@ -164,7 +164,7 @@ module cpu_tb();
             $display("ERROR: HLT signal not set after HLT instruction.");
             error = 1'b1;
           end else begin
-            $display("HLT instruction encountered. Stopping simulation.");
+            $display("HLT instruction encountered. Stopping simulation.\n");
             // If we reached here, that means all test cases were successful
             $display("YAHOO!! All tests passed.");
           end
@@ -213,8 +213,8 @@ module cpu_tb();
             .Z_set(Z_set),
             .N_set(N_set),
             .V_set(V_set),
-            .Input_A(iDUT.iALU.Input_A), // ALU internal operand A
-            .Input_B(iDUT.iALU.Input_B), // ALU internal operand B
+            .Input_A(iDUT.iALU.ALU_In1), // ALU internal operand A
+            .Input_B(iDUT.iALU.ALU_In2), // ALU internal operand B
             .ALU_Out(iDUT.iALU.ALU_Out),  // ALU's result output
             .ALU_Z(iDUT.iALU.Z_set),       // ALU's Z flag
             .ALU_N(iDUT.iALU.N_set),       // ALU's N flag
@@ -283,6 +283,7 @@ module cpu_tb();
       $stop();
     end
   
+  // Verify the flag register.
   always @(posedge clk)
     if (rst_n)
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));

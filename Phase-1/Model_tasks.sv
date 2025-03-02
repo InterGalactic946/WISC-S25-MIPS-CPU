@@ -80,8 +80,6 @@ package Model_tasks;
       output logic HLT,                // The decoded HLT signal
       output logic PCS,                // The decoded PCS signal
       output logic [3:0] ALUOp,              // The decoded ALUOp signal
-      output logic Z_en,               // The decoded Z flag enable
-      output logic NV_en,              // The decoded N/V flag enable
       output logic [2:0] cc            // The decoded condition code (only for B and BR instructions)
   );
       // Decode the opcode and register fields from the instruction
@@ -100,24 +98,18 @@ package Model_tasks;
       HLT = 1'b0;                      // HLT is 0 for all non HLT instructions
       PCS = 1'b0;                      // PCS is 0 for all non PCS instructions
       ALUOp = opcode;                  // ALUOp is the opcode for all instructions
-      Z_en = 1'b0;                     // Z flag enable is 0 for all instructions
-      NV_en = 1'b0;                    // N/V flag enable is 0 for all instructions
       cc = 3'bxxx;                     // Default condition code (not used)
       imm = 16'h000;                   // Default immediate value
 
       // Decode the immediate (imm) based on the opcode
       case (opcode)
           4'b0000, 4'b0001: begin  // ADD, SUB (opcode 0, 1, 2, 3, 7)
-            Z_en = 1'b1;      // Z flag enable
-            NV_en = 1'b1;     // N/V flag enable
           end
           4'b0010: begin  // XOR (opcode 2)
-              Z_en = 1'b1;      // Z flag enable
           end
           4'b0100, 4'b0101, 4'b0110: begin  // SLL, SRA, ROR (opcode 4, 5, 6)
               imm = {12'h000, instr[3:0]};  // Least significant 4 bits, zero-extended to 16 bits
               ALUSrc = 1'b1;    // ALUSrc is 1 for shift operations
-              Z_en = 1'b1;      // Z flag enable
           end
           4'b0111: begin // PADDSB (opcode 7)
             // Has all the default values.
@@ -186,8 +178,6 @@ package Model_tasks;
               PCS = 1'b0;      // No PCS
               HLT = 1'b0;      // No HLT
               ALUOp = opcode;  // ALUOp is the opcode for all instructions
-              Z_en = 1'b0;     // Z flag enable is off
-              NV_en = 1'b0;    // N/V flag enable is off
               imm = 16'h0000;  // Default case if opcode is not recognized
               cc = 3'bxxx;     // Default condition code don't care
           end

@@ -94,7 +94,7 @@ module cpu_tb();
       Setup();
 
       // Run the simulation for each instruction in the instruction memory.
-      repeat ($size(instr_memory)) @(negedge clk) begin
+      repeat ($size(instr_memory)) @(posedge clk) begin
         // Fetch the current instruction from memory.
         FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
@@ -128,8 +128,6 @@ module cpu_tb();
             .HLT(HLT),
             .PCS(PCS),
             .ALUOp(ALUOp),
-            .Z_en(Z_en),
-            .NV_en(NV_en),
             .cc(cc)
         );
 
@@ -273,7 +271,40 @@ module cpu_tb();
     end
 
 
-  
+  always_comb begin
+    // Default: No flag updates
+    Z_en  = 1'b0;
+    NV_en = 1'b0;
+
+    case (opcode)
+        4'b0000: begin // ADD -> Affects N, Z, V
+            Z_en  = 1'b1;
+            NV_en = 1'b1;
+        end
+        4'b0001: begin // SUB -> Affects N, Z, V
+            Z_en  = 1'b1;
+            NV_en = 1'b1;
+        end
+        4'b0010: begin // XOR -> Affects Z
+            Z_en  = 1'b1;
+        end
+        4'b0100: begin // SLL -> Affects Z
+            Z_en  = 1'b1;
+        end
+        4'b0101: begin // SRA -> Affects Z
+            Z_en  = 1'b1;
+        end
+        4'b0110: begin // ROR -> Affects Z
+            Z_en  = 1'b1;
+        end
+        default: begin
+          Z_en = 1'b0;
+          NV_en = 1'b0;
+        end
+    endcase
+  end
+
+
   // Expected data memory.
   always @(posedge clk)
     if (!rst_n)

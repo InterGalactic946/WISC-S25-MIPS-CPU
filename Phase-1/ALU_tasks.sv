@@ -277,6 +277,7 @@
             // Mask it for SW/LW.
             if (opcode === 4'h8 || opcode === 4'h9)
               Input_A = Input_A & 16'hFFFE;
+            
         end
 
         // Determine Input_B based on opcode

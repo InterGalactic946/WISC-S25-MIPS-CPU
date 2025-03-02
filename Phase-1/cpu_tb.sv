@@ -95,8 +95,6 @@ module cpu_tb();
 
       // Run the simulation for each instruction in the instruction memory.
       repeat ($size(instr_memory)) @(posedge clk) begin
-        VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
-
         // Fetch the current instruction from memory.
         FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
@@ -281,6 +279,10 @@ module cpu_tb();
     else if (MemEnable & MemWrite) // Store operation
       data_memory[result/2] <= regfile[rd];
   
+  always @(negedge clk)
+    if (rst_n)
+      VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
+
   // Models the flag register.
   always @(posedge clk)
     if(!rst_n)

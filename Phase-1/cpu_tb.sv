@@ -96,6 +96,8 @@ module cpu_tb();
         // Fetch the current instruction from memory.
         FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
+        $display("Instruction: 0x%h", instr_memory[expected_pc]);
+
         // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(
             .expected_instr(instr),      // Expected instruction

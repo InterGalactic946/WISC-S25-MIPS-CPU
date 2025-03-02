@@ -254,7 +254,7 @@
               $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, MemtoReg mismatch (Expected %b, got %b)", opcode, instr_name, MemtoReg, DUT_MemtoReg);
               error = 1'b1;
             end
-            if (RegWrite !=? DUT_RegWrite) begin
+            if (RegWrite !== DUT_RegWrite) begin
               $display("ERROR (Verify Control Signals): Opcode = 0b%4b, Instr: %s, RegWrite mismatch (Expected %b, got %b)", opcode, instr_name, RegWrite, DUT_RegWrite);
               error = 1'b1;
             end

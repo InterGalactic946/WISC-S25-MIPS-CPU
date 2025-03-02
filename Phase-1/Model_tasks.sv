@@ -168,7 +168,7 @@ package Model_tasks;
               HLT = 1'b1;       // HLT operation
               ALUSrc = 1'bx;   // ALUSrc is 0 for register-register operations
               MemtoReg = 1'bx; // MemtoReg is 0 for non LW operations
-              RegWrite = 1'bx; // Register write
+              RegWrite = 1'b0; // Register write
               MemEnable = 1'bx;  // Memory enable is off
               MemWrite = 1'bx; // No memory write
               Branch = 1'bx;   // No branch

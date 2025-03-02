@@ -255,6 +255,7 @@ module cpu_tb();
 
         // Update the PC register with the next PC value.
         expected_pc = next_pc;
+        $display("Expected PC: 0x%h", expected_pc);
 
         // Stop the simulation if an error is detected.
         if(error) begin

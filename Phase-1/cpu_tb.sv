@@ -94,7 +94,7 @@ module cpu_tb();
       Setup();
 
       // Run the simulation for each instruction in the instruction memory.
-      repeat ($size(instr_memory)) @(posedge clk) begin
+      repeat ($size(instr_memory)) @(negedge clk) begin
         // Fetch the current instruction from memory.
         FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
 
@@ -218,8 +218,6 @@ module cpu_tb();
             .error(error)
         );
 
-        $display("Model NV Enable: %b.", NV_en);
-
         // Access the memory based on the opcode and operands.
         AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .MemEnable(MemEnable), .MemWrite(MemWrite), .data_memory(data_memory));
 
@@ -283,7 +281,7 @@ module cpu_tb();
     else if (MemEnable & MemWrite) // Store operation
       data_memory[result/2] <= regfile[rd];
   
-  always @(posedge clk)
+  always @(negedge clk)
     if (rst_n)
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
 

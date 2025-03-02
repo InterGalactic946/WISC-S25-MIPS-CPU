@@ -83,14 +83,14 @@ module cpu (clk, rst_n, hlt, pc);
   // Fetch Instruction from PC //
   //////////////////////////////
   // Infer the instruction memory, it is always read enabled and never write enabled.
-  memory1c iINSTR_MEM (.data_out(pc_inst),
-                       .data_in(16'h0000),
-                       .addr(pc_addr),
-                       .enable(1'b1),
-                       .wr(1'b0),
-                       .clk(clk),
-                       .rst(rst)
-                      );
+  memory1c #(1, 16) iINSTR_MEM (.data_out(pc_inst),
+                              .data_in(16'h0000),
+                              .addr(pc_addr),
+                              .enable(1'b1),
+                              .wr(1'b0),
+                              .clk(clk),
+                              .rst(rst)
+                              );
 
   // Infer the PC Register.
   PC_Register iPC (.clk(clk), .rst(rst), .nxt_pc(nxt_pc), .curr_pc(pc_addr));
@@ -197,14 +197,14 @@ module cpu (clk, rst_n, hlt, pc);
   // Read or Write to Memory and write back to Register if applicable //
   /////////////////////////////////////////////////////////////////////
   // Instantiate the data memory. 
-  memory1c iDATA_MEM (.data_out(MemData),
-                      .data_in(SrcReg2_data),
-                      .addr(ALU_out),
-                      .enable(MemEnable),
-                      .wr(MemWrite),
-                      .clk(clk),
-                      .rst(rst)
-                      );
+  memory1c #(2, 16) iDATA_MEM (.data_out(MemData),
+                              .data_in(SrcReg2_data),
+                              .addr(ALU_out),
+                              .enable(MemEnable),
+                              .wr(MemWrite),
+                              .clk(clk),
+                              .rst(rst)
+                              );
   ///////////////////////////////////////////////////////////
   // Determine what is being written back to the register //
   /////////////////////////////////////////////////////////

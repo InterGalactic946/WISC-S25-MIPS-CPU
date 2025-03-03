@@ -294,7 +294,7 @@ package Model_tasks;
       // Write to memory if mem_write is enabled.
       if (MemEnable && MemWrite) begin
         data_memory[addr[15:1]] = data_in;  // Write to memory
-        $display("Model acessed data memory at address: 0x%h and wrote new data: 0x%h.", addr, data_in);
+        $display("Model acessed data memory at address: 0x%h and wrote data: 0x%h.", addr, data_in);
       end
     end
   endtask
@@ -304,7 +304,7 @@ package Model_tasks;
     begin
       if (RegWrite) begin
         regfile[rd] = input_data;
-        $display("Model Wrote back to register 0x%h with data 0x%h.", rd, input_data);
+        $display("Model wrote back to register 0x%h with data 0x%h.", rd, input_data);
       end
     end
   endtask

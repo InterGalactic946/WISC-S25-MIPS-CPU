@@ -410,7 +410,7 @@
         if (!wr) begin
           // Verify the LW operation.
           if (mem_unit[addr[15:1]] !== model_memory[addr[15:1]]) begin
-              $display("ERROR: Memory Mismatch at address 0x%h: Expected 0x%h, Found 0x%h. Instruction: %s", 
+              $display("ERROR: Memory mismatch at address 0x%h: Expected 0x%h, Found 0x%h. Instruction: %s", 
                       addr, model_memory[addr[15:1]], mem_unit[addr[15:1]], instr_name);
               error = 1'b1;
           end

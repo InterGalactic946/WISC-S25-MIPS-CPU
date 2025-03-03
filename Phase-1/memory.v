@@ -54,7 +54,7 @@ module memory1c (data_out, data_in, data, addr, enable, wr, clk, rst);
          //load loadfile_all.img
          if (!loaded) begin
             if (data)
-              $readmemh($sformatf("%s/instructions.img", `get_dir_from_file(`__FILE__)), mem);
+              $readmemh($sformatf("%s/data.img", `get_dir_from_file(`__FILE__)), mem);
               
             else
               $readmemh($sformatf("%s/instructions.img", `get_dir_from_file(`__FILE__)), mem);

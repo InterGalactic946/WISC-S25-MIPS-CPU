@@ -55,8 +55,11 @@ module memory1c (data_out, data_in, data, addr, enable, wr, clk, rst);
          if (!loaded) begin
             if (data)
               $readmemh($sformatf("%s/../data.img", `__FILE__), mem);
+              
             else
               $readmemh($sformatf("%s/../instructions.img", `__FILE__), mem);
+              file_path = $sformatf("%s/../instructions.img", `__FILE__);
+            $display("Resolved path: %s", file_path);
             loaded = 1;
          end
           

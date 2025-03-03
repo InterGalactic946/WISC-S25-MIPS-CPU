@@ -428,7 +428,7 @@
 
           // Print a message if no error.
           if (!error)
-            $display("DUT accessed data memory at address: 0x%h and wrote data: 0x%h", addr, data_in);
+            $display("DUT accessed data memory at address: 0x%h and wrote data: 0x%h", addr, DUT_data_in);
         end
       end
 	endtask

@@ -26,7 +26,7 @@ package Model_tasks;
   task automatic FetchInstruction(ref logic [15:0] instr_memory [0:65535], ref logic [15:0] pc, output logic [15:0] instr);
     begin
       // Fetch instruction from memory at PC
-      instr = instr_memory[[pc[15:1]]];
+      instr = instr_memory[pc[15:1]];
 
       // Display the fetched instruction.
       $display("Model Fetched instruction at PC = 0x%h: 0x%h", pc, instr);

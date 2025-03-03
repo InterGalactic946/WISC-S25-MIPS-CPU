@@ -11,8 +11,8 @@
     SUB R5, R3, R1    // R5 = R3 - R1 (0x0004 - 0x0002)
     XOR R6, R4, R5    // R6 = R4 ^ R5 (Bitwise XOR)
 
-    // Reduction operation
-    RED R7, R6        // R7 = Reduction of R6 (Bitwise OR reduction)
+    // Reduction operation (assuming RED requires 3 args)
+    RED R7, R6, R0    // Reduce R6, store in R7 (R0 as dummy/unused operand)
 
     // Shift operations
     SLL R8, R2, 2     // R8 = R2 << 2 (Logical left shift by 2)

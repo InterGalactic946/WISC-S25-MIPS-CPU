@@ -1,5 +1,15 @@
 `default_nettype none // Set the default as none to avoid errors
 
+///////////////////////////////////////////////////////////
+// cpu_tb.sv: CPU Testbench Module                       //  
+//                                                       //
+// This module serves as the testbench for the CPU core. //
+// It verifies the correct functionality of instruction  //
+// fetching, decoding, execution, and memory operations. //
+// The testbench initializes memory, loads instructions, //
+// and monitors register updates and ALU results. It     //
+// also checks branching behavior and halting conditions.//
+///////////////////////////////////////////////////////////
 module cpu_tb();
 
   import Model_tasks::*;
@@ -81,6 +91,9 @@ module cpu_tb();
         
         // Print a message to indicate successful initialization.
         $display("CPU Testbench initialized successfully.");
+        
+        // Print a new line.
+        $display("\n");
       end else begin
         $display("ERROR: CPU Testbench initialization failed.");
         $stop();
@@ -102,12 +115,12 @@ module cpu_tb();
 
         // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(
-            .expected_instr(instr),      // Expected instruction
-            .actual_instr(iDUT.pc_inst),          // Fetched instruction from DUT
-            .instr_memory(iDUT.iINSTR_MEM.mem),          // Instruction memory array
-            .expected_pc(expected_pc),            // Expected PC value
-            .pc(pc),                              // Actual PC value
-            .error(error)                         // Error flag
+            .expected_instr(instr),      
+            .actual_instr(iDUT.pc_inst),          
+            .instr_memory(iDUT.iINSTR_MEM.mem),          
+            .expected_pc(expected_pc),            
+            .pc(pc),                              
+            .error(error)                        
         );
 
         // Decode the instruction to extract opcode, rs, rt, rd, imm, and cc, and control signals.
@@ -173,12 +186,12 @@ module cpu_tb();
         
         // Choose the correct operands for the instruction based on the opcode.
         ChooseALUOperands(
-          .opcode(opcode), // Pass opcode to choose operands
-          .reg_rs(rs),         // Pass source register 1
-          .reg_rt(rt),         // Pass source register 2
-          .reg_rd(rd),         // Pass destination register
-          .imm(imm),       // Pass immediate value
-          .regfile(regfile), // Pass register file
+          .opcode(opcode), 
+          .reg_rs(rs),         
+          .reg_rt(rt),         
+          .reg_rd(rd),         
+          .imm(imm),       
+          .regfile(regfile), 
           .Input_A(A),
           .Input_B(B)
         );
@@ -188,18 +201,18 @@ module cpu_tb();
             .instr_name(instr_name),
             .Input_A(A),
             .Input_B(B),
-            .ALU_Input_A(iDUT.iALU.Input_A), // ALU internal operand A
-            .ALU_Input_B(iDUT.iALU.Input_B), // ALU internal operand B
+            .ALU_Input_A(iDUT.iALU.Input_A), 
+            .ALU_Input_B(iDUT.iALU.Input_B), 
             .error(error)
         );
 
         // Execute the instruction based on the opcode and operands.
         ExecuteInstruction(
-          .opcode(opcode), // Pass opcode to execute
-          .instr_name(instr_name), // Pass instruction
-          .Input_A(A), // Pass source register 1 value
-          .Input_B(B), // Pass source register 2 value
-          .result(result), // Pass result of the operation
+          .opcode(opcode), 
+          .instr_name(instr_name), 
+          .Input_A(A), 
+          .Input_B(B), 
+          .result(result), 
           .Z_set(Z_set),
           .V_set(V_set),
           .N_set(N_set)
@@ -213,12 +226,12 @@ module cpu_tb();
             .Z_set(Z_set),
             .N_set(N_set),
             .V_set(V_set),
-            .Input_A(iDUT.iALU.Input_A), // ALU internal operand A
-            .Input_B(iDUT.iALU.Input_B), // ALU internal operand B
-            .ALU_Out(iDUT.iALU.ALU_Out),  // ALU's result output
-            .ALU_Z(iDUT.iALU.Z_set),       // ALU's Z flag
-            .ALU_N(iDUT.iALU.N_set),       // ALU's N flag
-            .ALU_V(iDUT.iALU.V_set),       // ALU's V flag
+            .Input_A(iDUT.iALU.Input_A), 
+            .Input_B(iDUT.iALU.Input_B), 
+            .ALU_Out(iDUT.iALU.ALU_Out), 
+            .ALU_Z(iDUT.iALU.Z_set),     
+            .ALU_N(iDUT.iALU.N_set),     
+            .ALU_V(iDUT.iALU.V_set),     
             .error(error)
         );
 
@@ -227,24 +240,25 @@ module cpu_tb();
 
         // Verify the memory access operation.
         VerifyMemoryAccess(
-            .addr(result),                // Pass the address to access memory
-            .enable(MemEnable),           // Pass the memory enable signal
-            .data_in(regfile[rd]),        // Pass the data to write to memory
-            .instr_name(instr_name),      // Pass the instruction name
-            .wr(MemWrite),             // Pass the memory write signal
-            .model_memory(data_memory),  // Pass the memory model from DUT
-            .mem_unit(iDUT.iDATA_MEM.mem),     // Pass the actual memory from DUT
-            .error(error)                 // Pass the error flag
+            .addr(result),            
+            .enable(MemEnable),           
+            .DUT_data_in(iDUT.SrcReg2_data),   
+            .model_data_in(regfile[rd]),   
+            .instr_name(instr_name),      
+            .wr(MemWrite),             
+            .model_memory(data_memory),  
+            .mem_unit(iDUT.iDATA_MEM.mem),     
+            .error(error)               
         );
 
         // Determine the next PC value based on the opcode and operands.
         DetermineNextPC(
-          .Branch(Branch), // Pass branch flag
-          .BR(BR), // Pass branch flag
-          .C(cc), // Pass condition code
-          .F(flag_reg), // Pass flag register
-          .PC_in(expected_pc), // Pass current PC value 
-          .imm(imm), // Pass immediate value
+          .Branch(Branch), 
+          .BR(BR), 
+          .C(cc), 
+          .F(flag_reg), 
+          .PC_in(expected_pc), 
+          .imm(imm), 
           .next_PC(next_pc),
           .Rs(regfile[rs])
         );
@@ -255,22 +269,28 @@ module cpu_tb();
         // Write the result back to the register file based on the opcode and operands.
         WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
 
-        // (Assuming regfile is updated after the write operation).
-        if (RegWrite)
-          $display("DUT wrote back to register 0x%h with data 0x%h", iDUT.reg_rd, iDUT.RegWriteData);
+        // Verifies the write back stage.
+        VerifyWriteBack(
+          .DUT_reg_rd(iDUT.reg_rd), 
+          .RegWrite(RegWrite), 
+          .DUT_RegWriteData(iDUT.RegWriteData), 
+          .model_reg_rd(rd), 
+          .model_RegWriteData(reg_data), 
+          .error(error)
+        );
 
         // Update the PC register with the next PC value.
         expected_pc = next_pc;
 
-        // Update Z flag if enabled, otherwise hold
+        // Update Z flag if enabled, otherwise hold.
         flag_reg[2] = (Z_en)  ? Z_set : flag_reg[2];
-        // Update V flag if enabled, otherwise hold  
+        // Update V flag if enabled, otherwise hold.  
         flag_reg[1] = (NV_en) ? V_set : flag_reg[1];
-        // Update N flag if enabled, otherwise hold  
+        // Update N flag if enabled, otherwise hold.  
         flag_reg[0] = (NV_en) ? N_set : flag_reg[0];
 
         // Stop the simulation if an error is detected.
-        if(error) begin
+        if (error) begin
           $stop();
         end
 
@@ -283,8 +303,9 @@ module cpu_tb();
       $stop();
     end
   
-  // Verify the flag register.
+  // Verify the flag register at the begining of each clock cycle.
   always @(posedge clk)
+    // Ignore the check on reset.
     if (rst_n)
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
 

@@ -201,7 +201,7 @@ package Model_tasks;
   endtask
 
 
-  // Display the decoded information based on instruction type
+  // Display the decoded information based on instruction type.
   task automatic display_decoded_info(input logic [3:0] opcode, input string instr_name, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] imm, input logic [2:0] cc);
       begin
           case (opcode)
@@ -224,7 +224,7 @@ package Model_tasks;
   endtask
 
 
-  // Task to execute an instruction
+  // Task to execute an instruction.
   task automatic ExecuteInstruction(input logic [3:0] opcode,
                                       input string instr_name,
                                       input logic signed [15:0] Input_A,
@@ -276,24 +276,25 @@ package Model_tasks;
       N_set = result[15];            // Set N flag based on the sign bit
       V_set = expected_pos_overflow | expected_neg_overflow;  // Set V flag based on overflow
 
+      // If not PCS, or B/BR instructions.
       if (opcode !== 4'hC && opcode !== 4'hD && opcode !== 4'hE)
         $display("Model Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
     end
   endtask
 
-  // Task to simulate memory access (for LW and SW)
+  // Task to simulate memory access (for LW and SW).
   task automatic AccessMemory(input logic [15:0] addr, input logic [15:0] data_in, output logic [15:0] data_out, input logic MemEnable, input logic MemWrite, ref logic [15:0] data_memory [0:65535]);
     begin
       // Read from memory if mem_read is enabled.
       if (MemEnable && !MemWrite) begin
         data_out = data_memory[addr[15:1]];  // Read from memory
-        $display("Model Acessed data memory at address: 0x%h and read data as: 0x%h", addr, data_out);
+        $display("Model acessed data memory at address: 0x%h and read data: 0x%h.", addr, data_out);
       end
 
       // Write to memory if mem_write is enabled.
       if (MemEnable && MemWrite) begin
         data_memory[addr[15:1]] = data_in;  // Write to memory
-        $display("Model Acessed data memory at address: 0x%h: and wrote new data as 0x%h", addr, data_in);
+        $display("Model acessed data memory at address: 0x%h and wrote new data: 0x%h.", addr, data_in);
       end
     end
   endtask
@@ -303,7 +304,7 @@ package Model_tasks;
     begin
       if (RegWrite) begin
         regfile[rd] = input_data;
-        $display("Model Wrote back to register: 0x%h with data: 0x%h", rd, input_data);
+        $display("Model Wrote back to register 0x%h with data 0x%h.", rd, input_data);
       end
     end
   endtask

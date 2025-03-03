@@ -11,19 +11,19 @@
 	);
 			// Verify the PC.
 			if (pc !== expected_pc) begin
-				$display("ERROR (VerificationInstructionFetched): PC Mismatch after instruction fetch: Expected 0x%h, Found 0x%h.", expected_pc, pc);
+				$display("ERROR: PC Mismatch after instruction fetch: Expected 0x%h, Found 0x%h.", expected_pc, pc);
 				error = 1'b1;
 			end
 
 			// Verify the fetched instruction.
 			if (actual_instr !== expected_instr) begin
-				$display("ERROR (VerificationInstructionFetched): Instruction Mismatch at address 0x%h: Expected 0x%h, Found 0x%h.", pc, expected_instr, actual_instr);
+				$display("ERROR: Instruction Mismatch at address 0x%h: Expected 0x%h, Found 0x%h.", pc, expected_instr, actual_instr);
 				error = 1'b1;
 			end
 
 			// Verify that the instruction fetched matches what is in the instruction memory
-			if (instr_memory[pc/2] !== actual_instr) begin
-				$display("ERROR (VerificationInstructionFetched): Instruction at PC 0x%h does not match memory: Expected 0x%h, Found 0x%h.", pc, instr_memory[pc/2], actual_instr);
+			if (instr_memory[pc[15:1]] !== actual_instr) begin
+				$display("ERROR: Instruction at PC 0x%h does not match memory: Expected 0x%h, Found 0x%h.", pc, instr_memory[pc[15:1]], actual_instr);
 				error = 1'b1;
 			end
 
@@ -32,7 +32,7 @@
         $display("DUT Fetched instruction at PC = 0x%h: 0x%h", pc, actual_instr);
 	endtask
 
-  
+  // Task to verify control signals decoded by the DUT.
   task automatic VerifyControlSignals(
       input  logic [3:0] opcode,
       input  string instr_name,
@@ -288,8 +288,6 @@
   endtask
 
 
-
-
   // Display the decoded information based on instruction type
   task automatic display_decoded_info(input logic [3:0] opcode, input string instr_name, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] imm, input logic [2:0] cc, input logic [2:0] DUT_flag_reg);
       begin
@@ -311,6 +309,7 @@
           endcase
       end
   endtask
+
 
  // Task to verify the ALU operands.
  task automatic VerifyALUOperands(
@@ -336,6 +335,7 @@
       end
     end
  endtask
+
 
   // Task to verify the ALU operation result and flags.
   task automatic VerifyExecutionResult(
@@ -394,27 +394,41 @@
 
 	// Task to verify if the memory contents match between the model and the CPU's memory.
 	task automatic VerifyMemoryAccess(
-			input logic [15:0] addr,               // Address to access memory
-			input string instr_name,         // Instruction name
+			input logic [15:0] addr,          // Address to access memory
+			input string instr_name,          // Instruction name
       input logic enable,               // Enable flag
-      input logic [15:0] data_in,        // Data to write to memory
+      input logic [15:0] model_data_in, // Data written by the model
+      input logic [15:0] DUT_data_in,   // Data to write to memory 
       input logic wr,                   // Write flag
 			ref logic [15:0] model_memory [0:65535],  // Expected data memory model
-			ref logic [15:0] mem_unit [0:65535],   // Actual memory in DUT (CPU memory)
-			ref logic error                       // Error flag
+			ref logic [15:0] mem_unit [0:65535],      // Actual memory in DUT (CPU memory)
+			ref logic error                           // Error flag
 	);
 
 			// Compare the model memory and the actual memory in the CPU.
       if (enable) begin
         if (!wr) begin
+          // Verify the LW operation.
           if (mem_unit[addr[15:1]] !== model_memory[addr[15:1]]) begin
-              $display("ERROR (VerifyMemoryAccess): Memory Mismatch at address 0x%h: Expected 0x%h, Found 0x%h. Instruction: %s", 
+              $display("ERROR: Memory Mismatch at address 0x%h: Expected 0x%h, Found 0x%h. Instruction: %s", 
                       addr, model_memory[addr[15:1]], mem_unit[addr[15:1]], instr_name);
               error = 1'b1;
           end
-          $display("DUT attempted to access data memory at address: 0x%h and attempted to read data as: 0x%h", addr, mem_unit[addr[15:1]]);
+
+          // Print a message if no error.
+          if (!error)
+            $display("DUT accessed data memory at address: 0x%h and read data: 0x%h", addr, mem_unit[addr[15:1]]);
         end else begin
-          $display("DUT attempted to access data memory at address: 0x%h and attempted to write new data as 0x%h", addr, data_in);
+          // Verify the SW operation.
+          if (DUT_data_in !== model_data_in) begin
+              $display("ERROR: DUT wrote incorrect data to write to memory at address 0x%h: Expected 0x%h, Found 0x%h. Instruction: %s", 
+                      addr, model_data_in, DUT_data_in, instr_name);
+              error = 1'b1;
+          end
+
+          // Print a message if no error.
+          if (!error)
+            $display("DUT accessed data memory at address: 0x%h and wrote data: 0x%h", addr, data_in);
         end
       end
 	endtask
@@ -442,6 +456,35 @@
       if (flag_reg[0] !== DUT_flag_reg[0]) begin
           $display("ERROR: N_flag mismatch. Expected: %b, Found: %b", flag_reg[0], DUT_flag_reg[0]);
           error = 1'b1;
+      end
+  end
+  endtask
+
+  // Task to verify the write back operation.
+  task automatic VerifyWriteBack(
+      input logic [3:0] DUT_reg_rd,       
+      input logic RegWrite,
+      input  logic [15:0] DUT_RegWriteData, 
+      input logic [3:0] model_reg_rd,
+      input logic [15:0] model_RegWriteData,
+      ref logic error
+  );
+  begin
+      if (RegWrite) begin
+        // Verify the destination register ID.
+        if (model_reg_rd !== DUT_reg_rd) begin
+          $display("ERROR: DUT wrote to the wrong destination register. Expected: 0x%h, Found: 0x%h", model_reg_rd, DUT_reg_rd);
+          error = 1'b1;
+        end
+
+         if (model_RegWriteData !== DUT_RegWriteData) begin
+          $display("ERROR: DUT wrote the wrong data to the destination register. Expected: 0x%h, Found: 0x%h", model_RegWriteData, DUT_RegWriteData);
+          error = 1'b1;
+        end
+
+        // If no errors found print a message.
+        if (!error)
+          $display("DUT wrote back to register 0x%h with data 0x%h", DUT_reg_rd, DUT_RegWriteData);
       end
   end
   endtask

@@ -476,7 +476,7 @@ def compile_files(test_name, dependencies, args):
         if not Path(f"./work/{test_name}").is_dir():
             compile_command = (
                 f"vsim -c -logfile {log_file} -do "
-                f"'vlib ./work/{test_name}; vlog +acc -work {test_name} -stats=none {files_to_compile}; quit -f;'"
+                f"'vlib {test_name}; vlog +acc -work {test_name} -stats=none {files_to_compile}; quit -f;'"
             )
         else:
             compile_command = (

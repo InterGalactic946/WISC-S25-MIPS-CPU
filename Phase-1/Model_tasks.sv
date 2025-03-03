@@ -26,7 +26,7 @@ package Model_tasks;
   task automatic FetchInstruction(ref logic [15:0] instr_memory [0:65535], ref logic [15:0] pc, output logic [15:0] instr);
     begin
       // Fetch instruction from memory at PC
-      instr = instr_memory[pc/2];
+      instr = instr_memory[[pc[15:1]]];
 
       // Display the fetched instruction.
       $display("Model Fetched instruction at PC = 0x%h: 0x%h", pc, instr);
@@ -272,7 +272,7 @@ package Model_tasks;
       endcase
       
       // Set flags based on the result
-      Z_set = (result == 16'h0000);  // Set Z flag if result is zero
+      Z_set = (result === 16'h0000);  // Set Z flag if result is zero
       N_set = result[15];            // Set N flag based on the sign bit
       V_set = expected_pos_overflow | expected_neg_overflow;  // Set V flag based on overflow
 

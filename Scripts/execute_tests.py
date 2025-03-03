@@ -738,7 +738,7 @@ def get_gui_command(test_name, log_file, args):
 
     # Construct the base simulation command.
     sim_command = (
-        f"vsim -wlf {wave_file} {test_name}.{test_name} -logfile {log_file} -voptargs='+acc' "
+        f"vsim -wlf {wave_file} ./tests/{test_name}.{test_name} -logfile {log_file} -voptargs='+acc' "
         f"-do '{add_wave_command} run -all; write format wave -window .main_pane.wave.interior.cs.body.pw.wf {wave_format_file}; log -flush /*;'"
     )
 
@@ -774,7 +774,7 @@ def run_simulation(test_name, log_file, args):
     if args.mode == 0:
         if not args.all:
             print(f"{test_name}: Running in command-line mode...")
-        sim_command = f"vsim -c {test_name}.{test_name} -wlf {wave_file} -logfile {log_file} -do 'run -all; log -flush /*; quit -f;'"
+        sim_command = f"vsim -c ./tests/{test_name}.{test_name} -wlf {wave_file} -logfile {log_file} -do 'run -all; log -flush /*; quit -f;'"
     else:
         if args.mode == 1:
             if not args.all:
@@ -819,7 +819,7 @@ def run_test(test_name, args):
         - For failures, provides debugging options and logs output.
     """
     log_file = os.path.join(TRANSCRIPT_DIR, f"{test_name}_transcript.log")
-    os.chdir(WORK_DIR)
+    os.chdir(TEST_DIR)
 
     # Run the simulation and get the result.
     result = run_simulation(test_name, log_file, args)

@@ -151,7 +151,7 @@ module cpu_tb();
             .DUT_RegWrite(iDUT.iCC.RegWrite), .DUT_RegSrc(iDUT.iCC.RegSrc),
             .DUT_MemEnable(iDUT.iCC.MemEnable), .DUT_MemWrite(iDUT.iCC.MemWrite),
             .DUT_Branch(iDUT.iCC.Branch), .DUT_BR(iDUT.iPCC.BR),
-            .DUT_HLT(iDUT.iCC.HLT), .DUT_PCS(iDUT.iCC.PCS),
+            .DUT_HLT(iDUT.iCC.HLT), .DUT_PCS(iDUT.iCC.PCS), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
             .DUT_ALUOp(iDUT.iCC.ALUOp),
             .DUT_Z_en(iDUT.iCC.Z_en), .DUT_NV_en(iDUT.iCC.NV_en),
             .DUT_c_codes(iDUT.c_codes),

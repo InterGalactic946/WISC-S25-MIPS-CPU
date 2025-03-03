@@ -473,7 +473,7 @@ def compile_files(test_name, dependencies, args):
     
     try:
         # Check if the work library exists, and compile accordingly.
-        if not Path(f"./work/{test_name}").is_dir():
+        if not Path(f"./tests/{test_name}").is_dir():
             compile_command = (
                 f"vsim -c -logfile {log_file} -do "
                 f"'vlib {test_name}; vlog +acc -work {test_name} -stats=none {files_to_compile}; quit -f;'"

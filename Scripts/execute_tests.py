@@ -148,7 +148,7 @@ def setup_directories(name):
     LOGS_DIR = os.path.join(OUTPUT_DIR, "logs")         # Directory for log files.
     TRANSCRIPT_DIR = os.path.join(LOGS_DIR, "transcript")  # Directory for transcript logs.
     COMPILATION_DIR = os.path.join(LOGS_DIR, "compilation")  # Directory for compilation logs.
-    WORK_DIR = os.path.join(TEST_DIR, "work")           # Directory for temporary work files.
+    WORK_DIR = os.path.join(TEST_DIR, "tests")           # Directory for temporary work files.
 
     # Ensure that all the necessary directories are created, if they do not exist.
     directories = [WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR]
@@ -464,6 +464,9 @@ def compile_files(test_name, dependencies, args):
     # Determine the files that need recompilation.
     files_to_compile = get_files_to_compile(dependencies, log_file)
 
+    # Change to the work directory for simulation.
+    os.chdir(WORK_DIR)
+
     # If no files need recompilation, exit without performing compilation.
     if not files_to_compile:
         return
@@ -473,11 +476,11 @@ def compile_files(test_name, dependencies, args):
         if not Path(f"./work/{test_name}").is_dir():
             compile_command = (
                 f"vsim -c -logfile {log_file} -do "
-                f"'vlib ./work/{test_name}; vlog +acc -work ./work/{test_name} -stats=none {files_to_compile}; quit -f;'"
+                f"'vlib ./work/{test_name}; vlog +acc -work {test_name} -stats=none {files_to_compile}; quit -f;'"
             )
         else:
             compile_command = (
-                f"vlog +acc -logfile {log_file} -work ./work/{test_name} -stats=none {files_to_compile}"
+                f"vlog +acc -logfile {log_file} -work {test_name} -stats=none {files_to_compile}"
             )
         subprocess.run(compile_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
     except subprocess.CalledProcessError as e:
@@ -489,6 +492,9 @@ def compile_files(test_name, dependencies, args):
                 print("\n===== Compilation failed with the following errors =====\n")
                 print(log_fh.read())
         sys.exit(1)
+    
+    # Change back to the top level directory.
+    os.chdir(TEST_DIR)
 
     # Check the log file for warnings or errors.
     result = check_logs(log_file, "c")

@@ -278,7 +278,7 @@ package Model_tasks;
 
       // If not PCS, or B/BR instructions.
       if (opcode !== 4'hC && opcode !== 4'hD && opcode !== 4'hE)
-        $display("Model Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
+        $display("Model Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, Z_set = 0b%1b, V_set = 0b%1b, N_set = 0b%1b.", opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
     end
   endtask
 

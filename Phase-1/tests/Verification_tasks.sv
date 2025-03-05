@@ -386,7 +386,7 @@
 
       // Display the execution result if no errors are found.
       if (!error)
-          $display("DUT Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", 
+          $display("DUT Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, Z_set = 0b%1b, V_set = 0b%1b, N_set = 0b%1b.", 
                   opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
       end
   endtask
@@ -457,6 +457,10 @@
           $display("ERROR: N_flag mismatch. Expected: %b, Found: %b", flag_reg[0], DUT_flag_reg[0]);
           error = 1'b1;
       end
+
+      // If no error, print out the current state of the DUT's flag register.
+      if (!error)
+	 $display("DUT flag register state: ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", DUT_flag_reg[2], DUT_flag_reg[1], DUT_flag_reg[0]);
   end
   endtask
 

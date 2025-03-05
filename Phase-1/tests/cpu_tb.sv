@@ -12,8 +12,8 @@
 ///////////////////////////////////////////////////////////
 module cpu_tb();
 
-  import Model_tasks::*;
   import ALU_tasks::*;
+  import Model_tasks::*;
   import Verification_tasks::*;
 
 
@@ -84,10 +84,10 @@ module cpu_tb();
       // Load instructions into memory for the CPU to execute.
       if (!error) begin
         // Load instructions into memory for the CPU to execute.
-        LoadImage("instructions.img", instr_memory);
+        LoadImage("./tests/instructions.img", instr_memory);
 
         // Load instructions into data memory for the CPU to perform memory operations.
-        LoadImage("data.img", data_memory);
+        LoadImage("./tests/data.img", data_memory);
         
         // Print a message to indicate successful initialization.
         $display("CPU Testbench initialized successfully.");
@@ -304,10 +304,16 @@ module cpu_tb();
     end
   
   // Verify the flag register at the begining of each clock cycle.
-  always @(posedge clk)
+  always @(posedge clk) begin
     // Ignore the check on reset.
-    if (rst_n)
+    if (rst_n) begin
+      // Print out the current state of the model's flag register.
+      $display("Model flag register state: ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", flag_reg[2], flag_reg[1], flag_reg[0]);
+      
+      // Verify the DUT's flag register at the begining of each cycle.
       VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
+    end
+  end
 
   // Generate clock signal with 10 ns period.
   always 

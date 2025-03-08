@@ -628,10 +628,10 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
         module_def_pattern = re.compile(r'^\s*module\s+(\w+)', re.MULTILINE)
         package_def_pattern = re.compile(r'^\s*package\s+(\w+)', re.MULTILINE)
 
-        # Scan all .v files in the directory to populate the definitions.
-        for root, _, files in os.walk(TEST_DIR):
+        # Scan all .v files in the DESIGN_DIR (for modules) and .sv files in the TESTS_DIR (for packages).
+        for root, _, files in os.walk(DESIGNS_DIR):  # Scan for design files
             for file in files:
-                if file.endswith(('.v', '.sv')):  # Check for both .v and .sv files
+                if file.endswith('.v'):  # Design files are .v
                     file_path = os.path.join(root, file)
                     with open(file_path, 'r') as f:
                         content = f.read()
@@ -639,6 +639,13 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
                         for match in module_def_pattern.finditer(content):
                             module_name = match.group(1)
                             module_definitions.setdefault(module_name, file_path)
+
+        for root, _, files in os.walk(TESTS_DIR):  # Scan for package files
+            for file in files:
+                if file.endswith('.sv'):  # Package files are .sv
+                    file_path = os.path.join(root, file)
+                    with open(file_path, 'r') as f:
+                        content = f.read()
                         # Find package definitions and add to the map.
                         for match in package_def_pattern.finditer(content):
                             package_name = match.group(1)

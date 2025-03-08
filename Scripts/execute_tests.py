@@ -633,7 +633,7 @@ def find_signals(signal_names, test_name):
         try:
             # Run the vsim command to search for signals matching the provided name.
             result = subprocess.run(
-                f"vsim -c {test_name}.{test_name} -do 'find signals /{test_name}/{signal}* -recursive; quit -f;'",
+                f"vsim -c ./tests/WORK/{test_name}.{test_name} -do 'find signals /{test_name}/{signal}* -recursive; quit -f;'",
                 shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,

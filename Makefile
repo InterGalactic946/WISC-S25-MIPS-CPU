@@ -26,7 +26,7 @@
 # It helps users understand how to use the Makefile.
 default:
 	@echo "Usage instructions for the Makefile:"
-	@echo "  make check 	            - Checks all .v design files for compliancy within a selected directory."
+	@echo "  make check 	           - Checks all .v design files for compliancy within a selected directory."
 	@echo "  make kill 	           - Closes all started vsim instances from the script."
 	@echo "  make run <mode> [as] [a] - Run tests in a specified directory with a selected mode (c,s,g,v)."
 	@echo "  make log <log_type>      - Display logs for a specified directory and log type."

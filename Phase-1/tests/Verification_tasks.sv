@@ -45,7 +45,7 @@ package Verification_tasks;
 
 
   // TASK: Verifies the next PC as calculated by the DUT.
-  task VerifyNextPC(
+  task automatic VerifyNextPC(
       input [15:0] expected_next_PC, // The expected next PC value
       input [15:0] DUT_next_PC,      // The next PC value calculated by the DUT
       input expected_taken,          // Expected branch taken signal (1 or 0)

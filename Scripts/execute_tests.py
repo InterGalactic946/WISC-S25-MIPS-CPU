@@ -278,6 +278,7 @@ def check_design_files():
     """
     # Get absolute paths of all Verilog files (excluding testbench files).
     verilog_files = [os.path.abspath(f) for f in os.listdir(DESIGNS_DIR)]
+    print(verilog_files)
     
     # List to store files that fail the check.
     failed_files = []

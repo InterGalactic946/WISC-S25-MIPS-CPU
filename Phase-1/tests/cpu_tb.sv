@@ -62,7 +62,7 @@ module cpu_tb();
       error = 1'b0; // Reset error flag
       
       // Initialize the PC to a starting value (e.g., 0)
-      $display("Initializing CPU Testbench...");
+      $display("\nInitializing CPU Testbench...");
       instr_memory = '{default: 16'h0000};
       data_memory <= '{default: 16'h0000};
       regfile = '{default: 16'h0000};
@@ -175,7 +175,7 @@ module cpu_tb();
             $display("ERROR: HLT signal not set after HLT instruction.");
             error = 1'b1;
           end else begin
-            $display("HLT instruction encountered. Stopping simulation.\n");
+            $display("HLT instruction encountered. Stopping simulation...\n");
             // If we reached here, that means all test cases were successful
             $display("YAHOO!! All tests passed.");
           end

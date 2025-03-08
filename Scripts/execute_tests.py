@@ -616,7 +616,7 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
     if resolved_files is None:
         resolved_files = []
     if dep_file not in resolved_files:
-        resolved_files.insert(0, dep_file)
+        resolved_files.append(dep_file)  # Keep insertion order
 
     # Build module and package definitions if not provided
     if module_definitions is None or package_definitions is None:

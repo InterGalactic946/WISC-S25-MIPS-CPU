@@ -15,6 +15,7 @@ PHASE3_DIR = os.path.join(ROOT_DIR, "Phase-3")
 TEST_DIR = None
 TESTS_DIR = None
 DESIGNS_DIR = None
+TEST_PROGRAMS_DIR = None
 WAVE_CMD_DIR = None
 OUTPUT_DIR = None
 WAVES_DIR = None
@@ -133,10 +134,13 @@ def setup_directories(name):
               and ready for use.
     """
     # Modifying the global directory variables declared above.
-    global TEST_DIR, TESTS_DIR, DESIGNS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR
+    global TEST_DIR, TESTS_DIR, DESIGNS_DIR, TEST_PROGRAMS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR
 
     # Set the path for the main test directory using the provided 'name'.
     TEST_DIR = os.path.join(ROOT_DIR, name)
+
+    # Set the path for the test programs directory.
+    TEST_PROGRAMS_DIR = os.path.join(ROOT_DIR, "TestPrograms")
 
     # Set the path for the directory containing design files.
     DESIGNS_DIR = os.path.join(TEST_DIR, "designs")
@@ -159,7 +163,7 @@ def setup_directories(name):
     WORK_DIR = os.path.join(TESTS_DIR, "WORK")           # Directory for temporary work files.
 
     # Ensure that all the necessary directories are created, if they do not exist.
-    directories = [DESIGNS_DIR, TESTS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR]
+    directories = [WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR]
     for directory in directories:
         # 'mkdir' ensures that the directory and any necessary parent directories are created.
         # 'exist_ok=True' prevents an error if the directory already exists.
@@ -325,6 +329,53 @@ def check_design_files():
         else:
         # Exit gracefully, if no Verilog design files found.
             print(f"No Verilog design files found in {os.path.basename(DESIGNS_DIR)}. Exiting...")
+
+
+import os
+import subprocess
+
+TEST_PROGRAMS_DIR = "TestPrograms"  # Set your directory containing assembly files
+
+def list_and_assemble():
+    """
+    Lists all assembly files in the TestPrograms directory, prompts the user to select one, 
+    and then runs `perl assembler.pl <infile> > <outfile>`.
+    """
+    # Get all assembly files in the directory
+    asm_files = [f for f in os.listdir(TEST_PROGRAMS_DIR) if f.endswith(".s") or f.endswith(".asm")]
+
+    if not asm_files:
+        print("No assembly files found in TestPrograms directory.")
+        return
+
+    # Display the files in a numbered list
+    print("\nAvailable Assembly Files:")
+    for idx, file in enumerate(asm_files, start=1):
+        print(f"{idx}. {file}")
+
+    # Ask the user to select a file
+    while True:
+        try:
+            choice = int(input("\nSelect a file to assemble (enter number): ")) - 1
+            if 0 <= choice < len(asm_files):
+                break
+            else:
+                print("Invalid selection. Please enter a valid number.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+    # Get the selected file name
+    infile = os.path.join(TEST_PROGRAMS_DIR, asm_files[choice])
+    outfile = os.path.splitext(infile)[0] + ".hex"  # Output file with .hex extension
+
+    # Run the assembler command
+    command = f"perl assembler.pl {infile} > {outfile}"
+    print(f"\nRunning: {command}")
+
+    # Execute the command
+    subprocess.run(command, shell=True, check=True)
+
+    print(f"\nAssembly complete. Output saved to: {outfile}")
 
 
 def check_logs(logfile, mode):

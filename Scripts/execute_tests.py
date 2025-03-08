@@ -904,8 +904,8 @@ def rename_sim_files():
     log_file = os.path.join(OUTPUTS_DIR, f"verilogsim.log")
 
     # Create new file names by appending the base name.
-    new_trace_file = os.path.join(OUTPUTS_DIR, f"{TEST_FILE}_verilogsim.trace")
-    new_log_file = os.path.join(OUTPUTS_DIR, f"{TEST_FILE}_verilogsim.log")
+    new_trace_file = os.path.join(OUTPUTS_DIR, f"{TEST_FILE}_verilogsim.trace.txt")
+    new_log_file = os.path.join(OUTPUTS_DIR, f"{TEST_FILE}_verilogsim.log.txt")
 
     # Rename the trace file if it exists.
     if os.path.exists(trace_file):
@@ -914,7 +914,7 @@ def rename_sim_files():
     # Rename the log file if it exists.
     if os.path.exists(log_file):
         os.rename(log_file, new_log_file)
-        
+
 
 def run_test(test_name, args):
     """

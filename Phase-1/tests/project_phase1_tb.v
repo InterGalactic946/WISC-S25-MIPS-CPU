@@ -28,25 +28,15 @@ module project_phase1_tb();
 
    cpu iDUT(.clk(clk), .rst_n(rst_n), .pc(PC), .hlt(Halt)); /* Instantiate your processor */
    
-
-
-
-
-
-
    /* Setup */
    initial begin
       $display("Hello world...simulation starting");
-      $display("See verilogsim.log and verilogsim.trace for output");
+      $display("YAHOO!! All tests passed. See verilogsim.log and verilogsim.trace for output");
       inst_count = 0;
       trace_file = $fopen("./outputs/verilogsim.trace");
       sim_log_file = $fopen("./outputs/verilogsim.log");
       
    end
-
-
-
-
 
   /* Clock and Reset */
 // Clock period is 100 time units, and reset length
@@ -67,7 +57,7 @@ module project_phase1_tb();
     always @(posedge clk) begin
     	cycle_count = cycle_count + 1;
 	if (cycle_count > 100000) begin
-		$display("hmm....more than 100000 cycles of simulation...error?\n");
+		$display("ERROR: More than 100000 cycles of simulation.\n");
 		$finish;
 	end
     end

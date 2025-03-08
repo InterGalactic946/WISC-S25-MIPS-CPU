@@ -92,7 +92,9 @@ run:
 				;; \
 		esac; \
 		# If there is a third argument ('a'), pass it to the Python script. \
-		if [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "a" ]; then \
+		if [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "as" ]; then \
+			cd Scripts && python3 execute_tests.py -m $$mode -as; \
+		elif [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "a ]; then \
 			cd Scripts && python3 execute_tests.py -m $$mode -a; \
 		else \
 			cd Scripts && python3 execute_tests.py -m $$mode; \

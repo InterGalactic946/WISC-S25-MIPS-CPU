@@ -520,10 +520,9 @@ def compile_files(test_name, dependencies, args):
 def find_dependencies(dep_file, resolved_files=None, module_definitions=None, package_definitions=None):
     """
     Recursively finds all module and package dependencies for a given SystemVerilog testbench file.
-    
-    This function builds a list of files in the correct compilation order, including all modules
-    and packages required by the provided testbench file. It avoids redundant file scanning
-    by maintaining precomputed maps of module and package definitions.
+
+    - Modules are only searched in DESIGNS_DIR.
+    - Testbenches and packages are only searched in TESTS_DIR.
     
     Args:
         dep_file (str): Path to the SystemVerilog testbench file for which dependencies are to be resolved.
@@ -533,67 +532,72 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
                                              If None, the map is built during execution.
         package_definitions (dict, optional): Precomputed mapping of package names to file paths. 
                                               If None, the map is built during execution.
-    
+
     Returns:
         list: A list of file paths in the correct order for compilation, with the top-level testbench file first.
     """
-    # Initialize resolved files list and add the current file as the first dependency.
+    # Initialize resolved files list
     if resolved_files is None:
         resolved_files = []
     if dep_file not in resolved_files:
-        resolved_files.insert(0, dep_file)
+        resolved_files.append(dep_file)  # Keep insertion order
 
-    # Build module and package definitions if not provided.
+    # Build module and package definitions if not provided
     if module_definitions is None or package_definitions is None:
         module_definitions = {}
         package_definitions = {}
 
-        # Regular expressions for finding module and package definitions.
+        # Regular expressions for finding module and package definitions
         module_def_pattern = re.compile(r'^\s*module\s+(\w+)', re.MULTILINE)
         package_def_pattern = re.compile(r'^\s*package\s+(\w+)', re.MULTILINE)
 
-        # Scan all .v files in the directory to populate the definitions.
-        for root, _, files in os.walk(TEST_DIR):
+        # Scan only DESIGN_DIR for .v module definitions
+        for root, _, files in os.walk(DESIGNS_DIR):
             for file in files:
-                if file.endswith(('.v', '.sv')):  # Check for both .v and .sv files
+                if file.endswith('.v'):
                     file_path = os.path.join(root, file)
                     with open(file_path, 'r') as f:
                         content = f.read()
-                        # Find module definitions and add to the map.
                         for match in module_def_pattern.finditer(content):
                             module_name = match.group(1)
-                            module_definitions.setdefault(module_name, file_path)
-                        # Find package definitions and add to the map.
+                            module_definitions[module_name] = file_path
+
+        # Scan only TESTS_DIR for .sv package definitions
+        for root, _, files in os.walk(TESTS_DIR):
+            for file in files:
+                if file.endswith('.sv'):  
+                    file_path = os.path.join(root, file)
+                    with open(file_path, 'r') as f:
+                        content = f.read()
                         for match in package_def_pattern.finditer(content):
                             package_name = match.group(1)
-                            package_definitions.setdefault(package_name, file_path)
+                            package_definitions[package_name] = file_path
 
-    # Regular expressions for identifying dependencies in the testbench file.
+    # Regular expressions for identifying dependencies
     module_inst_pattern = re.compile(r'^\s*(\w+)\s*(#\([^)]*\))?\s+\w+\s*(\[\d+:\d+\])?\s*\(.*?\);', re.DOTALL | re.MULTILINE)
     import_pattern = re.compile(r'^\s*import\s+(\w+)\s*::\*;', re.MULTILINE)
 
-    # Read the top-level testbench file to extract direct dependencies.
+    # Read the testbench file to extract dependencies
     with open(dep_file, 'r') as v_file:
         v_file_content = v_file.read()
 
-    # Collect modules instantiated and packages imported in the testbench file.
     dependencies = set()
-    dependencies.update(match.group(1) for match in module_inst_pattern.finditer(v_file_content))
-    dependencies.update(match.group(1) for match in import_pattern.finditer(v_file_content))
+    dependencies.update(match.group(1) for match in module_inst_pattern.finditer(v_file_content))  # Modules
+    dependencies.update(match.group(1) for match in import_pattern.finditer(v_file_content))  # Packages
 
-    # Resolve dependencies recursively, ensuring each file is processed only once.
+    # Resolve dependencies recursively
     for dep in dependencies:
         if dep in module_definitions:
             dep_file = module_definitions[dep]
             if dep_file not in resolved_files:
-                resolved_files.insert(0, dep_file)
+                resolved_files.append(dep_file)  # Keep order
                 find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
         elif dep in package_definitions:
             dep_file = package_definitions[dep]
             if dep_file not in resolved_files:
-                resolved_files.insert(0, dep_file)
+                resolved_files.append(dep_file)  # Keep order
                 find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
-    
+
     return resolved_files
 
 

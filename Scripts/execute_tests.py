@@ -593,9 +593,6 @@ def compile_files(test_name, dependencies, args):
         sys.exit(1)
 
 
-import os
-import re
-
 def find_dependencies(dep_file, resolved_files=None, module_definitions=None, package_definitions=None):
     """
     Recursively finds all module and package dependencies for a given SystemVerilog testbench file.
@@ -664,20 +661,17 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
     dependencies.update(match.group(1) for match in module_inst_pattern.finditer(v_file_content))  # Modules
     dependencies.update(match.group(1) for match in import_pattern.finditer(v_file_content))  # Packages
 
-    # First add all package dependencies in order based on imports
-    for dep in dependencies:
-        if dep in package_definitions:
-            dep_file = package_definitions[dep]
-            if dep_file not in resolved_files:
-                resolved_files.insert(0, dep_file)  # Add package dependency first
-                find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
-
-    # Then add module dependencies in order
+    # Resolve dependencies recursively
     for dep in dependencies:
         if dep in module_definitions:
             dep_file = module_definitions[dep]
             if dep_file not in resolved_files:
-                resolved_files.insert(0, dep_file)  # Add module dependency after packages
+                resolved_files.insert(0, dep_file) 
+                find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
+        elif dep in package_definitions:
+            dep_file = package_definitions[dep]
+            if dep_file not in resolved_files:
+                resolved_files.append(0, dep_file)
                 find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
 
     return resolved_files

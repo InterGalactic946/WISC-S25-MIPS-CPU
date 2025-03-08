@@ -1124,7 +1124,7 @@ def execute_tests(test_names, args):
     This function uses a ThreadPoolExecutor to execute testbenches in parallel. It submits
     each test to the executor and waits for all the tests to complete.
     """
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=30) as executor:
         futures = []
         for test_name in test_names:
             # The job to be submitted to the executor.

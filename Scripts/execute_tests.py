@@ -324,7 +324,7 @@ def check_design_files():
             print("YAHOO!! All Verilog design files are compliant.")
         else:
         # Exit gracefully, if no Verilog design files found.
-            print(f"No Verilog design files found in {os.path.basename(TEST_DIR)}. Exiting...")
+            print(f"No Verilog design files found in {os.path.basename(DESIGNS_DIR)}. Exiting...")
 
 
 def check_logs(logfile, mode):
@@ -475,23 +475,20 @@ def compile_files(test_name, dependencies, args):
     # Determine the files that need recompilation.
     files_to_compile = get_files_to_compile(dependencies, log_file)
 
-    # Change to the work directory for simulation.
-    os.chdir(WORK_DIR)
-
     # If no files need recompilation, exit without performing compilation.
     if not files_to_compile:
         return
     
     try:
         # Check if the work library exists, and compile accordingly.
-        if not Path(f"./{test_name}").is_dir():
+        if not Path(f"./tests/WORK/{test_name}").is_dir():
             compile_command = (
                 f"vsim -c -logfile {log_file} -do "
-                f"'vlib {test_name}; vlog +acc -work {test_name} -stats=none {files_to_compile}; quit -f;'"
+                f"'vlib ./tests/WORK/{test_name}; vlog +acc -work ./tests/WORK/{test_name} -stats=none {files_to_compile}; quit -f;'"
             )
         else:
             compile_command = (
-                f"vlog +acc -logfile {log_file} -work {test_name} -stats=none {files_to_compile}"
+                f"vlog +acc -logfile {log_file} -work ./tests/WORK/{test_name} -stats=none {files_to_compile}"
             )
         subprocess.run(compile_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
     except subprocess.CalledProcessError as e:
@@ -504,8 +501,6 @@ def compile_files(test_name, dependencies, args):
                 print(log_fh.read())
         sys.exit(1)
     
-    # Change back to the top level directory.
-    os.chdir(TEST_DIR)
 
     # Check the log file for warnings or errors.
     result = check_logs(log_file, "c")
@@ -830,7 +825,6 @@ def run_test(test_name, args):
         - For failures, provides debugging options and logs output.
     """
     log_file = os.path.join(TRANSCRIPT_DIR, f"{test_name}_transcript.log")
-    os.chdir(TEST_DIR)
 
     # Run the simulation and get the result.
     result = run_simulation(test_name, log_file, args)

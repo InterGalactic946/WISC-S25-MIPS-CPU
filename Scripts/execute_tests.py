@@ -954,7 +954,6 @@ def find_testbench(find_all=False):
 
     # If only one testbench file is found, return its name without the extension.
     if len(testbench_names) == 1:
-        print([testbench_names[0].rsplit('.', 1)[0]] )
         return [testbench_names[0].rsplit('.', 1)[0]]  # Return as a list for consistency.
 
     # If multiple testbenches are found, prompt the user to choose one.
@@ -969,6 +968,7 @@ def find_testbench(find_all=False):
             choice = int(input("Enter the number corresponding to your choice: "))
             if 1 <= choice <= len(testbench_names):
                 # Return the chosen testbench without the extension.
+                print([testbench_names[choice - 1].rsplit('.', 1)[0]])
                 return [testbench_names[choice - 1].rsplit('.', 1)[0]]
             else:
                 # Handle out-of-range inputs.

@@ -13,6 +13,8 @@ PHASE1_DIR = os.path.join(ROOT_DIR, "Phase-1")
 PHASE2_DIR = os.path.join(ROOT_DIR, "Phase-2")       
 PHASE3_DIR = os.path.join(ROOT_DIR, "Phase-3")         
 TEST_DIR = None
+TESTS_DIR = None
+DESIGNS_DIR = None
 WAVE_CMD_DIR = None
 OUTPUT_DIR = None
 WAVES_DIR = None
@@ -131,10 +133,16 @@ def setup_directories(name):
               and ready for use.
     """
     # Modifying the global directory variables declared above.
-    global TEST_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR
+    global TEST_DIR, TESTS_DIR, DESIGNS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR
 
     # Set the path for the main test directory using the provided 'name'.
     TEST_DIR = os.path.join(ROOT_DIR, name)
+
+    # Set the path for the directory containing design files.
+    DESIGNS_DIR = os.path.join(TEST_DIR, "designs")
+
+    # Set the path for the directory containing testbench files.
+    TESTS_DIR = os.path.join(TEST_DIR, "tests")
 
     # Verify that the provided test directory exists.
     if not os.path.exists(TEST_DIR):
@@ -142,16 +150,16 @@ def setup_directories(name):
         raise FileNotFoundError(f"Directory '{name}' does not exist.")
 
     # Define the paths for directories that depend on the test directory (TEST_DIR).
-    WAVE_CMD_DIR = os.path.join(TEST_DIR, "add_wave_commands")  # Directory for waveform command files.
-    OUTPUT_DIR = os.path.join(TEST_DIR, "output")       # Output directory for the test results.
+    WAVE_CMD_DIR = os.path.join(TESTS_DIR, "add_wave_commands")  # Directory for waveform command files.
+    OUTPUT_DIR = os.path.join(TESTS_DIR, "output")       # Output directory for the test results.
     WAVES_DIR = os.path.join(OUTPUT_DIR, "waves")       # Directory for waveform files.
     LOGS_DIR = os.path.join(OUTPUT_DIR, "logs")         # Directory for log files.
     TRANSCRIPT_DIR = os.path.join(LOGS_DIR, "transcript")  # Directory for transcript logs.
     COMPILATION_DIR = os.path.join(LOGS_DIR, "compilation")  # Directory for compilation logs.
-    WORK_DIR = os.path.join(TEST_DIR, "tests")           # Directory for temporary work files.
+    WORK_DIR = os.path.join(TESTS_DIR, "WORK")           # Directory for temporary work files.
 
     # Ensure that all the necessary directories are created, if they do not exist.
-    directories = [WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR]
+    directories = [DESIGNS_DIR, TESTS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR]
     for directory in directories:
         # 'mkdir' ensures that the directory and any necessary parent directories are created.
         # 'exist_ok=True' prevents an error if the directory already exists.
@@ -269,7 +277,7 @@ def check_design_files():
         None
     """
     # Get absolute paths of all Verilog files (excluding testbench files).
-    verilog_files = [os.path.abspath(f) for f in os.listdir() if f.endswith(".v") and not f.endswith("_tb.v")]
+    verilog_files = [os.path.abspath(f) for f in DESIGNS_DIR]
     
     # List to store files that fail the check.
     failed_files = []
@@ -738,7 +746,7 @@ def get_gui_command(test_name, log_file, args):
 
     # Construct the base simulation command.
     sim_command = (
-        f"vsim -wlf {wave_file} ./tests/{test_name}.{test_name} -logfile {log_file} -voptargs='+acc' "
+        f"vsim -wlf {wave_file} ./tests/WORK/{test_name}.{test_name} -logfile {log_file} -voptargs='+acc' "
         f"-do '{add_wave_command} run -all; write format wave -window .main_pane.wave.interior.cs.body.pw.wf {wave_format_file}; log -flush /*;'"
     )
 
@@ -774,7 +782,7 @@ def run_simulation(test_name, log_file, args):
     if args.mode == 0:
         if not args.all:
             print(f"{test_name}: Running in command-line mode...")
-        sim_command = f"vsim -c ./tests/{test_name}.{test_name} -wlf {wave_file} -logfile {log_file} -do 'run -all; log -flush /*; quit -f;'"
+        sim_command = f"vsim -c ./tests/WORK/{test_name}.{test_name} -wlf {wave_file} -logfile {log_file} -do 'run -all; log -flush /*; quit -f;'"
     else:
         if args.mode == 1:
             if not args.all:

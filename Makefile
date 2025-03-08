@@ -152,7 +152,7 @@ clean:
 	select top_level_dir in $$top_level_dirs; do \
 		if [ -n "$$top_level_dir" ] && [ -d "$$top_level_dir" ]; then \
 			echo "Cleaning up generated files in $$top_level_dir..."; \
-			rm -rf "$$top_level_dir/tests/output/" "$$top_level_dir/tests/WORK/"; \
+			rm -rf "$$top_level_dir/dump.vcd" "$$top_level_dir/tests/output/" "$$top_level_dir/tests/WORK/"; \
 			echo "Cleanup complete."; \
 			break; \
 		else \

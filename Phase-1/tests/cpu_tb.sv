@@ -271,7 +271,7 @@ module cpu_tb();
             .expected_taken(taken),  
             .DUT_taken(iDUT.iPCC.Branch_taken),  
             .DUT_Branch(iDUT.iPCC.Branch),
-            .error(test_error)  
+            .error(error)  
         );  
 
         // Choose ALU_output or memory_output based on the opcode.

@@ -61,16 +61,19 @@ package Verification_tasks;
         error = 1'b1;
       end
 
-      // Verify if the branch taken signal matches.
-      if (expected_taken !== DUT_taken) begin
-        $display("ERROR: DUT incorrectly resolved the branch. Expected taken signal: 0b%b, got: 0b%b.", expected_taken, DUT_taken);
-        error = 1'b1;
+      // Only verfy the taken signal if it is a branch.
+      if (DUT_Branch === 1'b1) begin
+        // Verify if the branch taken signal matches.
+        if (expected_taken !== DUT_taken) begin
+          $display("ERROR: DUT incorrectly resolved the branch. Expected taken signal: 0b%b, got: 0b%b.", expected_taken, DUT_taken);
+          error = 1'b1;
+        end
       end
 
       // If no error, print a message.
-      if (DUT_taken && DUT_Branch)
+      if (DUT_taken === 1'b1 && DUT_Branch === 1'b1)
         $display("DUT took the branch.");
-      else if (!DUT_taken && DUT_Branch) begin
+      else if (DUT_taken === 1'b0 && DUT_Branch === 1'b1) begin
         $display("DUT did not take the branch.");
       end
     end

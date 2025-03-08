@@ -389,8 +389,6 @@ def assemble():
             stderr=subprocess.PIPE,                    # Capture standard error
             check=True                                 # Raise exception on non-zero exit code
         )
-        print(f"YAHOO!! Assembly successfully completed. Output saved to: {outfile}.")
-
     except subprocess.CalledProcessError as e:
         print(f"\n===== Error assembling file {os.path.basename(infile)} =====")
         # Decode and format the error message from stderr

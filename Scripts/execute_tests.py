@@ -401,7 +401,6 @@ def assemble():
     
     # Set the infile for use.
     TEST_FILE = os.path.splitext(os.path.basename(infile))[0]
-    print(TEST_FILE)
 
 
 def check_logs(logfile, mode):
@@ -890,7 +889,7 @@ def run_simulation(test_name, log_file, args):
             sys.exit(1)
     
     # Rename simulation files if applicable.
-    if TEST_FILE:
+    if TEST_FILE is not None:
         rename_sim_files()
 
     return check_logs(log_file, "t")

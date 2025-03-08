@@ -79,6 +79,7 @@ package Model_tasks;
       output logic [3:0] rt,           // The decoded rt
       output logic [3:0] rd,           // The decoded rd
       output logic [15:0] imm,         // The decoded immediate value (signed or unsigned)
+      input logic [2:0] flag_reg,      // Flag register of the model
       output logic ALUSrc,             // The decoded ALUSrc signal
       output logic MemtoReg,           // The decoded MemtoReg signal
       output logic RegWrite,           // The decoded RegWrite signal
@@ -207,12 +208,12 @@ package Model_tasks;
       decode_opcode(.opcode(opcode), .instr_name(instr_name));  // Decode the opcode to instruction name
 
       // Display the decoded information (including condition code).
-      display_decoded_info(.opcode(opcode), .instr_name(instr_name), .rs(rs), .rt(rt), .rd(rd), .imm(imm), .cc(cc));
+      display_decoded_info(.opcode(opcode), .instr_name(instr_name), .rs(rs), .rt(rt), .rd(rd), .imm(imm), .cc(cc), .flag_reg(flag_reg));
   endtask
 
 
   // Display the decoded information based on instruction type.
-  task automatic display_decoded_info(input logic [3:0] opcode, input string instr_name, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] imm, input logic [2:0] cc);
+  task automatic display_decoded_info(input logic [3:0] opcode, input string instr_name, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] imm, input logic [2:0] cc, input logic [2:0] flag_reg);
       begin
           case (opcode)
               4'h0, 4'h1, 4'h2, 4'h3, 4'h7: // Instructions with 2 registers (like ADD, SUB, XOR, etc.)
@@ -222,9 +223,9 @@ package Model_tasks;
               4'hA, 4'hB: // LLB and LHB have an immediate but no rt register.
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rd, imm);
               4'hC: // B instruction does not have registers like `rs`, `rt`, or `rd`.
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, imm = 0x%h.", opcode, instr_name, cc, imm);
+                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, imm = 0x%h, ZF = 0b%b, VF = 0b%b, NF = 0b%b.", opcode, instr_name, cc, imm, flag_reg[2], flag_reg[1], flag_reg[0]);
               4'hD: // BR instruction does not have registers like `rt`, or `rd`. It only has a source register `rs`.
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, rs = 0x%h.", opcode, instr_name, cc, rs); 
+                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, rs = 0x%h, ZF = 0b%b, VF = 0b%b, NF = 0b%b.", opcode, instr_name, cc, rs, flag_reg[2], flag_reg[1], flag_reg[0]); 
               4'hE: // (PCS) does not have registers like `rs`, `rt`. It only has a destination register `rd`.
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rd = 0x%h.", opcode, instr_name, rd);
               default: // HLT/Invalid opcode

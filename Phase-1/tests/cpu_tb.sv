@@ -131,6 +131,7 @@ module cpu_tb();
             .rd(rd),
             .imm(imm),
             .Z_en(Z_en),
+            .flag_reg(flag_reg),
             .NV_en(NV_en),
             .ALUSrc(ALUSrc),
             .MemtoReg(MemtoReg),

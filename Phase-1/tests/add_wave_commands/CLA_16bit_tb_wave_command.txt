@@ -1,1 +1,0 @@
-add wave /CLA_16bit_tb/iDUT/A; add wave /CLA_16bit_tb/iDUT/B; add wave /CLA_16bit_tb/iDUT/sub; add wave /CLA_16bit_tb/expected_sum; add wave /CLA_16bit_tb/Sum; add wave /CLA_16bit_tb/expected_pos_overflow; add wave /CLA_16bit_tb/pos_overflow; add wave /CLA_16bit_tb/expected_neg_overflow; add wave /CLA_16bit_tb/neg_overflow;

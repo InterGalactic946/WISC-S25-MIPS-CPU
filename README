@@ -1,35 +1,65 @@
-The file assembler.pl is a Perl script that will process assembly code and
-generate machine code. To use, create your assembly code program in a
-file, e.g. 'infile', then in a Linux terminal, use the command:
+```markdown
+# Single-Cycle Memory Specification
 
-   perl assembler.pl <infile> > <outfile> 
+For the first stage of your project, you are asked to design a processor that executes each instruction in a single cycle. For this, you will use the single-cycle byte-addressable memory module described here.
 
-If you specify an outfile name, the output will be saved in that file.
-If you don't specify an outfile name, the output will be sent to the
-screen.
+Since your single-cycle design must fetch instructions as well as read or write data in the same cycle, you will want to use **TWO** instances of this memory -- one for data and one for instructions.
 
-Additional comments (also in assembler.pl):
+```
+                  +-------------+
+ data_in[15:0] >--|             |--> data_out[15:0]
+    addr[15:0] >--|   16 bit    |
+        enable >--|   memory    |
+            wr >--|   with      |
+           clk >--|   variable  |
+           rst >--|   address   |
+    createdump >--|   width     |
+                  |             |
+                  +-------------+
+```
 
-#NOTES:
+During each cycle, the `enable` and `wr` inputs determine what function the memory will perform:
 
-# -All labels MUST start with L
+| enable | wr | Function       | data_out |
+|--------|----|---------------|----------|
+| 0      | X  | No operation  | 0        |
+| 1      | 0  | Read M[addr]  | M[addr]  |
+| 1      | 1  | Write data_in | 0        |
 
-# -No label at the beginning address 0000
+During a read cycle, the data output will immediately reflect the contents of the address input and will change in a flow-through fashion if the address changes. For writes, the `wr`, `addr`, and `data_in` signals must be stable at the rising edge of the clock (`clk`).
 
-# -Shift amounts must be in decimal
+## How to Initialize Your Memory
 
-# -Immediate may be in hex or decimal.  If in hex, precede with "0x"
+The memory is initialized from a file. The file name is `loadfile_all.img`, but you may change that in the Verilog source to any file name you prefer. The file is loaded at the first rising edge of the clock during reset. The simulator will look for the file in the same location as your `.v` files. The file format is:
 
-# -Comments may be specified with either "#" or "//".  
+```
+@0
+1234
+1234
+1234
+1234
+```
 
-# -No multiline comments
+where `@0` specifies a starting address of zero, and `1234` represents any 4-digit hex number. Any number of lines may be specified, up to the size of the memory. The assembler will produce files in this format.
 
-#
+## Assembler Usage
 
-#
+The file `assembler.pl` is a Perl script that will process assembly code and generate machine code. To use it, create your assembly code program in a file, e.g., `infile`, then in a Linux terminal, use the command:
 
-Of course, you will need to have Perl installed on your machine.
+```
+perl assembler.pl <infile> > <outfile>
+```
 
+If you specify an `outfile` name, the output will be saved in that file. If you don't specify an `outfile` name, the output will be sent to the screen.
 
+## Notes on Assembly Syntax
 
+- All labels **MUST** start with `L`.
+- No label at the beginning address `0000`.
+- Shift amounts must be in **decimal**.
+- Immediate values may be in **hex** or **decimal**. If in hex, precede with `0x`.
+- Comments may be specified with either `#` or `//`.
+- No multiline comments.
 
+Of course, you will need to have Perl installed on your machine to run the assembler script.
+```

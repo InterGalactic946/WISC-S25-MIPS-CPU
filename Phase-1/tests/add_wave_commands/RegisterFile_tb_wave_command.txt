@@ -1,1 +1,0 @@
-add wave /RegisterFile_tb/clk; add wave /RegisterFile_tb/rst; add wave /RegisterFile_tb/iDUT/SrcReg1; add wave /RegisterFile_tb/iDUT/SrcReg2; add wave /RegisterFile_tb/iDUT/DstReg; add wave /RegisterFile_tb/iDUT/WriteReg; add wave /RegisterFile_tb/iDUT/DstData; add wave /RegisterFile_tb/regfile; add wave /RegisterFile_tb/iDUT/SrcData1; add wave /RegisterFile_tb/iDUT/SrcData2;

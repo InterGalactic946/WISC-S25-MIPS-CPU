@@ -25,33 +25,31 @@ module cpu_tb();
   ///////////////////////////////
   // Declare internal signals //
   /////////////////////////////
-  logic hlt;
-  logic taken;
-  logic [15:0] expected_pc;
-  logic [15:0] pc;
-  logic [15:0] next_pc;
-  logic [15:0] instr;
-  logic [3:0] opcode;
-  logic [3:0] rs;
-  logic [3:0] rt;
-  logic [3:0] rd;
-  logic [15:0] imm;
-  logic [15:0] A, B;
+  logic hlt;               // Halt signal for execution stop
+  logic taken;             // Indicates if branch was taken
+  logic [15:0] expected_pc; // Expected program counter value for verification
+  logic [15:0] pc;         // Current program counter value
+  logic [15:0] next_pc;    // Next program counter value
+  logic [15:0] instr;      // Current instruction
+  logic [3:0] opcode;      // Instruction opcode
+  logic [3:0] rs, rt, rd;  // Source and destination registers
+  logic [15:0] imm;        // Immediate value
+  logic [15:0] A, B;       // ALU operands
   logic ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, Z_en, NV_en; // Control signals
-  logic [3:0] ALUOp;
-  logic [15:0] reg_data;
-  logic [15:0] result;
-  logic [15:0] data_memory_output;
-  string instr_name;
-  logic [2:0] cc;            // Condition code for branch instructions
-  logic [15:0] regfile [0:15];        // Register file to verify during execution
-  reg [15:0] instr_memory [0:65535]; // Instruction Memory to be loaded
-  reg [15:0] data_memory [0:65535]; // Data Memory to be loaded
-  logic [2:0] flag_reg;               // Flag register to verify during execution
-  logic Z_enable, V_enable, N_enable; // Enable flags for updating flag register
-  logic Z_set, V_set, N_set;          // Flags to be set based on the result of the operation
-  logic PCS;                          // Flag to determine if the next PC is the result of the ALU operation
-  logic error;                        // Error flag to indicate test failure
+  logic [3:0] ALUOp;       // ALU operation
+  logic [15:0] reg_data;   // Register data for write
+  logic [15:0] result;     // ALU result
+  logic [15:0] data_memory_output; // Data memory output
+  string instr_name;       // Instruction name for logging
+  logic [2:0] cc;          // Condition code for branch
+  logic [15:0] regfile [0:15]; // Register file
+  reg [15:0] instr_memory [0:65535]; // Instruction memory
+  reg [15:0] data_memory [0:65535]; // Data memory
+  logic [2:0] flag_reg;    // Flag register
+  logic Z_enable, V_enable, N_enable; // Flag enable signals
+  logic Z_set, V_set, N_set; // Flags to be set
+  logic PCS;               // Flag for ALU-based PC update
+  logic error;             // Error flag for test failures
 
   //////////////////////
   // Instantiate DUT //
@@ -77,7 +75,7 @@ module cpu_tb();
 
       // Verify that the PC is initialized to 0x0000.
 			if (pc !== expected_pc) begin
-					$display("ERROR: PC: 0x%h does not match Expected_PC: 0x%h after reset.", pc, expected_pc);
+					$display("ERROR: DUT has incorrect PC value after reset. PC: 0x%h does not match Expected_PC: 0x%h..", pc, expected_pc);
 					error = 1'b1;
 			end
 

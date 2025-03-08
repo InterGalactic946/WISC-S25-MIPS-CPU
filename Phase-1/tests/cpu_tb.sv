@@ -37,7 +37,7 @@ module cpu_tb();
   logic [3:0] rd;
   logic [15:0] imm;
   logic [15:0] A, B;
-  logic taken, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, Z_en, NV_en; // Control signals
+  logic ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, Z_en, NV_en; // Control signals
   logic [3:0] ALUOp;
   logic [15:0] reg_data;
   logic [15:0] result;

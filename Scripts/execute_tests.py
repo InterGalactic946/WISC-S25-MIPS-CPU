@@ -889,7 +889,8 @@ def run_simulation(test_name, log_file, args):
             sys.exit(1)
     
     # Rename simulation files if applicable.
-    rename_sim_files()
+    if TEST_FILE is not None:
+        rename_sim_files()
 
     return check_logs(log_file, "t")
 

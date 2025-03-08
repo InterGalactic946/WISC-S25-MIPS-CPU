@@ -968,7 +968,6 @@ def find_testbench(find_all=False):
             choice = int(input("Enter the number corresponding to your choice: "))
             if 1 <= choice <= len(testbench_names):
                 # Return the chosen testbench without the extension.
-                print([testbench_names[choice - 1].rsplit('.', 1)[0]])
                 return [testbench_names[choice - 1].rsplit('.', 1)[0]]
             else:
                 # Handle out-of-range inputs.
@@ -993,14 +992,14 @@ def execute_test(test_name, args):
     4. Executes the testbench with the provided arguments.
     """
     # First, try to find the file with the .sv extension.
-    test_file_sv = os.path.join(TEST_DIR, f"{test_name}.sv")
+    test_file_sv = os.path.join(TESTS_DIR, f"{test_name}.sv")
     
     # If the .sv file exists, use it. Otherwise, try the .v extension.
     if os.path.exists(test_file_sv):
         test_file = test_file_sv
     else:
         # Fallback to .v if .sv doesn't exist.
-        test_file = os.path.join(TEST_DIR, f"{test_name}.v")
+        test_file = os.path.join(TESTS_DIR, f"{test_name}.v")
 
     # Find all dependencies for the testbench.
     all_dependencies = find_dependencies(test_file)

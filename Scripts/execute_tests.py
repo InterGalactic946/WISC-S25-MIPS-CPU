@@ -16,6 +16,7 @@ TEST_DIR = None
 TESTS_DIR = None
 DESIGNS_DIR = None
 TEST_PROGRAMS_DIR = None
+TEST_FILE = None
 WAVE_CMD_DIR = None
 OUTPUT_DIR = None
 WAVES_DIR = None
@@ -345,6 +346,9 @@ def assemble():
     Raises:
         SystemExit: If no assembly files are found or if the assembly process fails.
     """
+    # Set the input file as the test file chosen
+    global TEST_FILE
+
     # Retrieve all valid assembly files in the directory
     asm_files = [f for f in os.listdir(TEST_PROGRAMS_DIR) if f.endswith(".s") or f.endswith(".list")]
 
@@ -354,14 +358,14 @@ def assemble():
         sys.exit(1)
 
     # Display the available assembly files as a numbered list
-    print("\nAvailable WISC-S25 Assembly Files:")
+    print("Available WISC-S25 Assembly Files:")
     for idx, file in enumerate(asm_files, start=1):
         print(f"{idx}. {file}")
 
     # Prompt the user to select an assembly file
     while True:
         try:
-            choice = int(input("\nSelect a file to assemble (enter number): ")) - 1
+            choice = int(input("Select a file to assemble (enter number): ")) - 1
             if 0 <= choice < len(asm_files):
                 break  # Valid choice, exit loop
             else:
@@ -393,6 +397,9 @@ def assemble():
         error_message = e.stderr.decode('utf-8').replace("\n", " ").strip()
         print(f"{error_message}")
         sys.exit(1)  # Exit the script with an error code
+    
+    # Set the infile for use.
+    TEST_FILE = os.path.splitext(os.path.basename(infile))[0]
 
 
 def check_logs(logfile, mode):
@@ -1162,12 +1169,12 @@ def main():
         elif args.check:
             check_design_files()
         else:
-            # Retrieve testbenches to be run
-            test_names = find_testbench(args.all)
-
             # Assemble the selected input file if not all tests running in parallel.
             if args.asm and not args.all:
                 assemble()
+
+            # Retrieve testbenches to be run
+            test_names = find_testbench(args.all)
 
             # Display the appropriate message based on mode.
             print_mode_message(args)

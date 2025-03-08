@@ -1,4 +1,12 @@
-  package ALU_tasks;
+///////////////////////////////////////////////////////////////
+// ALU_tasks.sv: Task definitions for the ALU module.        //
+// This package contains tasks related to performing         //
+// arithmetic and logical operations for the 16-bit ALU.     //
+// Tasks include operations like addition, subtraction,      //
+// AND, OR, etc., based on the provided operands and opcode. //
+///////////////////////////////////////////////////////////////
+package ALU_tasks;
+  
   
   // Task: Get positive and negative overflow for addition or subtraction.
   task automatic get_overflow(

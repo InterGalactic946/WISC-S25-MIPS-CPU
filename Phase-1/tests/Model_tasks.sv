@@ -1,6 +1,16 @@
+////////////////////////////////////////////////////////////
+// Model_tasks.sv: Task definitions for CPU modeling.     //
+// This package contains tasks to model the behavior      //
+// of the CPU core, including tasks for instruction       //
+// fetching, decoding, execution, and managing memory     //
+// and registers. It facilitates modeling of the CPU's    //
+// various components like the ALU, control unit, and     //
+// program counter during simulation.                     //
+////////////////////////////////////////////////////////////
 package Model_tasks;
 
   import ALU_tasks::*;
+  
   
   // Task to initialize testbench signals.
   task automatic Initialize(ref logic clk, ref logic rst_n);
@@ -29,7 +39,7 @@ package Model_tasks;
       instr = instr_memory[pc[15:1]];
 
       // Display the fetched instruction.
-      $display("Model Fetched instruction at PC = 0x%h: 0x%h", pc, instr);
+      $display("Model Fetched instruction: 0x%h at PC: 0x%h.", instr, pc);
     end
   endtask
 
@@ -207,11 +217,11 @@ package Model_tasks;
           case (opcode)
               4'h0, 4'h1, 4'h2, 4'h3, 4'h7: // Instructions with 2 registers (like ADD, SUB, XOR, etc.)
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, rd = 0x%h.", opcode, instr_name, rs, rt, rd);
-              4'h4, 4'h5, 4'h6, 4'h8, 4'h9: // LW and SW have an immediate but no rt register
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rs, rd, imm);
-              4'hA, 4'hB: // LLB and LHB have an immediate but no rt register
+              4'h4, 4'h5, 4'h6, 4'h8, 4'h9: // LW and SW have an immediate but no rd register.
+                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, imm = 0x%h.", opcode, instr_name, rs, rd, imm);
+              4'hA, 4'hB: // LLB and LHB have an immediate but no rt register.
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rd, imm);
-              4'hC: // B instruction does not have registers like `rs`, `rt`, or `rd`
+              4'hC: // B instruction does not have registers like `rs`, `rt`, or `rd`.
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, imm = 0x%h.", opcode, instr_name, cc, imm);
               4'hD: // BR instruction does not have registers like `rt`, or `rd`. It only has a source register `rs`.
                   $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, rs = 0x%h.", opcode, instr_name, cc, rs); 
@@ -304,7 +314,7 @@ package Model_tasks;
     begin
       if (RegWrite) begin
         regfile[rd] = input_data;
-        $display("Model wrote back to register 0x%h with data 0x%h.", rd, input_data);
+        $display("Model wrote back to register: 0x%h with data: 0x%h.", rd, input_data);
       end
     end
   endtask
@@ -328,6 +338,10 @@ package Model_tasks;
     
     // The expected PC addr is the current PC addr + 2 or PC addr + 2 + (I << 1) if branch is taken, or Rs if BR.
     next_PC = (taken === 1'b1 && Branch === 1'b1) ? ((BR === 1'b1) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1))) : (PC_in + 16'h0002);
+    
+    // Display a message if and when a branch is taken.
+    if (taken && Branch)
+      $display("Model took the branch.");
   end
   endtask
 

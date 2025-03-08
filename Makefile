@@ -103,7 +103,7 @@ run:
 	# If arguments are invalid or incomplete, print an error and usage. \
 	else \
 		echo "Error: Invalid arguments for 'run' target. Usage:"; \
-		echo "  make run v|g|s|c [a]"; \
+		echo "  make run v|g|s|c [as] [a]"; \
 		exit 1; \
 	fi;
 

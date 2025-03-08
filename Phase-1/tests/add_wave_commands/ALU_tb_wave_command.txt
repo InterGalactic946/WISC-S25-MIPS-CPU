@@ -1,0 +1,1 @@
+add wave /ALU_tb/iDUT/ALU_In1; add wave /ALU_tb/iDUT/ALU_In2; add wave /ALU_tb/iDUT/Opcode; add wave /ALU_tb/expected_result; add wave /ALU_tb/result; add wave /ALU_tb/expected_ZF; add wave /ALU_tb/ZF; add wave /ALU_tb/expected_VF; add wave /ALU_tb/VF; add wave /ALU_tb/expected_NF; add wave /ALU_tb/NF;

@@ -84,21 +84,21 @@ package Verification_tasks;
   task automatic VerifyControlSignals(
       input  logic [3:0] opcode,
       input  string instr_name,
-      input  logic [3:0] rs, rt, rd, // Register IDs are 4 bits
-      input  logic [15:0] imm,       // Immediate value is 16 bits
+      input  logic [3:0] rs, rt, rd, 
+      input  logic [15:0] imm,      
       input  logic ALUSrc, MemtoReg, RegWrite, RegSrc,
       input  logic MemEnable, MemWrite, Branch, BR, HLT, PCS,
       input  logic [3:0] ALUOp,
       input  logic Z_en, NV_en,
-      input  logic [3:0] cc,         // Condition codes
+      input  logic [3:0] cc,         
       input logic [2:0] DUT_flag_reg,
-      input  logic [3:0] DUT_opcode, // DUT opcode
-      input  logic [3:0] DUT_reg_rs, DUT_reg_rt, DUT_reg_rd, // DUT register IDs
+      input  logic [3:0] DUT_opcode, 
+      input  logic [3:0] DUT_reg_rs, DUT_reg_rt, DUT_reg_rd, 
       input  logic DUT_ALUSrc, DUT_MemtoReg, DUT_RegWrite, DUT_RegSrc,
       input  logic DUT_MemEnable, DUT_MemWrite, DUT_Branch, DUT_BR, DUT_HLT, DUT_PCS,
       input  logic [3:0] DUT_ALUOp,
       input  logic DUT_Z_en, DUT_NV_en,
-      input  logic [3:0] DUT_c_codes, // DUT condition codes
+      input  logic [3:0] DUT_c_codes, 
       ref logic error
     );
 

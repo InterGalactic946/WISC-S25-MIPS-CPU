@@ -278,7 +278,7 @@ def check_design_files():
     """
     # Change the directory to the designs folder.
     os.chdir(DESIGNS_DIR)
-    
+
     # Get absolute paths of all Verilog files (excluding testbench files).
     verilog_files = [os.path.abspath(f) for f in os.listdir()]
     
@@ -941,7 +941,7 @@ def find_testbench(find_all=False):
     """
    # Collect all testbench _tb.sv or _tb.v files in the specified directory.
     testbench_names = [
-        filename for filename in os.listdir(TEST_DIR) if filename.endswith(("_tb.sv", "_tb.v"))
+        os.path.abspath(filename) for filename in os.listdir(TESTS_DIR) if filename.endswith(("_tb.sv", "_tb.v"))
     ]
 
     # If no testbench files are found, raise an error.

@@ -8,11 +8,11 @@
 # - clean: Cleans up generated files in the specified directory.
 #
 # Usage:
-# - make check          - Checks if Verilog design files are compliant.
-# - make kill           - Closes all started vsim instances from the script.
-# - make run <mode> (a) - Run tests in a specified directory with a selected mode (optionally all tests in the directory).
-# - make log <log_type> - Display logs for a specified directory and log type.
-# - make clean          - Clean up generated files in a specified directory.
+# - make check               - Checks if Verilog design files are compliant.
+# - make kill           	 - Closes all started vsim instances from the script.
+# - make run <mode> (as) (a) - Assemble and run tests in a specified directory with a selected mode (optionally all tests in the directory).
+# - make log <log_type>      - Display logs for a specified directory and log type.
+# - make clean               - Clean up generated files in a specified directory.
 #
 # Example:
 # - make check  - Checks all .v design files that are not testbenches for compliancy.
@@ -28,7 +28,7 @@ default:
 	@echo "Usage instructions for the Makefile:"
 	@echo "  make check 	      - Checks all .v design files for compliancy within a selected directory."
 	@echo "  make kill 	      - Closes all started vsim instances from the script."
-	@echo "  make run <mode> [a] - Run tests in a specified directory with a selected mode (c,s,g,v)."
+	@echo "  make run <mode> [as] [a] - Run tests in a specified directory with a selected mode (c,s,g,v)."
 	@echo "  make log <log_type> - Display logs for a specified directory and log type."
 	@echo "  make clean 	      - Clean up generated files in a specified directory."
 
@@ -72,9 +72,10 @@ kill:
 # Target: run
 # This target runs tests with the specified arguments:
 # - <mode>: Test mode (default or one of `v`, `g`, `s`, `c`).
+# - <as>: Optional flag for assembling an input file.
 # - <a>: Optional flag for additional arguments (e.g., 'a' to run all tests in a specific mode).
 # Usage:
-#   make run <mode> [a]
+#   make run <mode> [as] [a]
 ##################################################
 run:
 	@if [ "$(words $(runargs))" -eq 0 ]; then \

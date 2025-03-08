@@ -37,7 +37,7 @@ module cpu_tb();
   logic [3:0] rd;
   logic [15:0] imm;
   logic [15:0] A, B;
-  logic ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, Z_en, NV_en; // Control signals
+  logic taken, ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, Z_en, NV_en; // Control signals
   logic [3:0] ALUOp;
   logic [15:0] reg_data;
   logic [15:0] result;
@@ -260,8 +260,19 @@ module cpu_tb();
           .PC_in(expected_pc), 
           .imm(imm), 
           .next_PC(next_pc),
-          .Rs(regfile[rs])
+          .Rs(regfile[rs]),
+          .taken(taken)
         );
+
+        // Verify the next PC based on the branch condition.
+        VerifyNextPC(  
+            .expected_next_PC(next_pc),  
+            .DUT_next_PC(iDUT.iPCC.PC_out),  
+            .expected_taken(taken),  
+            .DUT_taken(iDUT.iPCC.Branch_taken),  
+            .DUT_Branch(iDUT.iPCC.Branch),
+            .error(test_error)  
+        );  
 
         // Choose ALU_output or memory_output based on the opcode.
         reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);

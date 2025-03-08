@@ -320,10 +320,8 @@ package Model_tasks;
   endtask
 
   // TASK: It determines if the condition code is met based on the flags.
-  task DetermineNextPC(input logic Branch, input logic BR, input logic [15:0] Rs,  input logic [2:0] C, input logic [2:0] F, input logic [15:0] imm, input logic [15:0] PC_in, output logic [15:0] next_PC);
-  begin
-    logic taken; // Branch taken flag
-    
+  task DetermineNextPC(input logic Branch, input logic BR, input logic [15:0] Rs,  input logic [2:0] C, input logic [2:0] F, input logic [15:0] imm, input logic [15:0] PC_in, output logic taken, output logic [15:0] next_PC);
+  begin    
     // The branch is taken either unconditionally when C = 3'b111 
     // or when the condition code matches the flag register setting.
     taken = (C === 3'b000) ? ~F[2]               : // Not Equal (Z = 0)
@@ -342,6 +340,9 @@ package Model_tasks;
     // Display a message if and when a branch is taken.
     if (taken && Branch)
       $display("Model took the branch.");
+    else if (!taken && Branch) begin
+      $display("Model did not take the branch.");
+    end
   end
   endtask
 

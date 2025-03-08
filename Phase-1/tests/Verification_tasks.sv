@@ -44,6 +44,39 @@ package Verification_tasks;
 	endtask
 
 
+  // TASK: Verifies the next PC as calculated by the DUT.
+  task VerifyNextPC(
+      input [15:0] expected_next_PC, // The expected next PC value
+      input [15:0] DUT_next_PC,      // The next PC value calculated by the DUT
+      input expected_taken,          // Expected branch taken signal (1 or 0)
+      input DUT_taken,               // Branch taken signal from DUT (1 or 0)
+      input DUT_Branch,              // Branch instruction signal
+      ref logic error                // Flag to indicate if an error is found
+  );
+    begin
+
+      // Verify if the next PC is correct.
+      if (expected_next_PC !== DUT_next_PC) begin
+        $display("ERROR: DUT calculated the incorrect next PC value. Expected: 0x%h, got: 0x%h.", expected_next_PC, DUT_next_PC);
+        error = 1'b1;
+      end
+
+      // Verify if the branch taken signal matches.
+      if (expected_taken !== DUT_taken) begin
+        $display("ERROR: DUT incorrectly resolved the branch. Expected taken signal: 0b%b, got: 0b%b.", expected_taken, DUT_taken);
+        error = 1'b1;
+      end
+
+      // If no error, print a message.
+      if (DUT_taken && DUT_Branch)
+        $display("DUT took the branch.");
+      else if (!DUT_taken && DUT_Branch) begin
+        $display("DUT did not take the branch.");
+      end
+    end
+  endtask
+
+
   // Task to verify control signals decoded by the DUT.
   task automatic VerifyControlSignals(
       input  logic [3:0] opcode,

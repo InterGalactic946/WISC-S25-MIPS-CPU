@@ -39,8 +39,8 @@ module project_phase1_tb();
       $display("Hello world...simulation starting");
       $display("See verilogsim.log and verilogsim.trace for output");
       inst_count = 0;
-      trace_file = $fopen("verilogsim.trace");
-      sim_log_file = $fopen("verilogsim.log");
+      trace_file = $fopen("./outputs/verilogsim.trace");
+      sim_log_file = $fopen("./outputs/verilogsim.log");
       
    end
 

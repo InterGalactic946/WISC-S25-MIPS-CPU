@@ -1,36 +1,50 @@
-```markdown
+
 # Single-Cycle Memory Specification
 
-For the first stage of your project, you are asked to design a processor that executes each instruction in a single cycle. For this, you will use the single-cycle byte-addressable memory module described here.
+For the first stage of your project, you are tasked with designing a processor that executes each instruction in a single cycle. To achieve this, you will use the **single-cycle byte-addressable memory module** described below.
 
-Since your single-cycle design must fetch instructions as well as read or write data in the same cycle, you will want to use **TWO** instances of this memory -- one for data and one for instructions.
+Since your single-cycle design must fetch instructions as well as read or write data in the same cycle, you will need to use **TWO** instances of this memory — one for data and one for instructions.
+
+### Memory Module
 
 ```
                   +-------------+
- data_in[15:0] >--|             |--> data_out[15:0]
-    addr[15:0] >--|   16 bit    |
-        enable >--|   memory    |
-            wr >--|   with      |
-           clk >--|   variable  |
-           rst >--|   address   |
-    createdump >--|   width     |
+ data_in[15:0] -->|             |--> data_out[15:0]
+    addr[15:0] -->|   16-bit    |
+        enable -->|   memory    |
+            wr -->|   with      |
+           clk -->|   variable  |
+           rst -->|   address   |
+    createdump -->|   width     |
                   |             |
                   +-------------+
 ```
 
-During each cycle, the `enable` and `wr` inputs determine what function the memory will perform:
+### Memory Operation
 
-| enable | wr | Function       | data_out |
-|--------|----|---------------|----------|
-| 0      | X  | No operation  | 0        |
-| 1      | 0  | Read M[addr]  | M[addr]  |
-| 1      | 1  | Write data_in | 0        |
+During each cycle, the `enable` and `wr` inputs determine the function the memory will perform. Below is a table explaining the behavior:
 
-During a read cycle, the data output will immediately reflect the contents of the address input and will change in a flow-through fashion if the address changes. For writes, the `wr`, `addr`, and `data_in` signals must be stable at the rising edge of the clock (`clk`).
+| **enable** | **wr** | **Function**        | **data_out** |
+|------------|--------|---------------------|--------------|
+| 0          | X      | No operation        | 0            |
+| 1          | 0      | Read M[addr]        | M[addr]      |
+| 1          | 1      | Write data_in       | 0            |
 
-## How to Initialize Your Memory
+- When **enable = 0**, there is no operation, and the data output is `0`.
+- When **enable = 1 and wr = 0**, the memory will perform a read operation, and `data_out` will reflect the contents of `M[addr]`.
+- When **enable = 1 and wr = 1**, the memory will perform a write operation, but the output will always be `0`.
 
-The memory is initialized from a file. The file name is `loadfile_all.img`, but you may change that in the Verilog source to any file name you prefer. The file is loaded at the first rising edge of the clock during reset. The simulator will look for the file in the same location as your `.v` files. The file format is:
+### Read Cycle
+
+During a read cycle, the `data_out` will immediately reflect the contents of the address specified by `addr` and will change in a flow-through manner if the address changes. For write operations, the `wr`, `addr`, and `data_in` signals must remain stable at the rising edge of the clock (`clk`).
+
+---
+
+## Initializing Your Memory
+
+The memory is initialized from a file. By default, the file is named `loadfile_all.img`, but you can modify this in the Verilog source to any file name you prefer. The file is loaded at the first rising edge of the clock during reset. The simulator will look for this file in the same location as your `.v` files.
+
+The format of the file is as follows:
 
 ```
 @0
@@ -40,26 +54,34 @@ The memory is initialized from a file. The file name is `loadfile_all.img`, but 
 1234
 ```
 
-where `@0` specifies a starting address of zero, and `1234` represents any 4-digit hex number. Any number of lines may be specified, up to the size of the memory. The assembler will produce files in this format.
+- `@0` specifies the starting address of the memory (in this case, address `0`).
+- Each subsequent line represents a 4-digit hex number to be stored at the next address.
+- You can specify any number of lines, up to the size of the memory.
+
+The assembler will generate files in this format for you.
+
+---
 
 ## Assembler Usage
 
-The file `assembler.pl` is a Perl script that will process assembly code and generate machine code. To use it, create your assembly code program in a file, e.g., `infile`, then in a Linux terminal, use the command:
+The file `assembler.pl` is a Perl script that will process assembly code and generate the corresponding machine code. To use it, create your assembly code in a file (e.g., `infile`), then run the following command in a Linux terminal:
 
 ```
 perl assembler.pl <infile> > <outfile>
 ```
 
-If you specify an `outfile` name, the output will be saved in that file. If you don't specify an `outfile` name, the output will be sent to the screen.
+- If you specify an `outfile`, the output will be saved to that file.
+- If you do not specify an `outfile`, the output will be printed to the screen.
+
+---
 
 ## Notes on Assembly Syntax
 
-- All labels **MUST** start with `L`.
-- No label at the beginning address `0000`.
-- Shift amounts must be in **decimal**.
-- Immediate values may be in **hex** or **decimal**. If in hex, precede with `0x`.
-- Comments may be specified with either `#` or `//`.
-- No multiline comments.
+- **Labels must start with the letter `L`**.
+- No labels are allowed at the beginning address (`0000`).
+- **Shift amounts must be in decimal**.
+- Immediate values can be in either **hexadecimal** or **decimal**. For hexadecimal values, use the prefix `0x` (e.g., `0x1F`).
+- Comments can be written using either `#` or `//`.
+- **No multiline comments** are allowed.
 
-Of course, you will need to have Perl installed on your machine to run the assembler script.
-```
+Make sure you have Perl installed on your machine to run the assembler script.

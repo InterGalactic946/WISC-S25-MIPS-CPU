@@ -941,7 +941,7 @@ def find_testbench(find_all=False):
     """
    # Collect all testbench _tb.sv or _tb.v files in the specified directory.
     testbench_names = [
-        os.path.abspath(filename) for filename in os.listdir(TESTS_DIR) if filename.endswith(("_tb.sv", "_tb.v"))
+        filename for filename in os.listdir(TESTS_DIR) if filename.endswith(("_tb.sv", "_tb.v"))
     ]
 
     # If no testbench files are found, raise an error.

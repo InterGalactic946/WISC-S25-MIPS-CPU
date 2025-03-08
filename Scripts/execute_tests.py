@@ -12,11 +12,14 @@ SCRIPTS_DIR = os.path.join(ROOT_DIR, "Scripts")
 PHASE1_DIR = os.path.join(ROOT_DIR, "Phase-1")
 PHASE2_DIR = os.path.join(ROOT_DIR, "Phase-2")       
 PHASE3_DIR = os.path.join(ROOT_DIR, "Phase-3")         
+TEST_PROGRAMS_DIR = os.path.join(ROOT_DIR, "TestPrograms")
+
 TEST_DIR = None
 TESTS_DIR = None
 DESIGNS_DIR = None
-TEST_PROGRAMS_DIR = None
 TEST_FILE = None
+OUTPUTS_DIR = None
+
 WAVE_CMD_DIR = None
 OUTPUT_DIR = None
 WAVES_DIR = None
@@ -138,13 +141,13 @@ def setup_directories(name):
               and ready for use.
     """
     # Modifying the global directory variables declared above.
-    global TEST_DIR, TESTS_DIR, DESIGNS_DIR, TEST_PROGRAMS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR
+    global TEST_DIR, OUTPUTS_DIR, TESTS_DIR, DESIGNS_DIR, TEST_PROGRAMS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR
 
     # Set the path for the main test directory using the provided 'name'.
     TEST_DIR = os.path.join(ROOT_DIR, name)
 
-    # Set the path for the test programs directory.
-    TEST_PROGRAMS_DIR = os.path.join(ROOT_DIR, "TestPrograms")
+    # Set the path for the outputs directory.
+    OUTPUTS_DIR = os.path.join(TEST_DIR, "outputs")
 
     # Set the path for the directory containing design files.
     DESIGNS_DIR = os.path.join(TEST_DIR, "designs")
@@ -881,9 +884,36 @@ def run_simulation(test_name, log_file, args):
                     print(f"\n===== Running {test_name} failed with the following errors =====\n")
                     print(log_fh.read())
             sys.exit(1)
+    
+    # Rename simulation files if applicable.
+    rename_sim_files()
 
     return check_logs(log_file, "t")
 
+
+def rename_sim_files():
+    """
+    Renames the 'verilogsim.trace' and 'verilogsim.log' files by appending the base name 
+    of the input file.
+
+    Returns:
+        None: Renames the files in place.
+    """
+    # Define paths for the simuation files.
+    trace_file = os.path.join(OUTPUTS_DIR, f"verilogsim.trace")
+    log_file = os.path.join(OUTPUTS_DIR, f"verilogsim.log")
+
+    # Create new file names by appending the base name.
+    new_trace_file = f"{TEST_FILE}_verilogsim.trace"
+    new_log_file = f"{TEST_FILE}_verilogsim.log"
+
+    # Rename the trace file if it exists
+    if os.path.exists(trace_file):
+        os.rename(trace_file, new_trace_file)
+
+    # Rename the log file if it exists
+    if os.path.exists(log_file):
+        os.rename(log_file, new_log_file)
 
 def run_test(test_name, args):
     """

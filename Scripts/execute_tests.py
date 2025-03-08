@@ -331,51 +331,65 @@ def check_design_files():
             print(f"No Verilog design files found in {os.path.basename(DESIGNS_DIR)}. Exiting...")
 
 
-import os
-import subprocess
-
-TEST_PROGRAMS_DIR = "TestPrograms"  # Set your directory containing assembly files
-
-def list_and_assemble():
+def assemble():
     """
-    Lists all assembly files in the TestPrograms directory, prompts the user to select one, 
-    and then runs `perl assembler.pl <infile> > <outfile>`.
-    """
-    # Get all assembly files in the directory
-    asm_files = [f for f in os.listdir(TEST_PROGRAMS_DIR) if f.endswith(".s") or f.endswith(".asm")]
+    Lists all WISC-S25 assembly files in the TestPrograms directory, prompts the user to select one, 
+    and then runs `perl ./Scripts/assembler.pl <infile> > TESTS_DIR/instructions.img` to assemble it.
 
+    The function ensures the TESTS_DIR exists, provides an interactive selection for the user, 
+    and executes the assembler script with error handling.
+
+    Raises:
+        SystemExit: If no assembly files are found or if the assembly process fails.
+    """
+    # Retrieve all valid assembly files in the directory
+    asm_files = [f for f in os.listdir(TEST_PROGRAMS_DIR) if f.endswith(".s") or f.endswith(".list")]
+
+    # If no assembly files are found, notify the user and exit
     if not asm_files:
-        print("No assembly files found in TestPrograms directory.")
-        return
+        print(f"No WISC-S25 assembly files found in {os.path.basename(TEST_PROGRAMS_DIR)}. Exiting...")
+        sys.exit(1)
 
-    # Display the files in a numbered list
-    print("\nAvailable Assembly Files:")
+    # Display the available assembly files as a numbered list
+    print("\nAvailable WISC-S25 Assembly Files:")
     for idx, file in enumerate(asm_files, start=1):
         print(f"{idx}. {file}")
 
-    # Ask the user to select a file
+    # Prompt the user to select an assembly file
     while True:
         try:
             choice = int(input("\nSelect a file to assemble (enter number): ")) - 1
             if 0 <= choice < len(asm_files):
-                break
+                break  # Valid choice, exit loop
             else:
                 print("Invalid selection. Please enter a valid number.")
         except ValueError:
             print("Invalid input. Please enter a number.")
 
-    # Get the selected file name
+    # Get the full path of the selected input file.
     infile = os.path.join(TEST_PROGRAMS_DIR, asm_files[choice])
-    outfile = os.path.splitext(infile)[0] + ".hex"  # Output file with .hex extension
+    outfile = os.path.join(TESTS_DIR, "instructions.img") 
 
-    # Run the assembler command
-    command = f"perl assembler.pl {infile} > {outfile}"
-    print(f"\nRunning: {command}")
+    # Construct the command to run the assembler.
+    command = f"perl {SCRIPTS_DIR}/assembler.pl {infile} > {outfile}"
 
-    # Execute the command
-    subprocess.run(command, shell=True, check=True)
+    # Execute the assembler command with error handling.
+    try:
+        result = subprocess.run(
+            command,
+            shell=True,                                # Execute in a shell
+            stdout=subprocess.PIPE,                    # Capture standard output
+            stderr=subprocess.PIPE,                    # Capture standard error
+            check=True                                 # Raise exception on non-zero exit code
+        )
+        print(f"YAHOO!! Assembly successfully completed. Output saved to: {outfile}.")
 
-    print(f"\nAssembly complete. Output saved to: {outfile}")
+    except subprocess.CalledProcessError as e:
+        print(f"\n===== Error assembling file {os.path.basename(infile)} =====")
+        # Decode and format the error message from stderr
+        error_message = e.stderr.decode('utf-8').replace("\n", " ").strip()
+        print(f"{error_message}")
+        sys.exit(1)  # Exit the script with an error code
 
 
 def check_logs(logfile, mode):

@@ -677,7 +677,7 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
         if dep in module_definitions:
             dep_file = module_definitions[dep]
             if dep_file not in resolved_files:
-                resolved_files.append(dep_file)  # Add module dependency after packages
+                resolved_files.insert(0, dep_file)  # Add module dependency after packages
                 find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
 
     return resolved_files

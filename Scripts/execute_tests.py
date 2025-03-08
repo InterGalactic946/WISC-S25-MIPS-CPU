@@ -57,6 +57,9 @@ def parse_arguments():
     # Flag to indicate whether to run all testbenches in the directory.
     parser.add_argument("-a", "--all", action="store_true", help="Run all testbenches in the directory.")
 
+    # Flag to assemble a file and output the image file in the tests directory.
+    parser.add_argument("-as", "--asm", action="store_true", help="Assemble a file and output the image file in the test directory.")
+
     # Option to check all verilog files within a directory.
     parser.add_argument("-c", "--check", action="store_true", help="Check all Verilog design files in the directory.")
 
@@ -1161,6 +1164,10 @@ def main():
         else:
             # Retrieve testbenches to be run
             test_names = find_testbench(args.all)
+
+            # Assemble the selected input file if not all tests running in parallel.
+            if args.asm and not args.all:
+                assemble()
 
             # Display the appropriate message based on mode.
             print_mode_message(args)

@@ -910,10 +910,17 @@ def rename_sim_files():
     # Rename the trace file if it exists
     if os.path.exists(trace_file):
         os.rename(trace_file, new_trace_file)
+        print(f"Renamed {trace_file} to {new_trace_file}")
+    else:
+        print(f"{trace_file} not found.")
 
     # Rename the log file if it exists
     if os.path.exists(log_file):
         os.rename(log_file, new_log_file)
+        print(f"Renamed {log_file} to {new_log_file}")
+    else:
+        print(f"{log_file} not found.")
+
 
 def run_test(test_name, args):
     """

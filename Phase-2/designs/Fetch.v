@@ -9,34 +9,31 @@
 // prediction. The module includes logic to choose between  //
 // sequential execution (PC + 2) and branch targets based   //
 // on predictions from the Branch Predictor.                //
-//                                                          //
-// The `wen` signal ensures PC updates only when allowed,   //
-// preventing hazards. The `Branch` signal indicates if the //
-// instruction is a branch, while `Branch_taken` specifies  //
-// whether the branch should be taken. The output `PC_next` //
-// provides the computed next PC value, and `PC_inst`       //
-// represents the instruction fetched from memory.          //
 //////////////////////////////////////////////////////////////
-module Fetch(clk, rst, wen, Branch_target, Branch_taken, PC_next, PC_inst);
+module Fetch(clk, rst, stall, Branch_target, Branch_taken, PC_next, PC_inst, PC_curr);
   
   input wire clk;                  // System clock
   input wire rst;                  // Active high synchronous reset
-  input wire wen;                  // Write enable signal for the PC (from the hazard detection unit)
+  input wire stall;                // Stall signal for the PC (from the hazard detection unit)
   input wire [15:0] Branch_target; // Computed offset for branch instructions (from the decode stage)
   input wire Branch_taken;         // Signal used to determine whether branch is taken (from the decode stage)
   output wire [15:0] PC_next;      // The next PC value
   output wire [15:0] PC_inst;      // Instruction at the current PC address
+  output wire [15:0] PC_curr;      // The current PC's value.
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire [15:0] PC_new;         // The new address the PC is updated with.
-  wire [15:0] PC_curr;        // The current PC's value.
+  wire [15:0] PC_new;  // The new address the PC is updated with.
+  wire wen;            // PC write enable signal.
   //////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
   // Implement PC_control as structural/dataflow verilog //
   ////////////////////////////////////////////////////////
+  // We write to the PC whenever we don't stall.
+  assign wen = ~stall;
+
   // Choose between the computed branch target address and (PC+2) to update the PC register.
   assign PC_new = (Branch_taken) ? Branch_target : PC_next;
 

@@ -17,12 +17,11 @@
 // provides the computed next PC value, and `PC_inst`       //
 // represents the instruction fetched from memory.          //
 //////////////////////////////////////////////////////////////
-module Fetch(clk, rst, wen, Branch, Branch_target, Branch_taken, PC_next, PC_inst);
+module Fetch(clk, rst, wen, Branch_target, Branch_taken, PC_next, PC_inst);
   
   input wire clk;                  // System clock
   input wire rst;                  // Active high synchronous reset
   input wire wen;                  // Write enable signal for the PC (from the hazard detection unit)
-  input wire Branch;               // Indicates a branch instruction (from the decode stage)
   input wire [15:0] Branch_target; // Computed offset for branch instructions (from the decode stage)
   input wire Branch_taken;         // Signal used to determine whether branch is taken (from the decode stage)
   output wire [15:0] PC_next;      // The next PC value
@@ -39,7 +38,7 @@ module Fetch(clk, rst, wen, Branch, Branch_target, Branch_taken, PC_next, PC_ins
   // Implement PC_control as structural/dataflow verilog //
   ////////////////////////////////////////////////////////
   // Choose between the computed branch target address and (PC+2) to update the PC register.
-  assign PC_new = (Branch & Branch_taken) ? Branch_target : PC_next;
+  assign PC_new = (Branch_taken) ? Branch_target : PC_next;
 
   // Infer the PC Register.
   PC_Register iPC (.clk(clk), .rst(rst), .wen(wen), .nxt_pc(PC_new), .curr_pc(PC_curr));

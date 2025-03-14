@@ -21,12 +21,17 @@ module cpu (clk, rst_n, hlt, pc);
   /////////////////////////////////
   wire rst; // Active high synchronous reset signal
 
+  /* HAZARD DETECTION UNIT signals */
+  wire wen; // Write enable signal for the PC
+
   /* FETCH stage signals */
   wire [15:0] PC_next;  // Next PC address
   wire [15:0] PC_inst;  // Instruction at the current PC address
 
-  /* HAZARD DETECTION UNIT signals */
-  wire wen; // Write enable signal for the PC
+  /* IF/ID Pipeline Register signals */
+  wire [15:0] IF_ID_PC_inst; // Pipelined instruction word from the fetch stage
+  wire [15:0] IF_ID_PC_next; // Pipelined next instruction address from the fetch stage
+
 
   /* DECODE stage signals */
   wire [3:0] opcode;         // opcode of the instruction
@@ -38,6 +43,8 @@ module cpu (clk, rst_n, hlt, pc);
   wire [7:0] LB_imm;         // immediate for LLB/LHB instructions
   wire [8:0] Branch_imm;     // immediate for branch instructions
   wire [2:0] c_codes;        // condition codes for branch instructions
+
+  /* Branch control signals */
   wire [15:0] Branch_target; // Computed branch target address
   wire Branch_taken;         // Signal used to determine whether branch is taken
 
@@ -90,7 +97,6 @@ module cpu (clk, rst_n, hlt, pc);
         .clk(clk),
         .rst(rst),
         .wen(wen),
-        .Branch(Branch),
         .Branch_target(Branch_target),
         .Branch_taken(Branch_taken),
         .PC_next(PC_next),
@@ -99,6 +105,18 @@ module cpu (clk, rst_n, hlt, pc);
   /////////////////////////////////////////////////////
   // Decode instruction and get data from registers //
   ///////////////////////////////////////////////////
+  // Determines what the target branch address based on the condition codes.
+  Branch_control iBC (.C(c_codes),
+                   .I(Branch_imm),
+                   .F({ZF, VF, NF}),
+                   .Rs(SrcReg1_data),
+                   .Branch(Branch),
+                   .BR(IF_ID_PC_inst[12]),
+                   .PC_next(IF_ID_PC_next),
+                   .Branch_taken(Branch_taken),
+                   .PC_branch(Branch_target)
+                  );
+
   // Get the opcode, Rd, Rs, Rt register IDs.
   assign opcode = pc_inst[15:12];
   assign reg_rd = pc_inst[11:8];

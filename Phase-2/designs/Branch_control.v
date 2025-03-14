@@ -13,7 +13,7 @@
 // condition code (`C`) and flags (`F`) dictate whether a   //
 // branch should be taken using the signed offset `I`.      //
 //////////////////////////////////////////////////////////////
-module PC_control(C, I, F, Branch, Rs, BR, PC_in, PC_out);
+module Branch_control(C, I, F, Branch, Rs, BR, PC_in, PC_out);
   
   input wire [2:0] C;        // 3-bit condition code
   input wire [8:0] I;        // 9-bit signed offset right shifted by one
@@ -37,9 +37,6 @@ module PC_control(C, I, F, Branch, Rs, BR, PC_in, PC_out);
   //////////////////////////////////////////////////////////
   // Implement PC_control as structural/dataflow verilog //
   ////////////////////////////////////////////////////////
-  // Instantiate the PC+2 adder.
-  CLA_16bit iCLA_next (.A(PC_in), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
-
   // Instantiate the Branch adder.
   CLA_16bit iCLA_branch (.A(PC_next), .B(shifted_offset), .sub(1'b0), .Sum(PC_B), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
 

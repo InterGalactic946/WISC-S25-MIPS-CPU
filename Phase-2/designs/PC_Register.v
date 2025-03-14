@@ -9,6 +9,7 @@
 module PC_Register(
   input wire clk,             // System clock
   input wire rst,             // Active high synchronous reset
+  input wire wen,             // Write enable for the PC register
   input wire [15:0] nxt_pc,   // Next pc address
   output wire [15:0] curr_pc  // Current pc address
 );
@@ -16,7 +17,7 @@ module PC_Register(
   ////////////////////////////////////////
   // Instantiate 16 flops for register //
   //////////////////////////////////////
-  dff iFF [15:0] (.q(curr_pc), .d(nxt_pc), .wen(16'hFFFF), .clk({16{clk}}), .rst({16{rst}}));
+  dff iFF [15:0] (.q(curr_pc), .d(nxt_pc), .wen({16{wen}}), .clk({16{clk}}), .rst({16{rst}}));
 
 endmodule
 

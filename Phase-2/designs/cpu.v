@@ -21,20 +21,25 @@ module cpu (clk, rst_n, hlt, pc);
   /////////////////////////////////
   wire rst; // Active high synchronous reset signal
 
-  // Signals for the PC and instruction memory
-  wire [15:0] nxt_pc;  // Next PC address
-  wire [15:0] pc_inst; // Instruction at the current PC address
+  /* FETCH stage signals */
+  wire [15:0] PC_next;  // Next PC address
+  wire [15:0] PC_inst;  // Instruction at the current PC address
 
-  // Signals from the decoded instruction
-  wire [3:0] opcode;     // opcode of the instruction
-  wire [3:0] reg_rd;     // register ID of the destination register
-  wire [3:0] reg_rs;     // register ID of the first source register
-  wire [3:0] reg_rt;     // register ID of the second source register
-  wire [3:0] ALU_imm;    // immediate for ALU instructions (SLL/SRA/ROR)
-  wire [3:0] Mem_offset; // offset for memory instructions (LW/SW)
-  wire [7:0] LB_imm;     // immediate for LLB/LHB instructions
-  wire [8:0] Branch_imm;  // immediate for branch instructions
-  wire [2:0] c_codes;    // condition codes for branch instructions
+  /* HAZARD DETECTION UNIT signals */
+  wire wen; // Write enable signal for the PC
+
+  /* DECODE stage signals */
+  wire [3:0] opcode;         // opcode of the instruction
+  wire [3:0] reg_rd;         // register ID of the destination register
+  wire [3:0] reg_rs;         // register ID of the first source register
+  wire [3:0] reg_rt;         // register ID of the second source register
+  wire [3:0] ALU_imm;        // immediate for ALU instructions (SLL/SRA/ROR)
+  wire [3:0] Mem_offset;     // offset for memory instructions (LW/SW)
+  wire [7:0] LB_imm;         // immediate for LLB/LHB instructions
+  wire [8:0] Branch_imm;     // immediate for branch instructions
+  wire [2:0] c_codes;        // condition codes for branch instructions
+  wire [15:0] Branch_target; // Computed branch target address
+  wire Branch_taken;         // Signal used to determine whether branch is taken
 
   // Register IDs of source registers
   wire [3:0] SrcReg1; // Register ID of the first source register
@@ -81,30 +86,16 @@ module cpu (clk, rst_n, hlt, pc);
   ////////////////////////////////
   // Fetch Instruction from PC //
   //////////////////////////////
-  // Infer the instruction memory, it is always read enabled and never write enabled.
-  memory1c iINSTR_MEM (.data_out(pc_inst),
-                              .data_in(16'h0000),
-                              .addr(pc),
-                              .enable(1'b1),
-                              .data(1'b0),
-                              .wr(1'b0),
-                              .clk(clk),
-                              .rst(rst)
-                              );
-
-  // Infer the PC Register.
-  PC_Register iPC (.clk(clk), .rst(rst), .nxt_pc(nxt_pc), .curr_pc(pc));
-
-  // Determines what the next pc address is based on branch taken/not.
-  PC_control iPCC (.C(c_codes),
-                   .I(Branch_imm),
-                   .F({ZF, VF, NF}),
-                   .Rs(SrcReg1_data),
-                   .Branch(Branch),
-                   .BR(pc_inst[12]),
-                   .PC_in(pc),
-                   .PC_out(nxt_pc)
-                  );
+  Fetch iFETCH (
+        .clk(clk),
+        .rst(rst),
+        .wen(wen),
+        .Branch(Branch),
+        .Branch_target(Branch_target),
+        .Branch_taken(Branch_taken),
+        .PC_next(PC_next),
+        .PC_inst(PC_inst)
+  );
   /////////////////////////////////////////////////////
   // Decode instruction and get data from registers //
   ///////////////////////////////////////////////////

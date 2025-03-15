@@ -27,6 +27,7 @@ module RegisterFile(clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData, SrcDa
   wire [15:0] Wordline_1, Wordline_2; // Select lines for register 1 and 2.
   wire [15:0] Wordline_dst;           // Select line for destination register.
   wire [15:0] DstData_operand;        // Data to write to a register.
+  wire [15:0] ReadData1, ReadData2;   // Data read out from both registers.
   //////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////
@@ -40,10 +41,16 @@ module RegisterFile(clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData, SrcDa
   WriteDecoder_4_16 iWRITE (.RegId(DstReg), .WriteReg(WriteReg), .Wordline(Wordline_dst));
 
   // Vector instantiate 16 registers comprising a register file.
-  Register iREGISTER [15:0] (.clk({16{clk}}), .rst({16{rst}}), .D(DstData_operand), .WriteReg(Wordline_dst), .ReadEnable1(Wordline_1), .ReadEnable2(Wordline_2), .Bitline1(SrcData1), .Bitline2(SrcData2));
+  Register iREGISTER [15:0] (.clk({16{clk}}), .rst({16{rst}}), .D(DstData_operand), .WriteReg(Wordline_dst), .ReadEnable1(Wordline_1), .ReadEnable2(Wordline_2), .Bitline1(ReadData1), .Bitline2(ReadData2));
 
   // Hardcode register 0 to always hold 0x0000, otherwise write whatever data that was meant to be.
   assign DstData_operand = (DstReg == 4'h0) ? 16'h0000 : DstData;
+
+  // Reads in the latest data being written into the first register to allow for RF bypassing.
+  assign SrcData1 = (Wordline_1 & Wordline_dst) ? DstData_operand : ReadData1;
+
+  // Reads in the latest data being written into the second register to allow for RF bypassing.
+  assign SrcData2 = (Wordline_2 & Wordline_dst) ? DstData_operand : ReadData2;
 
 endmodule
 

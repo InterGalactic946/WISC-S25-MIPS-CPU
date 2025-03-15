@@ -1,32 +1,20 @@
 `default_nettype none // Set the default as none to avoid errors
 
-/////////////////////////////////////////////////////////
-// flag_register.v                                    //
-// This module infers a 3-bit register to hold and   //
-// change the values of Z, V, and N signals.        //
-/////////////////////////////////////////////////////
-module flag_register(
-  input wire clk,          // System clock
-  input wire rst,          // active high reset signal
-  input wire Z_en, Z_set,  // enable signal and set signal for Z
-  input wire V_en, V_set,  // enable signal and set signal for V
-  input wire N_en, N_set,  // enable signal and set signal for N
-  output wire Z,           // Z (Zero) signal
-  output wire V,           // V (Overflow) signal
-  output wire N            // N (Sign) signal
+////////////////////////////////////////////////////////
+// Flag_Register.v: Flag register representing state  //
+// This module infers a 3, 1-bit registers to hold    //
+// and change the values of Z, V, and N flags.        //
+////////////////////////////////////////////////////////
+module Flag_Register(
+  input wire clk,            // System clock
+  input wire rst,            // active high reset signal
+  input wire [2:0] wen,      // write enable signal for each 1-bit register (Z_en, NV_en, NV_en)
+  input wire [2:0] flags_in, // 3-bit flags as input to the register (Z_set, V_set, N_set)
+  inout wire [2:0] flags_out // 3-bit flags read out of the register (ZF, VF, NF)
 );
 
-  ///////////////////////////////////////
-  // Flop each singal based on enable //
-  /////////////////////////////////////
-  // flop for Z (Zero) signal
-  dff iFFZ (.q(Z), .d(Z_set), .wen(Z_en), .clk(clk), .rst(rst));
-
-  // flop for V (Overflow) signal
-  dff iFFV (.q(V), .d(V_set), .wen(V_en), .clk(clk), .rst(rst));
-
-  // flop for N (Sign) signal
-  dff iFFN (.q(N), .d(N_set), .wen(N_en), .clk(clk), .rst(rst));
+  // Infer the flag Register as an array of 1-bit registers.
+  CPU_Register #(.WIDTH(1)) iFLAG_REG [2:0] (.clk({3{clk}}), .rst({3{rst}}), .wen(wen), .data_in(flags_in), .data_out(flags_out));
 
 endmodule
 

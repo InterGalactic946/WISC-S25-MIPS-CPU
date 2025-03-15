@@ -1,5 +1,5 @@
 `default_nettype none // Set the default as none to avoid errors
-
+ 
 ///////////////////////////////////////////////////////////////
 // IF_ID_pipe_reg.v: Instruction Fetch to Decode Pipeline    //
 //                                                           //
@@ -9,22 +9,23 @@
 // fetched instruction while passing them from the IF stage  //
 // to the ID stage.                                          //
 ///////////////////////////////////////////////////////////////
-module PipelineRegister (clk, rst, stall, flush, data_in, data_out);
-
-  parameter WIDTH = 16;             // parametrize the amount of data to store in the register
-
-  input wire clk;                   // System clock
-  input wire rst;                   // Active high synchronous reset
-  input wire stall;                 // Stall signal (prevents updates)
-  input wire flush;                 // Flush pipeline register (clears the instruction)
-  input wire [WIDTH-1:0] data_in;   // Input data from the previous pipeline stage
-  output wire [WIDTH-1:0] data_out; // Output data to the next pipeline stage
+module IF_ID_pipe_reg (
+    input wire clk,                   // System clock
+    input wire rst,                   // Active high synchronous reset
+    input wire stall,                 // Stall signal (prevents updates)
+    input wire flush,                 // Flush pipeline register (clears the instruction word)
+    input wire [15:0] PC_next,        // Next PC from the fetch stage
+    input wire [15:0] PC_inst,        // Current instruction word from the fetch sage
+    
+    output wire [31:0] IF_ID_PC_next, // Pipelined next PC passed to the decode stage
+    output wire [31:0] IF_ID_PC_inst  // Pipelined current instruction word passed to the decode stage
+);
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire wen;   // Register write enable signal.
-  wire clr;   // Clear signal for instruction word register
+  wire wen;                   // Register write enable signal.
+  wire clr;                   // Clear signal for instruction word register
   //////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
@@ -32,12 +33,15 @@ module PipelineRegister (clk, rst, stall, flush, data_in, data_out);
   /////////////////////////////////////////////////////////////////////////
   // We write to the register whenever we don't stall.
   assign wen = ~stall;
-
+ 
   // We clear the instruction word register whenever we flush or during rst.
   assign clr = flush | rst;
 
-  // Register for storing the previous.
-  dff iPIPELINE_REG [WIDTH-1:0] (.q(data_out), .d(data_in), .wen({16{wen}}), .clk({16{clk}}), .rst({16{rst}}));
+  // Register for storing the next instruction's address.
+  CPU_Register iPC_NEXT_REG (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_next), .data_out(IF_ID_PC_next));
+
+  // Register for storing the fetched instruction word (clear the instruction on flush).
+  CPU_Register iPC_INST_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(PC_inst), .data_out(IF_ID_PC_inst));
 
 endmodule
 

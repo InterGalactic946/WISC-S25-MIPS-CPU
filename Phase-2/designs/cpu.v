@@ -33,38 +33,51 @@ module cpu (clk, rst_n, hlt, pc);
   /* IF/ID Pipeline Register signals */
   wire [15:0] IF_ID_PC_inst; // Pipelined instruction word from the fetch stage
   wire [15:0] IF_ID_PC_next; // Pipelined next instruction address from the fetch stage
-  wire [31:0] IF_ID_signals; // Pipelined current intruction word and next instruction's address in that order
 
   /* DECODE stage signals */
   wire [15:0] Branch_target; // Computed branch target address
   wire Branch_taken;         // Signal used to determine whether branch is taken
-  wire [5:0] EX_signals,     // Execute stage control signals
-  wire [1:0] MEM_signals,    // Memory stage control signals
-  wire [7:0] WB_signals,     // Write-back stage control signals
-  wire [15:0] ALU_In1,       // First ALU input
-  wire [15:0] ALU_In2        // Second ALU input
+  wire [37:0] EX_signals;    // Execute stage control signals
+  wire [17:0] MEM_signals;   // Memory stage control signals
+  wire [7:0] WB_signals;     // Write-back stage control signals
 
   /* ID/EX Pipeline Register signals */
-  wire [15:0] ID_EX_signals; // Stores EX, MEM, WB control signals in that order
+  wire [15:0] ID_EX_ALU_In1;       // Pipelined First ALU input from the decode stage
+  wire [15:0] ID_EX_ALU_In2;       // Pipelined Second ALU input from the decode stage
+  wire [3:0] ID_EX_ALUOp;          // Pipelined ALU operation code from the decode stage
+  wire ID_EX_Z_en, ID_EX_NV_en;    // Pipelined enable signals setting the Z, N, and V flags from the decode stage
+  wire [17:0] ID_EX_MEM_signals;   // Pipelined Memory stage control signals from the decode stage
+  wire [7:0] ID_EX_WB_signals;     // Pipelined Write-back stage control signals from the decode stage
+  wire [15:0] ID_EX_PC_next;       // Pipelined next instruction address from the fetch stage
 
   /* EXECUTE stage signals */
   wire [15:0] ALU_out;       // ALU output
   wire ZF, VF, NF;           // Flag signals
   wire Z_set, V_set, N_set;  // Flags set by ALU
 
+  /* EX/MEM Pipeline Register signals */
+  wire [15:0] EX_MEM_ALU_out;      // Pipelined data memory address/arithemtic computation result computed from the execute stage
+  wire [15:0] EX_MEM_MemWriteData; // Pipelined write data for SW from the decode stage
+  wire EX_MEM_MemEnable;           // Pipelined data memory access enable signal from the decode stage
+  wire EX_MEM_MemWrite;            // Pipelined data memory write enable signal from the decode stage
+  wire [7:0] EX_MEM_WB_signals;    // Pipelined Write-back stage control signals from the decode stage
+  wire [15:0] EX_MEM_PC_next;      // Pipelined next instruction address from the fetch stage
+
   /* MEMORY stage signals */
-  wire [15:0] MemData;        // Data read from memory
+  wire [15:0] MemData; // Data read from memory
 
   /* MEM/WB Pipeline Register signals */
-  wire [3:0] MEM_WB_reg_rd; // Register ID of the destination register
-  wire MEM_WB_RegWrite;     // Write enable to the register file
-  wire MEM_WB_MemToReg;     // Selects the data to write back to the register file
-  wire MEM_WB_HLT;          // Indicates that the HLT instruction, if fetched, entered the WB stage
-  wire MEM_WB_PCS;          // Indicates that the PCS instruction, if fetched, entered the WB stage
+  wire [15:0] MEM_WB_MemData; // Pipelined data read from memory from the memory stage
+  wire [15:0] MEM_WB_ALU_out; // Pipelined arithemtic computation result computed from the execute stage
+  wire [3:0] MEM_WB_reg_rd;   // Pipelined register ID of the destination register from the decode stage
+  wire MEM_WB_RegWrite;       // Pipelined write enable to the register file from the decode stage
+  wire MEM_WB_MemToReg;       // Pipelined select signal to write data read from memory or ALU result back to the register file
+  wire MEM_WB_HLT;            // Pipelined HLT signal from the decode stage (indicates that the HLT instruction, if fetched, entered the WB stage) 
+  wire MEM_WB_PCS;            // Pipelined PCS signal from the decode stage (indicates that the PCS instruction, if fetched, entered the WB stage)
+  wire [15:0] MEM_WB_PC_next; // Pipelined next instruction address from the fetch stage
 
   /* WRITE_BACK stage signals */
   wire [15:0] RegWriteData;   // Data to write back to the register file
-
   //////////////////////////////////////////////////
 
   /////////////////////////////////////////
@@ -91,7 +104,7 @@ module cpu (clk, rst_n, hlt, pc);
         .PC_inst(PC_inst),
         .PC_curr(pc)
   );
-  /////////////////////////////////////////////////
+  ///////////////////////////////////
 
   /////////////////////////////////////////////////
   // Pass the instruction word and the next PC address to the IF/ID pipeline register.
@@ -100,10 +113,10 @@ module cpu (clk, rst_n, hlt, pc);
     .rst(rst),
     .stall(IF_ID_stall),
     .flush(IF_flush),
-    .PC_next_in(PC_next),
-    .PC_inst_in(PC_inst),
-    .PC_next_out(IF_ID_PC_next),
-    .PC_inst_out(IF_ID_PC_inst)
+    .PC_next(PC_next),
+    .PC_inst(PC_inst),
+    .IF_ID_PC_next(IF_ID_PC_next),
+    .IF_ID_PC_inst(IF_ID_PC_inst)
   );
   /////////////////////////////////////////////////
 
@@ -123,68 +136,98 @@ module cpu (clk, rst_n, hlt, pc);
       .MEM_signals(MEM_signals),
       .WB_signals(WB_signals),
       .Branch_target(Branch_target),
-      .Branch_taken(Branch_taken),
-      .ALU_In1(ALU_In1),
-      .ALU_In2(ALU_In2)
-  );
-  ////////////////////////////////////////////////////////////////
+      .Branch_taken(Branch_taken)
+    );
+  ///////////////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////////////
-  // Pass the instruction word's control signals and operands required to execute.
+  // Pass the next PC, instruction word's control signals and operands to the ID/EX pipeline register.
   ID_EX_pipe_reg iID_EX (
-    .clk(clk),
-    .rst(rst),
-    .stall(IF_ID_stall),
-    .flush(IF_flush),
-    .PC_next_in(PC_next),
-    .PC_inst_in(PC_inst),
-    .PC_next_out(IF_ID_PC_next),
-    .PC_inst_out(IF_ID_PC_inst)
+      .clk(clk),
+      .rst(rst),
+      .flush(ID_flush),
+      .IF_ID_PC_next(IF_ID_PC_next),
+      .EX_signals(EX_signals),
+      .MEM_signals(MEM_signals),
+      .WB_signals(WB_signals),
+      .ID_EX_PC_next(ID_EX_PC_next),
+      .ID_EX_EX_signals({ID_EX_ALU_In1, ID_EX_ALU_In2, ID_EX_ALUOp, ID_EX_Z_en, ID_EX_NV_en}),
+      .ID_EX_MEM_signals(ID_EX_MEM_signals),
+      .ID_EX_WB_signals(ID_EX_WB_signals)
   );
   /////////////////////////////////////////////////
 
-  //////////////////////////////////////////////////
-  // Execute Instruction based on control signals //
-  //////////////////////////////////////////////////
-  // Instantiate ALU.
-  ALU iALU (.ALU_In1(ID_EX_ALU_In2),
-            .ALU_In2(ID_EX_ALU_In2),
-            .Opcode(ID_EX_ALUOp),
-            .ALU_Out(ALU_out),
-            .Z_set(Z_set),
-            .N_set(N_set),
-            .V_set(V_set)
-            );
+  ///////////////////////////////////////////////////////////
+  // EXECUTE instruction and set flags based on the opcode //
+  ///////////////////////////////////////////////////////////
+  Execute iEXECUTE (
+      .clk(clk),
+      .rst(rst),
+      .ALU_In1(ID_EX_ALU_In1),
+      .ALU_In2(ID_EX_ALU_In2),
+      .ALU_Op(ID_EX_ALUOp),
+      .Z_en(ID_EX_Z_en),
+      .NV_en(ID_EX_NV_en),
+      .ZF(ZF),
+      .NF(NF),
+      .VF(VF),
+      .ALU_out(ALU_out)
+  );
+  ////////////////////////////////////////////////////////
 
-  // Instantiate the flag_register.
-  flag_register iFR (.clk(clk),
-                    .rst(rst),
-                    .Z_en(ID_EX_Z_en), .Z_set(Z_set),
-                    .V_en(ID_EX_NV_en), .V_set(V_set),
-                    .N_en(ID_EX_NV_en), .N_set(N_set),
-                    .Z(ZF),
-                    .V(VF),
-                    .N(NF)
-                    );
-  ///////////////////////////////////////////////////////////////////////
-  // Read or Write to Memory and write back to Register if applicable //
-  /////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////
+  // Pass the next PC, ALU output along with control signals to the EX/MEM pipeline register. 
+  EX_MEM_pipe_reg iEX_MEM (
+      .clk(clk),
+      .rst(rst),
+      .flush(EX_flush),
+      .ALU_out(ALU_out),
+      .ID_EX_PC_next(ID_EX_PC_next),
+      .ID_EX_MEM_signals(ID_EX_MEM_signals),
+      .ID_EX_WB_signals(ID_EX_WB_signals),
+      .EX_MEM_PC_next(EX_MEM_PC_next),
+      .EX_MEM_ALU_out(EX_MEM_ALU_out),
+      .EX_MEM_MEM_signals({EX_MEM_MemWriteData, EX_MEM_MemEnable, EX_MEM_MemWrite}),
+      .EX_MEM_WB_signals(EX_MEM_WB_signals)
+  );
+  /////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////////
+  // Data MEMORY Access (read/write data for LW/SW as applicable) //
+  //////////////////////////////////////////////////////////////////
   // Instantiate the data memory. 
   memory1c iDATA_MEM (.data_out(MemData),
-                              .data_in(SrcReg2_data),
-                              .addr(ALU_out),
-                              .data(1'b1),
-                              .enable(MemEnable),
-                              .wr(MemWrite),
-                              .clk(clk),
-                              .rst(rst)
-                              );
-  ///////////////////////////////////////////////////////////
-  // Determine what is being written back to the register //
-  /////////////////////////////////////////////////////////
+                      .data_in(EX_MEM_MemWriteData),
+                      .addr(EX_MEM_ALU_out),
+                      .data(1'b1),
+                      .enable(EX_MEM_MemEnable),
+                      .wr(EX_MEM_MemWrite),
+                      .clk(clk),
+                      .rst(rst)
+                    );
+  //////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////
+  // Pass the next PC, data read out from memory and ALU result to the MEM/WB pipeline register.
+  MEM_WB_pipe_reg iMEM_WB (
+      .clk(clk),
+      .rst(rst),
+      .EX_MEM_PC_next(EX_MEM_PC_next),
+      .EX_MEM_ALU_out(EX_MEM_ALU_out),
+      .MemData(MemData),
+      .EX_MEM_WB_signals(EX_MEM_WB_signals),
+      .MEM_WB_PC_next(MEM_WB_PC_next),
+      .MEM_WB_ALU_out(MEM_WB_ALU_out),
+      .MEM_WB_WB_signals({MEM_WB_reg_rd, MEM_WB_RegWrite, MEM_WB_MemToReg, MEM_WB_HLT, MEM_WB_PCS})
+  );
+  /////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////////////
+  // WRITE_BACK data to the register file based on PCS/LW/ALU as applicable //
+  ////////////////////////////////////////////////////////////////////////////
   // Grab the data from memory for LW for write back or if it's PCS, we send (PC+2) for write back,
   // otherwise send the ALU output.
-  assign RegWriteData = (MemToReg) ? MemData : ((PCS) ? nxt_pc : ALU_out);
+  assign RegWriteData = (MEM_WB_MemToReg) ? MEM_WB_MemData : ((MEM_WB_PCS) ? MEM_WB_PC_next : MEM_WB_ALU_out);
 
 endmodule
 

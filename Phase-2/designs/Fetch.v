@@ -17,6 +17,7 @@ module Fetch(clk, rst, stall, Branch_target, Branch_taken, PC_next, PC_inst, PC_
   input wire stall;                // Stall signal for the PC (from the hazard detection unit)
   input wire [15:0] Branch_target; // Computed offset for branch instructions (from the decode stage)
   input wire Branch_taken;         // Signal used to determine whether branch is taken (from the decode stage)
+  
   output wire [15:0] PC_next;      // The next PC value
   output wire [15:0] PC_inst;      // Instruction at the current PC address
   output wire [15:0] PC_curr;      // The current PC's value.
@@ -38,18 +39,18 @@ module Fetch(clk, rst, stall, Branch_target, Branch_taken, PC_next, PC_inst, PC_
   assign PC_new = (Branch_taken) ? Branch_target : PC_next;
 
   // Infer the PC Register.
-  PC_Register iPC (.clk(clk), .rst(rst), .wen(wen), .nxt_pc(PC_new), .curr_pc(PC_curr));
+  CPU_Register iPC (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_new), .data_out(PC_curr));
 
   // Infer the instruction memory, it is always read enabled and never write enabled.
   memory1c iINSTR_MEM (.data_out(PC_inst),
-                              .data_in(16'h0000),
-                              .addr(PC_curr),
-                              .enable(1'b1),
-                              .data(1'b0),
-                              .wr(1'b0),
-                              .clk(clk),
-                              .rst(rst)
-                              );
+                       .data_in(16'h0000),
+                        .addr(PC_curr),
+                        .enable(1'b1),
+                        .data(1'b0),
+                        .wr(1'b0),
+                        .clk(clk),
+                        .rst(rst)
+                      );
 
   // Instantiate the PC+2 adder.
   CLA_16bit iCLA_next (.A(PC_curr), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());

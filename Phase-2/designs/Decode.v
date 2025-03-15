@@ -20,13 +20,11 @@ module Decode (
     input wire MEM_WB_RegWrite,           // Write enable to the register file (from the MEM/WB stage)
     input wire [15:0] RegWriteData,       // Data to write to the register file (from the MEM/WB stage)
     
-    output wire [5:0] EX_signals,         // Execute stage control signals
-    output wire [1:0] MEM_signals,        // Memory stage control signals
+    output wire [37:0] EX_signals,        // Execute stage control signals
+    output wire [17:0] MEM_signals,       // Memory stage control signals
     output wire [7:0] WB_signals,         // Write-back stage control signals
     output wire [15:0] Branch_target,     // Computed branch target address
-    output wire Branch_taken,             // Signal used to determine whether branch is taken
-    output wire [15:0] ALU_In1,           // First ALU input
-    output wire [15:0] ALU_In2            // Second ALU input
+    output wire Branch_taken              // Signal used to determine whether branch is taken
   );
   
   /////////////////////////////////////////////////
@@ -55,9 +53,12 @@ module Decode (
   wire [2:0] c_codes;       // Condition codes for branch instructions
   wire Branch;              // Indicates a branch instruction
   ///////////////////////////// EXECUTE STAGE ////////////////////////////////////
+  wire [15:0] ALU_In1;      // First ALU input
+  wire [15:0] ALU_In2;      // Second ALU input
   wire [3:0] ALUOp;         // ALU operation code
   wire Z_en, NV_en;         // Enables setting the Z, N, and V flags
   /////////////////////////// MEMORY STAGE ///////////////////////////////////////
+  wire [15:0] MemWriteData; // Data written to the data memory for SW
   wire MemEnable;           // Enables reading from memory
   wire MemWrite;            // Enables writing to memory
   /////////////////////////// WRITE BACK STAGE ///////////////////////////////////
@@ -96,10 +97,10 @@ module Decode (
   // Package each stage's control signals for the pipeline  //
   ////////////////////////////////////////////////////////////
   // Package the execute stage control signals.
-  assign EX_signals = {ALUOp, Z_en, NV_en};
+  assign EX_signals = {ALU_In1, ALU_In2, ALUOp, Z_en, NV_en};
 
   // Package the memory stage control signals.
-  assign MEM_signals = {MemEnable, MemWrite};
+  assign MEM_signals = {MemWriteData, MemEnable, MemWrite};
 
   // Package the write back stage control signals.
   assign WB_signals = {reg_rd, RegWrite, MemtoReg, HLT, PCS};
@@ -139,6 +140,9 @@ module Decode (
   // Select the source register for ALU operations.
   assign SrcReg1 = (RegSrc) ? reg_rd : reg_rs;
   assign SrcReg2 = (MemWrite) ? reg_rd : reg_rt;
+
+  // Get the memory write data as coming from the second read register.
+  assign MemWriteData = SrcReg2_data;
   
   // Instantiate the register file.
   RegisterFile iRF (

@@ -1,0 +1,543 @@
+///////////////////////////////////////////////////////////
+// Verification_tasks.sv: Tasks for comparing DUT with    //
+// the CPU model.                                         //
+// This package contains tasks to compare the behavior    //
+// of the Design Under Test (DUT) with the reference model //
+// to ensure that the DUT operates correctly and matches  //
+// the model's expected behavior. Tasks include checking  //
+// instruction execution, memory operations, register     //
+// updates, and control logic for consistency.            //
+///////////////////////////////////////////////////////////
+package Verification_tasks;
+
+
+  // Task to verify the instruction fetched from the instruction memory.
+	task automatic VerifyInstructionFetched(
+			input logic [15:0] expected_instr,       // Expected instruction
+			input logic [15:0] actual_instr,         // Actual instruction fetched from the DUT
+			input logic [15:0] instr_memory [0:65535], // The instruction memory array
+			input logic [15:0] expected_pc,        // Expected PC value
+			input logic [15:0] pc,                 // Actual PC value
+			ref logic error                        // Error flag
+	);
+			// Verify the PC.
+			if (pc !== expected_pc) begin
+				$display("ERROR: Incorrect PC value after instruction fetch. Expected: 0x%h, found: 0x%h.", expected_pc, pc);
+				error = 1'b1;
+			end
+
+			// Verify the fetched instruction.
+			if (actual_instr !== expected_instr) begin
+				$display("ERROR: Incorrect instruction fetched at address: 0x%h. Expected: 0x%h, found: 0x%h.", pc, expected_instr, actual_instr);
+				error = 1'b1;
+			end
+
+			// Verify that the instruction fetched matches what is in the instruction memory
+			if (instr_memory[pc[15:1]] !== expected_instr) begin
+				$display("ERROR: Instruction at PC: 0x%h does not match what is in memory. Expected: 0x%h, found: 0x%h.", pc, expected_instr, instr_memory[pc[15:1]]);
+				error = 1'b1;
+			end
+
+      // Display the fetched instruction if no errors are found.
+      if (!error)
+        $display("DUT Fetched instruction: 0x%h at PC: 0x%h.", actual_instr, pc);
+	endtask
+
+
+  // TASK: Verifies the next PC as calculated by the DUT.
+  task automatic VerifyNextPC(
+      input [15:0] expected_next_PC, // The expected next PC value
+      input [15:0] DUT_next_PC,      // The next PC value calculated by the DUT
+      input expected_taken,          // Expected branch taken signal (1 or 0)
+      input DUT_taken,               // Branch taken signal from DUT (1 or 0)
+      input DUT_Branch,              // Branch instruction signal
+      ref logic error                // Flag to indicate if an error is found
+  );
+    begin
+
+      // Verify if the next PC is correct.
+      if (expected_next_PC !== DUT_next_PC) begin
+        $display("ERROR: DUT calculated the incorrect next PC value. Expected: 0x%h, got: 0x%h.", expected_next_PC, DUT_next_PC);
+        error = 1'b1;
+      end
+
+      // Only verfy the taken signal if it is a branch.
+      if (DUT_Branch === 1'b1) begin
+        // Verify if the branch taken signal matches.
+        if (expected_taken !== DUT_taken) begin
+          $display("ERROR: DUT incorrectly resolved the branch. Expected taken signal: 0b%b, got: 0b%b.", expected_taken, DUT_taken);
+          error = 1'b1;
+        end
+      end
+
+      // If no error, print a message.
+      if (DUT_taken === 1'b1 && DUT_Branch === 1'b1)
+        $display("DUT took the branch.");
+      else if (DUT_taken === 1'b0 && DUT_Branch === 1'b1) begin
+        $display("DUT did not take the branch.");
+      end
+    end
+  endtask
+
+
+  // Task to verify control signals decoded by the DUT.
+  task automatic VerifyControlSignals(
+      input  logic [3:0] opcode,
+      input  string instr_name,
+      input  logic [3:0] rs, rt, rd, 
+      input  logic [15:0] imm,      
+      input  logic ALUSrc, MemtoReg, RegWrite, RegSrc,
+      input  logic MemEnable, MemWrite, Branch, BR, HLT, PCS,
+      input  logic [3:0] ALUOp,
+      input  logic Z_en, NV_en,
+      input  logic [3:0] cc,         
+      input logic [2:0] DUT_flag_reg,
+      input  logic [3:0] DUT_opcode, 
+      input  logic [3:0] DUT_reg_rs, DUT_reg_rt, DUT_reg_rd, 
+      input  logic DUT_ALUSrc, DUT_MemtoReg, DUT_RegWrite, DUT_RegSrc,
+      input  logic DUT_MemEnable, DUT_MemWrite, DUT_Branch, DUT_BR, DUT_HLT, DUT_PCS,
+      input  logic [3:0] DUT_ALUOp,
+      input  logic DUT_Z_en, DUT_NV_en,
+      input  logic [3:0] DUT_c_codes, 
+      ref logic error
+    );
+
+      // Verify opcode.
+      if (opcode !== DUT_opcode) begin
+        $display("ERROR: DUT decoded the incorrect opcode. Instr: %s, Expected opcode: 0b%4b, got: 0b%4b.", instr_name, opcode, DUT_opcode);
+        error = 1'b1;
+      end
+
+      // Verify registers.
+      if (rs !== DUT_reg_rs) begin
+        $display("ERROR: DUT decoded the incorrect rs register. Opcode: 0b%4b, Instr: %s, Expected rs: 0x%h, got: 0x%h.", opcode, instr_name, rs, DUT_reg_rs);
+        error = 1'b1;
+      end
+      if (rt !== DUT_reg_rt) begin
+        $display("ERROR: DUT decoded the incorrect rt register. Opcode: 0b%4b, Instr: %s, Expected rt: 0x%h, got: 0x%h.", opcode, instr_name, rt, DUT_reg_rt);
+        error = 1'b1;
+      end
+      if (rd !== DUT_reg_rd) begin
+        $display("ERROR: DUT decoded the incorrect rd register. Opcode: 0b%4b, Instr: %s, Expected rd: 0x%h, got: 0x%h.", opcode, instr_name, rd, DUT_reg_rd);
+        error = 1'b1;
+      end
+
+      // Verify enable signals.
+      if (Z_en !== DUT_Z_en) begin
+        $display("ERROR: DUT decoded the incorrect Z_enable signal. Opcode: 0b%4b, Instr: %s, Expected Z_en: 0b%b, got: 0b%b.", opcode, instr_name, Z_en, DUT_Z_en);
+        error = 1'b1;
+      end
+      if (NV_en !== DUT_NV_en) begin
+        $display("ERROR: DUT decoded the incorrect NV_enable signal. Opcode: 0b%4b, Instr: %s, Expected NV_en: 0b%b, got: 0b%b.", opcode, instr_name, NV_en, DUT_NV_en);
+        error = 1'b1;
+      end
+
+      // Control Signals Verification based on opcode
+      case(opcode)
+        4'h0, 4'h1, 4'h2, 4'h3, 4'h4, 4'h5, 4'h6, 4'h7, 4'h8, 4'hA, 4'hB: // ADD/SUB/XOR/RED/SLL/SRA/ROR/PADDSB/LW/LLB/LHB
+          begin
+            if (ALUSrc !== DUT_ALUSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (ALUSrc): 0b%b, got: 0b%b.", opcode, instr_name, ALUSrc, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !== DUT_MemtoReg) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemtoReg): 0b%b, got: 0b%b.", opcode, instr_name, MemtoReg, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegWrite): 0b%b, got: 0b%b.", opcode, instr_name, RegWrite, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !== DUT_MemEnable) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemEnable): 0b%b, got: 0b%b.", opcode, instr_name, MemEnable, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !== DUT_MemWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemWrite): 0b%b, got: 0b%b.", opcode, instr_name, MemWrite, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !== DUT_Branch) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (Branch): 0b%b, got: 0b%b.", opcode, instr_name, Branch, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !== DUT_RegSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegSrc): 0b%b, got: 0b%b.", opcode, instr_name, RegSrc, DUT_RegSrc);
+              error = 1'b1;
+            end
+          end
+        4'h9: // SW
+          begin
+            if (ALUSrc !== DUT_ALUSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (ALUSrc): 0b%b, got: 0b%b.", opcode, instr_name, ALUSrc, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !=? DUT_MemtoReg) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemtoReg): 0b%b, got: 0b%b.", opcode, instr_name, MemtoReg, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegWrite): 0b%b, got: 0b%b.", opcode, instr_name, RegWrite, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !== DUT_MemEnable) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemEnable): 0b%b, got: 0b%b.", opcode, instr_name, MemEnable, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !== DUT_MemWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemWrite): 0b%b, got: 0b%b.", opcode, instr_name, MemWrite, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !== DUT_Branch) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (Branch): 0b%b, got: 0b%b.", opcode, instr_name, Branch, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !== DUT_RegSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegSrc): 0b%b, got: 0b%b.", opcode, instr_name, RegSrc, DUT_RegSrc);
+              error = 1'b1;
+            end
+          end
+        4'b1100: // B
+          begin
+            if (ALUSrc !=? DUT_ALUSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (ALUSrc): 0b%b, got: 0b%b.", opcode, instr_name, ALUSrc, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !=? DUT_MemtoReg) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemtoReg): 0b%b, got: 0b%b.", opcode, instr_name, MemtoReg, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegWrite): 0b%b, got: 0b%b.", opcode, instr_name, RegWrite, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !== DUT_MemEnable) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemEnable): 0b%b, got: 0b%b.", opcode, instr_name, MemEnable, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !== DUT_MemWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemWrite): 0b%b, got: 0b%b.", opcode, instr_name, MemWrite, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !== DUT_Branch) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (Branch): 0b%b, got: 0b%b.", opcode, instr_name, Branch, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !=? DUT_RegSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegSrc): 0b%b, got: 0b%b.", opcode, instr_name, RegSrc, DUT_RegSrc);
+              error = 1'b1;
+            end
+          end
+        4'b1101: // BR
+          begin
+            if (ALUSrc !=? DUT_ALUSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (ALUSrc): 0b%b, got: 0b%b.", opcode, instr_name, ALUSrc, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !=? DUT_MemtoReg) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemtoReg): 0b%b, got: 0b%b.", opcode, instr_name, MemtoReg, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegWrite): 0b%b, got: 0b%b.", opcode, instr_name, RegWrite, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !== DUT_MemEnable) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemEnable): 0b%b, got: 0b%b.", opcode, instr_name, MemEnable, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !== DUT_MemWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemWrite): 0b%b, got: 0b%b.", opcode, instr_name, MemWrite, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !== DUT_Branch) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (Branch): 0b%b, got: 0b%b.", opcode, instr_name, Branch, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !== DUT_RegSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegSrc): 0b%b, got: 0b%b.", opcode, instr_name, RegSrc, DUT_RegSrc);
+              error = 1'b1;
+            end
+            if (BR !== DUT_BR) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (BR): 0b%b, got: 0b%b.", opcode, instr_name, BR, DUT_BR);
+              error = 1'b1;
+            end
+          end
+        4'b1110: // PCS
+          begin
+            if (ALUSrc !=? DUT_ALUSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (ALUSrc): 0b%b, got: 0b%b.", opcode, instr_name, ALUSrc, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !== DUT_MemtoReg) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemtoReg): 0b%b, got: 0b%b.", opcode, instr_name, MemtoReg, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegWrite): 0b%b, got: 0b%b.", opcode, instr_name, RegWrite, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !== DUT_MemEnable) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemEnable): 0b%b, got: 0b%b.", opcode, instr_name, MemEnable, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !== DUT_MemWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemWrite): 0b%b, got: 0b%b.", opcode, instr_name, MemWrite, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !== DUT_Branch) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (Branch): 0b%b, got: 0b%b.", opcode, instr_name, Branch, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !=? DUT_RegSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegSrc): 0b%b, got: 0b%b.", opcode, instr_name, RegSrc, DUT_RegSrc);
+              error = 1'b1;
+            end
+          end
+        4'b1111: // HLT
+          begin
+            if (ALUSrc !=? DUT_ALUSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (ALUSrc): 0b%b, got: 0b%b.", opcode, instr_name, ALUSrc, DUT_ALUSrc);
+              error = 1'b1;
+            end
+            if (MemtoReg !=? DUT_MemtoReg) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemtoReg): 0b%b, got: 0b%b.", opcode, instr_name, MemtoReg, DUT_MemtoReg);
+              error = 1'b1;
+            end
+            if (RegWrite !== DUT_RegWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegWrite): 0b%b, got: 0b%b.", opcode, instr_name, RegWrite, DUT_RegWrite);
+              error = 1'b1;
+            end
+            if (MemEnable !=? DUT_MemEnable) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemEnable): 0b%b, got: 0b%b.", opcode, instr_name, MemEnable, DUT_MemEnable);
+              error = 1'b1;
+            end
+            if (MemWrite !=? DUT_MemWrite) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (MemWrite): 0b%b, got: 0b%b.", opcode, instr_name, MemWrite, DUT_MemWrite);
+              error = 1'b1;
+            end
+            if (Branch !=? DUT_Branch) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (Branch): 0b%b, got: 0b%b.", opcode, instr_name, Branch, DUT_Branch);
+              error = 1'b1;
+            end
+            if (RegSrc !=? DUT_RegSrc) begin
+              $display("ERROR: DUT decoded the incorrect control signal. Opcode: 0b%4b, Instr: %s, Expected (RegSrc): 0b%b, got: 0b%b.", opcode, instr_name, RegSrc, DUT_RegSrc);
+              error = 1'b1;
+            end
+          end
+        default: begin // INVALID operation
+          $display("ERROR: Opcode = 0b%4b, Instr: %s.", opcode, instr_name);
+          error = 1'b1;
+        end
+      endcase
+
+      // Display the decoded information (including condition code).
+      display_decoded_info(.opcode(opcode), .instr_name(instr_name), .rs(rs), .rt(rt), .rd(rd), .imm(imm), .cc(cc), .DUT_flag_reg(DUT_flag_reg));
+  endtask
+
+
+  // Display the decoded information based on instruction type
+  task automatic display_decoded_info(input logic [3:0] opcode, input string instr_name, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] imm, input logic [2:0] cc, input logic [2:0] DUT_flag_reg);
+      begin
+          case (opcode)
+              4'h0, 4'h1, 4'h2, 4'h3, 4'h7: // Instructions with 2 registers (like ADD, SUB, XOR, etc.).
+                  $display("DUT Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, rd = 0x%h.", opcode, instr_name, rs, rt, rd);
+              4'h4, 4'h5, 4'h6, 4'h8, 4'h9: // LW and SW have an immediate but no rd register.
+                  $display("DUT Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, imm = 0x%h.", opcode, instr_name, rs, rd, imm);
+              4'hA, 4'hB: // LLB and LHB have an immediate but no rt register.
+                  $display("DUT Decoded instruction: Opcode = 0b%4b, Instr: %s, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rd, imm);
+              4'hC: // B instruction does not have registers like `rs`, `rt`, or `rd`.
+                  $display("DUT Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, imm = 0x%h, ZF = 0b%b, VF = 0b%b, NF = 0b%b.", opcode, instr_name, cc, imm, DUT_flag_reg[2], DUT_flag_reg[1], DUT_flag_reg[0]);
+              4'hD: // BR instruction does not have registers like `rt`, or `rd`. It only has a source register `rs`.
+                  $display("DUT Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, rs = 0x%h, ZF = 0b%b, VF = 0b%b, NF = 0b%b.", opcode, instr_name, cc, rs, DUT_flag_reg[2], DUT_flag_reg[1], DUT_flag_reg[0]); 
+              4'hE: // (PCS) does not have registers like `rs`, `rt`. It only has a destination register `rd`.
+                  $display("DUT Decoded instruction: Opcode = 0b%4b, Instr: %s, rd = 0x%h.", opcode, instr_name, rd);
+              default: // HLT/Invalid opcode
+                  $display("DUT Decoded instruction: Opcode = 0b%4b, Instr: %s.", opcode, instr_name);
+          endcase
+      end
+  endtask
+
+
+ // Task to verify the ALU operands.
+ task automatic VerifyALUOperands(
+    input  string instr_name,
+    input  logic [15:0] Input_A,  // Expected Input A operand
+    input  logic [15:0] Input_B,  // Expected Input B operand
+    input  logic [15:0] ALU_Input_A, // ALU's internal Input_A signal
+    input  logic [15:0] ALU_Input_B, // ALU's internal Input_B signal
+    ref logic error
+  );
+    // Verify ALU operands if not PCS or B or BR.
+    if (instr_name !== "B" && instr_name !== "BR" && instr_name !== "PCS") begin
+      // Verify operand A
+      if (Input_A !== ALU_Input_A) begin
+          $display("ERROR: DUT has incorrect ALU operands for execution. Instr: %s, Expected Input_A: 0x%h, but got: 0x%h.", instr_name, Input_A, ALU_Input_A);
+          error = 1'b1;
+      end
+
+      // Verify operand B
+      if (Input_B !== ALU_Input_B) begin
+          $display("ERROR: DUT has incorrect ALU operands for execution. Instr: %s, Expected Input_B: 0x%h, but got: 0x%h.", instr_name, Input_B, ALU_Input_B);
+          error = 1'b1;
+      end
+    end
+ endtask
+
+
+  // Task to verify the ALU operation result and flags.
+  task automatic VerifyExecutionResult(
+      input  string instr_name,          // Instruction name
+      input  logic [15:0] opcode,        // Opcode for additional context
+      input  logic [15:0] result,        // Expected result of the ALU operation
+      input  logic Z_set,                // Expected value of the Z flag
+      input  logic N_set,                // Expected value of the N flag
+      input  logic V_set,                // Expected value of the V flag
+      input  logic [15:0] Input_A,       // Input A operand
+      input  logic [15:0] Input_B,       // Input B operand
+      input  logic [15:0] ALU_Out,       // ALU output (result)
+      input  logic ALU_Z,                // Actual Z flag output from ALU
+      input  logic ALU_N,                // Actual N flag output from ALU
+      input  logic ALU_V,                // Actual V flag output from ALU
+      ref logic error                    // Error flag
+  );
+
+      // Verify ALU result if not PCS or B or BR.
+      if (opcode !== 4'hC && opcode !== 4'hD && opcode !== 4'hE) begin
+        if (result !== ALU_Out) begin
+            $display("ERROR: DUT generated an incorrect result on ALU execution. Instr: %s, Opcode: 0b%4b, Expected result: 0x%h, but got: 0x%h.", instr_name, opcode, result, ALU_Out);
+            error = 1'b1;
+        end
+
+        // Verify Z flag for ADD/SUB/SLL/SRA/ROR.
+        if (opcode === 4'h0 || opcode === 4'h1 || opcode === 4'h2 || opcode === 4'h4 || opcode === 4'h5 || opcode === 4'h6) begin
+          if (Z_set !== ALU_Z) begin
+              $display("ERROR: DUT generated incorrect flag set signals on ALU execution. Instr: %s, Opcode: 0b%4b, Expected Z_Set: 0b%b, but got: 0b%b.", instr_name, opcode, Z_set, ALU_Z);
+              error = 1'b1;
+          end
+        end
+
+        // Verify the NV flags for ADD/SUB.
+        if (opcode === 4'h0 || opcode === 4'h1) begin
+          // Verify N flag
+          if (N_set !== ALU_N) begin
+              $display("ERROR: DUT generated incorrect flag set signals on ALU execution. Instr: %s, Opcode: 0b%4b, Expected N_Set: 0b%b, but got: %b.", instr_name, opcode, N_set, ALU_N);
+              error = 1'b1;
+          end
+
+          // Verify V flag
+          if (V_set !== ALU_V) begin
+              $display("ERROR: DUT generated incorrect flag set signals on ALU execution. Instr: %s, Opcode: 0b%4b, Expected V_Set: 0b%b, but got: 0b%b.", instr_name, opcode, V_set, ALU_V);
+              error = 1'b1;
+          end
+        end
+
+      // Display the execution result if no errors are found.
+      if (!error)
+          $display("DUT Executed instruction: Opcode = 0b%4b, Instr: %s, Input_A = 0x%h, Input_B = 0x%h, Result = 0x%h, Z_set = 0b%1b, V_set = 0b%1b, N_set = 0b%1b.", 
+                  opcode, instr_name, Input_A, Input_B, result, Z_set, V_set, N_set);
+      end
+  endtask
+
+
+	// Task to verify if the memory contents match between the model and the CPU's memory.
+	task automatic VerifyMemoryAccess(
+			input logic [15:0] addr,          // Address to access memory
+			input string instr_name,          // Instruction name
+      input logic enable,               // Enable flag
+      input logic [15:0] model_data_in, // Data written by the model
+      input logic [15:0] DUT_data_in,   // Data to write to memory 
+      input logic wr,                   // Write flag
+			ref logic [15:0] model_memory [0:65535],  // Expected data memory model
+			ref logic [15:0] mem_unit [0:65535],      // Actual memory in DUT (CPU memory)
+			ref logic error                           // Error flag
+	);
+
+			// Compare the model memory and the actual memory in the CPU.
+      if (enable) begin
+        if (!wr) begin
+          // Verify the LW operation.
+          if (mem_unit[addr[15:1]] !== model_memory[addr[15:1]]) begin
+              $display("ERROR: DUT read incorrect data from data memory at address: 0x%h. Expected: 0x%h, found: 0x%h.", 
+                      addr, model_memory[addr[15:1]], mem_unit[addr[15:1]]);
+              error = 1'b1;
+          end
+
+          // Print a message if no error.
+          if (!error)
+            $display("DUT accessed data memory at address: 0x%h and read data: 0x%h.", addr, mem_unit[addr[15:1]]);
+        end else begin
+          // Verify the SW operation.
+          if (DUT_data_in !== model_data_in) begin
+              $display("ERROR: DUT wrote incorrect data to data memory at address: 0x%h. Expected: 0x%h, found: 0x%h.",
+                      addr, model_data_in, DUT_data_in);
+              error = 1'b1;
+          end
+
+          // Print a message if no error.
+          if (!error)
+            $display("DUT accessed data memory at address: 0x%h and wrote data: 0x%h.", addr, DUT_data_in);
+        end
+      end
+	endtask
+
+  // Task to verify flag register.
+  task automatic VerifyFlagRegister(
+      input  logic [2:0] flag_reg,      // Expected flag register {N, V, Z}
+      input  logic [2:0] DUT_flag_reg,  // DUT's actual flag register {N, V, Z}
+      ref logic error
+  );
+  begin
+      // Check Z flag (flag_reg[0])
+      if (flag_reg[2] !== DUT_flag_reg[2]) begin
+          $display("ERROR: DUT has an incorrect Z_flag. Expected: 0b%b, found: 0b%b.", flag_reg[2], DUT_flag_reg[2]);
+          error = 1'b1;
+      end
+      
+      // Check V flag (flag_reg[1])
+      if (flag_reg[1] !== DUT_flag_reg[1]) begin
+          $display("ERROR: DUT has an incorrect V_flag. Expected: 0b%b, found: 0b%b.", flag_reg[1], DUT_flag_reg[1]);
+          error = 1'b1;
+      end
+      
+      // Check N flag (flag_reg[2])
+      if (flag_reg[0] !== DUT_flag_reg[0]) begin
+          $display("ERROR: DUT has an incorrect N_flag. Expected: 0b%b, found: 0b%b.", flag_reg[0], DUT_flag_reg[0]);
+          error = 1'b1;
+      end
+
+      // If no error, print out the current state of the DUT's flag register.
+      if (!error)
+	      $display("DUT flag register state: ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", DUT_flag_reg[2], DUT_flag_reg[1], DUT_flag_reg[0]);
+  end
+  endtask
+
+  // Task to verify the write back operation.
+  task automatic VerifyWriteBack(
+      input logic [3:0] DUT_reg_rd,       
+      input logic RegWrite,
+      input  logic [15:0] DUT_RegWriteData, 
+      input logic [3:0] model_reg_rd,
+      input logic [15:0] model_RegWriteData,
+      ref logic error
+  );
+  begin
+      if (RegWrite) begin
+        // Verify the destination register ID.
+        if (model_reg_rd !== DUT_reg_rd) begin
+          $display("ERROR: DUT wrote back to the wrong destination register. Expected: 0x%h, found: 0x%h.", model_reg_rd, DUT_reg_rd);
+          error = 1'b1;
+        end
+
+         if (model_RegWriteData !== DUT_RegWriteData) begin
+          $display("ERROR: DUT wrote back the wrong data to the correct destination register: 0x%h. Expected: 0x%h, found: 0x%h.", DUT_reg_rd, model_RegWriteData, DUT_RegWriteData);
+          error = 1'b1;
+        end
+
+        // If no errors found print a message.
+        if (!error)
+          $display("DUT wrote back to register: 0x%h with data: 0x%h.", DUT_reg_rd, DUT_RegWriteData);
+      end
+  end
+  endtask
+
+endpackage  

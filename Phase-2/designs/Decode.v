@@ -103,7 +103,7 @@ module Decode (
   assign MEM_signals = {MemWriteData, MemEnable, MemWrite};
 
   // Package the write back stage control signals.
-  assign WB_signals = {reg_rd, RegWrite, MemtoReg, HLT, PCS};
+  assign WB_signals = {reg_rd, RegWrite, MemToReg, HLT, PCS};
   /////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////

@@ -14,7 +14,7 @@ module Execute(
     input wire rst,                // Active high synchronous reset
     input wire [15:0] ALU_In1,     // First input to ALU (from the decode stage)
     input wire [15:0] ALU_In2,     // Second input to ALU (from the decode stage)
-    input wire [3:0] ALU_Op,       // ALU operation code (from the decode stage)
+    input wire [3:0] ALUOp,        // ALU operation code (from the decode stage)
     input wire Z_en,               // Enable signal for Z flag
     input wire NV_en,              // Enable signal for N and V flags
     

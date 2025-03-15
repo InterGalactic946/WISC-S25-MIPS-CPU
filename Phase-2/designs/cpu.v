@@ -165,7 +165,7 @@ module cpu (clk, rst_n, hlt, pc);
       .rst(rst),
       .ALU_In1(ID_EX_ALU_In1),
       .ALU_In2(ID_EX_ALU_In2),
-      .ALU_Op(ID_EX_ALUOp),
+      .ALUOp(ID_EX_ALUOp),
       .Z_en(ID_EX_Z_en),
       .NV_en(ID_EX_NV_en),
       .ZF(ZF),

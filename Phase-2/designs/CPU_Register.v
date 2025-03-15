@@ -12,12 +12,12 @@
 /////////////////////////////////////////////////////
 module CPU_Register(clk, rst, wen, data_in, data_out);
 
-  parameter WIDTH = 16;            // Width of each register in bits
+  parameter WIDTH = 16;             // Width of each register in bits
 
-  input wire clk, rst;             // system clock and active high synchronous reset inputs
-  input wire wen;                  // used to enable writing to the register
-  input wire [WIDTH-1:0] data_in;  // WIDTH-bit data input to the register
-  inout wire [WIDTH-1:0] data_out; // read output of the register
+  input wire clk, rst;              // system clock and active high synchronous reset inputs
+  input wire wen;                   // used to enable writing to the register
+  input wire [WIDTH-1:0] data_in;   // WIDTH-bit data input to the register
+  output wire [WIDTH-1:0] data_out; // read output of the register
   
   //////////////////////////////////////////////////
   // Implement CPU_Register as structural verilog //

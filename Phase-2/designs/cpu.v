@@ -33,77 +33,37 @@ module cpu (clk, rst_n, hlt, pc);
   /* IF/ID Pipeline Register signals */
   wire [15:0] IF_ID_PC_inst; // Pipelined instruction word from the fetch stage
   wire [15:0] IF_ID_PC_next; // Pipelined next instruction address from the fetch stage
+  wire [31:0] IF_ID_signals; // Pipelined current intruction word and next instruction's address in that order
 
   /* DECODE stage signals */
-  /////////////////////////// DECODE INSTRUCTION SIGNALS ////////////////////////////
-  wire [3:0] opcode;        // Opcode of the instruction
-  wire [3:0] reg_rd;        // Register ID of the destination register
-  wire [3:0] reg_rs;        // Register ID of the first source register
-  wire [3:0] reg_rt;        // Register ID of the second source register
-  wire [3:0] ALU_imm;       // Immediate for ALU instructions (SLL/SRA/ROR)
-  wire [3:0] Mem_offset;    // Offset for memory instructions (LW/SW)
-  wire [7:0] LB_imm;        // Immediate for LLB/LHB instructions
-  wire [8:0] Branch_imm;    // Immediate for branch instructions
-  wire [2:0] c_codes;       // Condition codes for branch instructions
-  ///////////////////////////// CONTROL UNIT SIGNALS ///////////////////////////////
-  wire RegSrc;              // Selects register source based on LLB/LHB instructions
-  wire RegWrite;            // Enables writing to the register file        
-  wire Branch;              // Indicates a branch instruction
-  wire ALUSrc;              // Selects second ALU input based on instruction type
-  wire [3:0] ALUOp;         // ALU operation code
-  wire Z_en, NV_en;         // Enables setting the Z, N, and V flags
-  wire MemWrite;            // Enables writing to memory
-  wire MemEnable;           // Enables reading from memory
-  wire MemToReg;            // Selects data to write back to the register file
-  wire HLT;                 // Indicates a HLT instruction
-  wire PCS;                 // Indicates a PCS instruction
-  ////////////////////////// BRANCH CONTROL UNIT SIGNALS ///////////////////////////
   wire [15:0] Branch_target; // Computed branch target address
   wire Branch_taken;         // Signal used to determine whether branch is taken
-  /////////////////////////// SOURCE REGISTER SIGNALS //////////////////////////////
-  wire [3:0] SrcReg1;        // Register ID of the first source register
-  wire [3:0] SrcReg2;        // Register ID of the second source register
-  wire [15:0] SrcReg1_data;  // Data from the first source register
-  wire [15:0] SrcReg2_data;  // Data from the second source register
-  //////////////////////////////////////////////////////////////////////////////////
+  wire [5:0] EX_signals,     // Execute stage control signals
+  wire [1:0] MEM_signals,    // Memory stage control signals
+  wire [7:0] WB_signals,     // Write-back stage control signals
+  wire [15:0] ALU_In1,       // First ALU input
+  wire [15:0] ALU_In2        // Second ALU input
 
   /* ID/EX Pipeline Register signals */
-  /////////////////////////// DECODE INSTRUCTION SIGNALS ////////////////////////////
-  wire [3:0] ID_EX_ALU_imm;       // Pipelined immediate for ALU instructions (SLL/SRA/ROR)
-  wire [3:0] ID_EX_Mem_offset;    // Pipelined offset for memory instructions (LW/SW)
-  wire [7:0] ID_EX_LB_imm;        // Pipelined immediate for LLB/LHB instructions
-  ///////////////////////////// CONTROL UNIT SIGNALS ///////////////////////////////
-  wire ID_EX_RegWrite;            // Pipelined enable signal for writing to the register file
-  wire ID_EX_ALUSrc;              // Pipelined selection of second ALU input based on instruction type
-  wire [3:0] ID_EX_ALUOp;         // Pipelined ALU operation code
-  wire ID_EX_Z_en, ID_EX_NV_en;   // Pipelined enable signals for setting the Z, N, and V flags
-  wire ID_EX_MemWrite;            // Pipelined enable signal for writing to memory
-  wire ID_EX_MemEnable;           // Pipelined enable signal for reading from memory
-  wire ID_EX_MemToReg;            // Pipelined selection of data to write back to the register file
-  wire ID_EX_HLT;                 // Pipelined halt instruction indicator
-  wire ID_EX_PCS;                 // Pipelined PCS instruction indicator
-  /////////////////////////// SOURCE REGISTER SIGNALS //////////////////////////////
-  wire [3:0] ID_EX_SrcReg1;        // Pipelined register ID of the first source register
-  wire [3:0] ID_EX_SrcReg2;        // Pipelined register ID of the second source register
-  wire [15:0] ID_EX_SrcReg1_data;  // Pipelined data from the first source register
-  wire [15:0] ID_EX_SrcReg2_data;  // Pipelined data from the second source register
-  //////////////////////////////////////////////////////////////////////////////////
+  wire [15:0] ID_EX_signals; // Stores EX, MEM, WB control signals in that order
 
   /* EXECUTE stage signals */
-  wire [15:0] imm;           // Sign extended immediate value for ALU operations
-  wire [15:0] ALU_In2_step;  // Second ALU input based on the instruction type
-  wire [15:0] ALU_In2;       // Second ALU input
   wire [15:0] ALU_out;       // ALU output
   wire ZF, VF, NF;           // Flag signals
   wire Z_set, V_set, N_set;  // Flags set by ALU
 
-  // Memory signals
-  wire [15:0] Mem_ex_offset;  // Sign extended memory offset
-  wire [15:0] RegWriteData;   // Data to write back to the register file
+  /* MEMORY stage signals */
   wire [15:0] MemData;        // Data read from memory
 
   /* MEM/WB Pipeline Register signals */
-  wire MEM_WB_HLT;            // Indicates that the HLT instruction, if fetched, entered the WB stage.
+  wire [3:0] MEM_WB_reg_rd; // Register ID of the destination register
+  wire MEM_WB_RegWrite;     // Write enable to the register file
+  wire MEM_WB_MemToReg;     // Selects the data to write back to the register file
+  wire MEM_WB_HLT;          // Indicates that the HLT instruction, if fetched, entered the WB stage
+  wire MEM_WB_PCS;          // Indicates that the PCS instruction, if fetched, entered the WB stage
+
+  /* WRITE_BACK stage signals */
+  wire [15:0] RegWriteData;   // Data to write back to the register file
 
   //////////////////////////////////////////////////
 
@@ -118,9 +78,9 @@ module cpu (clk, rst_n, hlt, pc);
   // Halts the processor if a HLT instruction is encountered and is in the WB stage.
   assign hlt = MEM_WB_HLT;
 
-  ///////////////////////////////
-  // FETCH instruction from PC //
-  ///////////////////////////////
+  ////////////////////////////////
+  // FETCH instruction from PC  //
+  ////////////////////////////////
   Fetch iFETCH (
         .clk(clk),
         .rst(rst),
@@ -147,44 +107,25 @@ module cpu (clk, rst_n, hlt, pc);
   );
   /////////////////////////////////////////////////
 
-  //////////////////////////////////////////////////
-  // DECODE instruction word and resolve branches //
-  //////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
+  // DECODE instruction word, resolve branches, and access register file   //
+  ///////////////////////////////////////////////////////////////////////////
   Decode iDECODE (
       .clk(clk),
       .rst(rst),
-      .ZF(ZF),
-      .VF(VF),
-      .NF(NF),
+      .flags({ZF, VF, NF}), 
       .pc_inst(IF_ID_PC_inst),
       .pc_next(IF_ID_PC_next),
-      .RegSrc(RegSrc),
-      .RegWrite(RegWrite),
-      .Branch(Branch),
-      .ALUSrc(ALUSrc),
-      .ALUOp(ALUOp),
-      .Z_en(Z_en),
-      .NV_en(NV_en),
-      .MemEnable(MemEnable),
-      .MemWrite(MemWrite),
-      .MemToReg(MemToReg),
-      .HLT(HLT),
-      .PCS(PCS),
+      .MEM_WB_reg_rd(MEM_WB_reg_rd),
+      .MEM_WB_RegWrite(MEM_WB_RegWrite),
+      .RegWriteData(RegWriteData),
+      .EX_signals(EX_signals),
+      .MEM_signals(MEM_signals),
+      .WB_signals(WB_signals),
       .Branch_target(Branch_target),
       .Branch_taken(Branch_taken),
-      .SrcReg1(SrcReg1),
-      .SrcReg2(SrcReg2),
-      .SrcReg1_data(SrcReg1_data),
-      .SrcReg2_data(SrcReg2_data),
-      .opcode(opcode),
-      .reg_rd(reg_rd),
-      .reg_rs(reg_rs),
-      .reg_rt(reg_rt),
-      .ALU_imm(ALU_imm),
-      .Mem_offset(Mem_offset),
-      .LB_imm(LB_imm),
-      .Branch_imm(Branch_imm),
-      .c_codes(c_codes)
+      .ALU_In1(ALU_In1),
+      .ALU_In2(ALU_In2)
   );
   ////////////////////////////////////////////////////////////////
 
@@ -206,7 +147,7 @@ module cpu (clk, rst_n, hlt, pc);
   // Execute Instruction based on control signals //
   //////////////////////////////////////////////////
   // Instantiate ALU.
-  ALU iALU (.ALU_In1(ID_EX_SrcReg1_data),
+  ALU iALU (.ALU_In1(ID_EX_ALU_In2),
             .ALU_In2(ID_EX_ALU_In2),
             .Opcode(ID_EX_ALUOp),
             .ALU_Out(ALU_out),
@@ -218,9 +159,9 @@ module cpu (clk, rst_n, hlt, pc);
   // Instantiate the flag_register.
   flag_register iFR (.clk(clk),
                     .rst(rst),
-                    .Z_en(Z_en), .Z_set(Z_set),
-                    .V_en(NV_en), .V_set(V_set),
-                    .N_en(NV_en), .N_set(N_set),
+                    .Z_en(ID_EX_Z_en), .Z_set(Z_set),
+                    .V_en(ID_EX_NV_en), .V_set(V_set),
+                    .N_en(ID_EX_NV_en), .N_set(N_set),
                     .Z(ZF),
                     .V(VF),
                     .N(NF)

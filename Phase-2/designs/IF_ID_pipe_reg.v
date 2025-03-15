@@ -9,16 +9,16 @@
 // fetched instruction while passing them from the IF stage  //
 // to the ID stage.                                          //
 ///////////////////////////////////////////////////////////////
-module IF_ID_pipe_reg (
-    input wire clk,                     // System clock
-    input wire rst,                     // Active high synchronous reset
-    input wire stall,                   // Stall signal (prevents updates)
-    input wire flush,                   // Flush pipeline register (clears the instruction word)
-    input wire [15:0] PC_next_in,       // Next PC from Fetch stage
-    input wire [15:0] PC_inst_in,       // Fetched instruction
-    output wire [15:0] PC_next_out,     // Next PC passed to the decode stage
-    output wire [15:0] PC_inst_out      // Instruction word passed to the decode stage
-);
+module PipelineRegister (clk, rst, stall, flush, data_in, data_out);
+
+  parameter WIDTH = 16;             // parametrize the amount of data to store in the register
+
+  input wire clk;                   // System clock
+  input wire rst;                   // Active high synchronous reset
+  input wire stall;                 // Stall signal (prevents updates)
+  input wire flush;                 // Flush pipeline register (clears the instruction)
+  input wire [WIDTH-1:0] data_in;   // Input data from the previous pipeline stage
+  output wire [WIDTH-1:0] data_out; // Output data to the next pipeline stage
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
@@ -36,11 +36,8 @@ module IF_ID_pipe_reg (
   // We clear the instruction word register whenever we flush or during rst.
   assign clr = flush | rst;
 
-  // Register for storing the next instruction's address.
-  dff iPC_next [15:0] (.q(PC_next_out), .d(PC_next_in), .wen({16{wen}}), .clk({16{clk}}), .rst({16{rst}}));
-
-  // Register for storing the fetched instruction word.
-  dff iPC_inst [15:0] (.q(PC_inst_out), .d(PC_inst_in), .wen({16{wen}}), .clk({16{clk}}), .rst({16{clr}}));
+  // Register for storing the previous.
+  dff iPIPELINE_REG [WIDTH-1:0] (.q(data_out), .d(data_in), .wen({16{wen}}), .clk({16{clk}}), .rst({16{rst}}));
 
 endmodule
 

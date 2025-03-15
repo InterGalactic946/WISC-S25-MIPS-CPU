@@ -33,40 +33,41 @@ module Decode (
   /////////////////////////// DECODE INSTRUCTION SIGNALS //////////////////////////
   wire [3:0] opcode;        // Opcode of the instruction
   /********************************** REGFILE Signals ******************************/
-  wire [3:0] reg_rs;        // Register ID of the first source register
-  wire [3:0] reg_rt;        // Register ID of the second source register
-  wire [3:0] SrcReg1;       // Register ID of the first source register
-  wire [3:0] SrcReg2;       // Register ID of the second source register
-  wire [15:0] SrcReg1_data; // Data from the first source register
-  wire [15:0] SrcReg2_data; // Data from the second source register
-  wire RegSrc;              // Selects register source based on LLB/LHB instructions
+  wire [3:0] reg_rs;         // Register ID of the first source register
+  wire [3:0] reg_rt;         // Register ID of the second source register
+  wire [3:0] SrcReg1;        // Register ID of the first source register
+  wire [3:0] SrcReg2;        // Register ID of the second source register
+  wire [15:0] SrcReg1_data;  // Data from the first source register
+  wire [15:0] SrcReg2_data;  // Data from the second source register
+  wire RegSrc;               // Selects register source based on LLB/LHB instructions
   /********************************** ALU Signals **********************************/
-  wire [3:0] ALU_imm;       // Immediate for ALU instructions (SLL/SRA/ROR)
-  wire [15:0] imm;          // Sign extended immediate value for ALU operations
-  wire ALUSrc;              // Selects second ALU input based on instruction type
-  wire [15:0] ALU_In2_step; // Second ALU input based on the instruction type
-  wire [3:0] Mem_offset;    // Offset for memory instructions (LW/SW)
-  wire [7:0] LB_imm;        // Immediate for LLB/LHB instructions
+  wire [3:0] ALU_imm;        // Immediate for ALU instructions (SLL/SRA/ROR)
+  wire [15:0] imm;           // Sign extended immediate value for ALU operations
+  wire ALUSrc;               // Selects second ALU input based on instruction type
+  wire [15:0] ALU_In2_step;  // Second ALU input based on the instruction type
+  wire [3:0] Mem_offset;     // Offset for memory instructions (LW/SW)
+  wire [15:0] Mem_ex_offset; // Sign extended memory offset
+  wire [7:0] LB_imm;         // Immediate for LLB/LHB instructions
   /********************************************************************************/
   /////////////////////////// BRANCH CONTROL SIGNALS //////////////////////////////
-  wire [8:0] Branch_imm;    // Immediate for branch instructions
-  wire [2:0] c_codes;       // Condition codes for branch instructions
-  wire Branch;              // Indicates a branch instruction
+  wire [8:0] Branch_imm;     // Immediate for branch instructions
+  wire [2:0] c_codes;        // Condition codes for branch instructions
+  wire Branch;               // Indicates a branch instruction
   ///////////////////////////// EXECUTE STAGE ////////////////////////////////////
-  wire [15:0] ALU_In1;      // First ALU input
-  wire [15:0] ALU_In2;      // Second ALU input
-  wire [3:0] ALUOp;         // ALU operation code
-  wire Z_en, NV_en;         // Enables setting the Z, N, and V flags
+  wire [15:0] ALU_In1;       // First ALU input
+  wire [15:0] ALU_In2;       // Second ALU input
+  wire [3:0] ALUOp;          // ALU operation code
+  wire Z_en, NV_en;          // Enables setting the Z, N, and V flags
   /////////////////////////// MEMORY STAGE ///////////////////////////////////////
-  wire [15:0] MemWriteData; // Data written to the data memory for SW
-  wire MemEnable;           // Enables reading from memory
-  wire MemWrite;            // Enables writing to memory
+  wire [15:0] MemWriteData;  // Data written to the data memory for SW
+  wire MemEnable;            // Enables reading from memory
+  wire MemWrite;             // Enables writing to memory
   /////////////////////////// WRITE BACK STAGE ///////////////////////////////////
-  wire [3:0] reg_rd;        // Register ID of the destination register
-  wire RegWrite;            // Enables writing to the register file
-  wire MemToReg;            // Selects data to write back to the register file        
-  wire HLT;                 // Indicates a HLT instruction
-  wire PCS;                 // Indicates a PCS instruction
+  wire [3:0] reg_rd;         // Register ID of the destination register
+  wire RegWrite;             // Enables writing to the register file
+  wire MemToReg;             // Selects data to write back to the register file        
+  wire HLT;                  // Indicates a HLT instruction
+  wire PCS;                  // Indicates a PCS instruction
   ////////////////////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////

@@ -11,8 +11,7 @@
 /////////////////////////////////////////////////////
 module Register(clk, rst, D, WriteReg, ReadEnable1, ReadEnable2, Bitline1, Bitline2);
 
-  parameter WIDTH = 16;                     // Parametrizable width for the register
-
+  parameter WIDTH = 16;                      // Parametrizable width for the register
   input wire clk, rst;                       // system clock and active high synchronous reset inputs
   input wire [WIDTH-1:0] D;                  // WIDTH-bit data input to the register
   input wire WriteReg;                       // used to enable writing to a register

@@ -76,7 +76,6 @@ module cpu (clk, rst_n, hlt, pc);
 
   /* MEMORY stage signals */
   wire [15:0] MemData;      // Data read from memory
-  wire [15:0] MemAddr;      // Address of the memory accessed
   wire [15:0] MemWriteData; // Data written to memory
 
   /* MEM/WB Pipeline Register signals */
@@ -200,8 +199,8 @@ module cpu (clk, rst_n, hlt, pc);
   Execute iEXECUTE (
       .clk(clk),
       .rst(rst),
-      .EX_MEM_ALU_out(EX_MEM_ALU_out),
-      .MEM_WB_ALU_out(MEM_WB_ALU_out),
+      .EX_MEM_ALU_in(EX_MEM_ALU_out),
+      .MEM_WB_ALU_in(RegWriteData),
       .ALU_In1_step(ID_EX_ALU_In1),
       .ForwardA(ForwardA),
       .ForwardB(ForwardB),
@@ -238,16 +237,13 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////////////////////////////////
   // Data MEMORY Access (read/write data for LW/SW as applicable) //
   //////////////////////////////////////////////////////////////////
-  // Use the forwarded read out value or the MemWriteData at the end of the execute stage for writing new data (in case of LW followed by SW).
-  assign MemWriteData = (ForwardMEM) ? MEM_WB_MemData : EX_MEM_MemWriteData;
-
-  // Use the forwarded read out value or the ALU_out at the end of the execute stage to get the correct memory address.
-  assign MemAddr = (ForwardMEM) ? MEM_WB_ALU_out : EX_MEM_ALU_out;
+  // Use the value read out from data memory from the previous instruction or previous ALU result if forwarded otherwise the current value. 
+  assign MemWriteData = (ForwardMEM) ? RegWriteData : EX_MEM_MemWriteData;
 
   // Access data memory.
   memory1c iDATA_MEM (.data_out(MemData),
                       .data_in(MemWriteData),
-                      .addr(MemAddr),
+                      .addr(EX_MEM_ALU_out),
                       .data(1'b1),
                       .enable(EX_MEM_MemEnable),
                       .wr(EX_MEM_MemWrite),

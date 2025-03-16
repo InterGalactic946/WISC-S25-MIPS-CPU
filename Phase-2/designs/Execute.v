@@ -12,8 +12,8 @@
 module Execute(
     input wire clk,                   // System clock
     input wire rst,                   // Active high synchronous reset
-    input wire [15:0] EX_MEM_ALU_out, // Pipelined data memory address/arithemtic computation result computed from the memory stage
-    input wire [15:0] MEM_WB_ALU_out, // Pipelined arithemtic computation result computed from the WB stage
+    input wire [15:0] EX_MEM_ALU_in,  // Pipelined ALU result computed from the memory stage
+    input wire [15:0] MEM_WB_ALU_in,  // Pipelined ALU/data memory result computed from the WB stage
     input wire [15:0] ALU_In1_step,   // First input to ALU (from the decode stage)
     input wire [15:0] ALU_imm,        // Immediate for I-type ALU instructions (from the decode stage)
     input wire [15:0] ALU_In2_step,   // Second ALU input based on the instruction type (from the decode stage)
@@ -43,13 +43,13 @@ module Execute(
   // EXECUTE instruction based on the opcode //
   /////////////////////////////////////////////
   // First ALU input either take the forwarded result or the current instruction's decoded values.
-  assign ALU_In1 = (ForwardA == 2'b10) ? EX_MEM_ALU_out :
-                   (ForwardA == 2'b01) ? MEM_WB_ALU_out :
+  assign ALU_In1 = (ForwardA == 2'b10) ? EX_MEM_ALU_in :
+                   (ForwardA == 2'b01) ? MEM_WB_ALU_in :
                    ALU_In1_step;
   
   // Second ALU input either take the forwarded result or the current instruction's decoded values.
-  assign ALU_In2_stg = (ForwardB == 2'b10) ? EX_MEM_ALU_out :
-                       (ForwardB == 2'b01) ? MEM_WB_ALU_out :
+  assign ALU_In2_stg = (ForwardB == 2'b10) ? EX_MEM_ALU_in :
+                       (ForwardB == 2'b01) ? MEM_WB_ALU_in :
                        ALU_In2_step;
 
   // Determine the 2nd ALU input, either immediate or ALU_In2_stg if non I-type instruction.

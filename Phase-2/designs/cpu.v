@@ -145,7 +145,7 @@ module cpu (clk, rst_n, hlt, pc);
       .WB_signals(WB_signals),
       .is_branch(Branch),
       .Branch_target(Branch_target),
-      .Branch_taken(taken)
+      .taken(taken)
     );
   ///////////////////////////////////////////////////////////////////////////
 

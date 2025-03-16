@@ -39,6 +39,7 @@ module Execute(
   // Determine the 2nd ALU input, either immediate or SrcReg2 data (Rd for save word or Rt otherwise).
   assign ALU_In2 = (ALUSrc) ? ALU_imm : SrcReg2_data;
 
+  // Execute the instruction on the ALU based on the opcode.
   ALU iALU (.ALU_In1(ALU_In1),
             .ALU_In2(ALU_In2),
             .Opcode(ALUOp),
@@ -47,6 +48,7 @@ module Execute(
             .N_set(N_set),
             .V_set(V_set)
           );
+  /////////////////////////////////////////////
 
   ////////////////////////////////////////////////////
   // Set FLAGS based on the output of the execution //
@@ -58,6 +60,7 @@ module Execute(
     .flags_in({Z_set, V_set, N_set}),
     .flags_out({ZF, VF, NF})
   );
+  ////////////////////////////////////////////////////
 
 endmodule
 

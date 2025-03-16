@@ -25,6 +25,11 @@ module cpu (clk, rst_n, hlt, pc);
   wire PC_stall;                     // Stall signal for the PC register
   wire IF_ID_stall;                  // Stall signal for the IF/ID pipeline register
   wire IF_flush, ID_flush, EX_flush; // Flush signals for each pipeline register
+
+  /* FORWARDING UNIT signals */
+  wire [1:0] ForwardA,              // Forwarding signal for the first ALU input (ALU_In1)
+  wire [1:0] ForwardB,              // Forwarding signal for the second ALU input (ALU_In2)
+  wire ForwardMEM                   // Forwarding signal for MEM stage to MEM stage
   
   /* FETCH stage signals */
   wire [15:0] PC_next; // Next PC address
@@ -48,7 +53,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire [3:0] ID_EX_SrcReg2;        // Pipelined second source register ID from the decode stage
   wire [15:0] ID_EX_ALU_In1;       // Pipelined first ALU input from the decode stage
   wire [15:0] ID_EX_ALU_imm;       // Pipelined ALU immediate input from the decode stage
-  wire [15:0] ID_EX_SrcReg2_data;  // Pipelined data from the second source register from the decode stage
+  wire [15:0] ID_EX_ALU_In2;       // Pipelined second ALU input from the decode stage
   wire [3:0] ID_EX_ALUOp;          // Pipelined ALU operation code from the decode stage
   wire ID_EX_ALUSrc;               // Pipelined ALU select signal to choose between register/immediate operand from the decode stage
   wire ID_EX_Z_en, ID_EX_NV_en;    // Pipelined enable signals setting the Z, N, and V flags from the decode stage
@@ -70,7 +75,9 @@ module cpu (clk, rst_n, hlt, pc);
   wire [15:0] EX_MEM_PC_next;      // Pipelined next instruction address from the fetch stage
 
   /* MEMORY stage signals */
-  wire [15:0] MemData; // Data read from memory
+  wire [15:0] MemData;      // Data read from memory
+  wire [15:0] MemAddr;      // Address of the memory accessed
+  wire [15:0] MemWriteData; // Data written to memory
 
   /* MEM/WB Pipeline Register signals */
   wire [15:0] MEM_WB_MemData; // Pipelined data read from memory from the memory stage
@@ -96,6 +103,23 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////////////////////////////////
   // Halts the processor if a HLT instruction is encountered and is in the WB stage.
   assign hlt = MEM_WB_HLT;
+
+  //////////////////////////////////////
+  // Instantiate the Forwarding Unit  //
+  //////////////////////////////////////
+  // (EX_MEM_MEM_signals[7:4] == reg_rd), EX_MEM_MEM_signals[3] == RegWrite).
+  ForwardingUnit forwarding_unit_inst (
+    .ID_EX_SrcReg1(ID_EX_SrcReg1),
+    .ID_EX_SrcReg2(ID_EX_SrcReg2),
+    .EX_MEM_reg_rd(EX_MEM_MEM_signals[7:4]),
+    .MEM_WB_reg_rd(MEM_WB_reg_rd),
+    .EX_MEM_RegWrite(EX_MEM_RegWrite[3]),
+    .MEM_WB_RegWrite(MEM_WB_RegWrite),
+    .ForwardA(ForwardA),
+    .ForwardB(ForwardB),
+    .ForwardMEM(ForwardMEM)
+  );
+  ///////////////////////////////////////
 
   ////////////////////////////////
   // FETCH instruction from PC  //
@@ -163,7 +187,7 @@ module cpu (clk, rst_n, hlt, pc);
       .WB_signals(WB_signals),
       .ID_EX_PC_next(ID_EX_PC_next),
       .ID_EX_EX_signals({ID_EX_SrcReg1, ID_EX_SrcReg2,
-      ID_EX_ALU_In1, ID_EX_ALU_imm, ID_EX_SrcReg2_data, 
+      ID_EX_ALU_In1, ID_EX_ALU_imm, ID_EX_ALU_In2, 
       ID_EX_ALUOp, ID_EX_ALUSrc, ID_EX_Z_en, ID_EX_NV_en}),
       .ID_EX_MEM_signals(ID_EX_MEM_signals),
       .ID_EX_WB_signals(ID_EX_WB_signals)
@@ -176,9 +200,13 @@ module cpu (clk, rst_n, hlt, pc);
   Execute iEXECUTE (
       .clk(clk),
       .rst(rst),
-      .ALU_In1(ID_EX_ALU_In1),
+      .EX_MEM_ALU_out(EX_MEM_ALU_out),
+      .MEM_WB_ALU_out(MEM_WB_ALU_out),
+      .ALU_In1_step(ID_EX_ALU_In1),
+      .ForwardA(ForwardA),
+      .ForwardB(ForwardB),
       .ALU_imm(ID_EX_ALU_imm),
-      .SrcReg2_data(ID_EX_SrcReg2_data),
+      .ALU_In2_step(ID_EX_ALU_In2),
       .ALUOp(ID_EX_ALUOp),
       .ALUSrc(ID_EX_ALUSrc),
       .Z_en(ID_EX_Z_en),
@@ -210,9 +238,16 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////////////////////////////////
   // Data MEMORY Access (read/write data for LW/SW as applicable) //
   //////////////////////////////////////////////////////////////////
+  // Use the forwarded read out value or the MemWriteData at the end of the execute stage for writing new data (in case of LW followed by SW).
+  assign MemWriteData = (ForwardMEM) ? MEM_WB_MemData : EX_MEM_MemWriteData;
+
+  // Use the forwarded read out value or the ALU_out at the end of the execute stage to get the correct memory address.
+  assign MemAddr = (ForwardMEM) ? MEM_WB_ALU_out : EX_MEM_ALU_out;
+
+  // Access data memory.
   memory1c iDATA_MEM (.data_out(MemData),
-                      .data_in(EX_MEM_MemWriteData),
-                      .addr(EX_MEM_ALU_out),
+                      .data_in(MemWriteData),
+                      .addr(MemAddr),
                       .data(1'b1),
                       .enable(EX_MEM_MemEnable),
                       .wr(EX_MEM_MemWrite),

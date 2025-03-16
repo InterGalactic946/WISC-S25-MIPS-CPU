@@ -37,6 +37,7 @@ module Decode (
   wire [3:0] reg_rs;         // Register ID of the first source register extracted from the instruction
   wire [3:0] reg_rt;         // Register ID of the second source register extracted from the instruction
   wire [15:0] SrcReg1_data;  // Data from the first source register
+ wire [15:0] SrcReg2_data;   // Data from the second source register
   wire RegSrc;               // Selects register source based on LLB/LHB instructions
   /********************************** ALU Signals **********************************/
   wire [3:0] imm;            // immediate value decoded from the instruction
@@ -51,7 +52,7 @@ module Decode (
   wire [3:0] SrcReg2;        // Register ID of the second source register
   wire [15:0] ALU_In1;       // First ALU input
   wire [15:0] ALU_imm;       // Immediate for I-type ALU instructions
-  wire [15:0] SrcReg2_data;  // Data from the second source register
+  wire [15:0] ALU_In2;       // Second ALU input
   wire [3:0] ALUOp;          // ALU operation code
   wire ALUSrc;               // Selects second ALU input (immediate or SrcReg2_data) based on instruction type
   wire Z_en, NV_en;          // Enables setting the Z, N, and V flags
@@ -95,7 +96,7 @@ module Decode (
   // Package each stage's control signals for the pipeline  //
   ////////////////////////////////////////////////////////////
   // Package the execute stage control signals.
-  assign EX_signals = {SrcReg1, SrcReg2, ALU_In1, ALU_imm, SrcReg2_data, ALUOp, ALUSrc, Z_en, NV_en};
+  assign EX_signals = {SrcReg1, SrcReg2, ALU_In1, ALU_imm, ALU_In2, ALUOp, ALUSrc, Z_en, NV_en};
 
   // Package the memory stage control signals.
   assign MEM_signals = {MemWriteData, MemEnable, MemWrite};
@@ -170,6 +171,9 @@ module Decode (
   
   // Get the first ALU input as the first register read out.
   assign ALU_In1 = SrcReg1_data;
+
+  // Determine the 2nd ALU input, either immediate or SrcReg2 data (Rd for save word or Rt otherwise).
+  assign ALU_In2 = (ALUSrc) ? ALU_imm : SrcReg2_data;
   /////////////////////////////////////////////////////////////////////////////
 
 endmodule

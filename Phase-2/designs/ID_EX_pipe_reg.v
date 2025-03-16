@@ -30,9 +30,9 @@ module ID_EX_pipe_reg (
   ///////////////////////////// EXECUTE STAGE ////////////////////////////////////
   wire [3:0] ID_EX_SrcReg1;       // Pipelined first source register ID passed to the execute stage
   wire [3:0] ID_EX_SrcReg2;       // Pipelined second source register ID passed to the execute stage
-  wire [15:0] ID_EX_ALU_In1;      // Pipelined First ALU input passed to the execute stage
+  wire [15:0] ID_EX_ALU_In1;      // Pipelined first ALU input passed to the execute stage
   wire [15:0] ID_EX_ALU_imm;      // Pipelined ALU immediate input passed to the execute stage
-  wire [15:0] ID_EX_SrcReg2_data; // Pipelined data from the second source register passed to the execute stage
+  wire [15:0] ID_EX_ALU_In2;      // Pipelined second ALU input passed to the execute stage
   wire [3:0] ID_EX_ALUOp;         // Pipelined ALU operation code passed to the execute stage
   wire ID_EX_ALUSrc;              // Pipelined ALU select signal to choose between register/immediate operand passed to the execute stage
   wire ID_EX_Z_en, ID_EX_NV_en;   // Pipelined enable signals setting the Z, N, and V flags passed to the execute stage
@@ -74,8 +74,8 @@ module ID_EX_pipe_reg (
   // Register for storing ALU immediate input (EX_signals[38:23] == ALU_Imm).
   CPU_Register iALU_IMM_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[38:23]), .data_out(ID_EX_ALU_imm));
 
-  // Register for storing second source register data input (EX_signals[22:7] == SrcReg2_data).
-  CPU_Register iSrcReg2_data_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[22:7]), .data_out(ID_EX_SrcReg2_data));
+  // Register for storing second ALU input (EX_signals[22:7] == ALU_In2).
+  CPU_Register iALU_IN2_REG  (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[22:7]), .data_out(ID_EX_ALU_In2));
 
   // Register for storing ALU operation code (EX_signals[6:3] == ALUOp).
   CPU_Register #(.WIDTH(4)) iALUOp_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[6:3]), .data_out(ID_EX_ALUOp));
@@ -90,7 +90,7 @@ module ID_EX_pipe_reg (
   CPU_Register #(.WIDTH(1)) iNV_en_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[0]), .data_out(ID_EX_NV_en));
 
   // Concatenate all pipelined execute stage signals.
-  assign ID_EX_EX_signals = {ID_EX_SrcReg1, ID_EX_SrcReg2, ID_EX_ALU_In1, ID_EX_ALU_imm, ID_EX_SrcReg2_data, ID_EX_ALUOp, ID_EX_ALUSrc, ID_EX_Z_en, ID_EX_NV_en};
+  assign ID_EX_EX_signals = {ID_EX_SrcReg1, ID_EX_SrcReg2, ID_EX_ALU_In1, ID_EX_ALU_imm, ID_EX_ALU_In2, ID_EX_ALUOp, ID_EX_ALUSrc, ID_EX_Z_en, ID_EX_NV_en};
   /////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////////////

@@ -72,7 +72,7 @@ module ID_EX_pipe_reg (
   CPU_Register iALU_IN1_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[54:39]), .data_out(ID_EX_ALU_In1));
 
   // Register for storing ALU immediate input (EX_signals[38:23] == ALU_Imm).
-  CPU_Register iALU_IMM_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[38:23]), .data_out(ID_EX_ALU_Imm));
+  CPU_Register iALU_IMM_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[38:23]), .data_out(ID_EX_ALU_imm));
 
   // Register for storing second source register data input (EX_signals[22:7] == SrcReg2_data).
   CPU_Register iSrcReg2_data_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[22:7]), .data_out(ID_EX_SrcReg2_data));

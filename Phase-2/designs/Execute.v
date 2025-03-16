@@ -10,29 +10,35 @@
 // Overflow (V) flags based on the ALU output.             //
 /////////////////////////////////////////////////////////////
 module Execute(
-    input wire clk,                // System clock
-    input wire rst,                // Active high synchronous reset
-    input wire [15:0] ALU_In1,     // First input to ALU (from the decode stage)
-    input wire [15:0] ALU_In2,     // Second input to ALU (from the decode stage)
-    input wire [3:0] ALUOp,        // ALU operation code (from the decode stage)
-    input wire Z_en,               // Enable signal for Z flag
-    input wire NV_en,              // Enable signal for N and V flags
+    input wire clk,                  // System clock
+    input wire rst,                  // Active high synchronous reset
+    input wire [15:0] ALU_In1,       // First input to ALU (from the decode stage)
+    input wire [15:0] ALU_imm,       // Immediate for I-type ALU instructions (from the decode stage)
+    input wire [15:0] SrcReg2_data,  // Data from the second source register (from the decode stage)
+    input wire [3:0] ALUOp,          // ALU operation code (from the decode stage)
+    input wire ALUSrc,               // Selects second ALU input (immediate or SrcReg2_data) based on instruction type (from the decode stage)
+    input wire Z_en,                 // Enable signal for Z flag
+    input wire NV_en,                // Enable signal for N and V flags
     
-    output wire ZF,                // Zero flag output
-    output wire NF,                // Negative flag output
-    output wire VF,                // Overflow flag output
-    output wire [15:0] ALU_out     // ALU operation result output
+    output wire ZF,                  // Zero flag output
+    output wire NF,                  // Negative flag output
+    output wire VF,                  // Overflow flag output
+    output wire [15:0] ALU_out       // ALU operation result output
 );
 
   ////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ////////////////////////////////////////////////
   wire Z_set, V_set, N_set;  // Flags set signals by the ALU
+  wire [15:0] ALU_In2;       // Second ALU input based on the instruction type
   ////////////////////////////////////////////////
 
   /////////////////////////////////////////////
   // EXECUTE instruction based on the opcode //
   /////////////////////////////////////////////
+  // Determine the 2nd ALU input, either immediate or SrcReg2 data (Rd for save word or Rt otherwise).
+  assign ALU_In2 = (ALUSrc) ? ALU_imm : SrcReg2_data;
+
   ALU iALU (.ALU_In1(ALU_In1),
             .ALU_In2(ALU_In2),
             .Opcode(ALUOp),

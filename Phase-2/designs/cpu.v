@@ -39,7 +39,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire [15:0] Branch_target; // Computed branch target address
   wire taken;                // Signal used to determine whether branch instruction met condition codes
   wire Branch;               // Indicates it is a branch instruction
-  wire [45:0] EX_signals;    // Execute stage control signals
+  wire [62:0] EX_signals;    // Execute stage control signals
   wire [17:0] MEM_signals;   // Memory stage control signals
   wire [7:0] WB_signals;     // Write-back stage control signals
 
@@ -47,8 +47,10 @@ module cpu (clk, rst_n, hlt, pc);
   wire [3:0] ID_EX_SrcReg1;        // Pipelined first source register ID from the decode stage
   wire [3:0] ID_EX_SrcReg2;        // Pipelined second source register ID from the decode stage
   wire [15:0] ID_EX_ALU_In1;       // Pipelined first ALU input from the decode stage
-  wire [15:0] ID_EX_ALU_In2;       // Pipelined second ALU input from the decode stage
+  wire [15:0] ID_EX_ALU_imm;       // Pipelined ALU immediate input from the decode stage
+  wire [15:0] ID_EX_SrcReg2_data;  // Pipelined data from the second source register from the decode stage
   wire [3:0] ID_EX_ALUOp;          // Pipelined ALU operation code from the decode stage
+  wire ID_EX_ALUSrc;               // Pipelined ALU select signal to choose between register/immediate operand from the decode stage
   wire ID_EX_Z_en, ID_EX_NV_en;    // Pipelined enable signals setting the Z, N, and V flags from the decode stage
   wire [17:0] ID_EX_MEM_signals;   // Pipelined Memory stage control signals from the decode stage
   wire [7:0] ID_EX_WB_signals;     // Pipelined Write-back stage control signals from the decode stage
@@ -160,7 +162,9 @@ module cpu (clk, rst_n, hlt, pc);
       .MEM_signals(MEM_signals),
       .WB_signals(WB_signals),
       .ID_EX_PC_next(ID_EX_PC_next),
-      .ID_EX_EX_signals({ID_EX_SrcReg1, ID_EX_SrcReg2, ID_EX_ALU_In1, ID_EX_ALU_In2, ID_EX_ALUOp, ID_EX_Z_en, ID_EX_NV_en}),
+      .ID_EX_EX_signals({ID_EX_SrcReg1, ID_EX_SrcReg2,
+      ID_EX_ALU_In1, ID_EX_ALU_imm, ID_EX_SrcReg2_data, 
+      ID_EX_ALUOp, ID_EX_ALUSrc, ID_EX_Z_en, ID_EX_NV_en}),
       .ID_EX_MEM_signals(ID_EX_MEM_signals),
       .ID_EX_WB_signals(ID_EX_WB_signals)
   );
@@ -173,8 +177,10 @@ module cpu (clk, rst_n, hlt, pc);
       .clk(clk),
       .rst(rst),
       .ALU_In1(ID_EX_ALU_In1),
-      .ALU_In2(ID_EX_ALU_In2),
+      .ALU_imm(ID_EX_ALU_Imm),
+      .SrcReg2_data(ID_EX_SrcReg2_data),
       .ALUOp(ID_EX_ALUOp),
+      .ALUSrc(ID_EX_ALUSrc),
       .Z_en(ID_EX_Z_en),
       .NV_en(ID_EX_NV_en),
       .ZF(ZF),

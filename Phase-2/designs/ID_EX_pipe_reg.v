@@ -90,7 +90,7 @@ module ID_EX_pipe_reg (
   CPU_Register #(.WIDTH(1)) iNV_en_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(EX_signals[0]), .data_out(ID_EX_NV_en));
 
   // Concatenate all pipelined execute stage signals.
-  assign ID_EX_EX_signals = {ID_EX_SrcReg1, ID_EX_SrcReg2, ID_EX_ALU_In1, ID_EX_ALU_Imm, ID_EX_SrcReg2_data, ID_EX_ALUOp, ID_EX_ALUSrc, ID_EX_Z_en, ID_EX_NV_en};
+  assign ID_EX_EX_signals = {ID_EX_SrcReg1, ID_EX_SrcReg2, ID_EX_ALU_In1, ID_EX_ALU_imm, ID_EX_SrcReg2_data, ID_EX_ALUOp, ID_EX_ALUSrc, ID_EX_Z_en, ID_EX_NV_en};
   /////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////////////

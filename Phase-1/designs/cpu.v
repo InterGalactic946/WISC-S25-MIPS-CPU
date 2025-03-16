@@ -30,10 +30,10 @@ module cpu (clk, rst_n, hlt, pc);
   wire [3:0] reg_rd;     // register ID of the destination register
   wire [3:0] reg_rs;     // register ID of the first source register
   wire [3:0] reg_rt;     // register ID of the second source register
-  wire [3:0] ALU_imm;    // immediate for ALU instructions (SLL/SRA/ROR)
-  wire [3:0] Mem_offset; // offset for memory instructions (LW/SW)
+  wire [3:0] imm;        // immediate value decoded from the instruction
+  wire [15:0] imm_ext;   // Sign-extended or zero-extended immediate from the instruction
   wire [7:0] LB_imm;     // immediate for LLB/LHB instructions
-  wire [8:0] Branch_imm;  // immediate for branch instructions
+  wire [8:0] Branch_imm; // immediate for branch instructions
   wire [2:0] c_codes;    // condition codes for branch instructions
 
   // Register IDs of source registers
@@ -59,9 +59,9 @@ module cpu (clk, rst_n, hlt, pc);
   wire PCS;                  // Indicates a PCS instruction
 
   // ALU signals
-  wire [15:0] imm;           // Sign extended immediate value for ALU operations
-  wire [15:0] ALU_In2_step;  // Second ALU input based on the instruction type
-  wire [15:0] ALU_In2;       // Second ALU input
+  wire [15:0] ALU_imm;       // Immediate for I-type ALU instructions
+  wire [15:0] ALU_In1;       // First ALU input 
+  wire [15:0] ALU_In2;       // Second ALU input based on the instruction type
   wire [15:0] ALU_out;       // ALU output
 
   // Memory signals
@@ -115,8 +115,7 @@ module cpu (clk, rst_n, hlt, pc);
   assign reg_rt = pc_inst[3:0];
 
   // Get the immediate value for SLL/SRA/ROR/MEM/Branch instructions along with condition codes.
-  assign ALU_imm = pc_inst[3:0];
-  assign Mem_offset = pc_inst[3:0];
+  assign imm = pc_inst[3:0];
   assign LB_imm = pc_inst[7:0];
   assign Branch_imm = pc_inst[8:0];
   assign c_codes = pc_inst[11:9];
@@ -161,20 +160,20 @@ module cpu (clk, rst_n, hlt, pc);
   ///////////////////////////////////////////////////
   // Execute Instruction based on control signals //
   /////////////////////////////////////////////////
-  // Grab the LLB/LHB immediate or the ALU immediate based on the instruction.
-  assign imm = (RegSrc) ? {8'h00, LB_imm} : {12'h000, ALU_imm};
+  // Sign-extend or zero-extend the immediate from the instruction based on memory vs non-memory instructions.
+  assign imm_ext = (MemEnable) ? {{12{imm[3]}}, imm} : {12'h000, imm};
 
-  // Determine the 2nd ALU input, either zero-extended immediate or SrcReg2 data (Rd for save word or Rt otherwise).
-  assign ALU_In2_step = (ALUSrc) ? imm : SrcReg2_data;
+  // Grab the LLB/LHB immediate or the extended immediate based on the instruction as the ALU immediate.
+  assign ALU_imm = (RegSrc) ? {8'h00, LB_imm} : imm_ext;
+  
+  // Get the first ALU input as the first register read out.
+  assign ALU_In1 = SrcReg1_data;
 
-  // Sign extend the immediate memory offset.
-  assign Mem_ex_offset = {{12{Mem_offset[3]}}, Mem_offset};
-
-  // Get the second ALU input based on whether it is LW/SW instruction or not.
-  assign ALU_In2 = (MemEnable) ? Mem_ex_offset : ALU_In2_step;
+  // Determine the 2nd ALU input, either immediate or SrcReg2 data (Rd for save word or Rt otherwise).
+  assign ALU_In2 = (ALUSrc) ? ALU_imm : SrcReg2_data;
 
   // Instantiate ALU.
-  ALU iALU (.ALU_In1(SrcReg1_data),
+  ALU iALU (.ALU_In1(ALU_In1),
             .ALU_In2(ALU_In2),
             .Opcode(ALUOp),
             .ALU_Out(ALU_out),

@@ -85,7 +85,7 @@ module Decode (
       .RegSrc(RegSrc),
       .MemEnable(MemEnable),
       .MemWrite(MemWrite),
-      .Branch(Branch),
+      .Branch(is_branch),
       .HLT(HLT),
       .PCS(PCS),
       .ALUOp(ALUOp),

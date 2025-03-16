@@ -21,7 +21,7 @@ module BTB (
   ///////////////////////////////////////////
   // Declare any internal signals as wire  //
   ///////////////////////////////////////////
-  wire [15:0] WriteWordline   // Select lines for 16 registers (write)
+  wire [15:0] WriteWordline;  // Select lines for 16 registers (write)
   wire [15:0] ReadWordline;   // Select lines for 16 registers (read)
   wire [15:0] unused_bitline; // Unused bitline read out of the BTB
   ///////////////////////////////////////////

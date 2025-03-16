@@ -1,7 +1,7 @@
 `default_nettype none // Set the default as none to avoid errors
 
 /////////////////////////////////////////////////////////////////
-// Dynamic Branch Predictor: Integrates BTB and BHT            //
+// DynamicBranchPredictor.v: Integrates BTB and BHT            //
 //                                                             //
 // This module combines a Branch Target Buffer (BTB) and a     //
 // Branch History Table (BHT) to predict branch direction and  //

@@ -1,7 +1,7 @@
 `default_nettype none // Set the default as none to avoid errors
 
 /////////////////////////////////////////////////////////////
-// Branch History Table (BHT): 16-loc, 2-bit Register File //
+// BHT.v: 16-entry, 2-bit Branch History Table             //
 //                                                         //
 // This design implements a 16-entry BHT, with each entry  //
 // being a 2-bit register. It allows reading and updating  //

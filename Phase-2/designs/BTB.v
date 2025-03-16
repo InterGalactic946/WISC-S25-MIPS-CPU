@@ -1,7 +1,7 @@
 `default_nettype none // Set the default as none to avoid errors
 
 //////////////////////////////////////////////////////////////
-// Branch Target Buffer (BTB): 16-bit Addressing for Target //
+// BTB.v: 16-bit Branch Target Buffer                       //
 //                                                          //
 // This design implements a Branch Target Buffer (BTB)      //
 // that caches the target addresses of taken branches.      //

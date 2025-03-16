@@ -35,7 +35,6 @@ module cpu (clk, rst_n, hlt, pc);
   wire [15:0] IF_ID_PC_next; // Pipelined next instruction address from the fetch stage
   wire [15:0] IF_ID_PC_inst; // Pipelined instruction word from the fetch stage
 
-
   /* DECODE stage signals */
   wire [15:0] Branch_target; // Computed branch target address
   wire taken;                // Signal used to determine whether branch instruction met condition codes

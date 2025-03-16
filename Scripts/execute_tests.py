@@ -652,7 +652,7 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
                             package_definitions.setdefault(package_name, file_path)
 
     # Regular expressions for identifying dependencies in the testbench file.
-    module_inst_pattern = re.compile(r'^\s*(\w+)\s*(#\([^)]*\))?\s+\w+\s*(\[\d+:\d+\])?\s*\(.*?\);', re.DOTALL | re.MULTILINE)
+    module_inst_pattern = re.compile(r'^\s*(\w+)\s*(#\([^)]*\))?\s+\w+\s*(\[\w+\s*[-:]\s*\w+\])?\s*\(.*?\);', re.DOTALL | re.MULTILINE)
     import_pattern = re.compile(r'^\s*import\s+(\w+)\s*::\*;', re.MULTILINE)
 
     # Read the top-level testbench file to extract direct dependencies.

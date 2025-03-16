@@ -10,24 +10,28 @@
 // sequential execution (PC + 2) and branch targets based   //
 // on predictions from the Branch Predictor.                //
 //////////////////////////////////////////////////////////////
-module Fetch(clk, rst, stall, Branch_target, Branch_taken, PC_next, PC_inst, PC_curr);
-  
-  input wire clk;                  // System clock
-  input wire rst;                  // Active high synchronous reset
-  input wire stall;                // Stall signal for the PC (from the hazard detection unit)
-  input wire [15:0] Branch_target; // Computed offset for branch instructions (from the decode stage)
-  input wire Branch_taken;         // Signal used to determine whether branch is taken (from the decode stage)
-  
-  output wire [15:0] PC_next;      // The next PC value
-  output wire [15:0] PC_inst;      // Instruction at the current PC address
-  output wire [15:0] PC_curr;      // The current PC's value.
+module Fetch (
+    input wire clk,                  // System clock
+    input wire rst,                  // Active high synchronous reset
+    input wire stall,                // Stall signal for the PC (from the hazard detection unit)
+    input wire [15:0] Branch_target, // Target address for branch instructions (from the decode stage)
+    input wire is_branch,            // Indicates whether the instruction is a branch (from the decode stage)
+    input wire actual_taken,         // Indicates whether the branch is actually taken (from the decode stage)
+    input wire [15:0] IF_ID_PC_curr, // Pipelined previous PC value (from the fetch stage)
+    
+    output wire [15:0] PC_next,      // Computed next PC value
+    output wire [15:0] PC_inst,      // Instruction fetched from the current PC address
+    output wire [15:0] PC_curr       // Current PC value
+);
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire [15:0] PC_new;  // The new address the PC is updated with.
-  wire wen;            // PC write enable signal.
-  //////////////////////////////////////////////////////////////////
+  wire [15:0] PC_new;           // The new address the PC is updated with.
+  wire [15:0] predicted_target; // The predicted target address cached in the BTB
+  wire Branch_taken;            // Predicted taken signal from the branch history table
+  wire wen;                     // PC write enable signal.
+  ////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
   // Implement PC_control as structural/dataflow verilog //
@@ -35,8 +39,11 @@ module Fetch(clk, rst, stall, Branch_target, Branch_taken, PC_next, PC_inst, PC_
   // We write to the PC whenever we don't stall.
   assign wen = ~stall;
 
-  // Choose between the computed branch target address and (PC+2) to update the PC register.
-  assign PC_new = (Branch_taken) ? Branch_target : PC_next;
+  // Choose between the predicted branch target address and (PC+2) to update the PC register.
+  assign PC_new = (Branch_taken) ? predicted_target : PC_next;
+
+  // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
+  DynamicBranchPredictor iDBP (.clk(clk), .rst(rst), .PC_curr(PC_curr), .IF_ID_PC_curr(IF_ID_PC_curr), .is_branch(is_branch), .actual_taken(actual_taken), .actual_target(Branch_target), .predicted_taken(Branch_taken), .predicted_target(predicted_target));
 
   // Infer the PC Register.
   CPU_Register iPC (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_new), .data_out(PC_curr));

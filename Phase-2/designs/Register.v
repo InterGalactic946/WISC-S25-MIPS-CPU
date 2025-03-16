@@ -11,17 +11,19 @@
 /////////////////////////////////////////////////////
 module Register(clk, rst, D, WriteReg, ReadEnable1, ReadEnable2, Bitline1, Bitline2);
 
-  input wire clk, rst;                  // system clock and active high synchronous reset inputs
-  input wire [15:0] D;                  // 16-bit data input to the register
-  input wire WriteReg;                  // used to enable writing to a register
-  input wire ReadEnable1, ReadEnable2;  // enables reads from a register through two read paths
-  inout wire [15:0] Bitline1, Bitline2; // read outputs of a register driven by tristate driver
+  parameter WIDTH = 16;                     // Parametrizable width for the register
+
+  input wire clk, rst;                       // system clock and active high synchronous reset inputs
+  input wire [WIDTH-1:0] D;                  // WIDTH-bit data input to the register
+  input wire WriteReg;                       // used to enable writing to a register
+  input wire ReadEnable1, ReadEnable2;       // enables reads from a register through two read paths
+  inout wire [WIDTH-1:0] Bitline1, Bitline2; // read outputs of a register driven by tristate driver
   
   ///////////////////////////////////////////////
   // Implement Register as structural verilog //
   /////////////////////////////////////////////
-  // Vector instantiate 16 BitCells comprising a register.
-  BitCell iBIT_CELL [15:0] (.clk({16{clk}}), .rst({16{rst}}), .D(D), .WriteEnable({16{WriteReg}}), .ReadEnable1({16{ReadEnable1}}), .ReadEnable2({16{ReadEnable2}}), .Bitline1(Bitline1), .Bitline2(Bitline2));
+  // Vector instantiate WIDTH BitCells comprising a register.
+  BitCell iBIT_CELL [WIDTH-1:0] (.clk({WIDTH{clk}}), .rst({WIDTH{rst}}), .D(D), .WriteEnable({WIDTH{WriteReg}}), .ReadEnable1({WIDTH{ReadEnable1}}), .ReadEnable2({WIDTH{ReadEnable2}}), .Bitline1(Bitline1), .Bitline2(Bitline2));
 
 endmodule
 

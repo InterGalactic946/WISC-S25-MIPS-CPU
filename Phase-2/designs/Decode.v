@@ -23,8 +23,9 @@ module Decode (
     output wire [37:0] EX_signals,        // Execute stage control signals
     output wire [17:0] MEM_signals,       // Memory stage control signals
     output wire [7:0] WB_signals,         // Write-back stage control signals
+    output wire is_branch,                // Indicates a branch instruction
     output wire [15:0] Branch_target,     // Computed branch target address
-    output wire Branch_taken              // Signal used to determine whether branch is taken
+    output wire taken                     // Signal used to determine whether branch instruction met condition codes
   );
   
   /////////////////////////////////////////////////
@@ -52,7 +53,6 @@ module Decode (
   /////////////////////////// BRANCH CONTROL SIGNALS //////////////////////////////
   wire [8:0] Branch_imm;     // Immediate for branch instructions
   wire [2:0] c_codes;        // Condition codes for branch instructions
-  wire Branch;               // Indicates a branch instruction
   ///////////////////////////// EXECUTE STAGE ////////////////////////////////////
   wire [15:0] ALU_In1;       // First ALU input
   wire [15:0] ALU_In2;       // Second ALU input
@@ -122,10 +122,9 @@ module Decode (
       .I(Branch_imm),
       .F(flags),
       .Rs(SrcReg1_data),
-      .Branch(Branch),
       .BR(pc_inst[12]),
       .PC_next(pc_next),
-      .Branch_taken(Branch_taken),
+      .taken(taken),
       .PC_branch(Branch_target)
   );
   ////////////////////////////////////////////////////////////////////////

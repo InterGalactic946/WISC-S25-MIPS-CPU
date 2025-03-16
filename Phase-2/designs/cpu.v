@@ -31,12 +31,15 @@ module cpu (clk, rst_n, hlt, pc);
   wire [15:0] PC_inst; // Instruction at the current PC address
 
   /* IF/ID Pipeline Register signals */
-  wire [15:0] IF_ID_PC_inst; // Pipelined instruction word from the fetch stage
+  wire [15:0] IF_ID_PC_curr; // Pipelined current instruction address from the fetch stage
   wire [15:0] IF_ID_PC_next; // Pipelined next instruction address from the fetch stage
+  wire [15:0] IF_ID_PC_inst; // Pipelined instruction word from the fetch stage
+
 
   /* DECODE stage signals */
   wire [15:0] Branch_target; // Computed branch target address
-  wire Branch_taken;         // Signal used to determine whether branch is taken
+  wire taken;                // Signal used to determine whether branch instruction met condition codes
+  wire Branch;               // Indicates it is a branch instruction
   wire [37:0] EX_signals;    // Execute stage control signals
   wire [17:0] MEM_signals;   // Memory stage control signals
   wire [7:0] WB_signals;     // Write-back stage control signals
@@ -95,26 +98,30 @@ module cpu (clk, rst_n, hlt, pc);
   // FETCH instruction from PC  //
   ////////////////////////////////
   Fetch iFETCH (
-        .clk(clk),
-        .rst(rst),
-        .stall(PC_stall),
-        .Branch_target(Branch_target),
-        .Branch_taken(Branch_taken),
-        .PC_next(PC_next),
-        .PC_inst(PC_inst),
-        .PC_curr(pc)
+      .clk(clk), 
+      .rst(rst), 
+      .stall(PC_stall), 
+      .Branch_target(Branch_target), 
+      .is_branch(Branch), 
+      .actual_taken(taken), 
+      .IF_ID_PC_curr(IF_ID_PC_curr), 
+      .PC_next(PC_next), 
+      .PC_inst(PC_inst), 
+      .PC_curr(pc)
   );
   ///////////////////////////////////
 
   /////////////////////////////////////////////////
-  // Pass the instruction word and the next PC address to the IF/ID pipeline register.
+  // Pass the instruction word, current PC, and the next PC address to the IF/ID pipeline register.
   IF_ID_pipe_reg iIF_ID (
     .clk(clk),
     .rst(rst),
     .stall(IF_ID_stall),
     .flush(IF_flush),
+    .PC_curr(pc),
     .PC_next(PC_next),
     .PC_inst(PC_inst),
+    .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_PC_next(IF_ID_PC_next),
     .IF_ID_PC_inst(IF_ID_PC_inst)
   );
@@ -135,8 +142,9 @@ module cpu (clk, rst_n, hlt, pc);
       .EX_signals(EX_signals),
       .MEM_signals(MEM_signals),
       .WB_signals(WB_signals),
+      .is_branch(Branch),
       .Branch_target(Branch_target),
-      .Branch_taken(Branch_taken)
+      .Branch_taken(taken)
     );
   ///////////////////////////////////////////////////////////////////////////
 
@@ -195,7 +203,6 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////////////////////////////////
   // Data MEMORY Access (read/write data for LW/SW as applicable) //
   //////////////////////////////////////////////////////////////////
-  // Instantiate the data memory. 
   memory1c iDATA_MEM (.data_out(MemData),
                       .data_in(EX_MEM_MemWriteData),
                       .addr(EX_MEM_ALU_out),

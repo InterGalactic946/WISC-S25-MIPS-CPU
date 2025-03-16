@@ -14,9 +14,11 @@ module IF_ID_pipe_reg (
     input wire rst,                   // Active high synchronous reset
     input wire stall,                 // Stall signal (prevents updates)
     input wire flush,                 // Flush pipeline register (clears the instruction word)
+    input wire [15:0] PC_curr,        // Current PC from the fetch stage
     input wire [15:0] PC_next,        // Next PC from the fetch stage
     input wire [15:0] PC_inst,        // Current instruction word from the fetch sage
     
+    output wire [15:0] IF_ID_PC_curr, // Pipelined current instruction address from the fetch stage
     output wire [31:0] IF_ID_PC_next, // Pipelined next PC passed to the decode stage
     output wire [31:0] IF_ID_PC_inst  // Pipelined current instruction word passed to the decode stage
 );
@@ -36,6 +38,9 @@ module IF_ID_pipe_reg (
  
   // We clear the instruction word register whenever we flush or during rst.
   assign clr = flush | rst;
+
+  // Register for storing the current instruction's address.
+  CPU_Register iPC_CURR_REG (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_curr), .data_out(IF_ID_PC_curr));
 
   // Register for storing the next instruction's address.
   CPU_Register iPC_NEXT_REG (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_next), .data_out(IF_ID_PC_next));

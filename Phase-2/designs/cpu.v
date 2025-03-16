@@ -177,7 +177,7 @@ module cpu (clk, rst_n, hlt, pc);
       .clk(clk),
       .rst(rst),
       .ALU_In1(ID_EX_ALU_In1),
-      .ALU_imm(ID_EX_ALU_Imm),
+      .ALU_imm(ID_EX_ALU_imm),
       .SrcReg2_data(ID_EX_SrcReg2_data),
       .ALUOp(ID_EX_ALUOp),
       .ALUSrc(ID_EX_ALUSrc),

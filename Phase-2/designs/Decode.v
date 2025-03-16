@@ -20,7 +20,7 @@ module Decode (
     input wire MEM_WB_RegWrite,           // Write enable to the register file (from the MEM/WB stage)
     input wire [15:0] RegWriteData,       // Data to write to the register file (from the MEM/WB stage)
     
-    output wire [37:0] EX_signals,        // Execute stage control signals
+    output wire [45:0] EX_signals,        // Execute stage control signals
     output wire [17:0] MEM_signals,       // Memory stage control signals
     output wire [7:0] WB_signals,         // Write-back stage control signals
     output wire is_branch,                // Indicates a branch instruction
@@ -34,8 +34,8 @@ module Decode (
   /////////////////////////// DECODE INSTRUCTION SIGNALS //////////////////////////
   wire [3:0] opcode;        // Opcode of the instruction
   /********************************** REGFILE Signals ******************************/
-  wire [3:0] reg_rs;         // Register ID of the first source register
-  wire [3:0] reg_rt;         // Register ID of the second source register
+  wire [3:0] reg_rs;         // Register ID of the first source register extracted from the instruction
+  wire [3:0] reg_rt;         // Register ID of the second source register extracted from the instruction
   wire [3:0] SrcReg1;        // Register ID of the first source register
   wire [3:0] SrcReg2;        // Register ID of the second source register
   wire [15:0] SrcReg1_data;  // Data from the first source register
@@ -98,7 +98,7 @@ module Decode (
   // Package each stage's control signals for the pipeline  //
   ////////////////////////////////////////////////////////////
   // Package the execute stage control signals.
-  assign EX_signals = {ALU_In1, ALU_In2, ALUOp, Z_en, NV_en};
+  assign EX_signals = {SrcReg1, SrcReg2, ALU_In1, ALU_In2, ALUOp, Z_en, NV_en};
 
   // Package the memory stage control signals.
   assign MEM_signals = {MemWriteData, MemEnable, MemWrite};

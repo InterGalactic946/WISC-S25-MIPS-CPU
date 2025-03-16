@@ -39,7 +39,7 @@ module Fetch (
   // We write to the PC whenever we don't stall.
   assign wen = ~stall;
 
-  // Choose between the predicted branch target address and (PC+2) to update the PC register.
+  // Update the PC with the branch target address if predicted to be taken, otherwise assume not taken.
   assign PC_new = (Branch_taken) ? predicted_target : PC_next;
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.

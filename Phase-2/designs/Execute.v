@@ -12,8 +12,8 @@
 module Execute(
     input wire clk,                   // System clock
     input wire rst,                   // Active high synchronous reset
-    input wire [15:0] EX_MEM_ALU_out; // Pipelined data memory address/arithemtic computation result computed from the memory stage
-    input wire [15:0] MEM_WB_ALU_out; // Pipelined arithemtic computation result computed from the WB stage
+    input wire [15:0] EX_MEM_ALU_out, // Pipelined data memory address/arithemtic computation result computed from the memory stage
+    input wire [15:0] MEM_WB_ALU_out, // Pipelined arithemtic computation result computed from the WB stage
     input wire [15:0] ALU_In1_step,   // First input to ALU (from the decode stage)
     input wire [15:0] ALU_imm,        // Immediate for I-type ALU instructions (from the decode stage)
     input wire [15:0] ALU_In2_step,   // Second ALU input based on the instruction type (from the decode stage)

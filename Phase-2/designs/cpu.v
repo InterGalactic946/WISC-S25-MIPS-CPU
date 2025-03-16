@@ -27,9 +27,9 @@ module cpu (clk, rst_n, hlt, pc);
   wire IF_flush, ID_flush, EX_flush; // Flush signals for each pipeline register
 
   /* FORWARDING UNIT signals */
-  wire [1:0] ForwardA,              // Forwarding signal for the first ALU input (ALU_In1)
-  wire [1:0] ForwardB,              // Forwarding signal for the second ALU input (ALU_In2)
-  wire ForwardMEM                   // Forwarding signal for MEM stage to MEM stage
+  wire [1:0] ForwardA;              // Forwarding signal for the first ALU input (ALU_In1)
+  wire [1:0] ForwardB;              // Forwarding signal for the second ALU input (ALU_In2)
+  wire ForwardMEM;                  // Forwarding signal for MEM stage to MEM stage
   
   /* FETCH stage signals */
   wire [15:0] PC_next; // Next PC address
@@ -107,13 +107,13 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////
   // Instantiate the Forwarding Unit  //
   //////////////////////////////////////
-  // (EX_MEM_MEM_signals[7:4] == reg_rd), EX_MEM_MEM_signals[3] == RegWrite).
+  // (EX_MEM_WB_signals[7:4] == reg_rd), EX_MEM_WB_signals[3] == RegWrite).
   ForwardingUnit forwarding_unit_inst (
     .ID_EX_SrcReg1(ID_EX_SrcReg1),
     .ID_EX_SrcReg2(ID_EX_SrcReg2),
-    .EX_MEM_reg_rd(EX_MEM_MEM_signals[7:4]),
+    .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
     .MEM_WB_reg_rd(MEM_WB_reg_rd),
-    .EX_MEM_RegWrite(EX_MEM_RegWrite[3]),
+    .EX_MEM_RegWrite(EX_MEM_WB_signals[3]),
     .MEM_WB_RegWrite(MEM_WB_RegWrite),
     .ForwardA(ForwardA),
     .ForwardB(ForwardB),

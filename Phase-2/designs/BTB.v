@@ -14,6 +14,7 @@ module BTB (
     input wire [3:0] PC_curr,          // 4-bit address (lower 4-bits of current PC from the fetch stage)
     input wire [3:0] IF_ID_PC_curr,    // Pipelined 4-bit address (lower 4-bits of previous PC from the fetch stage)
     input wire wen,                    // Write enable signal for updating BTB when the branch is actually taken
+    input wire enable,                 // Enable signal for the BTB
     input wire [15:0] actual_target,   // 16-bit actual target address of the branched instruction (from the decode stage)
     
     output wire [15:0] predicted_target // Predicted cached target address (16-bit) along with the valid bit (MSB)
@@ -22,21 +23,25 @@ module BTB (
   ///////////////////////////////////////////
   // Declare any internal signals as wire  //
   ///////////////////////////////////////////
-  wire [15:0] WriteWordline;  // Select lines for 16 registers (write)
-  wire [15:0] ReadWordline;   // Select lines for 16 registers (read)
-  wire [15:0] unused_bitline; // Unused bitline read out of the BTB
+  wire [3:0] addr; // Used to determine read vs write address.
   ///////////////////////////////////////////
 
   //////////////////////////////////////////////////
-  // Implement BHT as structural/dataflow verilog //
+  // Implement BTB as structural/dataflow verilog //
   //////////////////////////////////////////////////
-  // Instantiate one read and one write register decoder (for both read and write operations).
-  ReadDecoder_4_16 iREAD_DECODER (.RegId(PC_curr), .Wordline(ReadWordline));
-  WriteDecoder_4_16 iWRITE_DECODER (.RegId(IF_ID_PC_curr), .WriteReg(wen), .Wordline(WriteWordline));
+  // Our read address is PC_curr while our write address is IF_ID_PC_curr.
+  assign addr = (wen) ? IF_ID_PC_curr : PC_curr;
 
-  // Vector instantiate 16 registers, each 16-bit wide for the BTB.
-  Register iRF_BTB [15:0] (.clk({16{clk}}), .rst({16{rst}}), .D(actual_target), .WriteReg(WriteWordline), .ReadEnable1(ReadWordline), .ReadEnable2(ReadWordline), .Bitline1(predicted_target), .Bitline2(unused_bitline));
-
+  // Infer the branch target buffer as an asynchronously read, synchronously written memory, enabled when not stalling.
+  memory1c #(4) iMEM_BTB (.data_out(predicted_target),
+                          .data_in(actual_target),
+                          .addr(addr),
+                          .enable(enable),
+                          .data(1'b1),
+                          .wr(wen),
+                          .clk(clk),
+                          .rst(rst)
+                          );
 endmodule
 
 `default_nettype wire // Reset default behavior at the end

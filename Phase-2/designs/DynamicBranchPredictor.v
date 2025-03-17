@@ -14,6 +14,7 @@ module DynamicBranchPredictor (
     input wire rst,                      // Active high reset signal
     input wire [3:0] PC_curr,            // Lower 4-bits of current PC address
     input wire [3:0] IF_ID_PC_curr,      // Pipelined lower 4-bits of previous PC address
+    input wire enable,                   // Enable signal for the DynamicBranchPredictor
     input wire actual_taken,             // Actual branch taken value (from the decode stage)
     input wire [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
     input wire misprediction,            // Indicates if there was a branch misprediction (from the decode stage)
@@ -29,6 +30,7 @@ module DynamicBranchPredictor (
   BTB iBTB (
     .clk(clk), 
     .rst(rst), 
+    .enable(enable),
     .PC_curr(PC_curr), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .wen(actual_taken), 
@@ -43,6 +45,7 @@ module DynamicBranchPredictor (
   BHT iBHT (
     .clk(clk), 
     .rst(rst), 
+    .enable(enable),
     .PC_curr(PC_curr), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .wen(misprediction), 

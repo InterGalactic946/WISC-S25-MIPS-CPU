@@ -30,14 +30,14 @@ module Fetch (
   ///////////////////////////////////////////////
   wire [15:0] PC_new;           // The new address the PC is updated with.
   wire [15:0] predicted_target; // The predicted target address cached in the BTB
-  wire wen;                     // PC write enable signal.
+  wire enable;                  // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
   ////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
   // Implement PC_control as structural/dataflow verilog //
   ////////////////////////////////////////////////////////
   // We write to the PC whenever we don't stall.
-  assign wen = ~stall;
+  assign enable = ~stall;
 
   // Update the PC with the branch target address if predicted to be taken, otherwise assume not taken.
   assign PC_new = (predicted_taken) ? predicted_target : PC_next;
@@ -47,6 +47,7 @@ module Fetch (
     .clk(clk), 
     .rst(rst), 
     .PC_curr(PC_curr[3:0]), 
+    .enable(enable),
     .misprediction(branch_mispredicted), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .actual_taken(actual_taken), 
@@ -56,13 +57,13 @@ module Fetch (
   );
 
   // Infer the PC Register.
-  CPU_Register iPC (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_new), .data_out(PC_curr));
+  CPU_Register iPC (.clk(clk), .rst(rst), .wen(enable), .data_in(PC_new), .data_out(PC_curr));
 
-  // Infer the instruction memory, it is always read enabled and never write enabled.
+  // Infer the instruction memory, it is read enabled when not stalling and never write enabled.
   memory1c iINSTR_MEM (.data_out(PC_inst),
                        .data_in(16'h0000),
                         .addr(PC_curr),
-                        .enable(1'b1),
+                        .enable(enable),
                         .data(1'b0),
                         .wr(1'b0),
                         .clk(clk),

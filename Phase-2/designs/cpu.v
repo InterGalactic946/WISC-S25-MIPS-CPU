@@ -27,10 +27,10 @@ module cpu (clk, rst_n, hlt, pc);
   wire predicted_taken; // Predicted taken signal from the branch history table
 
   /* IF/ID Pipeline Register signals */
-  wire [3:0] IF_ID_PC_curr;   // Pipelined lower 4-bits of current instruction address from the fetch stage
-  wire [15:0] IF_ID_PC_next;  // Pipelined next instruction address from the fetch stage
-  wire [15:0] IF_ID_PC_inst;  // Pipelined instruction word from the fetch stage
-  wire IF_ID_predicted_taken; // Pipelined branch prediction from the fetch stage
+  wire [3:0] IF_ID_PC_curr;   // Pipelined lower 4-bits of current instruction (previous PC) address from the fetch stage
+  wire [15:0] IF_ID_PC_next;  // Pipelined next instruction (previous PC_next) address from the fetch stage
+  wire [15:0] IF_ID_PC_inst;  // Pipelined instruction word (previous PC_inst) from the fetch stage
+  wire IF_ID_predicted_taken; // Pipelined branch prediction (previous predicted_taken) from the fetch stage
 
   /* DECODE stage signals */
   wire [15:0] branch_target; // Computed branch target address
@@ -134,6 +134,7 @@ module cpu (clk, rst_n, hlt, pc);
     .PC_curr(pc),
     .PC_next(PC_next),
     .PC_inst(PC_inst),
+    .predicted_taken(predicted_taken),
     .IF_ID_predicted_taken(IF_ID_predicted_taken),
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_PC_next(IF_ID_PC_next),

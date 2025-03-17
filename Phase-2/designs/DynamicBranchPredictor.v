@@ -26,13 +26,29 @@ module DynamicBranchPredictor (
   // Instantiate the Branch Target Buffer (BTB) //
   ////////////////////////////////////////////////
   // We update the BTB when the branch is actually taken.
-  BTB iBTB (.clk(clk), .rst(rst), .PC_curr_lower(PC_curr), .IF_ID_PC_curr_lower(IF_ID_PC_curr), .wen(actual_taken), .actual_target(actual_target),.predicted_target(predicted_target));
+  BTB iBTB (
+    .clk(clk), 
+    .rst(rst), 
+    .PC_curr(PC_curr), 
+    .IF_ID_PC_curr(IF_ID_PC_curr), 
+    .wen(actual_taken), 
+    .actual_target(actual_target),
+    .predicted_target(predicted_target)
+  );
 
   ////////////////////////////////////////////////
   // Instantiate the Branch History Table (BHT) //
   ////////////////////////////////////////////////
   // We update the BHT on a mispredicted branch instruction.
-  BHT iBHT (.clk(clk), .rst(rst), .PC_curr_lower(PC_curr), .IF_ID_PC_curr_lower(IF_ID_PC_curr), .wen(misprediction), .actual_taken(actual_taken),.predicted_taken(predicted_taken)); 
+  BHT iBHT (
+    .clk(clk), 
+    .rst(rst), 
+    .PC_curr(PC_curr), 
+    .IF_ID_PC_curr(IF_ID_PC_curr), 
+    .wen(misprediction), 
+    .actual_taken(actual_taken),
+    .predicted_taken(predicted_taken)
+  ); 
 
 endmodule
 

@@ -8,13 +8,14 @@
 // predictions based on the branch PC address.             //
 /////////////////////////////////////////////////////////////
 module BHT (
-    input wire clk,                       // System clock
-    input wire rst,                       // active high reset signal
-    input wire [3:0] PC_curr_lower,       // 4-bit address (lower 4-bits of current PC from the fetch stage)
-    input wire [3:0] IF_ID_PC_curr_lower, // Pipelined 4-bit address (lower 4-bits of previous PC from the fetch stage)
-    input wire wen,                       // used to update the BTB register
-    input wire actual_taken,              // Actual taken value (from the decode stage)
-    output wire predicted_taken           // Predicted 2-bit value (00 => Strong Not Taken, 01 => Weak Not Taken, 10 => Weak Taken, 11 => Strong Taken)
+    input wire clk,                 // System clock
+    input wire rst,                 // active high reset signal
+    input wire [3:0] PC_curr,       // 4-bit address (lower 4-bits of current PC from the fetch stage)
+    input wire [3:0] IF_ID_PC_curr, // Pipelined 4-bit address (lower 4-bits of previous PC from the fetch stage)
+    input wire wen,                 // used to update the BTB register on a misprediction
+    input wire actual_taken,        // Actual taken value (from the decode stage)
+    
+    output wire predicted_taken     // Predicted taken 1-bit value from 2-bit prediction (00 => Strong Not Taken, 01 => Weak Not Taken, 10 => Weak Taken, 11 => Strong Taken)
 );
 
   ///////////////////////////////////////////
@@ -31,9 +32,9 @@ module BHT (
   //////////////////////////////////////////////////
   // Implement BHT as structural/dataflow verilog //
   //////////////////////////////////////////////////
-  // Instantiate two read register decoders (for both read and write operations).
-  ReadDecoder_4_16 iREAD_DECODER (.RegId(PC_curr_lower), .Wordline(ReadWordline));
-  WriteDecoder_4_16 iWRITE_DECODER (.RegId(IF_ID_PC_curr_lower), .WriteReg(wen), .Wordline(WriteWordline));
+  // Instantiate one read and one write register decoder (for both read and write operations).
+  ReadDecoder_4_16 iREAD_DECODER (.RegId(PC_curr), .Wordline(ReadWordline));
+  WriteDecoder_4_16 iWRITE_DECODER (.RegId(IF_ID_PC_curr), .WriteReg(wen), .Wordline(WriteWordline));
 
   // Vector instantiate 16 registers, each 2-bit wide for the BHT (reading from the same register out of both bitlines).
   Register #(.WIDTH(2)) iRF_BHT [15:0] (.clk({16{clk}}), .rst({16{rst}}), .D(updated_prediction), .WriteReg(WriteWordline), .ReadEnable1(ReadWordline), .ReadEnable2(ReadWordline), .Bitline1(prediction), .Bitline2(unused_bitline));

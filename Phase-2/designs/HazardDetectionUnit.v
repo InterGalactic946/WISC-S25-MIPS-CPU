@@ -21,7 +21,7 @@ module HazardDetectionUnit (
     input wire ID_EX_Z_en,             // Zero flag enable signal from ID/EX stage
     input wire ID_EX_NV_en,            // Negative/Overflow flag enable signal from ID/EX stage
     input wire branch_mispredicted,    // Signal indicating branch misprediction
-    input wire branch_taken            // Signal indicating branch is taken
+    input wire branch_taken,           // Signal indicating branch is taken
     
     output wire PC_stall,              // Stall signal for IF stage
     output wire IF_ID_stall,           // Stall signal for ID stage

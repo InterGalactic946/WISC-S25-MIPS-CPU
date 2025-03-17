@@ -12,8 +12,8 @@
 module DynamicBranchPredictor (
     input wire clk,                      // System clock
     input wire rst,                      // Active high reset signal
-    input wire [15:0] PC_curr,           // Current PC address (16-bit)
-    input wire [15:0] IF_ID_PC_curr,     // Pipelined previous PC address (16-bit)
+    input wire [3:0] PC_curr,            // Lower 4-bits of current PC address
+    input wire [3:0] IF_ID_PC_curr,      // Pipelined lower 4-bits of previous PC address
     input wire is_branch,                // Indicates if the instruction is a branch (from the decode stage)
     input wire actual_taken,             // Actual branch taken value (from the decode stage)
     input wire [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
@@ -29,12 +29,12 @@ module DynamicBranchPredictor (
   ////////////////////////////////////////////////
   // Instantiate the Branch Target Buffer (BTB) //
   ////////////////////////////////////////////////
-  BTB iBTB (.clk(clk), .rst(rst), .PC_curr_lower(PC_curr[3:0]), .IF_ID_PC_curr_lower(IF_ID_PC_curr[3:0]), .wen(wen_BTB), .actual_target(actual_target),.predicted_target(predicted_target));
+  BTB iBTB (.clk(clk), .rst(rst), .PC_curr_lower(PC_curr), .IF_ID_PC_curr_lower(IF_ID_PC_curr), .wen(wen_BTB), .actual_target(actual_target),.predicted_target(predicted_target));
 
   ////////////////////////////////////////////////
   // Instantiate the Branch History Table (BHT) //
   ////////////////////////////////////////////////
-  BHT iBHT (.clk(clk), .rst(rst), .PC_curr_lower(PC_curr[3:0]), .IF_ID_PC_curr_lower(IF_ID_PC_curr[3:0]), .wen(wen_BHT), .actual_taken(actual_taken),.predicted_taken(predicted_taken)); 
+  BHT iBHT (.clk(clk), .rst(rst), .PC_curr_lower(PC_curr), .IF_ID_PC_curr_lower(IF_ID_PC_curr), .wen(wen_BHT), .actual_taken(actual_taken),.predicted_taken(predicted_taken)); 
 
   // Update the BHT when the prediction doesn't match actual on a branch instruction.
   assign wen_BHT = misprediction & is_branch;

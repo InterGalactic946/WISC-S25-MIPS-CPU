@@ -27,7 +27,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire predicted_taken; // Predicted taken signal from the branch history table
 
   /* IF/ID Pipeline Register signals */
-  wire [15:0] IF_ID_PC_curr;  // Pipelined current instruction address from the fetch stage
+  wire [3:0] IF_ID_PC_curr;   // Pipelined lower 4-bits of current instruction address from the fetch stage
   wire [15:0] IF_ID_PC_next;  // Pipelined next instruction address from the fetch stage
   wire [15:0] IF_ID_PC_inst;  // Pipelined instruction word from the fetch stage
   wire IF_ID_predicted_taken; // Pipelined branch prediction from the fetch stage
@@ -63,7 +63,6 @@ module cpu (clk, rst_n, hlt, pc);
   /* EXECUTE stage signals */
   wire [15:0] ALU_out;             // ALU output
   wire ZF, VF, NF;                 // Flag signals
-  wire Z_set, V_set, N_set;        // Flags set by ALU
 
   /* FORWARDING UNIT signals */
   wire [1:0] ForwardA;              // Forwarding signal for the first ALU input (ALU_In1)

@@ -19,7 +19,7 @@ module IF_ID_pipe_reg (
     input wire [15:0] PC_inst,        // Current instruction word from the fetch sage
     input wire predicted_taken,       // Predicted branch taken signal from the fetch stage
     
-    output wire [15:0] IF_ID_PC_curr,  // Pipelined current instruction address from the fetch stage
+    output wire [3:0] IF_ID_PC_curr,   // Pipelined lower 4-bits of current instruction address from the fetch stage
     output wire [15:0] IF_ID_PC_next,  // Pipelined next PC passed to the decode stage
     output wire [15:0] IF_ID_PC_inst,  // Pipelined current instruction word passed to the decode stage
     output wire IF_ID_predicted_taken  // Pipelined predicted branch taken signal passed to the decode stage
@@ -28,9 +28,9 @@ module IF_ID_pipe_reg (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire wen;                   // Register write enable signal.
-  wire clr;                   // Clear signal for instruction word register
-  //////////////////////////////////////////////////////////////////
+  wire wen; // Register write enable signal.
+  wire clr; // Clear signal for instruction word register
+  ///////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
   // Implement the IF/ID Pipeline Register as structural/dataflow verilog //
@@ -42,7 +42,7 @@ module IF_ID_pipe_reg (
   assign clr = flush | rst;
 
   // Register for storing the current instruction's address.
-  CPU_Register iPC_CURR_REG (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_curr), .data_out(IF_ID_PC_curr));
+  CPU_Register #(.WIDTH(4)) iPC_CURR_REG (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_curr[3:0]), .data_out(IF_ID_PC_curr));
 
   // Register for storing the next instruction's address.
   CPU_Register iPC_NEXT_REG (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_next), .data_out(IF_ID_PC_next));

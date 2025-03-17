@@ -20,16 +20,6 @@ module cpu (clk, rst_n, hlt, pc);
   // Declare any internal signals //
   /////////////////////////////////
   wire rst; // Active high synchronous reset signal
-
-  /* HAZARD DETECTION UNIT signals */
-  wire PC_stall;                     // Stall signal for the PC register
-  wire IF_ID_stall;                  // Stall signal for the IF/ID pipeline register
-  wire IF_flush, ID_flush, EX_flush; // Flush signals for each pipeline register
-
-  /* FORWARDING UNIT signals */
-  wire [1:0] ForwardA;              // Forwarding signal for the first ALU input (ALU_In1)
-  wire [1:0] ForwardB;              // Forwarding signal for the second ALU input (ALU_In2)
-  wire ForwardMEM;                  // Forwarding signal for MEM stage to MEM stage
   
   /* FETCH stage signals */
   wire [15:0] PC_next;  // Next PC address
@@ -52,6 +42,11 @@ module cpu (clk, rst_n, hlt, pc);
   wire [17:0] MEM_signals;   // Memory stage control signals
   wire [7:0] WB_signals;     // Write-back stage control signals
 
+  /* HAZARD DETECTION UNIT signals */
+  wire PC_stall;             // Stall signal for the PC register
+  wire IF_ID_stall;          // Stall signal for the IF/ID pipeline register
+  wire IF_flush, ID_flush;   // Flush signals for each pipeline register
+
   /* ID/EX Pipeline Register signals */
   wire [3:0] ID_EX_SrcReg1;        // Pipelined first source register ID from the decode stage
   wire [3:0] ID_EX_SrcReg2;        // Pipelined second source register ID from the decode stage
@@ -66,9 +61,14 @@ module cpu (clk, rst_n, hlt, pc);
   wire [15:0] ID_EX_PC_next;       // Pipelined next instruction address from the fetch stage
 
   /* EXECUTE stage signals */
-  wire [15:0] ALU_out;       // ALU output
-  wire ZF, VF, NF;           // Flag signals
-  wire Z_set, V_set, N_set;  // Flags set by ALU
+  wire [15:0] ALU_out;             // ALU output
+  wire ZF, VF, NF;                 // Flag signals
+  wire Z_set, V_set, N_set;        // Flags set by ALU
+
+  /* FORWARDING UNIT signals */
+  wire [1:0] ForwardA;              // Forwarding signal for the first ALU input (ALU_In1)
+  wire [1:0] ForwardB;              // Forwarding signal for the second ALU input (ALU_In2)
+  wire ForwardMEM;                  // Forwarding signal for MEM stage to MEM stage
 
   /* EX/MEM Pipeline Register signals */
   wire [15:0] EX_MEM_ALU_out;      // Pipelined data memory address/arithemtic computation result computed from the execute stage
@@ -79,8 +79,8 @@ module cpu (clk, rst_n, hlt, pc);
   wire [15:0] EX_MEM_PC_next;      // Pipelined next instruction address from the fetch stage
 
   /* MEMORY stage signals */
-  wire [15:0] MemData;      // Data read from memory
-  wire [15:0] MemWriteData; // Data written to memory
+  wire [15:0] MemData;             // Data read from memory
+  wire [15:0] MemWriteData;        // Data written to memory
 
   /* MEM/WB Pipeline Register signals */
   wire [15:0] MEM_WB_MemData; // Pipelined data read from memory from the memory stage

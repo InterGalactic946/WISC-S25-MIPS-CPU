@@ -40,7 +40,7 @@ module Decode (
   wire [3:0] reg_rs;         // Register ID of the first source register extracted from the instruction
   wire [3:0] reg_rt;         // Register ID of the second source register extracted from the instruction
   wire [15:0] SrcReg1_data;  // Data from the first source register
- wire [15:0] SrcReg2_data;   // Data from the second source register
+  wire [15:0] SrcReg2_data;  // Data from the second source register
   wire RegSrc;               // Selects register source based on LLB/LHB instructions
   /********************************** ALU Signals **********************************/
   wire [3:0] imm;            // immediate value decoded from the instruction

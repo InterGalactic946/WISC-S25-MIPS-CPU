@@ -16,7 +16,6 @@ module Fetch (
     input wire stall,                // Stall signal for the PC (from the hazard detection unit)
     input wire [15:0] actual_target, // Target address for branch instructions (from the decode stage)
     input wire actual_taken,         // Indicates whether the branch is actually taken (from the decode stage)
-    input wire is_branch,            // Indicates whether the instruction is a branch (from the decode stage)
     input wire branch_mispredicted,  // Indicates if the branch prediction was incorrect (from the decode stage)
     input wire [3:0] IF_ID_PC_curr,  // Pipelined lower 4-bits of previous PC value (from the fetch stage)
     
@@ -44,7 +43,17 @@ module Fetch (
   assign PC_new = (predicted_taken) ? predicted_target : PC_next;
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
-  DynamicBranchPredictor iDBP (.clk(clk), .rst(rst), .PC_curr(PC_curr[3:0]), .misprediction(branch_mispredicted), .IF_ID_PC_curr(IF_ID_PC_curr), .is_branch(is_branch), .actual_taken(actual_taken), .actual_target(actual_target), .predicted_taken(predicted_taken), .predicted_target(predicted_target));
+  DynamicBranchPredictor iDBP (
+    .clk(clk), 
+    .rst(rst), 
+    .PC_curr(PC_curr[3:0]), 
+    .misprediction(branch_mispredicted), 
+    .IF_ID_PC_curr(IF_ID_PC_curr), 
+    .actual_taken(actual_taken), 
+    .actual_target(actual_target), 
+    .predicted_taken(predicted_taken), 
+    .predicted_target(predicted_target)
+  );
 
   // Infer the PC Register.
   CPU_Register iPC (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_new), .data_out(PC_curr));

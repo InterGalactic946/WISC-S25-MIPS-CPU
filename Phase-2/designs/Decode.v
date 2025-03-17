@@ -26,8 +26,8 @@ module Decode (
     output wire [7:0] WB_signals,         // Write-back stage control signals
     output wire is_branch,                // Indicates a branch instruction
     output wire is_BR,                    // Indicates a branch register instruction
-    output wire [15:0] Branch_target,     // Computed branch target address
-    output wire taken,                    // Signal used to determine whether branch instruction met condition codes
+    output wire [15:0] branch_target,     // Computed branch target address
+    output wire branch_taken,             // Signal used to determine whether branch instruction is taken
     output wire misprediction             // Indicates a branch misprediction
   );
   
@@ -78,7 +78,7 @@ module Decode (
   assign opcode = pc_inst[15:12];
 
   // We detect a misprediction if the prediction from the fetch stage differs from the decode stage.
-  assign misprediction = taken != IF_ID_predicted_taken;
+  assign misprediction = branch_taken != IF_ID_predicted_taken;
 
   // Instantiate the Control Unit.
   ControlUnit iCC (
@@ -124,15 +124,16 @@ module Decode (
   assign c_codes = pc_inst[11:9];
 
   // Instantiate the Branch Control Unit.
-  Branch_control iBC (
+  Branch_Control iBC (
       .C(c_codes),
       .I(Branch_imm),
       .F(flags),
       .Rs(SrcReg1_data),
+      .Branch(is_branch),
       .BR(is_BR),
       .PC_next(pc_next),
-      .taken(taken),
-      .PC_branch(Branch_target)
+      .branch_taken(branch_taken),
+      .PC_branch(branch_target)
   );
   ////////////////////////////////////////////////////////////////////////
 

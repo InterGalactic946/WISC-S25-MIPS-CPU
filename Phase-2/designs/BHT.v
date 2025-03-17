@@ -62,7 +62,7 @@ module BHT (
           16'h0003: updated_prediction = (actual_taken) ? 16'h0003 : 16'h0002; // Strong Taken
           default: begin
             updated_prediction = 16'h0000; // Default predict not taken.
-            error = 1'b1;              // Invalid prediction state
+            error = 1'b1;                  // Invalid prediction state.
           end
       endcase
   end

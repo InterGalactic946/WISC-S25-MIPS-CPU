@@ -115,12 +115,13 @@ module cpu (clk, rst_n, hlt, pc);
       .stall(PC_stall), 
       .actual_target(branch_target), 
       .actual_taken(branch_taken), 
-      .predicted_taken(predicted_taken),
-      .IF_ID_PC_curr(IF_ID_PC_curr), 
       .branch_mispredicted(misprediction),
+      .IF_ID_PC_curr(IF_ID_PC_curr), 
+      
       .PC_next(PC_next), 
       .PC_inst(PC_inst), 
-      .PC_curr(pc)
+      .PC_curr(pc),
+      .predicted_taken(predicted_taken)
   );
   ///////////////////////////////////
 
@@ -135,10 +136,11 @@ module cpu (clk, rst_n, hlt, pc);
     .PC_next(PC_next),
     .PC_inst(PC_inst),
     .predicted_taken(predicted_taken),
-    .IF_ID_predicted_taken(IF_ID_predicted_taken),
+    
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_PC_next(IF_ID_PC_next),
-    .IF_ID_PC_inst(IF_ID_PC_inst)
+    .IF_ID_PC_inst(IF_ID_PC_inst),
+    .IF_ID_predicted_taken(IF_ID_predicted_taken)
   );
   /////////////////////////////////////////////////
 
@@ -148,18 +150,20 @@ module cpu (clk, rst_n, hlt, pc);
   Decode iDECODE (
     .clk(clk),
     .rst(rst),
-    .flags({ZF, VF, NF}), 
     .pc_inst(IF_ID_PC_inst),
     .pc_next(IF_ID_PC_next),
-    .MEM_WB_reg_rd(MEM_WB_reg_rd),
+    .flags({ZF, VF, NF}), 
+    .IF_ID_predicted_taken(IF_ID_predicted_taken),
     .MEM_WB_RegWrite(MEM_WB_RegWrite),
+    .MEM_WB_reg_rd(MEM_WB_reg_rd),
     .RegWriteData(RegWriteData),
+    
     .EX_signals(EX_signals),
     .MEM_signals(MEM_signals),
     .WB_signals(WB_signals),
     .is_branch(Branch),
     .is_BR(BR),
-    .Branch_target(branch_target),
+    .branch_target(branch_target),
     .branch_taken(branch_taken),
     .branch_mispredicted(misprediction)
   );

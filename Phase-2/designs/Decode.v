@@ -13,12 +13,12 @@
 module Decode (
     input wire clk,                       // System clock
     input wire rst,                       // Active high synchronous reset
-    input wire [2:0] flags,               // Flag register signals (ZF, VF, NF)
-    input wire IF_ID_predicted_taken,     // Predicted taken signal from the IF/ID stage
     input wire [15:0] pc_inst,            // The current instruction word
     input wire [15:0] pc_next,            // The next instruction's address
-    input wire [3:0] MEM_WB_reg_rd,       // Register ID of the destination register (from the MEM/WB stage)
+    input wire [2:0] flags,               // Flag register signals (ZF, VF, NF)
+    input wire IF_ID_predicted_taken,     // Predicted taken signal from the IF/ID stage
     input wire MEM_WB_RegWrite,           // Write enable to the register file (from the MEM/WB stage)
+    input wire [3:0] MEM_WB_reg_rd,       // Register ID of the destination register (from the MEM/WB stage)
     input wire [15:0] RegWriteData,       // Data to write to the register file (from the MEM/WB stage)
     
     output wire [62:0] EX_signals,        // Execute stage control signals
@@ -28,7 +28,7 @@ module Decode (
     output wire is_BR,                    // Indicates a branch register instruction
     output wire [15:0] branch_target,     // Computed branch target address
     output wire branch_taken,             // Signal used to determine whether branch instruction is taken
-    output wire misprediction             // Indicates a branch misprediction
+    output wire branch_mispredicted       // Indicates a branch misprediction
   );
   
   /////////////////////////////////////////////////
@@ -78,7 +78,7 @@ module Decode (
   assign opcode = pc_inst[15:12];
 
   // We detect a misprediction if the prediction from the fetch stage differs from the decode stage.
-  assign misprediction = branch_taken != IF_ID_predicted_taken;
+  assign branch_mispredicted = branch_taken != IF_ID_predicted_taken;
 
   // Instantiate the Control Unit.
   ControlUnit iCC (

@@ -19,7 +19,7 @@ module IF_ID_pipe_reg (
     input wire [15:0] PC_inst,        // Current instruction word from the fetch sage
     input wire predicted_taken,       // Predicted branch taken signal from the fetch stage
     
-    output wire [3:0] IF_ID_PC_curr,   // Pipelined lower 4-bits of current instruction address from the fetch stage
+    output wire [3:0] IF_ID_PC_curr,   // Pipelined lower 4-bits of current instruction address passed to the decode stage
     output wire [15:0] IF_ID_PC_next,  // Pipelined next PC passed to the decode stage
     output wire [15:0] IF_ID_PC_inst,  // Pipelined current instruction word passed to the decode stage
     output wire IF_ID_predicted_taken  // Pipelined predicted branch taken signal passed to the decode stage

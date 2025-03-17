@@ -39,8 +39,9 @@ module Fetch (
   // We write to the PC whenever we don't stall.
   assign enable = ~stall;
 
-  // Update the PC with the branch target address if predicted to be taken, otherwise assume not taken.
-  assign PC_new = (predicted_taken) ? predicted_target : PC_next;
+  // Update the PC with correct target on misprediction, or the branch target address 
+  // if predicted to be taken, otherwise assume not taken.
+  assign PC_new = (branch_mispredicted) ? actual_target : ((predicted_taken) ? predicted_target : PC_next);
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
   DynamicBranchPredictor iDBP (

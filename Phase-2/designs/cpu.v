@@ -190,7 +190,7 @@ module cpu (clk, rst_n, hlt, pc);
       .ID_EX_Z_en(ID_EX_Z_en),
       .ID_EX_NV_en(ID_EX_NV_en),
       .branch_mispredicted(misprediction),
-      .branch_taken(taken),
+      .branch_taken(branch_taken),
       .PC_stall(PC_stall),
       .IF_ID_stall(IF_ID_stall),
       .ID_flush(ID_flush),

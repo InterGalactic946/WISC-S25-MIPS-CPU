@@ -173,6 +173,7 @@ module cpu (clk, rst_n, hlt, pc);
   // EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
   // ID_EX_MEM_signals[1] == ID_EX_MemEnable, ID_EX_MEM_signals[0] == ID_EX_MemWrite.
   // MEM_signals[1] == MemEnable.
+  // WB_signals[1] == HLT.
   // EX_signals[62:59] == SrcReg1, EX_signals[58:55] == SrcReg2. 
   HazardDetectionUnit iHDU (
       .ID_EX_reg_rd(ID_EX_WB_signals[7:4]),
@@ -185,6 +186,7 @@ module cpu (clk, rst_n, hlt, pc);
       .ID_EX_MemWrite(ID_EX_MEM_signals[0]),
       .MemWrite(MEM_signals[1]),
       .Branch(Branch),
+      .HLT(WB_signals[1]),
       .BR(BR),
       .ID_EX_Z_en(ID_EX_Z_en),
       .ID_EX_NV_en(ID_EX_NV_en),
@@ -262,7 +264,6 @@ module cpu (clk, rst_n, hlt, pc);
   EX_MEM_pipe_reg iEX_MEM (
       .clk(clk),
       .rst(rst),
-      .flush(EX_flush),
       .ALU_out(ALU_out),
       .ID_EX_PC_next(ID_EX_PC_next),
       .ID_EX_MEM_signals(ID_EX_MEM_signals),
@@ -303,6 +304,7 @@ module cpu (clk, rst_n, hlt, pc);
       .EX_MEM_WB_signals(EX_MEM_WB_signals),
       .MEM_WB_PC_next(MEM_WB_PC_next),
       .MEM_WB_ALU_out(MEM_WB_ALU_out),
+      .MEM_WB_MemData(MEM_WB_MemData),
       .MEM_WB_WB_signals({MEM_WB_reg_rd, MEM_WB_RegWrite, MEM_WB_MemToReg, MEM_WB_HLT, MEM_WB_PCS})
   );
   /////////////////////////////////////////////////

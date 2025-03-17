@@ -18,6 +18,7 @@ module MEM_WB_pipe_reg (
     
     output wire [15:0] MEM_WB_PC_next,     // Pipelined next PC passed to the write-back stage
     output wire [15:0] MEM_WB_ALU_out,     // Pipelined ALU result passed to the write-back stage
+    output wire [15:0] MEM_WB_MemData,     // Pipelined data read from memory passed to the write-back stage
     output wire [7:0] MEM_WB_WB_signals    // Pipelined write back stage signals passed to the write-back stage
 );
 
@@ -42,6 +43,12 @@ module MEM_WB_pipe_reg (
   // Pipeline the ALU output to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////
   CPU_Register iALU_OUT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_ALU_out), .data_out(MEM_WB_ALU_out));
+  //////////////////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////////////
+  // Pipeline the MemData output to be passed to the write-back stage //
+  //////////////////////////////////////////////////////////////////////
+  CPU_Register iMEM_DATA_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(MemData), .data_out(MEM_WB_MemData));
   //////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////////////////

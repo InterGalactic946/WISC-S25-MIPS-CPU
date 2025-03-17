@@ -18,6 +18,7 @@ module HazardDetectionUnit (
     input wire ID_EX_MemWrite,         // Data memory write signal from ID/EX stage
     input wire MemWrite,               // Memory write signal for current instruction
     input wire Branch,                 // Branch signal indicating a branch instruction
+    input wire HLT,                    // Halt signal indicating a halt instruction
     input wire BR,                     // BR signal indicating a BR instruction
     input wire ID_EX_Z_en,             // Zero flag enable signal from ID/EX stage
     input wire ID_EX_NV_en,            // Negative/Overflow flag enable signal from ID/EX stage
@@ -44,9 +45,9 @@ module HazardDetectionUnit (
   /////////////////////////////////////////////////////
   // Stall conditions for LW, B, and BR instructions //
   /////////////////////////////////////////////////////
-  // We stall anytime there is a branch or load to use hazard in the fetch and decode stages.
-  assign PC_stall = load_to_use_hazard | B_hazard | BR_hazard;
-  assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
+  // We stall anytime there is a branch or load to use hazard in the fetch and decode stages, or it is a halt instruction.
+  assign PC_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
+  assign IF_ID_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
   /////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////

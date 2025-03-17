@@ -146,23 +146,23 @@ module cpu (clk, rst_n, hlt, pc);
   // DECODE instruction word, resolve branches, and access register file   //
   ///////////////////////////////////////////////////////////////////////////
   Decode iDECODE (
-      .clk(clk),
-      .rst(rst),
-      .flags({ZF, VF, NF}), 
-      .pc_inst(IF_ID_PC_inst),
-      .pc_next(IF_ID_PC_next),
-      .MEM_WB_reg_rd(MEM_WB_reg_rd),
-      .MEM_WB_RegWrite(MEM_WB_RegWrite),
-      .RegWriteData(RegWriteData),
-      .EX_signals(EX_signals),
-      .MEM_signals(MEM_signals),
-      .WB_signals(WB_signals),
-      .is_branch(Branch),
-      .is_BR(BR),
-      .Branch_target(Branch_target),
-      .taken(taken),
-      .branch_mispredicted(misprediction)
-    );
+    .clk(clk),
+    .rst(rst),
+    .flags({ZF, VF, NF}), 
+    .pc_inst(IF_ID_PC_inst),
+    .pc_next(IF_ID_PC_next),
+    .MEM_WB_reg_rd(MEM_WB_reg_rd),
+    .MEM_WB_RegWrite(MEM_WB_RegWrite),
+    .RegWriteData(RegWriteData),
+    .EX_signals(EX_signals),
+    .MEM_signals(MEM_signals),
+    .WB_signals(WB_signals),
+    .is_branch(Branch),
+    .is_BR(BR),
+    .Branch_target(Branch_target),
+    .taken(taken),
+    .branch_mispredicted(misprediction)
+  );
   ///////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////
@@ -196,7 +196,7 @@ module cpu (clk, rst_n, hlt, pc);
       .ID_flush(ID_flush),
       .IF_flush(IF_flush)
   );
-  ///////////////////////////////////////
+  ///////////////////////////////////////////////
 
   /////////////////////////////////////////////////
   // Pass the next PC, instruction word's control signals and operands to the ID/EX pipeline register.
@@ -239,7 +239,7 @@ module cpu (clk, rst_n, hlt, pc);
       .VF(VF),
       .ALU_out(ALU_out)
   );
-  ////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
 
   //////////////////////////////////////
   // Instantiate the Forwarding Unit  //

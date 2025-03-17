@@ -47,7 +47,7 @@ module HazardDetectionUnit (
   /////////////////////////////////////////////////////
   // We stall anytime there is a branch or load to use hazard in the fetch and decode stages, or it is a halt instruction.
   assign PC_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
-  assign IF_ID_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
+  assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
   /////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////

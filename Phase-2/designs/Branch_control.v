@@ -15,7 +15,7 @@
 // value, considering both sequential execution and branch  //
 // control decisions.                                       //
 //////////////////////////////////////////////////////////////
-module Branch_Control(C, I, F, Rs, Branch, BR, PC_next, taken, PC_branch);
+module Branch_Control(C, I, F, Rs, Branch, BR, PC_next, branch_taken, PC_branch);
   
   input wire [2:0] C;           // 3-bit condition code
   input wire [8:0] I;           // 9-bit signed offset right shifted by one

@@ -77,8 +77,8 @@ module Decode (
   // Get the opcode from the instructions.
   assign opcode = pc_inst[15:12];
 
-  // We detect a misprediction if the prediction from the fetch stage differs from the decode stage.
-  assign branch_mispredicted = branch_taken != IF_ID_predicted_taken;
+  // We detect a misprediction if the instruction is a branch and prediction from the fetch stage differs from the decode stage.
+  assign branch_mispredicted = is_branch & (branch_taken != IF_ID_predicted_taken);
 
   // Instantiate the Control Unit.
   ControlUnit iCC (

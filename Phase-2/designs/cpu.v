@@ -34,7 +34,7 @@ module cpu (clk, rst_n, hlt, pc);
 
   /* DECODE stage signals */
   wire [15:0] branch_target; // Computed branch target address
-  wire branch_taken;         // Signal used to determine whether the branch is actually taken
+  wire actual_taken;         // Signal used to determine whether an instruction met condition codes
   wire misprediction;        // Indicates the branch was incorrectly predicted in the fetch stage
   wire Branch;               // Indicates it is a branch instruction
   wire BR;                   // Indicates it is a branch register instruction
@@ -114,7 +114,7 @@ module cpu (clk, rst_n, hlt, pc);
       .rst(rst), 
       .stall(PC_stall), 
       .actual_target(branch_target), 
-      .actual_taken(branch_taken), 
+      .actual_taken(actual_taken), 
       .branch_mispredicted(misprediction),
       .IF_ID_PC_curr(IF_ID_PC_curr), 
       
@@ -164,7 +164,7 @@ module cpu (clk, rst_n, hlt, pc);
     .is_branch(Branch),
     .is_BR(BR),
     .branch_target(branch_target),
-    .branch_taken(branch_taken),
+    .actual_taken(actual_taken),
     .branch_mispredicted(misprediction)
   );
   ///////////////////////////////////////////////////////////////////////////

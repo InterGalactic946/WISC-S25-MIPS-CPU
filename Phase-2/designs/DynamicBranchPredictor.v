@@ -15,43 +15,58 @@ module DynamicBranchPredictor (
     input wire [3:0] PC_curr,            // Lower 4-bits of current PC address
     input wire [3:0] IF_ID_PC_curr,      // Pipelined lower 4-bits of previous PC address
     input wire enable,                   // Enable signal for the DynamicBranchPredictor
+    input wire was_branch,               // Indicates that the previous instruction was a branch instruction
     input wire actual_taken,             // Actual branch taken value (from the decode stage)
     input wire [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
-    input wire misprediction,            // Indicates if there was a branch misprediction (from the decode stage)
+    input wire branch_mispredicted,      // Indicates if there was a branch misprediction (from the decode stage)
 
     output wire predicted_taken,         // Predicted branch taken (from BHT)
     output wire [15:0] predicted_target  // Predicted target address (from BTB)
 );
 
+  /////////////////////////////////////////////////
+  // Declare any internal signals as type wire  //
+  ///////////////////////////////////////////////
+  wire wen_BTB;  // Write enable for BTB.
+  wire wen_BHT;  // Write enable for BHT.
+  ////////////////////////////////////////////////
+
   ////////////////////////////////////////////////
   // Instantiate the Branch Target Buffer (BTB) //
   ////////////////////////////////////////////////
-  // We update the BTB when the branch is actually taken.
+  // We update the BTB when the instruction was a branch and is actually taken.
+  assign wen_BTB = actual_taken & was_branch;
+
+  // Instantiate the branch target buffer.
   BTB iBTB (
     .clk(clk), 
     .rst(rst), 
     .enable(enable),
     .PC_curr(PC_curr), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
-    .wen(actual_taken), 
+    .wen(wen_BTB), 
     .actual_target(actual_target),
+    
     .predicted_target(predicted_target)
   );
+  ////////////////////////////////////////////////
 
   ////////////////////////////////////////////////
   // Instantiate the Branch History Table (BHT) //
   ////////////////////////////////////////////////
-  // We update the BHT on a mispredicted branch instruction.
+  // We update the BHT on a mispredicted branch instruction.  
   BHT iBHT (
     .clk(clk), 
     .rst(rst), 
     .enable(enable),
     .PC_curr(PC_curr), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
-    .wen(misprediction), 
+    .wen(branch_mispredicted), 
     .actual_taken(actual_taken),
+    
     .predicted_taken(predicted_taken)
   ); 
+  ////////////////////////////////////////////////
 
 endmodule
 

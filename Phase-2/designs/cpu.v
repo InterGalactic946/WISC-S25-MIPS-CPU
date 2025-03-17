@@ -115,6 +115,7 @@ module cpu (clk, rst_n, hlt, pc);
       .stall(PC_stall), 
       .actual_target(branch_target), 
       .actual_taken(actual_taken), 
+      .was_branch(Branch),
       .branch_mispredicted(misprediction),
       .IF_ID_PC_curr(IF_ID_PC_curr), 
       

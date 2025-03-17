@@ -16,6 +16,7 @@ module Fetch (
     input wire stall,                // Stall signal for the PC (from the hazard detection unit)
     input wire [15:0] actual_target, // Target address for branch instructions (from the decode stage)
     input wire actual_taken,         // Indicates whether the branch is actually taken (from the decode stage)
+    input wire was_branch,           // Indicates that the previous instruction was a branch instruction
     input wire branch_mispredicted,  // Indicates if the branch prediction was incorrect (from the decode stage)
     input wire [3:0] IF_ID_PC_curr,  // Pipelined lower 4-bits of previous PC value (from the fetch stage)
     
@@ -50,11 +51,13 @@ module Fetch (
     .clk(clk), 
     .rst(rst), 
     .PC_curr(PC_curr[3:0]), 
-    .enable(enable),
-    .misprediction(branch_mispredicted), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
-    .actual_taken(actual_taken), 
-    .actual_target(actual_target), 
+    .enable(enable),
+    .was_branch(was_branch),
+    .actual_taken(actual_taken),
+    .actual_target(actual_target),  
+    .branch_mispredicted(branch_mispredicted), 
+    
     .predicted_taken(predicted_taken), 
     .predicted_target(predicted_target)
   );

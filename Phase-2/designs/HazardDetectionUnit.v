@@ -1,4 +1,4 @@
-default_nettype none // Set the default as none to avoid errors
+`default_nettype none // Set the default as none to avoid errors
 
 ///////////////////////////////////////////////////////////////
 // HazardDetectionUnit.v: Handle stall conditions for Branch //

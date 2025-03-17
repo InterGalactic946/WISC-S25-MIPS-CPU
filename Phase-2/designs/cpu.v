@@ -160,7 +160,7 @@ module cpu (clk, rst_n, hlt, pc);
       .is_branch(Branch),
       .Branch_target(Branch_target),
       .taken(taken),
-      .branch_mispredicted(misprediction),
+      .branch_mispredicted(misprediction)
     );
   ///////////////////////////////////////////////////////////////////////////
 

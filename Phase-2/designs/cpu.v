@@ -32,17 +32,20 @@ module cpu (clk, rst_n, hlt, pc);
   wire ForwardMEM;                  // Forwarding signal for MEM stage to MEM stage
   
   /* FETCH stage signals */
-  wire [15:0] PC_next; // Next PC address
-  wire [15:0] PC_inst; // Instruction at the current PC address
+  wire [15:0] PC_next;  // Next PC address
+  wire [15:0] PC_inst;  // Instruction at the current PC address
+  wire predicted_taken; // Predicted taken signal from the branch history table
 
   /* IF/ID Pipeline Register signals */
-  wire [15:0] IF_ID_PC_curr; // Pipelined current instruction address from the fetch stage
-  wire [15:0] IF_ID_PC_next; // Pipelined next instruction address from the fetch stage
-  wire [15:0] IF_ID_PC_inst; // Pipelined instruction word from the fetch stage
+  wire [15:0] IF_ID_PC_curr;  // Pipelined current instruction address from the fetch stage
+  wire [15:0] IF_ID_PC_next;  // Pipelined next instruction address from the fetch stage
+  wire [15:0] IF_ID_PC_inst;  // Pipelined instruction word from the fetch stage
+  wire IF_ID_predicted_taken; // Pipelined branch prediction from the fetch stage
 
   /* DECODE stage signals */
   wire [15:0] Branch_target; // Computed branch target address
   wire taken;                // Signal used to determine whether branch instruction met condition codes
+  wire misprediction;        // Indicates the branch was incorrectly predicted in the fetch stage
   wire Branch;               // Indicates it is a branch instruction
   wire [62:0] EX_signals;    // Execute stage control signals
   wire [17:0] MEM_signals;   // Memory stage control signals
@@ -103,23 +106,6 @@ module cpu (clk, rst_n, hlt, pc);
   // Halts the processor if a HLT instruction is encountered and is in the WB stage.
   assign hlt = MEM_WB_HLT;
 
-  //////////////////////////////////////
-  // Instantiate the Forwarding Unit  //
-  //////////////////////////////////////
-  // (EX_MEM_WB_signals[7:4] == reg_rd), EX_MEM_WB_signals[3] == RegWrite).
-  ForwardingUnit iFWD (
-    .ID_EX_SrcReg1(ID_EX_SrcReg1),
-    .ID_EX_SrcReg2(ID_EX_SrcReg2),
-    .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
-    .MEM_WB_reg_rd(MEM_WB_reg_rd),
-    .EX_MEM_RegWrite(EX_MEM_WB_signals[3]),
-    .MEM_WB_RegWrite(MEM_WB_RegWrite),
-    .ForwardA(ForwardA),
-    .ForwardB(ForwardB),
-    .ForwardMEM(ForwardMEM)
-  );
-  ///////////////////////////////////////
-
   ////////////////////////////////
   // FETCH instruction from PC  //
   ////////////////////////////////
@@ -130,7 +116,9 @@ module cpu (clk, rst_n, hlt, pc);
       .Branch_target(Branch_target), 
       .is_branch(Branch), 
       .actual_taken(taken), 
+      .predicted_taken(predicted_taken),
       .IF_ID_PC_curr(IF_ID_PC_curr), 
+      .branch_mispredicted(misprediction),
       .PC_next(PC_next), 
       .PC_inst(PC_inst), 
       .PC_curr(pc)
@@ -138,7 +126,7 @@ module cpu (clk, rst_n, hlt, pc);
   ///////////////////////////////////
 
   /////////////////////////////////////////////////
-  // Pass the instruction word, current PC, and the next PC address to the IF/ID pipeline register.
+  // Pass the instruction word, current PC, prediction, and the next PC address to the IF/ID pipeline register.
   IF_ID_pipe_reg iIF_ID (
     .clk(clk),
     .rst(rst),
@@ -147,6 +135,7 @@ module cpu (clk, rst_n, hlt, pc);
     .PC_curr(pc),
     .PC_next(PC_next),
     .PC_inst(PC_inst),
+    .IF_ID_predicted_taken(IF_ID_predicted_taken),
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_PC_next(IF_ID_PC_next),
     .IF_ID_PC_inst(IF_ID_PC_inst)
@@ -170,9 +159,35 @@ module cpu (clk, rst_n, hlt, pc);
       .WB_signals(WB_signals),
       .is_branch(Branch),
       .Branch_target(Branch_target),
-      .taken(taken)
+      .taken(taken),
+      .branch_mispredicted(misprediction),
     );
   ///////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////
+  // Instantiate the Hazard Detection Unit  //
+  ////////////////////////////////////////////
+  HazardDetectionUnit iHDU (
+      .ID_EX_reg_rd(ID_EX_WB_signals[7:4]),
+      .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
+      .SrcReg1(EX_signals[62:59]),
+      .SrcReg2(EX_signals[58:55]),
+      .ID_EX_RegWrite(ID_EX_WB_signals[3]),
+      .EX_MEM_RegWrite(ID_EX_WB_signals[3]),
+      .ID_EX_MemEnable(ID_EX_MEM_signals[1]),
+      .ID_EX_MemWrite(ID_EX_MEM_signals[0]),
+      .MemWrite(MEM_signals[1]),
+      .Branch(Branch),
+      .ID_EX_Z_en(ID_EX_Z_en),
+      .ID_EX_NV_en(ID_EX_NV_en),
+      .branch_mispredicted(misprediction),
+      .branch_taken(taken),
+      .PC_stall(PC_stall),
+      .IF_ID_stall(IF_ID_stall),
+      .ID_flush(ID_flush),
+      .IF_flush(IF_flush)
+  );
+  ///////////////////////////////////////
 
   /////////////////////////////////////////////////
   // Pass the next PC, instruction word's control signals and operands to the ID/EX pipeline register.
@@ -216,6 +231,23 @@ module cpu (clk, rst_n, hlt, pc);
       .ALU_out(ALU_out)
   );
   ////////////////////////////////////////////////////////
+
+  //////////////////////////////////////
+  // Instantiate the Forwarding Unit  //
+  //////////////////////////////////////
+  // (EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd), EX_MEM_WB_signals[3] == EX_MEM_RegWrite).
+  ForwardingUnit iFWD (
+    .ID_EX_SrcReg1(ID_EX_SrcReg1),
+    .ID_EX_SrcReg2(ID_EX_SrcReg2),
+    .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
+    .MEM_WB_reg_rd(MEM_WB_reg_rd),
+    .EX_MEM_RegWrite(EX_MEM_WB_signals[3]),
+    .MEM_WB_RegWrite(MEM_WB_RegWrite),
+    .ForwardA(ForwardA),
+    .ForwardB(ForwardB),
+    .ForwardMEM(ForwardMEM)
+  );
+  ///////////////////////////////////////
 
   /////////////////////////////////////////////////
   // Pass the next PC, ALU output along with control signals to the EX/MEM pipeline register. 

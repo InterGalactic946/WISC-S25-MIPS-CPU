@@ -17,10 +17,12 @@ module IF_ID_pipe_reg (
     input wire [15:0] PC_curr,        // Current PC from the fetch stage
     input wire [15:0] PC_next,        // Next PC from the fetch stage
     input wire [15:0] PC_inst,        // Current instruction word from the fetch sage
+    input wire predicted_taken,       // Predicted branch taken signal from the fetch stage
     
-    output wire [15:0] IF_ID_PC_curr, // Pipelined current instruction address from the fetch stage
-    output wire [31:0] IF_ID_PC_next, // Pipelined next PC passed to the decode stage
-    output wire [31:0] IF_ID_PC_inst  // Pipelined current instruction word passed to the decode stage
+    output wire [15:0] IF_ID_PC_curr,  // Pipelined current instruction address from the fetch stage
+    output wire [15:0] IF_ID_PC_next,  // Pipelined next PC passed to the decode stage
+    output wire [15:0] IF_ID_PC_inst,  // Pipelined current instruction word passed to the decode stage
+    output wire IF_ID_predicted_taken  // Pipelined predicted branch taken signal passed to the decode stage
 );
 
   /////////////////////////////////////////////////
@@ -47,6 +49,9 @@ module IF_ID_pipe_reg (
 
   // Register for storing the fetched instruction word (clear the instruction on flush).
   CPU_Register iPC_INST_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(PC_inst), .data_out(IF_ID_PC_inst));
+
+  // Register for storing the predicted branch taken signal (clear the signal on flush).
+  CPU_Register #(.WIDTH(1)) iPREDICTED_TAKEN_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(predicted_taken), .data_out(IF_ID_predicted_taken));
 
 endmodule
 

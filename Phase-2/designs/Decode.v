@@ -14,6 +14,7 @@ module Decode (
     input wire clk,                       // System clock
     input wire rst,                       // Active high synchronous reset
     input wire [2:0] flags,               // Flag register signals (ZF, VF, NF)
+    input wire IF_ID_predicted_taken,     // Predicted taken signal from the IF/ID stage
     input wire [15:0] pc_inst,            // The current instruction word
     input wire [15:0] pc_next,            // The next instruction's address
     input wire [3:0] MEM_WB_reg_rd,       // Register ID of the destination register (from the MEM/WB stage)
@@ -25,7 +26,8 @@ module Decode (
     output wire [7:0] WB_signals,         // Write-back stage control signals
     output wire is_branch,                // Indicates a branch instruction
     output wire [15:0] Branch_target,     // Computed branch target address
-    output wire taken                     // Signal used to determine whether branch instruction met condition codes
+    output wire taken,                    // Signal used to determine whether branch instruction met condition codes
+    output wire misprediction             // Indicates a branch misprediction
   );
   
   /////////////////////////////////////////////////
@@ -73,6 +75,9 @@ module Decode (
   //////////////////////////////////////////////
   // Get the opcode from the instructions.
   assign opcode = pc_inst[15:12];
+
+  // We detect a misprediction if the prediction from the fetch stage differs from the decode stage.
+  assign misprediction = taken != IF_ID_predicted_taken;
 
   // Instantiate the Control Unit.
   ControlUnit iCC (

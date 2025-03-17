@@ -17,11 +17,13 @@ module Fetch (
     input wire [15:0] Branch_target, // Target address for branch instructions (from the decode stage)
     input wire is_branch,            // Indicates whether the instruction is a branch (from the decode stage)
     input wire actual_taken,         // Indicates whether the branch is actually taken (from the decode stage)
+    input wire branch_mispredicted,  // Indicates if the branch prediction was incorrect (from the decode stage)
     input wire [15:0] IF_ID_PC_curr, // Pipelined previous PC value (from the fetch stage)
     
     output wire [15:0] PC_next,      // Computed next PC value
     output wire [15:0] PC_inst,      // Instruction fetched from the current PC address
-    output wire [15:0] PC_curr       // Current PC value
+    output wire [15:0] PC_curr,      // Current PC value
+    output wire predicted_taken      // Predicted taken signal from the branch history table
 );
 
   /////////////////////////////////////////////////
@@ -29,7 +31,6 @@ module Fetch (
   ///////////////////////////////////////////////
   wire [15:0] PC_new;           // The new address the PC is updated with.
   wire [15:0] predicted_target; // The predicted target address cached in the BTB
-  wire Branch_taken;            // Predicted taken signal from the branch history table
   wire wen;                     // PC write enable signal.
   ////////////////////////////////////////////////
 
@@ -40,10 +41,10 @@ module Fetch (
   assign wen = ~stall;
 
   // Update the PC with the branch target address if predicted to be taken, otherwise assume not taken.
-  assign PC_new = (Branch_taken) ? predicted_target : PC_next;
+  assign PC_new = (predicted_taken) ? predicted_target : PC_next;
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
-  DynamicBranchPredictor iDBP (.clk(clk), .rst(rst), .PC_curr(PC_curr), .IF_ID_PC_curr(IF_ID_PC_curr), .is_branch(is_branch), .actual_taken(actual_taken), .actual_target(Branch_target), .predicted_taken(Branch_taken), .predicted_target(predicted_target));
+  DynamicBranchPredictor iDBP (.clk(clk), .rst(rst), .PC_curr(PC_curr), .misprediction(branch_mispredicted), .IF_ID_PC_curr(IF_ID_PC_curr), .is_branch(is_branch), .actual_taken(actual_taken), .actual_target(Branch_target), .predicted_taken(predicted_taken), .predicted_target(predicted_target));
 
   // Infer the PC Register.
   CPU_Register iPC (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_new), .data_out(PC_curr));

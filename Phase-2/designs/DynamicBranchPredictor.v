@@ -17,7 +17,8 @@ module DynamicBranchPredictor (
     input wire is_branch,                // Indicates if the instruction is a branch (from the decode stage)
     input wire actual_taken,             // Actual branch taken value (from the decode stage)
     input wire [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
-    
+    input wire misprediction,            // Indicates if there was a branch misprediction (from the decode stage)
+
     output wire predicted_taken,         // Predicted branch taken (from BHT)
     output wire [15:0] predicted_target  // Predicted target address (from BTB)
 );
@@ -36,7 +37,7 @@ module DynamicBranchPredictor (
   BHT iBHT (.clk(clk), .rst(rst), .PC_curr_lower(PC_curr[3:0]), .IF_ID_PC_curr_lower(IF_ID_PC_curr[3:0]), .wen(wen_BHT), .actual_taken(actual_taken),.predicted_taken(predicted_taken)); 
 
   // Update the BHT when the prediction doesn't match actual on a branch instruction.
-  assign wen_BHT = (actual_taken != predicted_taken) & is_branch;
+  assign wen_BHT = misprediction & is_branch;
 
  // Update the BTB when branch is taken and it is a branch instruction.
   assign wen_BTB = actual_taken & is_branch;

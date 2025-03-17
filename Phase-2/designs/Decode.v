@@ -25,6 +25,7 @@ module Decode (
     output wire [17:0] MEM_signals,       // Memory stage control signals
     output wire [7:0] WB_signals,         // Write-back stage control signals
     output wire is_branch,                // Indicates a branch instruction
+    output wire is_BR,                    // Indicates a branch register instruction
     output wire [15:0] Branch_target,     // Computed branch target address
     output wire taken,                    // Signal used to determine whether branch instruction met condition codes
     output wire misprediction             // Indicates a branch misprediction
@@ -115,6 +116,9 @@ module Decode (
   //////////////////////////////////////////////////////////////////////
   // Get the 9-bit right shifted branch target offset.
   assign Branch_imm = pc_inst[8:0];
+  
+  // Indicates the branch is a BR instruction.
+  assign is_BR = pc_inst[12];
 
   // Get the condition codes to determine if branch is taken or not.
   assign c_codes = pc_inst[11:9];
@@ -125,7 +129,7 @@ module Decode (
       .I(Branch_imm),
       .F(flags),
       .Rs(SrcReg1_data),
-      .BR(pc_inst[12]),
+      .BR(is_BR),
       .PC_next(pc_next),
       .taken(taken),
       .PC_branch(Branch_target)

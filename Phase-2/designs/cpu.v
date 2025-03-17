@@ -47,6 +47,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire taken;                // Signal used to determine whether branch instruction met condition codes
   wire misprediction;        // Indicates the branch was incorrectly predicted in the fetch stage
   wire Branch;               // Indicates it is a branch instruction
+  wire BR;                   // Indicates it is a branch register instruction
   wire [62:0] EX_signals;    // Execute stage control signals
   wire [17:0] MEM_signals;   // Memory stage control signals
   wire [7:0] WB_signals;     // Write-back stage control signals
@@ -158,6 +159,7 @@ module cpu (clk, rst_n, hlt, pc);
       .MEM_signals(MEM_signals),
       .WB_signals(WB_signals),
       .is_branch(Branch),
+      .is_BR(BR),
       .Branch_target(Branch_target),
       .taken(taken),
       .branch_mispredicted(misprediction)
@@ -167,6 +169,11 @@ module cpu (clk, rst_n, hlt, pc);
   ////////////////////////////////////////////
   // Instantiate the Hazard Detection Unit  //
   ////////////////////////////////////////////
+  // ID_EX_WB_signals[7:4] == ID_EX_reg_rd, ID_EX_WB_signals[3] == ID_EX_RegWrite.
+  // EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
+  // ID_EX_MEM_signals[1] == ID_EX_MemEnable, ID_EX_MEM_signals[0] == ID_EX_MemWrite.
+  // MEM_signals[1] == MemEnable.
+  // EX_signals[62:59] == SrcReg1, EX_signals[58:55] == SrcReg2. 
   HazardDetectionUnit iHDU (
       .ID_EX_reg_rd(ID_EX_WB_signals[7:4]),
       .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
@@ -178,6 +185,7 @@ module cpu (clk, rst_n, hlt, pc);
       .ID_EX_MemWrite(ID_EX_MEM_signals[0]),
       .MemWrite(MEM_signals[1]),
       .Branch(Branch),
+      .BR(BR),
       .ID_EX_Z_en(ID_EX_Z_en),
       .ID_EX_NV_en(ID_EX_NV_en),
       .branch_mispredicted(misprediction),

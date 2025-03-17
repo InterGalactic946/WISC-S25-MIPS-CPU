@@ -18,6 +18,7 @@ module HazardDetectionUnit (
     input wire ID_EX_MemWrite,         // Data memory write signal from ID/EX stage
     input wire MemWrite,               // Memory write signal for current instruction
     input wire Branch,                 // Branch signal indicating a branch instruction
+    input wire BR,                     // BR signal indicating a BR instruction
     input wire ID_EX_Z_en,             // Zero flag enable signal from ID/EX stage
     input wire ID_EX_NV_en,            // Negative/Overflow flag enable signal from ID/EX stage
     input wire branch_mispredicted,    // Signal indicating branch misprediction
@@ -51,8 +52,8 @@ module HazardDetectionUnit (
   ///////////////////////////////////////////////////////////////
   // Flush the pipeline on load to use or branch misprediction //
   ///////////////////////////////////////////////////////////////
-  // We flush the ID_EX pipeline register and send nops during a load to use stall.
-  assign ID_flush = load_to_use_hazard;
+  // We flush the ID_EX pipeline register and send nops during load to use or branch hazards.
+  assign ID_flush = load_to_use_hazard | B_hazard | BR_hazard;
 
   // We flush the IF_ID pipeline instruction word whenever we predict the branch incorrectly and
   // it is taken.
@@ -67,8 +68,8 @@ module HazardDetectionUnit (
   
   // A load to use hazard is detected when the instruction in the EX stage (LW) is writing to the same register that the instruction 
   // in the decode stage is trying to read. We don't want to stall when the second read register is the same and
-  // is a save word, as we have MEM-MEM forwarding available.
-  assign load_to_use_hazard = (ID_EX_MemRead & (ID_EX_reg_rd != 0) & ((ID_EX_reg_rd == SrcReg1) | ((ID_EX_reg_rd == SrcReg2) & ~MemWrite)));
+  // is a save word instruction, as we have MEM-MEM forwarding available.
+  assign load_to_use_hazard = (ID_EX_MemRead & (ID_EX_reg_rd != 4'h0) & ((ID_EX_reg_rd == SrcReg1) | ((ID_EX_reg_rd == SrcReg2) & ~MemWrite)));
   ////////////////////////////////////
 
   /////////////////////////////
@@ -76,18 +77,18 @@ module HazardDetectionUnit (
   /////////////////////////////    
   // Indicates the previous instruction in the EX stage is writing to the same register (not $0) as the BR
   // instruction needs in the ID stage (Rs), so we need to stall.
-  assign EX_to_ID_haz_BR = (EX_MEM_RegWrite & (EX_MEM_reg_rd != 4'h0)) & (EX_MEM_reg_rd == SrcReg1);
+  assign MEM_to_ID_haz_BR = (EX_MEM_RegWrite & (EX_MEM_reg_rd != 4'h0)) & (EX_MEM_reg_rd == SrcReg1);
 
   // Indicates the previous instruction in the MEM stage is writing to the same register (not $0) as the BR
   // instruction needs in the ID stage (Rs), so we need to stall.
-  assign MEM_to_ID_haz_BR = (ID_EX_RegWrite & (ID_EX_reg_rd != 4'h0)) & (ID_EX_reg_rd == SrcReg1);
+  assign EX_to_ID_haz_BR = (ID_EX_RegWrite & (ID_EX_reg_rd != 4'h0)) & (ID_EX_reg_rd == SrcReg1);
 
   // There is a hazard for the B instruction when it is in the decode stage and 
   // a flag setting ALU instruction is in the EX stage.
   assign B_hazard = (Branch) & (ID_EX_Z_en | ID_EX_NV_en);
 
-  // We have a BR hazard if it is a B hazard (for condition codes) and either when EX-to-ID or MEM-to-ID hazards exist.
-  assign BR_hazard = (B_hazard) & (EX_to_ID_haz_BR | MEM_to_ID_haz_BR);
+  // We have a BR hazard if it is a BR instruction and is a B hazard (for condition codes) or either when EX-to-ID or MEM-to-ID hazards exist.
+  assign BR_hazard = (BR) & ((B_hazard) | (EX_to_ID_haz_BR | MEM_to_ID_haz_BR));
   ////////////////////////////////
 
 endmodule

@@ -353,7 +353,7 @@ module DynamicBranchPredictor_tb();
     if (rst)
       IF_ID_predicted_taken <= 1'b0;
     else
-      IF_ID_predicted_taken <= predict_taken;
+      IF_ID_predicted_taken <= predicted_taken;
 
 endmodule
 

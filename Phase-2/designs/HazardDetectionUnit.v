@@ -8,22 +8,22 @@
 // necessary stalls for both branch and load instructions.   //
 ///////////////////////////////////////////////////////////////
 module HazardDetectionUnit (
-    input wire [3:0] ID_EX_reg_rd,     // Destination register ID in ID/EX stage
-    input wire [3:0] EX_MEM_reg_rd,    // Destination register ID in EX/MEM stage
     input wire [3:0] SrcReg1,          // First source register ID (Rs) in ID stage
     input wire [3:0] SrcReg2,          // Second source register ID (Rt) in ID stage
     input wire ID_EX_RegWrite,         // Register write signal from ID/EX stage
+    input wire [3:0] ID_EX_reg_rd,     // Destination register ID in ID/EX stage
+    input wire [3:0] EX_MEM_reg_rd,    // Destination register ID in EX/MEM stage
     input wire EX_MEM_RegWrite,        // Register write signal from EX/MEM stage
     input wire ID_EX_MemEnable,        // Data memory enable signal from ID/EX stage
     input wire ID_EX_MemWrite,         // Data memory write signal from ID/EX stage
     input wire MemWrite,               // Memory write signal for current instruction
-    input wire Branch,                 // Branch signal indicating a branch instruction
-    input wire HLT,                    // Halt signal indicating a halt instruction
-    input wire BR,                     // BR signal indicating a BR instruction
     input wire ID_EX_Z_en,             // Zero flag enable signal from ID/EX stage
     input wire ID_EX_NV_en,            // Negative/Overflow flag enable signal from ID/EX stage
+    input wire Branch,                 // Branch signal indicating a branch instruction
+    input wire BR,                     // BR signal indicating a BR instruction
     input wire branch_mispredicted,    // Signal indicating branch misprediction
-    input wire branch_taken,           // Signal indicating branch is taken
+    input wire actual_taken,           // Signal used to determine whether an instruction met condition codes
+    input wire HLT,                    // Halt signal indicating a halt instruction
     
     output wire PC_stall,              // Stall signal for IF stage
     output wire IF_ID_stall,           // Stall signal for ID stage
@@ -37,6 +37,7 @@ module HazardDetectionUnit (
   wire ID_EX_MemRead;      // Indicates instruction in the EX stage is a LW instruction
   wire load_to_use_hazard; // Signal to detect and place a load-to-use stall in the pipeline
   wire B_hazard;           // Detects a hazard for B type branch instructions
+  wire BR_inst;            // Indicates a BR instruction.
   wire EX_to_ID_haz_BR;    // Detects a hazard between the beginning of the EX and ID stage for BR instructions
   wire MEM_to_ID_haz_BR;   // Detects a hazard between the beginning of the MEM and ID stage for BR instructions
   wire BR_hazard;          // Detects a hazard for BR type branch instructions
@@ -47,6 +48,8 @@ module HazardDetectionUnit (
   /////////////////////////////////////////////////////
   // We stall anytime there is a branch or load to use hazard in the fetch and decode stages, or it is a halt instruction.
   assign PC_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
+
+  // We don't stall the decode stage for HLT instructions to let it propogate through to WB.
   assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
   /////////////////////////////////////////////////////
 
@@ -58,7 +61,7 @@ module HazardDetectionUnit (
 
   // We flush the IF_ID pipeline instruction word whenever we predict the branch incorrectly and
   // it is taken.
-  assign IF_flush = branch_mispredicted & branch_taken;
+  assign IF_flush = branch_mispredicted & actual_taken;
   /////////////////////////////////////////////////////////////
 
   //////////////////////////////////
@@ -88,8 +91,11 @@ module HazardDetectionUnit (
   // a flag setting ALU instruction is in the EX stage.
   assign B_hazard = (Branch) & (ID_EX_Z_en | ID_EX_NV_en);
 
-  // We have a BR hazard if it is a BR instruction and is a B hazard (for condition codes) or either when EX-to-ID or MEM-to-ID hazards exist.
-  assign BR_hazard = (BR) & ((B_hazard) | (EX_to_ID_haz_BR | MEM_to_ID_haz_BR));
+  // Indicates a BR instruction.
+  assign BR_inst = Branch & BR;
+
+  // We have a BR hazard if it is a BR instruction and is a B type hazard (for condition codes) or either when EX-to-ID or MEM-to-ID hazards exist.
+  assign BR_hazard = (BR_inst) & ((ID_EX_Z_en | ID_EX_NV_en) | EX_to_ID_haz_BR | MEM_to_ID_haz_BR);
   ////////////////////////////////
 
 endmodule

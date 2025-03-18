@@ -100,7 +100,7 @@ module cpu (clk, rst_n, hlt, pc);
   ///////////////////////////////////////
   assign rst = ~rst_n;
 
-  ///////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////
   // Raise the hlt signal when the HLT instruction is encountered //
   //////////////////////////////////////////////////////////////////
   // Halts the processor if a HLT instruction is encountered and is in the WB stage.
@@ -180,22 +180,23 @@ module cpu (clk, rst_n, hlt, pc);
   // WB_signals[1] == HLT.
   // EX_signals[62:59] == SrcReg1, EX_signals[58:55] == SrcReg2. 
   HazardDetectionUnit iHDU (
-      .ID_EX_reg_rd(ID_EX_WB_signals[7:4]),
-      .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
       .SrcReg1(EX_signals[62:59]),
       .SrcReg2(EX_signals[58:55]),
       .ID_EX_RegWrite(ID_EX_WB_signals[3]),
+      .ID_EX_reg_rd(ID_EX_WB_signals[7:4]),
+      .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
       .EX_MEM_RegWrite(ID_EX_WB_signals[3]),
       .ID_EX_MemEnable(ID_EX_MEM_signals[1]),
       .ID_EX_MemWrite(ID_EX_MEM_signals[0]),
       .MemWrite(MEM_signals[1]),
-      .Branch(Branch),
-      .HLT(WB_signals[1]),
-      .BR(BR),
       .ID_EX_Z_en(ID_EX_Z_en),
       .ID_EX_NV_en(ID_EX_NV_en),
+      .Branch(Branch),
+      .BR(BR),
       .branch_mispredicted(misprediction),
-      .branch_taken(branch_taken),
+      .actual_taken(actual_taken),
+      .HLT(WB_signals[1]),
+      
       .PC_stall(PC_stall),
       .IF_ID_stall(IF_ID_stall),
       .ID_flush(ID_flush),

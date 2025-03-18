@@ -91,16 +91,16 @@ module DynamicBranchPredictor_tb();
           $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
           $stop();
         end
-
-       // The number of times we mispredicted the branch.
-        if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
-            misprediction_count = misprediction_count + 1;
-            branch_mispredicted = 1'b1;
-        end
-
       end
 
       $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+
+      @(negedge clk);
+      // The number of times we mispredicted the branch.
+      if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
+            misprediction_count = misprediction_count + 1;
+            branch_mispredicted = 1'b1;
+      end
 
       // Second branch at PC = 6, taken.
       PC_curr = 4'h6;
@@ -127,22 +127,22 @@ module DynamicBranchPredictor_tb();
           $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
           $stop();
         end
-
-        // The number of times we mispredicted the branch.
-        if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
-            misprediction_count = misprediction_count + 1;
-            branch_mispredicted = 1'b1;
-        end
-
       end
 
       $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+
+      @(negedge clk);
+      // The number of times we mispredicted the branch.
+      if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
+            misprediction_count = misprediction_count + 1;
+            branch_mispredicted = 1'b1;
+      end
 
       // Third branch at PC = 10, not taken again
       PC_curr = 4'hA;
       was_branch = 1'b1;
       actual_taken = 1'b0;
-      actual_target = 16'h00C0;
+      actual_target = 16'h00C0;     
       
       // Wait to settle.
       @(posedge clk);
@@ -163,16 +163,16 @@ module DynamicBranchPredictor_tb();
           $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
           $stop();
         end
-        
-        // The number of times we mispredicted the branch.
-        if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
-            misprediction_count = misprediction_count + 1;
-            branch_mispredicted = 1'b1;
-        end
-
       end
 
       $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+
+      @(negedge clk);
+      // The number of times we mispredicted the branch.
+      if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
+            misprediction_count = misprediction_count + 1;
+            branch_mispredicted = 1'b1;
+      end
 
       // Fourth branch at PC = 2 again, should be taken now if predictor learned
       PC_curr = 4'h2;
@@ -199,23 +199,26 @@ module DynamicBranchPredictor_tb();
           $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
           $stop();
         end
+      end
 
-       // The number of times we mispredicted the branch.
+      // Verify the output.
+      @(negedge clk) begin
+        // The number of times we mispredicted the branch.
         if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
             misprediction_count = misprediction_count + 1;
             branch_mispredicted = 1'b1;
         end
-      end
 
-      $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+        $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
 
-      // Verify if predictor learned to take branch at PC = 2.
-      if (predicted_taken !== 1'b1) begin
-        $display("ERROR: Predictor did not learn branch at PC=2 should be taken.");
-        $stop();
-      end else begin
-        $display("SUCCESS: Predictor learned branch at PC=2 should be taken.");
-        $display("SUCCESS: Predictor learned target branch at PC=2 should should be: 0x%h.", expected_predicted_target);
+        // Verify if predictor learned to take branch at PC = 2.
+        if (predicted_taken !== 1'b1) begin
+          $display("ERROR: Predictor did not learn branch at PC=2 should be taken.");
+          $stop();
+        end else begin
+          $display("SUCCESS: Predictor learned branch at PC=2 should be taken.");
+          $display("SUCCESS: Predictor learned target branch at PC=2 should should be: 0x%h.", expected_predicted_target);
+        end
       end
     end
   endtask

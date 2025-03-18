@@ -55,7 +55,7 @@ module EX_MEM_pipe_reg (
   // Pipeline the MEMORY control signals to be passed to the memory stage  //
   ///////////////////////////////////////////////////////////////////////////
   // Register for storing second source register ID.
-  CPU_Register #(.WIDTH(4)) iSrcReg2_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(ID_EX_SrcReg2), .data_out(EX_MEM_SrcReg2));
+  CPU_Register #(.WIDTH(4)) iSrcReg2_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_SrcReg2), .data_out(EX_MEM_SrcReg2));
 
   // Register for storing Memory write data (ID_EX_MEM_signals[17:2] == MemWriteData).
   CPU_Register #(.WIDTH(16)) iMemWriteData_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[17:2]), .data_out(EX_MEM_MemWriteData));

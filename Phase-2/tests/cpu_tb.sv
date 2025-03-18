@@ -210,9 +210,9 @@ module cpu_tb();
       Setup();
 
       // Run the simulation for each instruction in the instruction memory.
-      repeat ($size(instr_memory)) @(posedge clk) begin
+      repeat ($size(inst_memory)) @(posedge clk) begin
         // Fetch the current instruction from memory.
-        FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
+        FetchInstruction(.instr_memory(inst_memory), .pc(expected_pc), .instr(instr));
 
         // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(

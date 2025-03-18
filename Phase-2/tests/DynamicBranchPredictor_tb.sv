@@ -71,7 +71,7 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) begin;
         // Generate random values for all inputs
         PC_curr        = $random % 4;    // Random 4-bit PC address
-        enable         = $random % 2;    // Random enable (0 or 1)
+        // enable         = $random % 2;    // Random enable (0 or 1)
         was_branch     = $random % 2;    // Random branch indication (0 or 1)
         actual_taken   = $random % 2;    // Random actual branch outcome (0 or 1)
         actual_target  = $random;        // Random 16-bit target address
@@ -119,7 +119,7 @@ module DynamicBranchPredictor_tb();
   initial begin
     clk = 1'b0; // initially clk is low
     rst = 1'b0; // initally rst is low
-    enable = 1'b0;  // Disable the branch predictor
+    enable = 1'b1;  // Disable the branch predictor
     was_branch = 1'b0;    // Initially no branch
     actual_taken = 1'b0;  // Initially the branch is not taken
     actual_target = 16'h0000; // Set target to 0 initially

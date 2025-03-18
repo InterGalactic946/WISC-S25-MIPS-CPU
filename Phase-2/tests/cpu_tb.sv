@@ -183,12 +183,6 @@ module cpu_tb();
 
         // Load data into data memory for the CPU to perform memory operations.
         $readmemh("./tests/data.img", data_memory);
-
-        // Load data into branch target buffer for the CPU.
-        $readmemh("./tests/data.img", branch_target_buffer);
-                
-        // Load data into branch history table for the CPU.
-        $readmemh("./tests/data.img", branch_history_table);
         
         // Print a message to indicate successful initialization.
         $display("CPU Testbench initialized successfully.");

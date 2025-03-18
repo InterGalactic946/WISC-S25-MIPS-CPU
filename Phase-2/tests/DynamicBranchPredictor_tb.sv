@@ -95,6 +95,8 @@ module DynamicBranchPredictor_tb();
         if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
               misprediction_count = misprediction_count + 1;
               branch_mispredicted = 1'b1;
+        end else begin
+          branch_mispredicted = 1'b0;
         end
       end
 
@@ -235,7 +237,7 @@ module DynamicBranchPredictor_tb();
     if (rst)
       IF_ID_predicted_taken <= 1'b0;
     else
-      IF_ID_predicted_taken <= predicted_taken;
+      IF_ID_predicted_taken <= expected_predicted_taken;
 
 endmodule
 

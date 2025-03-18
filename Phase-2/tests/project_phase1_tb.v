@@ -31,7 +31,6 @@ module project_phase1_tb();
    /* Setup */
    initial begin
       $display("Hello world...simulation starting");
-      $display("YAHOO!! All tests passed. See verilogsim.log and verilogsim.trace for output");
       inst_count = 0;
       trace_file = $fopen("./outputs/verilogsim.trace");
       sim_log_file = $fopen("./outputs/verilogsim.log");
@@ -59,7 +58,9 @@ module project_phase1_tb();
 	if (cycle_count > 100000) begin
 		$display("ERROR: More than 100000 cycles of simulation.\n");
 		$finish;
-	end
+   end else begin
+      $display("YAHOO!! All tests passed. See verilogsim.log and verilogsim.trace for output");
+   end
     end
 
 

@@ -69,9 +69,13 @@ module DynamicBranchPredictor_tb();
 
       // Repeat the test case multiple times to check if the predictor learns.
       for (i = 0; i < 5; i = i + 1) begin
-        
+       // Wait for changes to settle at the next positive clock edge.
+        @(posedge clk);
+
         // Set initial PC where the branch occurs.
         PC_curr = 4'h2;
+
+        #1; // small delay
 
         // Check if the branch prediction matches the expected behavior.
         if (predicted_taken !== expected_predicted_taken) begin
@@ -87,30 +91,23 @@ module DynamicBranchPredictor_tb();
         end
 
         // Apply actual branch outcomes at the next negative clock edge.
-        @(negedge clk);
-        was_branch   = 1'b1;                 // Indicate that a branch was encountered.
-        actual_taken = (i >= 2) ? 1'b1 : 1'b0; // Initially not taken, then taken after 2 iterations.
-        actual_target = 16'h0040;            // Set actual branch target (arbitrary value).
-
-        // Wait for changes to settle at the next positive clock edge.
-        @(posedge clk);
-
-        // Determine if a branch misprediction occurred.
-        @(negedge clk);
-        if (((was_branch && !actual_taken) && IF_ID_predicted_taken) || 
-            ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
-          misprediction_count = misprediction_count + 1; // Increment misprediction counter.
-          branch_mispredicted = 1'b1;  // Flag the misprediction event.
-        end else begin
-          branch_mispredicted = 1'b0;  // No misprediction detected.
+        @(negedge clk) begin
+          was_branch   = 1'b1;                 // Indicate that a branch was encountered.
+          actual_taken = (i >= 2) ? 1'b1 : 1'b0; // Initially not taken, then taken after 2 iterations.
+          actual_target = 16'h0040;            // Set actual branch target (arbitrary value).
+          
+          // The number of times we mispredicted the branch.
+          if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
+              misprediction_count = misprediction_count + 1; // Increment misprediction counter.
+              branch_mispredicted = 1'b1;
+          end else begin
+              branch_mispredicted = 1'b0;
+          end
         end
 
         // Display the final prediction results for debugging.
         $display("Iteration %0d | PC=0x%h | Predicted Taken: %b | Predicted Target: 0x%h | Expected Taken: %b | Expected Target: 0x%h", 
                 i, PC_curr, predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
-
-        // Small delay to simulate time between test cases.
-        #2;
       end
     end
   endtask
@@ -122,53 +119,59 @@ module DynamicBranchPredictor_tb();
 
     // Apply num_tests of stimulus.
     for (i = 0; i < num_tests; i = i + 1) begin
+
+      // Wait for a clock cycle to allow processing
+      @(posedge clk);
+
+      // The number of times we actually took the branch.
+      if (was_branch && actual_taken)
+        actual_taken_count = actual_taken_count + 1;
+        
+      // The number of times we mispredicted the branch.
+      if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
+          misprediction_count = misprediction_count + 1;
+      end
+        
+      // The number of times we predicted we took the branch.
+      if (IF_ID_predicted_taken === 1'b1)
+        predicted_taken_count = predicted_taken_count + 1;
+        
+      // The number of times we predicted we did not take the branch.
+      if (IF_ID_predicted_taken === 1'b0)
+        predicted_not_taken_count = predicted_not_taken_count + 1;
       
+      PC_curr = $random % 4;    // Random 4-bit PC address
+      
+      #1; // small delay
+
+      // Verify the prediction.
+      if (predicted_taken !== expected_predicted_taken) begin
+        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
+        $stop();
+      end
+
+      // Verify the predicted target.
+      if (predicted_target !== expected_predicted_target) begin
+        $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+        $stop();
+      end
+
       // Apply stimulus on negative edge.
       @(negedge clk) begin;
         // Generate random values for all inputs
-        PC_curr        = $random % 4;    // Random 4-bit PC address
         enable         = $random % 2;    // Random enable (0 or 1)
         was_branch     = $random % 2;    // Random branch indication (0 or 1)
         actual_taken   = $random % 2;    // Random actual branch outcome (0 or 1)
         actual_target  = $random;        // Random 16-bit target address
-      end
-
-      // Wait for a clock cycle to allow processing
-      @(posedge clk);
-      
-      // Verify the result on a negative edge.
-      @(negedge clk) begin
-        // Verify the prediction.
-        if (predicted_taken !== expected_predicted_taken) begin
-          $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
-          $stop();
-        end
-
-        // Verify the predicted target.
-        if (predicted_target !== expected_predicted_target) begin
-          $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
-          $stop();
-        end
-
-        // The number of times we actually took the branch.
-        if (was_branch && actual_taken)
-          actual_taken_count = actual_taken_count + 1;
         
         // The number of times we mispredicted the branch.
         if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
-            misprediction_count = misprediction_count + 1;
             branch_mispredicted = 1'b1;
-        end
-        
-        // The number of times we predicted we took the branch.
-        if (IF_ID_predicted_taken === 1'b1)
-          predicted_taken_count = predicted_taken_count + 1;
-        
-        // The number of times we predicted we did not take the branch.
-        if (IF_ID_predicted_taken === 1'b0)
-          predicted_not_taken_count = predicted_not_taken_count + 1;
+        else
+            branch_mispredicted = 1'b0
       end
     end
+  end
   endtask
 
   // Initialize the testbench.

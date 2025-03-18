@@ -61,7 +61,7 @@ module project_phase1_tb();
    end else begin
       $display("YAHOO!! All tests passed. See verilogsim.log and verilogsim.trace for output");
    end
-    end
+   end
 
 
 

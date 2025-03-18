@@ -14,6 +14,7 @@ module ForwardingUnit (
     input wire [3:0] ID_EX_SrcReg1, // Pipelined first source register ID from the decode stage
     input wire [3:0] ID_EX_SrcReg2, // Pipelined second source register ID from the decode stage
     input wire [3:0] EX_MEM_SrcReg2,// Pipelined register ID second source register from the memory stage
+    input wire [3:0] EX_MEM_reg_rd, // Pipelined register ID of the destination register from the memory stage
     input wire [3:0] MEM_WB_reg_rd, // Pipelined register ID of the destination register from the write-back stage
     input wire EX_MEM_RegWrite,     // Pipelined write enable to the register file from the execute stage
     input wire MEM_WB_RegWrite,     // Pipelined write enable to the register file from the write-back stage

@@ -253,11 +253,12 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////
   // Instantiate the Forwarding Unit  //
   //////////////////////////////////////
-  // EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
+  // EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
   ForwardingUnit iFWD (
     .ID_EX_SrcReg1(ID_EX_SrcReg1),
     .ID_EX_SrcReg2(ID_EX_SrcReg2),
     .EX_MEM_SrcReg2(EX_MEM_SrcReg2),
+    .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
     .MEM_WB_reg_rd(MEM_WB_reg_rd),
     .EX_MEM_RegWrite(EX_MEM_WB_signals[3]),
     .MEM_WB_RegWrite(MEM_WB_RegWrite),

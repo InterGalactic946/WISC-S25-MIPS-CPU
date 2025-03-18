@@ -158,7 +158,7 @@ module project_phase1_tb();
 	assign MemRead =  (iDUT.EX_MEM_MemEnable & ~iDUT.EX_MEM_MemWrite);
    // Is memory being read, one bit signal (1 means yes, 0 means no)
    
-   assign MemWrite = (iDUT.iCC.EX_MEM_MemEnable & iDUT.EX_MEM_MemWrite);
+   assign MemWrite = (iDUT.EX_MEM_MemEnable & iDUT.EX_MEM_MemWrite);
    // Is memory being written to (1 bit signal)
    
    assign MemAddress = iDUT.EX_MEM_ALU_out;

@@ -8,16 +8,16 @@
 
 module DynamicBranchPredictor_tb();
 
-  reg clk;                              // Clock signal
-  reg rst;                              // Reset signal
-  reg enable;                           // Enable signal for the branch predictor
-  reg was_branch;                       // Flag to indicate if the current instruction was a branch
-  reg actual_taken;                     // Flag indicating whether the branch was actually taken
-  reg [15:0] actual_target;             // Actual target address of the branch
-  logic IF_ID_predicted_taken;          // Pipelined predicted branch taken signal passed to the decode stage
-  reg branch_mispredicted;              // Output indicating if the branch was mispredicted
-  reg [3:0] PC_curr;                    // Current PC value
-  reg [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
+  logic clk;                              // Clock signal
+  logic rst;                              // Reset signal
+  logic enable;                           // Enable signal for the branch predictor
+  logic was_branch;                       // Flag to indicate if the current instruction was a branch
+  logic actual_taken;                     // Flag indicating whether the branch was actually taken
+  logic [15:0] actual_target;             // Actual target address of the branch
+  logic IF_ID_predicted_taken;            // Pipelined predicted branch taken signal passed to the decode stage
+  logic branch_mispredicted;              // Output indicating if the branch was mispredicted
+  reg [3:0] PC_curr;                      // Current PC value
+  reg [3:0] IF_ID_PC_curr;                // IF/ID stage current PC value
 
   integer actual_taken_count;           // Number of times branch was actually taken.
   integer predicted_taken_count;        // Number of times branch was predicted to be taken.
@@ -217,11 +217,119 @@ module DynamicBranchPredictor_tb();
       end
     end
 
-    // Apply controlled test cases before random stimulus.
-    apply_controlled_test_cases();
+    // Models the active clock edge the DUT just fetched the instruction.
+    @(posedge clk);
+    
+    // Go with PC = 0x8. (Branch instruction)
+    PC_curr = 4'h8; // Branch not taken
+    
+    // Verify the prediction after reset.
+    if (predicted_taken !== expected_predicted_taken) begin
+      $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
+      $stop();
+    end
 
-    // Apply randomized test cases.
-    apply_random_stimulus(.num_tests(1000000));
+    // Verify the predicted target after reset.
+    if (predicted_target !== expected_predicted_target) begin
+      $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+      $stop();
+    end
+
+    // We're at the beginging of the decode stage.
+    @(posedge clk);
+
+    // We learned that the branch was actually taken.
+    @(negedge clk) begin;
+      was_branch = 1'b1;
+      actual_taken = 1'b1;
+      actual_target = 16'h0080;
+      branch_mispredicted = 1'b1;
+    end
+
+    // Models the active clock edge the DUT just fetched the next instruction.
+    @(posedge clk);
+    
+    // Go with PC = 0xA. (Non Branch instruction)
+    PC_curr = 4'hA;
+    
+    // Verify the prediction after reset.
+    if (predicted_taken !== expected_predicted_taken) begin
+      $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
+      $stop();
+    end
+
+    // Verify the predicted target after reset.
+    if (predicted_target !== expected_predicted_target) begin
+      $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+      $stop();
+    end
+
+    // We're at the beginging of the decode stage.
+    @(posedge clk);
+
+    // We set the signals.
+    @(negedge clk) begin;
+      was_branch = 1'b0;
+      actual_taken = 1'b0;
+      actual_target = 16'h0040; // Doesn't matter
+      branch_mispredicted = 1'b0;
+    end
+
+    // Models the active clock edge the DUT just fetched the next instruction.
+    @(posedge clk);
+    
+    // Go with PC = 0x8. (Branch instruction)
+    PC_curr = 4'h8; // Should still predict not taken
+    
+    // Verify the prediction after reset.
+    if (predicted_taken !== expected_predicted_taken) begin
+      $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
+      $stop();
+    end
+
+    // Verify the predicted target after reset.
+    if (predicted_target !== expected_predicted_target) begin
+      $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+      $stop();
+    end
+    
+    // Models the active clock edge the DUT just fetched the next instruction.
+    @(posedge clk);
+
+    // We learned that the branch was actually taken.
+    @(negedge clk) begin;
+      was_branch = 1'b1;
+      actual_taken = 1'b1;
+      actual_target = 16'h0080;
+      branch_mispredicted = 1'b1;
+    end
+
+    // Models the active clock edge the DUT just fetched the next instruction.
+    @(posedge clk);
+    
+    // Go with PC = 0x8. (Branch instruction)
+    PC_curr = 4'h8; // Should predict taken
+    
+    // Verify the prediction after reset.
+    if (predicted_taken !== expected_predicted_taken) begin
+      $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
+      $stop();
+    end
+
+    // Verify the predicted target after reset.
+    if (predicted_target !== expected_predicted_target) begin
+      $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+      $stop();
+    end
+
+    $display("PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
+    $display("PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+    
+    // // Apply controlled test cases before random stimulus.
+    // apply_controlled_test_cases();
+
+    // // Apply randomized test cases.
+    // apply_random_stimulus(.num_tests(1000000));
 
     // Print out the count of branches predicted taken and not taken.
     $display("Number of branches predicted to be taken: %0d. Number of branches predicted to be not taken: %0d.", predicted_taken_count, predicted_not_taken_count);

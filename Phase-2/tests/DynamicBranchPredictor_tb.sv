@@ -64,10 +64,10 @@ module DynamicBranchPredictor_tb();
   task automatic apply_controlled_test_cases();
     begin
       integer i;
-
       // Repeat the test case multiple times to check if the predictor learns.
       for (i = 0; i < 5; i = i + 1) begin
-       // Wait for changes to settle at the next positive clock edge.
+
+        // Wait for changes to settle at the next positive clock edge.
         @(posedge clk);
 
         // Set initial PC where the branch occurs.
@@ -87,6 +87,9 @@ module DynamicBranchPredictor_tb();
                   i, PC_curr, predicted_target, expected_predicted_target);
           $stop();
         end
+
+        // Wait for changes to settle at the next positive clock edge.
+        @(posedge clk);
 
         // Apply actual branch outcomes at the next negative clock edge.
         @(negedge clk) begin

@@ -62,47 +62,59 @@ module DynamicBranchPredictor_tb();
     .predicted_target(expected_predicted_target)
   );
 
-  // Task to apply controlled test cases before random stimulus.
+  // Task to apply controlled test cases and verify that the predictor adapts over time.
   task automatic apply_controlled_test_cases();
     begin
-      // First branch at PC = 2, not taken initially
-      PC_curr = 4'h2;
+      integer i;
 
-      // Verify if the prediction is correct after the first cycle
-      if (predicted_taken !== expected_predicted_taken) begin
-        $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, predicted_taken, expected_predicted_taken);
-        $stop();
-      end
+      // Repeat the test case multiple times to check if the predictor learns.
+      for (i = 0; i < 5; i = i + 1) begin
+        
+        // Set initial PC where the branch occurs.
+        PC_curr = 4'h2;
 
-      if (predicted_target !== expected_predicted_target) begin
-        $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
-        $stop();
-      end
-
-      // Update the actual values.
-      @(negedge clk) begin;
-        was_branch = 1'b1;
-        actual_taken = 1'b0;
-        actual_target = 16'h0040;
-      end
-      
-      // Wait to settle.
-      @(posedge clk);
-
-      // Set the misprediction flag.
-      @(negedge clk) begin
-        // The number of times we mispredicted the branch.
-        if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
-              misprediction_count = misprediction_count + 1;
-              branch_mispredicted = 1'b1;
-        end else begin
-          branch_mispredicted = 1'b0;
+        // Check if the branch prediction matches the expected behavior.
+        if (predicted_taken !== expected_predicted_taken) begin
+          $display("ERROR: Iteration %0d | PC=0x%h | predicted_taken=0b%b | expected_predicted_taken=0b%b.", 
+                  i, PC_curr, predicted_taken, expected_predicted_taken);
+          $stop();
         end
-      end
 
-      $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+        if (predicted_target !== expected_predicted_target) begin
+          $display("ERROR: Iteration %0d | PC=0x%h | predicted_target=0x%h | expected_predicted_target=0x%h.", 
+                  i, PC_curr, predicted_target, expected_predicted_target);
+          $stop();
+        end
+
+        // Apply actual branch outcomes at the next negative clock edge.
+        @(negedge clk);
+        was_branch   = 1'b1;                 // Indicate that a branch was encountered.
+        actual_taken = (i >= 2) ? 1'b1 : 1'b0; // Initially not taken, then taken after 2 iterations.
+        actual_target = 16'h0040;            // Set actual branch target (arbitrary value).
+
+        // Wait for changes to settle at the next positive clock edge.
+        @(posedge clk);
+
+        // Determine if a branch misprediction occurred.
+        @(negedge clk);
+        if (((was_branch && !actual_taken) && IF_ID_predicted_taken) || 
+            ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
+          misprediction_count = misprediction_count + 1; // Increment misprediction counter.
+          branch_mispredicted = 1'b1;  // Flag the misprediction event.
+        end else begin
+          branch_mispredicted = 1'b0;  // No misprediction detected.
+        end
+
+        // Display the final prediction results for debugging.
+        $display("Iteration %0d | PC=0x%h | Predicted Taken: %b | Predicted Target: 0x%h | Expected Taken: %b | Expected Target: 0x%h", 
+                i, PC_curr, predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+
+        // Small delay to simulate time between test cases.
+        #2;
+      end
     end
   endtask
+
 
   // Task to apply random stimulus for each input of the DUT.
   task automatic apply_random_stimulus(input integer num_tests);

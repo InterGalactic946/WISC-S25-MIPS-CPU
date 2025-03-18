@@ -20,8 +20,8 @@ module DynamicBranchPredictor_tb();
   reg [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
   integer actual_taken_count;            // Number of times branch was actually taken.
-  integer predict_taken_count;           // Number of times branch was predicted to be taken.
-  integer predict_not_taken_count;       // Number of times branch was predicted to not to be taken.
+  integer predicted_taken_count;         // Number of times branch was predicted to be taken.
+  integer predicted_not_taken_count;     // Number of times branch was predicted to not to be taken.
   integer misprediction_count;           // Number of times branch was mispredicted.
   wire predicted_taken;                  // The predicted taken flag from the predictor
   wire [15:0] predicted_target;          // The predicted target address from the predictor
@@ -126,8 +126,8 @@ module DynamicBranchPredictor_tb();
     
     // Initialize counter values.
     actual_taken_count = 0;
-    predict_taken_count = 0;
-    predict_not_taken_count = 0;
+    predicted_taken_count = 0;
+    predicted_not_taken_count = 0;
     misprediction_count = 0;
 
     // Wait to initialize inputs.
@@ -159,7 +159,7 @@ module DynamicBranchPredictor_tb();
     apply_random_stimulus(.num_tests(1000000));
 
     // Print out the count of branches predicted taken and not taken.
-    $display("Number of branches predicted to be taken: %0d. Number of branches predicted to be not taken: %0d.", predict_taken_count, predict_not_taken_count);
+    $display("Number of branches predicted to be taken: %0d. Number of branches predicted to be not taken: %0d.", predicted_taken_count, predicted_not_taken_count);
 
     // Print out the count of mispredictions.
     $display("Number of mispredictions: %0d.", misprediction_count);

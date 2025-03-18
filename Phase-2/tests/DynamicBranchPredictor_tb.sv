@@ -170,7 +170,7 @@ module DynamicBranchPredictor_tb();
   // Model the PC curr register.
   always @(posedge clk)
     if (rst)
-      IF_ID_PC_curr <= 4'h0
+      IF_ID_PC_curr <= 4'h0;
     else
       IF_ID_PC_curr <= PC_curr;
 

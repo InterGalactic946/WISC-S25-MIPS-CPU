@@ -632,7 +632,7 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
         for directory in [DESIGNS_DIR, TESTS_DIR]:
             for root, _, files in os.walk(directory): # Scan for design files
                 for file in files:
-                    if file.endswith('.v'):  # Design files are .v
+                    if file.endswith('.v') or file.endswith('.sv'):  # Design files can be .v or .sv
                         file_path = os.path.join(root, file)
                         with open(file_path, 'r') as f:
                             content = f.read()

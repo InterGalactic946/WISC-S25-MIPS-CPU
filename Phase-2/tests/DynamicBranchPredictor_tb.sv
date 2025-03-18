@@ -19,7 +19,10 @@ module DynamicBranchPredictor_tb();
   reg [3:0] PC_curr;                    // Current PC value
   reg [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
-  integer count;                         // Number of times branch was actually taken.
+  integer actual_taken_count;            // Number of times branch was actually taken.
+  integer predict_taken_count;           // Number of times branch was predicted to be taken.
+  integer predict_not_taken_count;       // Number of times branch was predicted to not to be taken.
+  integer misprediction_count;           // Number of times branch was mispredicted.
   wire predicted_taken;                  // The predicted taken flag from the predictor
   wire [15:0] predicted_target;          // The predicted target address from the predictor
   wire expected_predicted_taken;         // The expected predicted taken flag from the model DBP
@@ -58,18 +61,21 @@ module DynamicBranchPredictor_tb();
   );
 
   // Task to apply random stimulus for each input of the DUT.
-  task automatic apply_random_stimulus(input integer num_tests, output integer branch_taken_count);
+  task automatic apply_random_stimulus(input integer num_tests);
     integer i;
-    integer count = 0;
+
+    // Apply num_tests of stimulus.
     for (i = 0; i < num_tests; i = i + 1) begin
-      @(negedge clk);
       
-      // Generate random values for all inputs
-      PC_curr        = $random % 4;    // Random 4-bit PC address
-      enable         = $random % 2;    // Random enable (0 or 1)
-      was_branch     = $random % 2;    // Random branch indication (0 or 1)
-      actual_taken   = $random % 2;    // Random actual branch outcome (0 or 1)
-      actual_target  = $random;        // Random 16-bit target address
+      // Apply stimulus on negative edge.
+      @(negedge clk) begin;
+        // Generate random values for all inputs
+        PC_curr        = $random % 4;    // Random 4-bit PC address
+        enable         = $random % 2;    // Random enable (0 or 1)
+        was_branch     = $random % 2;    // Random branch indication (0 or 1)
+        actual_taken   = $random % 2;    // Random actual branch outcome (0 or 1)
+        actual_target  = $random;        // Random 16-bit target address
+      end
 
       // Wait for a clock cycle to allow processing
       @(posedge clk);
@@ -88,9 +94,21 @@ module DynamicBranchPredictor_tb();
           $stop();
         end
 
-        // Update the number of times we took the branch.
+        // The number of times we actually took the branch.
         if (was_branch && actual_taken)
-          count = count + 1;
+          actual_taken_count = actual_taken_count + 1;
+        
+        // The number of times we mispredicted the branch.
+        if ((((was_branch && !actual_taken) && predicted_taken)) || ((was_branch && actual_taken) && !predicted_taken))
+            misprediction_count = misprediction_count + 1;
+        
+        // The number of times we predcited we took the branch.
+        if (predicted_taken === 1'b1)
+          predicted_taken_count = predicted_taken_count + 1;
+        
+        // The number of times we predcited we did not take the branch.
+        if (predicted_taken === 1'b0)
+          predicted_not_taken_count = predicted_not_taken_count + 1;
       end
     end
   endtask
@@ -105,6 +123,12 @@ module DynamicBranchPredictor_tb();
     actual_target = 16'h0000; // Set target to 0 initially
     PC_curr = 4'h0;   // Start with PC = 0
     IF_ID_PC_curr = 4'h0; // Start with PC = 0
+    
+    // Initialize counter values.
+    actual_taken_count = 0;
+    predict_taken_count = 0;
+    predict_not_taken_count = 0;
+    misprediction_count = 0;
 
     // Wait to initialize inputs.
     repeat(2) @(posedge clk);

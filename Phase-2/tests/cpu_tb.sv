@@ -49,7 +49,99 @@ module cpu_tb();
   logic Z_enable, V_enable, N_enable; // Flag enable signals
   logic Z_set, V_set, N_set; // Flags to be set
   logic PCS;               // Flag for ALU-based PC update
-  logic error;             // Error flag for test failures
+  
+  ///////////////////////////////////
+  // Declare any internal signals //
+  /////////////////////////////////
+  // DUT signals.
+  logic clk, rst_n, hlt, pc;
+
+  /* Model memory and register file signals. */
+  logic [15:0] regfile [0:15];              // 16x16 Register file
+  logic [15:0] inst_memory [0:65535];       // Instruction memory
+  logic [15:0] data_memory [0:65535];       // Data memory
+  logic [15:0] branch_target_buffer [0:15]; // 16x16 Branch Target Buffer
+  logic [1:0] branch_history_table [0:15];  // 4x2 Branch History Table
+  logic flag_reg[0:2];                      // 3 (ZF,VF,NF) 1-bit flag register
+
+  /* FETCH stage signals */
+  wire [15:0] expected_PC_curr;  // Current PC address
+  wire [15:0] expected_PC_next;  // Next PC address
+  wire [15:0] expected_PC_inst;  // Instruction at the current PC address
+  wire expected_predicted_taken; // Predicted taken signal from the branch history table
+
+  /* IF/ID Pipeline Register signals */
+  wire [3:0] IF_ID_PC_curr;   // Pipelined lower 4-bits of current instruction (previous PC) address from the fetch stage
+  wire [15:0] IF_ID_PC_next;  // Pipelined next instruction (previous PC_next) address from the fetch stage
+  wire [15:0] IF_ID_PC_inst;  // Pipelined instruction word (previous PC_inst) from the fetch stage
+  wire IF_ID_predicted_taken; // Pipelined branch prediction (previous predicted_taken) from the fetch stage
+
+  /* DECODE stage signals */
+  wire [15:0] branch_target; // Computed branch target address
+  wire actual_taken;         // Signal used to determine whether an instruction met condition codes
+  wire misprediction;        // Indicates the branch was incorrectly predicted in the fetch stage
+  wire Branch;               // Indicates it is a branch instruction
+  wire BR;                   // Indicates it is a branch register instruction
+  wire [62:0] EX_signals;    // Execute stage control signals
+  wire [17:0] MEM_signals;   // Memory stage control signals
+  wire [7:0] WB_signals;     // Write-back stage control signals
+
+  /* HAZARD DETECTION UNIT signals */
+  wire PC_stall;             // Stall signal for the PC register
+  wire IF_ID_stall;          // Stall signal for the IF/ID pipeline register
+  wire IF_flush, ID_flush;   // Flush signals for each pipeline register
+
+  /* ID/EX Pipeline Register signals */
+  wire [3:0] ID_EX_SrcReg1;        // Pipelined first source register ID from the decode stage
+  wire [3:0] ID_EX_SrcReg2;        // Pipelined second source register ID from the decode stage
+  wire [15:0] ID_EX_ALU_In1;       // Pipelined first ALU input from the decode stage
+  wire [15:0] ID_EX_ALU_imm;       // Pipelined ALU immediate input from the decode stage
+  wire [15:0] ID_EX_ALU_In2;       // Pipelined second ALU input from the decode stage
+  wire [3:0] ID_EX_ALUOp;          // Pipelined ALU operation code from the decode stage
+  wire ID_EX_ALUSrc;               // Pipelined ALU select signal to choose between register/immediate operand from the decode stage
+  wire ID_EX_Z_en, ID_EX_NV_en;    // Pipelined enable signals setting the Z, N, and V flags from the decode stage
+  wire [17:0] ID_EX_MEM_signals;   // Pipelined Memory stage control signals from the decode stage
+  wire [7:0] ID_EX_WB_signals;     // Pipelined Write-back stage control signals from the decode stage
+  wire [15:0] ID_EX_PC_next;       // Pipelined next instruction (previous PC_next) address from the fetch stage
+
+  /* EXECUTE stage signals */
+  wire [15:0] ALU_out;             // ALU output
+  wire ZF, VF, NF;                 // Flag signals
+
+  /* FORWARDING UNIT signals */
+  wire [1:0] ForwardA;              // Forwarding signal for the first ALU input (ALU_In1)
+  wire [1:0] ForwardB;              // Forwarding signal for the second ALU input (ALU_In2)
+  wire ForwardMEM;                  // Forwarding signal for MEM stage to MEM stage
+
+  /* EX/MEM Pipeline Register signals */
+  wire [15:0] EX_MEM_ALU_out;      // Pipelined data memory address/arithemtic computation result computed from the execute stage
+  wire [3:0] EX_MEM_SrcReg2;       // Pipelined second source register ID from the decode stage
+  wire [15:0] EX_MEM_MemWriteData; // Pipelined write data for SW from the decode stage
+  wire EX_MEM_MemEnable;           // Pipelined data memory access enable signal from the decode stage
+  wire EX_MEM_MemWrite;            // Pipelined data memory write enable signal from the decode stage
+  wire [7:0] EX_MEM_WB_signals;    // Pipelined Write-back stage control signals from the decode stage
+  wire [15:0] EX_MEM_PC_next;      // Pipelined next instruction (previous PC_next) address from the fetch stage
+
+  /* MEMORY stage signals */
+  wire [15:0] MemData;             // Data read from memory
+  wire [15:0] MemWriteData;        // Data written to memory
+
+  /* MEM/WB Pipeline Register signals */
+  wire [15:0] MEM_WB_MemData; // Pipelined data read from memory from the memory stage
+  wire [15:0] MEM_WB_ALU_out; // Pipelined arithemtic computation result computed from the execute stage
+  wire [3:0] MEM_WB_reg_rd;   // Pipelined register ID of the destination register from the decode stage
+  wire MEM_WB_RegWrite;       // Pipelined write enable to the register file from the decode stage
+  wire MEM_WB_MemToReg;       // Pipelined select signal to write data read from memory or ALU result back to the register file
+  wire MEM_WB_HLT;            // Pipelined HLT signal from the decode stage (indicates that the HLT instruction, if fetched, entered the WB stage) 
+  wire MEM_WB_PCS;            // Pipelined PCS signal from the decode stage (indicates that the PCS instruction, if fetched, entered the WB stage)
+  wire [15:0] MEM_WB_PC_next; // Pipelined next instruction (previous PC_next) address from the fetch stage
+
+  /* WRITE_BACK stage signals */
+  wire [15:0] RegWriteData;   // Data to write back to the register file
+
+  /* TEST_BENCH signals */
+  logic error;                // Error flag for test failures
+  //////////////////////////////////////////
 
   //////////////////////
   // Instantiate DUT //
@@ -61,31 +153,42 @@ module cpu_tb();
     begin
       error = 1'b0; // Reset error flag
       
-      // Initialize the PC to a starting value (e.g., 0)
+      // Initialize the testbench.
       $display("\nInitializing CPU Testbench...");
-      instr_memory = '{default: 16'h0000};
-      data_memory <= '{default: 16'h0000};
+
+      // Initialize the memories the model CPU needs.
+      inst_memory = '{default: 16'h0000};
+      data_memory = '{default: 16'h0000};
       regfile = '{default: 16'h0000};
-      flag_reg = 3'h0;
-      next_pc = 16'h0000;
-      expected_pc = 16'h0000;
+      branch_target_buffer = '{default: 16'h0000};
+      branch_history_table = '{default: 2'h0};
+      flag_reg = '{default: 1'b0};
+
+      // Initialize the current PC value.
+      expected_PC_curr = 16'h0000;
 
       // Initialize all signals for the testbench.
       Initialize(.clk(clk), .rst_n(rst_n));
 
       // Verify that the PC is initialized to 0x0000.
-			if (pc !== expected_pc) begin
-					$display("ERROR: DUT has incorrect PC value after reset. PC: 0x%h does not match Expected_PC: 0x%h..", pc, expected_pc);
+			if (pc !== expected_PC_curr) begin
+					$display("ERROR: DUT has incorrect PC value after reset. PC: 0x%h does not match expected_PC_curr: 0x%h.", pc, expected_PC_curr);
 					error = 1'b1;
 			end
 
-      // Load instructions into memory for the CPU to execute.
+      // Load conetents into memory for the CPU model as required if no error.
       if (!error) begin
         // Load instructions into memory for the CPU to execute.
-        LoadImage("./tests/instructions.img", instr_memory);
+        $readmemh("./tests/instructions.img", inst_memory);
 
-        // Load instructions into data memory for the CPU to perform memory operations.
-        LoadImage("./tests/data.img", data_memory);
+        // Load data into data memory for the CPU to perform memory operations.
+        $readmemh("./tests/data.img", data_memory);
+
+        // Load data into branch target buffer for the CPU.
+        $readmemh("./tests/data.img", branch_target_buffer);
+                
+        // Load data into branch history table for the CPU.
+        $readmemh("./tests/data.img", branch_history_table);
         
         // Print a message to indicate successful initialization.
         $display("CPU Testbench initialized successfully.");

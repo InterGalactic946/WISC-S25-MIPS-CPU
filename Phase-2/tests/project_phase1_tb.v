@@ -144,27 +144,27 @@ module project_phase1_tb();
    // names on the right hand side
     
 //   assign PC = DUT.fetch0.pcCurrent; //You won't need this because it's part of the main cpu interface
-   assign Inst = iDUT.iINSTR_MEM.data_out;
+   assign Inst = iDUT.PC_inst;
    
-   assign RegWrite = iDUT.iCC.RegWrite;
+   assign RegWrite = iDUT.MEM_WB_RegWrite;
    // Is memory being read, one bit signal (1 means yes, 0 means no)
    
-   assign WriteRegister = iDUT.iRF.DstReg;
+   assign WriteRegister = iDUT.MEM_WB_reg_rd;
    // The name of the register being written to. (4 bit signal)
 
-   assign WriteData = iDUT.iRF.DstData;
+   assign WriteData = iDUT.RegWriteData;
    // Data being written to the register. (16 bits)
    
-	assign MemRead =  (iDUT.iCC.MemEnable & ~iDUT.iCC.MemWrite);
+	assign MemRead =  (iDUT.EX_MEM_MemEnable & ~iDUT.EX_MEM_MemWrite);
    // Is memory being read, one bit signal (1 means yes, 0 means no)
    
-   assign MemWrite = (iDUT.iCC.MemEnable & iDUT.iCC.MemWrite);
+   assign MemWrite = (iDUT.iCC.EX_MEM_MemEnable & iDUT.EX_MEM_MemWrite);
    // Is memory being written to (1 bit signal)
    
-   assign MemAddress = iDUT.iDATA_MEM.addr;
+   assign MemAddress = iDUT.EX_MEM_ALU_out;
    // Address to access memory with (for both reads and writes to memory, 16 bits)
    
-   assign MemData = iDUT.iDATA_MEM.data_in;
+   assign MemData = iDUT.MemData;
    // Data to be written to memory for memory writes (16 bits)
    
 //   assign Halt = DUT.memory0.halt; //You won't need this because it's part of the main cpu interface

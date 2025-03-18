@@ -74,6 +74,10 @@ module DynamicBranchPredictor_tb();
 
       // Check on negedge.
       @(negedge clk) begin
+        // Debugging: print out the predictor state and transition for first branch
+        $display("Predictor State at PC=0x%h: predicted_taken=%0b, predicted_target=%0h", PC_curr, predicted_taken, predicted_target);
+        $display("Actual Taken: %0b, Actual Target: %0h", actual_taken, actual_target);
+        
         // Verify if the prediction is correct after the first cycle
         if (predicted_taken !== expected_predicted_taken) begin
           $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, predicted_taken, expected_predicted_taken);
@@ -98,6 +102,10 @@ module DynamicBranchPredictor_tb();
 
       // Check on negedge.
       @(negedge clk) begin
+        // Debugging: print out the predictor state and transition for second branch
+        $display("Predictor State at PC=0x%h: predicted_taken=%0b, predicted_target=%0h", PC_curr, predicted_taken, predicted_target);
+        $display("Actual Taken: %0b, Actual Target: %0h", actual_taken, actual_target);
+
         // Verify if the prediction is correct after the second cycle
         if (predicted_taken !== expected_predicted_taken) begin
           $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, predicted_taken, expected_predicted_taken);
@@ -108,7 +116,6 @@ module DynamicBranchPredictor_tb();
           $stop();
         end
       end
-
 
       $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
 
@@ -123,6 +130,10 @@ module DynamicBranchPredictor_tb();
 
       // Check on negedge.
       @(negedge clk) begin
+        // Debugging: print out the predictor state and transition for third branch
+        $display("Predictor State at PC=0x%h: predicted_taken=%0b, predicted_target=%0h", PC_curr, predicted_taken, predicted_target);
+        $display("Actual Taken: %0b, Actual Target: %0h", actual_taken, actual_target);
+
         // Verify if the prediction is correct after the third cycle
         if (predicted_taken !== expected_predicted_taken) begin
           $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b", PC_curr, predicted_taken, expected_predicted_taken);
@@ -147,6 +158,10 @@ module DynamicBranchPredictor_tb();
 
       // Check on negedge.
       @(negedge clk) begin
+        // Debugging: print out the predictor state and transition for fourth branch
+        $display("Predictor State at PC=0x%h: predicted_taken=%0b, predicted_target=%0h", PC_curr, predicted_taken, predicted_target);
+        $display("Actual Taken: %0b, Actual Target: %0h", actual_taken, actual_target);
+
         // Verify if the prediction is correct after the fourth cycle
         if (predicted_taken !== expected_predicted_taken) begin
           $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b", PC_curr, predicted_taken, expected_predicted_taken);

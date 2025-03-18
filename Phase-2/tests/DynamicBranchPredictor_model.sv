@@ -40,14 +40,14 @@ module DynamicBranchPredictor_model (
     if (rst) begin
       // Initialize the BTB entries to a default target address (e.g., 16'h0000).
       BTB <= '{default: 16'h0000};
-    end else if (enable && wen_BTB) begin
+    end else if (enable & wen_BTB) begin
       // Update BTB with the target address if the branch was taken.
       BTB[IF_ID_PC_curr[3:1]] <= actual_target;
     end
   end
 
   // Asynchronously read out the target when read enabled.
-  assign predicted_target = (enable & !wen_BTB) ? BTB[PC_curr[3:1]] : 16'h0000;
+  assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]] : 16'h0000;
   ////////////////////////////////////////////////
 
   ///////////////////////////////////////////
@@ -58,14 +58,14 @@ module DynamicBranchPredictor_model (
     if (rst) begin
       // Initialize the BHT entries to 0 on reset.
       BHT <= '{default: 2'h0};
-    end else if (enable && branch_mispredicted) begin
+    end else if (enable & branch_mispredicted) begin
       // Update BHT based on a mispredicted branch instruction.
       BHT[IF_ID_PC_curr[3:1]] <= updated_prediction;
     end
   end
 
   // Asynchronously read out the prediction when read enabled.
-  assign prediction = (enable & !branch_mispredicted) ? BHT[PC_curr[3:1]] : 2'h0;
+  assign prediction = (enable & ~branch_mispredicted) ? BHT[PC_curr[3:1]] : 2'h0;
 
   // The actual predition is the MSB of the 2-bit predictor.
   assign predicted_taken = prediction[1];

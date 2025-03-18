@@ -264,6 +264,14 @@ module DynamicBranchPredictor_tb();
       $stop();
     end
 
+    // Deasssert signals
+    @(negedge clk) begin;
+      was_branch = 1'b0;
+      actual_taken = 1'b0;
+      actual_target = 16'h0000;
+      branch_mispredicted = 1'b0;
+    end
+
     // We're at the beginging of the decode stage.
     @(posedge clk);
 
@@ -291,6 +299,14 @@ module DynamicBranchPredictor_tb();
     if (predicted_target !== expected_predicted_target) begin
       $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
       $stop();
+    end
+
+    // Deasssert signals
+    @(negedge clk) begin;
+      was_branch = 1'b0;
+      actual_taken = 1'b0;
+      actual_target = 16'h0000;
+      branch_mispredicted = 1'b0;
     end
     
     // Models the active clock edge the DUT just fetched the next instruction.
@@ -320,6 +336,14 @@ module DynamicBranchPredictor_tb();
     if (predicted_target !== expected_predicted_target) begin
       $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
       $stop();
+    end
+
+    // Deasssert signals
+    @(negedge clk) begin;
+      was_branch = 1'b0;
+      actual_taken = 1'b0;
+      actual_target = 16'h0000;
+      branch_mispredicted = 1'b0;
     end
 
     $display("PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);

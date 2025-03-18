@@ -13,11 +13,13 @@ module EX_MEM_pipe_reg (
     input wire rst,                        // Active high synchronous reset
     input wire [15:0] ID_EX_PC_next,       // Pipelined next PC from the fetch stage
     input wire [15:0] ALU_out,             // ALU output from the execute stage
+    input wire [3:0] ID_EX_SrcReg2,        // Pipelined second source register ID pfrom the decode stage
     input wire [17:0] ID_EX_MEM_signals,   // Pipelined memory stage signals from the decode stage
     input wire [7:0] ID_EX_WB_signals,     // Pipelined write back stage signals from the decode stage
     
     output wire [15:0] EX_MEM_PC_next,     // Pipelined next PC passed to the memory stage
     output wire [15:0] EX_MEM_ALU_out,     // Pipelined ALU output passed to the memory stage
+    output wire [3:0] EX_MEM_SrcReg2,      // Pipelined second source register ID passed to the memory stage
     output wire [17:0] EX_MEM_MEM_signals, // Pipelined memory stage signals passed to the memory stage
     output wire [7:0] EX_MEM_WB_signals    // Pipelined write back stage signals passed to the memory stage
 );
@@ -52,6 +54,9 @@ module EX_MEM_pipe_reg (
   ///////////////////////////////////////////////////////////////////////////
   // Pipeline the MEMORY control signals to be passed to the memory stage  //
   ///////////////////////////////////////////////////////////////////////////
+  // Register for storing second source register ID.
+  CPU_Register #(.WIDTH(4)) iSrcReg2_REG (.clk(clk), .rst(clr), .wen(1'b1), .data_in(ID_EX_SrcReg2), .data_out(EX_MEM_SrcReg2));
+
   // Register for storing Memory write data (ID_EX_MEM_signals[17:2] == MemWriteData).
   CPU_Register #(.WIDTH(16)) iMemWriteData_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[17:2]), .data_out(EX_MEM_MemWriteData));
 

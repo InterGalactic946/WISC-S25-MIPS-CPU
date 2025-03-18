@@ -71,11 +71,12 @@ module cpu (clk, rst_n, hlt, pc);
 
   /* EX/MEM Pipeline Register signals */
   wire [15:0] EX_MEM_ALU_out;      // Pipelined data memory address/arithemtic computation result computed from the execute stage
+  wire [3:0] EX_MEM_SrcReg2;       // Pipelined second source register ID from the decode stage
   wire [15:0] EX_MEM_MemWriteData; // Pipelined write data for SW from the decode stage
   wire EX_MEM_MemEnable;           // Pipelined data memory access enable signal from the decode stage
   wire EX_MEM_MemWrite;            // Pipelined data memory write enable signal from the decode stage
   wire [7:0] EX_MEM_WB_signals;    // Pipelined Write-back stage control signals from the decode stage
-  wire [15:0] EX_MEM_PC_next;      // Pipelined next instruction address from the fetch stage
+  wire [15:0] EX_MEM_PC_next;      // Pipelined next instruction (previous PC_next) address from the fetch stage
 
   /* MEMORY stage signals */
   wire [15:0] MemData;             // Data read from memory
@@ -89,7 +90,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire MEM_WB_MemToReg;       // Pipelined select signal to write data read from memory or ALU result back to the register file
   wire MEM_WB_HLT;            // Pipelined HLT signal from the decode stage (indicates that the HLT instruction, if fetched, entered the WB stage) 
   wire MEM_WB_PCS;            // Pipelined PCS signal from the decode stage (indicates that the PCS instruction, if fetched, entered the WB stage)
-  wire [15:0] MEM_WB_PC_next; // Pipelined next instruction address from the fetch stage
+  wire [15:0] MEM_WB_PC_next; // Pipelined next instruction (previous PC_next) address from the fetch stage
 
   /* WRITE_BACK stage signals */
   wire [15:0] RegWriteData;   // Data to write back to the register file
@@ -233,14 +234,15 @@ module cpu (clk, rst_n, hlt, pc);
       .EX_MEM_ALU_in(EX_MEM_ALU_out),
       .MEM_WB_ALU_in(RegWriteData),
       .ALU_In1_step(ID_EX_ALU_In1),
-      .ForwardA(ForwardA),
-      .ForwardB(ForwardB),
       .ALU_imm(ID_EX_ALU_imm),
       .ALU_In2_step(ID_EX_ALU_In2),
+      .ForwardA(ForwardA),
+      .ForwardB(ForwardB),
       .ALUOp(ID_EX_ALUOp),
       .ALUSrc(ID_EX_ALUSrc),
       .Z_en(ID_EX_Z_en),
       .NV_en(ID_EX_NV_en),
+      
       .ZF(ZF),
       .NF(NF),
       .VF(VF),
@@ -251,14 +253,15 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////
   // Instantiate the Forwarding Unit  //
   //////////////////////////////////////
-  // (EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd), EX_MEM_WB_signals[3] == EX_MEM_RegWrite).
+  // EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
   ForwardingUnit iFWD (
     .ID_EX_SrcReg1(ID_EX_SrcReg1),
     .ID_EX_SrcReg2(ID_EX_SrcReg2),
-    .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
+    .EX_MEM_SrcReg2(EX_MEM_SrcReg2),
     .MEM_WB_reg_rd(MEM_WB_reg_rd),
     .EX_MEM_RegWrite(EX_MEM_WB_signals[3]),
     .MEM_WB_RegWrite(MEM_WB_RegWrite),
+    
     .ForwardA(ForwardA),
     .ForwardB(ForwardB),
     .ForwardMEM(ForwardMEM)
@@ -270,12 +273,15 @@ module cpu (clk, rst_n, hlt, pc);
   EX_MEM_pipe_reg iEX_MEM (
       .clk(clk),
       .rst(rst),
-      .ALU_out(ALU_out),
       .ID_EX_PC_next(ID_EX_PC_next),
+      .ALU_out(ALU_out),
+      .ID_EX_SrcReg2(ID_EX_SrcReg2),
       .ID_EX_MEM_signals(ID_EX_MEM_signals),
       .ID_EX_WB_signals(ID_EX_WB_signals),
+      
       .EX_MEM_PC_next(EX_MEM_PC_next),
       .EX_MEM_ALU_out(EX_MEM_ALU_out),
+      .EX_MEM_SrcReg2(EX_MEM_SrcReg2),
       .EX_MEM_MEM_signals({EX_MEM_MemWriteData, EX_MEM_MemEnable, EX_MEM_MemWrite}),
       .EX_MEM_WB_signals(EX_MEM_WB_signals)
   );
@@ -284,7 +290,8 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////////////////////////////////
   // Data MEMORY Access (read/write data for LW/SW as applicable) //
   //////////////////////////////////////////////////////////////////
-  // Use the value read out from data memory from the previous instruction or previous ALU result if forwarded otherwise the current value. 
+  // Use the value read out from data memory from the previous instruction 
+  // or previous ALU result if forwarded otherwise the current value. 
   assign MemWriteData = (ForwardMEM) ? RegWriteData : EX_MEM_MemWriteData;
 
   // Access data memory.
@@ -308,6 +315,7 @@ module cpu (clk, rst_n, hlt, pc);
       .EX_MEM_ALU_out(EX_MEM_ALU_out),
       .MemData(MemData),
       .EX_MEM_WB_signals(EX_MEM_WB_signals),
+      
       .MEM_WB_PC_next(MEM_WB_PC_next),
       .MEM_WB_ALU_out(MEM_WB_ALU_out),
       .MEM_WB_MemData(MEM_WB_MemData),

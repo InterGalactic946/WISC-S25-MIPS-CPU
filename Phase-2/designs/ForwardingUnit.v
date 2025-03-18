@@ -13,7 +13,7 @@
 module ForwardingUnit (
     input wire [3:0] ID_EX_SrcReg1, // Pipelined first source register ID from the decode stage
     input wire [3:0] ID_EX_SrcReg2, // Pipelined second source register ID from the decode stage
-    input wire [3:0] EX_MEM_reg_rd, // Pipelined register ID of the destination register from the execute stage
+    input wire [3:0] EX_MEM_SrcReg2,// Pipelined register ID second source register from the memory stage
     input wire [3:0] MEM_WB_reg_rd, // Pipelined register ID of the destination register from the write-back stage
     input wire EX_MEM_RegWrite,     // Pipelined write enable to the register file from the execute stage
     input wire MEM_WB_RegWrite,     // Pipelined write enable to the register file from the write-back stage
@@ -79,9 +79,9 @@ module ForwardingUnit (
   ///////////////////////////////
   // Determine MEM-MEM haxard  //
   ///////////////////////////////
-  // We detect a MEM-to-MEM hazard when the instruction in the begining of the MEM stage is reading from a register (not $0) 
+  // We detect a MEM-to-MEM hazard when the instruction in the begining of the MEM stage is reading from a register (SrcReg2) (not $0) 
   // which is being written to by an instruction at the begining of the WB stage.
-  assign MEM_to_MEM_haz = (MEM_WB_RegWrite & (MEM_WB_reg_rd != 4'h0)) & (MEM_WB_reg_rd == EX_MEM_reg_rd);
+  assign MEM_to_MEM_haz = (MEM_WB_RegWrite & (MEM_WB_reg_rd != 4'h0)) & (MEM_WB_reg_rd == EX_MEM_SrcReg2);
   //////////////////////////////
                   
 endmodule

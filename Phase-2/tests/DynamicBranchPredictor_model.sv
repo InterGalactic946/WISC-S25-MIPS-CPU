@@ -51,7 +51,7 @@ module DynamicBranchPredictor_model (
   end
 
   // Asynchronously read out the target when read enabled.
-  assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]] : 16'h0000;
+  assign predicted_target = (enable & ~wen_BTB) ? BTB[addr_BTB[3:1]] : 16'h0000;
   ////////////////////////////////////////////////
 
   ///////////////////////////////////////////

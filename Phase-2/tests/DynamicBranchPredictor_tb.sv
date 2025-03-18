@@ -163,13 +163,12 @@ module DynamicBranchPredictor_tb();
         actual_target  = $random;        // Random 16-bit target address
         
         // The number of times we mispredicted the branch.
-        if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
+        if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken))
             branch_mispredicted = 1'b1;
         else
             branch_mispredicted = 1'b0;
       end
     end
-  end
   endtask
 
   // Initialize the testbench.

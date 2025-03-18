@@ -1,5 +1,3 @@
-`default_nettype none // Set the default as none to avoid errors
-
 //////////////////////////////////////////////////////////////////
 // DynamicBranchPredictor_model.sv: Model to the DBP of the CPU //
 //                                                              //
@@ -90,5 +88,3 @@ module DynamicBranchPredictor_model (
   ////////////////////////////////////////////////
 
 endmodule
-
-`default_nettype wire // Reset default behavior at the end

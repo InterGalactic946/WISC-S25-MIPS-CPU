@@ -55,81 +55,6 @@ module DynamicBranchPredictor_tb();
     .predicted_taken(expected_predicted_taken), 
     .predicted_target(expected_predicted_target)
   );
-  
-  // Initialize the inputs and expected outputs
-  initial begin
-    clk = 1'b0; // initially clk is low
-    rst = 1'b0; // initally rst is low
-    enable = 1'b0;  // Disable the branch predictor
-    was_branch = 1'b0;    // Initially no branch
-    actual_taken = 1'b0;  // Initially the branch is not taken
-    actual_target = 16'h0000; // Set target to 0 initially
-    PC_curr = 4'h0;   // Start with PC = 0
-    IF_ID_PC_curr = 4'h0; // Start with PC = 0
-
-    // Wait to initialize inputs.
-    repeat(2) @(posedge clk);
-    
-    // Wait for a negative edge to assert rst.
-    @(negedge clk) rst = 1'b1;
-
-    // Wait for a full clock cycle before deasserting rst.
-    @(negedge clk) rst = 1'b0;
-
-    // Test Case 1: Branch prediction where the branch is taken and correctly predicted
-    apply_branch_case(16'h04, 1'b1, 16'h08, 1'b1);
-    
-    // Test Case 2: Branch prediction where the branch is taken but mispredicted
-    apply_branch_case(16'h08, 1'b0, 16'h0C, 1'b1);
-    
-    // Test Case 3: Branch prediction where the branch is not taken
-    apply_branch_case(16'h0C, 1'b0, 16'h00, 1'b0);
-    
-    // Test Case 4: Branch prediction where the branch is not taken but mispredicted
-    apply_branch_case(16'h10, 1'b1, 16'h00, 1'b0);
-    
-    // Final check after all cases
-    #5;
-    $stop();
-  end
-
-  // Initialize the testbench.
-  initial begin
-    clk = 1'b0; // initially clk is low
-    rst = 1'b0; // initally rst is low
-    
-    // Wait to initialize inputs.
-    repeat(2) @(posedge clk);
-    
-    // Wait for a negative edge to assert rst.
-    @(negedge clk) rst = 1'b1;
-
-    // Wait for a full clock cycle before deasserting rst.
-    @(negedge clk) begin
-      
-      // Deassert reset.
-      rst = 1'b0;
-
-      // Verify the prediction after reset.
-      if (predicted_taken !== expected_predicted_taken) begin
-        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b",PC_curr, predicted_taken, expected_predicted_taken);
-        $stop();
-      end
-
-      // Verify the predicted target after reset.
-      if (predicted_target !== expected_predicted_target) begin
-        $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
-        $stop();
-      end
-    end
-
-    // Apply randomized test cases.
-    apply_random_stimulus(1000000);
-
-    // If we reached here, it means that all tests passed.
-    $display("YAHOO!! All tests passed.");
-    $stop();
-  end
 
   // Task to apply random stimulus for each input of the DUT.
   task automatic apply_random_stimulus(input integer num_tests);
@@ -163,6 +88,50 @@ module DynamicBranchPredictor_tb();
       end
     end
   endtask
+
+  // Initialize the testbench.
+  initial begin
+    clk = 1'b0; // initially clk is low
+    rst = 1'b0; // initally rst is low
+    enable = 1'b0;  // Disable the branch predictor
+    was_branch = 1'b0;    // Initially no branch
+    actual_taken = 1'b0;  // Initially the branch is not taken
+    actual_target = 16'h0000; // Set target to 0 initially
+    PC_curr = 4'h0;   // Start with PC = 0
+    IF_ID_PC_curr = 4'h0; // Start with PC = 0
+
+    // Wait to initialize inputs.
+    repeat(2) @(posedge clk);
+    
+    // Wait for a negative edge to assert rst.
+    @(negedge clk) rst = 1'b1;
+
+    // Wait for a full clock cycle before deasserting rst.
+    @(negedge clk) begin
+      
+      // Deassert reset.
+      rst = 1'b0;
+
+      // Verify the prediction after reset.
+      if (predicted_taken !== expected_predicted_taken) begin
+        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b",PC_curr, predicted_taken, expected_predicted_taken);
+        $stop();
+      end
+
+      // Verify the predicted target after reset.
+      if (predicted_target !== expected_predicted_target) begin
+        $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
+        $stop();
+      end
+    end
+
+    // Apply randomized test cases.
+    apply_random_stimulus(1000000);
+
+    // If we reached here, it means that all tests passed.
+    $display("YAHOO!! All tests passed.");
+    $stop();
+  end
 
   always 
     #5 clk = ~clk; // toggle clock every 5 time units.

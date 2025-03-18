@@ -1,5 +1,3 @@
-`default_nettype none // Set the default as none to avoid errors
-
 //////////////////////////////////////////////////////////////
 // Fetch_model.sv: Model Instruction Fetch Stage            //
 //                                                          //
@@ -84,5 +82,3 @@ module Fetch_model (
   //////////////////////////////////////
 
 endmodule
-
-`default_nettype wire // Reset default behavior at the end

@@ -1,7 +1,5 @@
-`default_nettype none // Set the default as none to avoid errors
- 
 ///////////////////////////////////////////////////////////////////////////
-// IF_ID_pipe_reg_model.v: Model Instruction Fetch to Decode Pipeline    //
+// IF_ID_pipe_reg_model.sv: Model Instruction Fetch to Decode Pipeline   //
 //                                                                       //
 // This module represents a model IF/ID pipeline register for the CPU.   //
 ///////////////////////////////////////////////////////////////////////////
@@ -67,5 +65,3 @@ module IF_ID_pipe_reg_model (
   /////////////////////////////////////////////////////////////////////////////
 
 endmodule
-
-`default_nettype wire // Reset default behavior at the end

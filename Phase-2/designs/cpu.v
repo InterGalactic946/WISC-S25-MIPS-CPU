@@ -58,7 +58,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire ID_EX_Z_en, ID_EX_NV_en;    // Pipelined enable signals setting the Z, N, and V flags from the decode stage
   wire [17:0] ID_EX_MEM_signals;   // Pipelined Memory stage control signals from the decode stage
   wire [7:0] ID_EX_WB_signals;     // Pipelined Write-back stage control signals from the decode stage
-  wire [15:0] ID_EX_PC_next;       // Pipelined next instruction address from the fetch stage
+  wire [15:0] ID_EX_PC_next;       // Pipelined next instruction (previous PC_next) address from the fetch stage
 
   /* EXECUTE stage signals */
   wire [15:0] ALU_out;             // ALU output
@@ -214,6 +214,7 @@ module cpu (clk, rst_n, hlt, pc);
       .EX_signals(EX_signals),
       .MEM_signals(MEM_signals),
       .WB_signals(WB_signals),
+      
       .ID_EX_PC_next(ID_EX_PC_next),
       .ID_EX_EX_signals({ID_EX_SrcReg1, ID_EX_SrcReg2,
       ID_EX_ALU_In1, ID_EX_ALU_imm, ID_EX_ALU_In2, 

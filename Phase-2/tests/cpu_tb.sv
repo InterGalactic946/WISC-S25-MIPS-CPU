@@ -214,6 +214,45 @@ module cpu_tb();
         // Fetch the current instruction from memory.
         FetchInstruction(.instr_memory(inst_memory), .pc(expected_pc), .instr(instr));
 
+        ////////////////////////////////
+        // FETCH instruction from PC  //
+        ////////////////////////////////
+        Fetch iFETCH (
+            .clk(clk), 
+            .rst(rst), 
+            .stall(PC_stall), 
+            .actual_target(branch_target), 
+            .actual_taken(actual_taken), 
+            .was_branch(Branch),
+            .branch_mispredicted(misprediction),
+            .IF_ID_PC_curr(IF_ID_PC_curr), 
+            
+            .PC_next(PC_next), 
+            .PC_inst(PC_inst), 
+            .PC_curr(pc),
+            .predicted_taken(predicted_taken)
+        );
+        ///////////////////////////////////
+
+        /////////////////////////////////////////////////
+        // Pass the instruction word, current PC, prediction, and the next PC address to the IF/ID pipeline register.
+        IF_ID_pipe_reg iIF_ID (
+          .clk(clk),
+          .rst(rst),
+          .stall(IF_ID_stall),
+          .flush(IF_flush),
+          .PC_curr(pc),
+          .PC_next(PC_next),
+          .PC_inst(PC_inst),
+          .predicted_taken(predicted_taken),
+          
+          .IF_ID_PC_curr(IF_ID_PC_curr), 
+          .IF_ID_PC_next(IF_ID_PC_next),
+          .IF_ID_PC_inst(IF_ID_PC_inst),
+          .IF_ID_predicted_taken(IF_ID_predicted_taken)
+        );
+        /////////////////////////////////////////////////
+
         // Verify that the instruction was fetched correctly.
         VerifyInstructionFetched(
             .expected_instr(instr),      

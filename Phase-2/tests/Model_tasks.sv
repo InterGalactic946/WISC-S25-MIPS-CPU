@@ -32,16 +32,16 @@ package Model_tasks;
 
 
   // Task to fetch an instruction from memory.
-  task automatic FetchInstruction(ref logic [15:0] instr_memory [0:65535], ref logic [15:0] pc, output logic [15:0] instr);
+  task automatic FetchInstruction(ref logic [15:0] inst_memory [0:65535], ref logic [15:0] pc, output logic [15:0] instr);
     begin
       // Fetch instruction from memory at PC
-      instr = instr_memory[pc[15:1]];
+      instr = inst_memory[pc[15:1]];
 
       // Display the fetched instruction.
       $display("Model Fetched instruction: 0x%h at PC: 0x%h.", instr, pc);
     end
   endtask
-
+  
 
   // Task to decode an instruction and identify its opcode and operands.
   task automatic decode_opcode(input logic [3:0] opcode, output string instr_name);

@@ -94,6 +94,8 @@ module DynamicBranchPredictor_tb();
           $stop();
         end
 
+        $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target)
+
         // The number of times we actually took the branch.
         if (was_branch && actual_taken)
           actual_taken_count = actual_taken_count + 1;

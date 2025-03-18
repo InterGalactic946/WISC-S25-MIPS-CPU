@@ -26,6 +26,7 @@ module DynamicBranchPredictor_model (
   logic [1:0] prediction;         // The predicted value of the current branch instruction.
   logic [1:0] BHT [15:0];         // 2-bit, 16 entry Branch History Table (BHT) memory.
   logic [15:0] BTB [15:0];        // 16 entry Branch Target Buffer (BTB) memory.
+  logic [3:0] addr_BHT, addr_BTB; // Used to determine read vs write address.
   logic error;                    // Error flag raised when prediction state is invalid.
   ////////////////////////////////////////////////
 
@@ -34,6 +35,9 @@ module DynamicBranchPredictor_model (
   /////////////////////////////////////////
   // We update the BTB when the instruction was a branch and is actually taken.
   assign wen_BTB = actual_taken & was_branch;
+
+  // Our read address is PC_curr while our write address is IF_ID_PC_curr.
+  assign addr_BTB = (wen_BTB) ? IF_ID_PC_curr : PC_curr;
 
   // Model the BTB memory.
   always @(posedge clk) begin
@@ -53,6 +57,9 @@ module DynamicBranchPredictor_model (
   ///////////////////////////////////////////
   // Model the Branch History Table (BHT) //
   /////////////////////////////////////////
+  // Our read address is PC_curr while our write address is IF_ID_PC_curr.
+  assign addr_BHT = (branch_mispredicted) ? IF_ID_PC_curr : PC_curr;
+
   // Model the BHT memory.
   always @(posedge clk) begin
     if (rst) begin
@@ -65,7 +72,7 @@ module DynamicBranchPredictor_model (
   end
 
   // Asynchronously read out the prediction when read enabled.
-  assign prediction = (enable & ~branch_mispredicted) ? BHT[PC_curr[3:1]] : 2'h0;
+  assign prediction = (enable & ~branch_mispredicted) ? BHT[addr_BHT[3:1]] : 2'h0;
 
   // The actual predition is the MSB of the 2-bit predictor.
   assign predicted_taken = prediction[1];

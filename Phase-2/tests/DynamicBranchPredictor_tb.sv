@@ -1,5 +1,3 @@
-`default_nettype none // Set the default as none to avoid errors 
-
 ///////////////////////////////////////////////////////////////////////
 // DynamicBranchPredictor_tb.v: Testbench for the Dynamic Branch     //
 // Predictor module with BHT and BTB. This testbench verifies the    //
@@ -168,7 +166,7 @@ module DynamicBranchPredictor_tb();
         if ((((was_branch && !actual_taken) && IF_ID_predicted_taken)) || ((was_branch && actual_taken) && !IF_ID_predicted_taken)) begin
             branch_mispredicted = 1'b1;
         else
-            branch_mispredicted = 1'b0
+            branch_mispredicted = 1'b0;
       end
     end
   end
@@ -255,5 +253,3 @@ module DynamicBranchPredictor_tb();
       IF_ID_predicted_taken <= expected_predicted_taken;
 
 endmodule
-
-`default_nettype wire  // Reset default behavior at the end

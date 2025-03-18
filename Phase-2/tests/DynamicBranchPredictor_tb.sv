@@ -1,4 +1,4 @@
-`default_nettype none // Set the default as none to avoid errors
+`default_nettype none // Set the default as none to avoid errors 
 
 ///////////////////////////////////////////////////////////////////////
 // DynamicBranchPredictor_tb.v: Testbench for the Dynamic Branch     //
@@ -7,6 +7,7 @@
 // cases and checking the outputs, including both correct and        //
 // mispredicted branch predictions, by comparing against a model DBP //
 ///////////////////////////////////////////////////////////////////////
+
 module DynamicBranchPredictor_tb();
 
   reg clk;                              // Clock signal
@@ -19,14 +20,14 @@ module DynamicBranchPredictor_tb();
   reg [3:0] PC_curr;                    // Current PC value
   reg [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
-  integer actual_taken_count;            // Number of times branch was actually taken.
-  integer predicted_taken_count;         // Number of times branch was predicted to be taken.
-  integer predicted_not_taken_count;     // Number of times branch was predicted to not to be taken.
-  integer misprediction_count;           // Number of times branch was mispredicted.
-  wire predicted_taken;                  // The predicted taken flag from the predictor
-  wire [15:0] predicted_target;          // The predicted target address from the predictor
-  wire expected_predicted_taken;         // The expected predicted taken flag from the model DBP
-  wire [15:0] expected_predicted_target; // The expected predicted target address from from the model DBP
+  integer actual_taken_count;           // Number of times branch was actually taken.
+  integer predicted_taken_count;        // Number of times branch was predicted to be taken.
+  integer predicted_not_taken_count;    // Number of times branch was predicted to not be taken.
+  integer misprediction_count;          // Number of times branch was mispredicted.
+  wire predicted_taken;                 // The predicted taken flag from the predictor
+  wire [15:0] predicted_target;         // The predicted target address from the predictor
+  wire expected_predicted_taken;        // The expected predicted taken flag from the model DBP
+  wire [15:0] expected_predicted_target;// The expected predicted target address from from the model DBP
 
   // Instantiate the DUT: Dynamic Branch Predictor.
   DynamicBranchPredictor iDUT (
@@ -39,7 +40,6 @@ module DynamicBranchPredictor_tb();
     .actual_taken(actual_taken),
     .actual_target(actual_target),
     .branch_mispredicted(branch_mispredicted),
-    
     .predicted_taken(predicted_taken),
     .predicted_target(predicted_target)
   );
@@ -55,10 +55,121 @@ module DynamicBranchPredictor_tb();
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
     .branch_mispredicted(branch_mispredicted), 
-    
     .predicted_taken(expected_predicted_taken), 
     .predicted_target(expected_predicted_target)
   );
+
+  // Task to apply controlled test cases before random stimulus.
+  task automatic apply_controlled_test_cases();
+    begin
+      // First branch at PC = 2, not taken initially
+      @(negedge clk);
+      PC_curr = 4'h2;
+      was_branch = 1'b1;
+      actual_taken = 1'b0;
+      actual_target = 16'h0040;
+      
+      // Wait to settle.
+      @(posedge clk);
+
+      // Check on negedge.
+      @(negedge clk) begin
+        // Verify if the prediction is correct after the first cycle
+        if (predicted_taken !== expected_predicted_taken) begin
+          $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, predicted_taken, expected_predicted_taken);
+          $stop();
+        end
+        if (predicted_target !== expected_predicted_target) begin
+          $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+          $stop();
+        end
+      end
+
+      $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+
+      // Second branch at PC = 6, taken.
+      PC_curr = 4'h6;
+      was_branch = 1'b1;
+      actual_taken = 1'b1;
+      actual_target = 16'h0080;
+      
+      // Wait to settle.
+      @(posedge clk);
+
+      // Check on negedge.
+      @(negedge clk) begin
+        // Verify if the prediction is correct after the second cycle
+        if (predicted_taken !== expected_predicted_taken) begin
+          $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, predicted_taken, expected_predicted_taken);
+          $stop();
+        end
+        if (predicted_target !== expected_predicted_target) begin
+          $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+          $stop();
+        end
+      end
+
+
+      $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+
+      // Third branch at PC = 10, not taken again
+      PC_curr = 4'hA;
+      was_branch = 1'b1;
+      actual_taken = 1'b0;
+      actual_target = 16'h00C0;
+      
+      // Wait to settle.
+      @(posedge clk);
+
+      // Check on negedge.
+      @(negedge clk) begin
+        // Verify if the prediction is correct after the third cycle
+        if (predicted_taken !== expected_predicted_taken) begin
+          $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b", PC_curr, predicted_taken, expected_predicted_taken);
+          $stop();
+        end
+        if (predicted_target !== expected_predicted_target) begin
+          $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
+          $stop();
+        end
+      end
+
+      $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+
+      // Fourth branch at PC = 2 again, should be taken now if predictor learned
+      PC_curr = 4'h2;
+      was_branch = 1'b1;
+      actual_taken = 1'b1;
+      actual_target = 16'h0040;
+      
+      // Wait to settle.
+      @(posedge clk);
+
+      // Check on negedge.
+      @(negedge clk) begin
+        // Verify if the prediction is correct after the fourth cycle
+        if (predicted_taken !== expected_predicted_taken) begin
+          $display("ERROR: PC=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b", PC_curr, predicted_taken, expected_predicted_taken);
+          $stop();
+        end
+        if (predicted_target !== expected_predicted_target) begin
+          $display("ERROR: PC=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
+          $stop();
+        end
+      end
+
+      $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
+
+      // Verify if predictor learned to take branch at PC = 2.
+      if (predicted_taken !== 1'b1) begin
+        $display("ERROR: Predictor did not learn branch at PC=2 should be taken.");
+        $stop();
+      end else begin
+        $display("SUCCESS: Predictor learned branch at PC=2 should be taken.");
+        $display("SUCCESS: Predictor learned target branch at PC=2 should should be: 0x%h.", expected_predicted_target);
+      end
+    end
+  endtask
 
   // Task to apply random stimulus for each input of the DUT.
   task automatic apply_random_stimulus(input integer num_tests);
@@ -71,7 +182,7 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) begin;
         // Generate random values for all inputs
         PC_curr        = $random % 4;    // Random 4-bit PC address
-        // enable         = $random % 2;    // Random enable (0 or 1)
+        enable         = $random % 2;    // Random enable (0 or 1)
         was_branch     = $random % 2;    // Random branch indication (0 or 1)
         actual_taken   = $random % 2;    // Random actual branch outcome (0 or 1)
         actual_target  = $random;        // Random 16-bit target address
@@ -84,17 +195,15 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) begin
         // Verify the prediction.
         if (predicted_taken !== expected_predicted_taken) begin
-          $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b",PC_curr, predicted_taken, expected_predicted_taken);
+          $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
           $stop();
         end
 
         // Verify the predicted target.
         if (predicted_target !== expected_predicted_target) begin
-          $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
+          $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
           $stop();
         end
-
-        $display("Predicted taken: %0d, Predicted target: %0d, Expected Predicted taken: %0d, Expected Predicted target: %0d.", predicted_taken, predicted_target, expected_predicted_taken, expected_predicted_target);
 
         // The number of times we actually took the branch.
         if (was_branch && actual_taken)
@@ -104,11 +213,11 @@ module DynamicBranchPredictor_tb();
         if ((((was_branch && !actual_taken) && predicted_taken)) || ((was_branch && actual_taken) && !predicted_taken))
             misprediction_count = misprediction_count + 1;
         
-        // The number of times we predcited we took the branch.
+        // The number of times we predicted we took the branch.
         if (predicted_taken === 1'b1)
           predicted_taken_count = predicted_taken_count + 1;
         
-        // The number of times we predcited we did not take the branch.
+        // The number of times we predicted we did not take the branch.
         if (predicted_taken === 1'b0)
           predicted_not_taken_count = predicted_not_taken_count + 1;
       end
@@ -118,8 +227,8 @@ module DynamicBranchPredictor_tb();
   // Initialize the testbench.
   initial begin
     clk = 1'b0; // initially clk is low
-    rst = 1'b0; // initally rst is low
-    enable = 1'b1;  // Disable the branch predictor
+    rst = 1'b0; // initially rst is low
+    enable = 1'b1;  // Enable the branch predictor
     was_branch = 1'b0;    // Initially no branch
     actual_taken = 1'b0;  // Initially the branch is not taken
     actual_target = 16'h0000; // Set target to 0 initially
@@ -140,22 +249,24 @@ module DynamicBranchPredictor_tb();
 
     // Wait for a full clock cycle before deasserting rst.
     @(negedge clk) begin
-      
       // Deassert reset.
       rst = 1'b0;
 
       // Verify the prediction after reset.
       if (predicted_taken !== expected_predicted_taken) begin
-        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b",PC_curr, predicted_taken, expected_predicted_taken);
+        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
         $stop();
       end
 
       // Verify the predicted target after reset.
       if (predicted_target !== expected_predicted_target) begin
-        $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
+        $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
         $stop();
       end
     end
+
+    // Apply controlled test cases before random stimulus.
+    apply_controlled_test_cases();
 
     // Apply randomized test cases.
     apply_random_stimulus(.num_tests(1000000));

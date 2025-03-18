@@ -156,13 +156,16 @@ module DynamicBranchPredictor_tb();
     end
 
     // Apply randomized test cases.
-    apply_random_stimulus(.num_tests(1000000), .branch_taken_count(count));
+    apply_random_stimulus(.num_tests(1000000));
 
-    // Print out the count of branches taken and not taken.
-    $display("Number of branches taken: %0d. Number of branches not taken: %0d.", count, 1000000 - count);
+    // Print out the count of branches predicted taken and not taken.
+    $display("Number of branches predicted to be taken: %0d. Number of branches predicted to be not taken: %0d.", predict_taken_count, predict_not_taken_count);
 
     // Print out the count of mispredictions.
-    $display("Number of mispredictions: %0d.", count, 1000000 - count);
+    $display("Number of mispredictions: %0d.", misprediction_count);
+
+    // Print out the count of actual taken branches.
+    $display("Number of branches actually taken: %0d.", actual_taken_count);
 
     // If we reached here, it means that all tests passed.
     $display("YAHOO!! All tests passed.");

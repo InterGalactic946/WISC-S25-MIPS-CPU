@@ -19,6 +19,7 @@ module DynamicBranchPredictor_tb();
   reg [3:0] PC_curr;                    // Current PC value
   reg [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
+  integer count;                         // Number of times branch was actually taken.
   wire predicted_taken;                  // The predicted taken flag from the predictor
   wire [15:0] predicted_target;          // The predicted target address from the predictor
   wire expected_predicted_taken;         // The expected predicted taken flag from the model DBP
@@ -57,8 +58,9 @@ module DynamicBranchPredictor_tb();
   );
 
   // Task to apply random stimulus for each input of the DUT.
-  task automatic apply_random_stimulus(input integer num_tests);
+  task automatic apply_random_stimulus(input integer num_tests, output integer branch_taken_count);
     integer i;
+    integer count = 0;
     for (i = 0; i < num_tests; i = i + 1) begin
       @(negedge clk);
       
@@ -85,6 +87,10 @@ module DynamicBranchPredictor_tb();
           $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h", PC_curr, predicted_target, expected_predicted_target);
           $stop();
         end
+
+        // Update the number of times we took the branch.
+        if (was_branch && actual_taken)
+          count = count + 1;
       end
     end
   endtask
@@ -126,7 +132,13 @@ module DynamicBranchPredictor_tb();
     end
 
     // Apply randomized test cases.
-    apply_random_stimulus(1000000);
+    apply_random_stimulus(.num_tests(1000000), .branch_taken_count(count));
+
+    // Print out the count of branches taken and not taken.
+    $display("Number of branches taken: %0d. Number of branches not taken: %0d.", count, 1000000 - count);
+
+    // Print out the count of mispredictions.
+    $display("Number of mispredictions: %0d.", count, 1000000 - count);
 
     // If we reached here, it means that all tests passed.
     $display("YAHOO!! All tests passed.");

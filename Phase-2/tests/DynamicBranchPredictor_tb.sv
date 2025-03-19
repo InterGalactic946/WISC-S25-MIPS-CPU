@@ -87,7 +87,7 @@ module DynamicBranchPredictor_tb();
     verify_prediction_and_target();
 
   // Dumps the contents of the branch history table and branch target buffers for both the DUT and model.
-  task dump_BHT_BTB() 
+  task dump_BHT_BTB(); 
   begin
     // Loop variable.
     integer i;
@@ -162,7 +162,7 @@ module DynamicBranchPredictor_tb();
     else if (enable) begin
       if (branch_mispredicted && actual_taken)
         PC_curr <= actual_target;
-      else if (expected_predicted_taken[1])
+      else if (expected_prediction[1])
         PC_curr <= expected_predicted_target;
       else
         PC_curr <= PC_curr + 16'h0002;

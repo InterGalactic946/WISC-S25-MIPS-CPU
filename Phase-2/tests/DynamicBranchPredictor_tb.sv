@@ -231,7 +231,7 @@ module DynamicBranchPredictor_tb();
         actual_taken = $random % 2;
       
       4, 5:  // 25% of the time, randomize actual_target
-        actual_target = (actual_taken) ? $random : 16'h0000;
+        actual_target = (actual_taken) ? $random * 2 : 16'h0000;
 
       6:  // 12.5% of the time, randomize enable
         enable = $random % 2;

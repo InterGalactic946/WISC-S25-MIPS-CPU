@@ -71,7 +71,7 @@ module Fetch_tb();
       .clk(clk), 
       .rst(rst), 
       .stall(PC_stall), 
-      .actual_target(branch_target), 
+      .actual_target(actual_target), 
       .actual_taken(actual_taken), 
       .wen_BTB(wen_BTB),
       .wen_BHT(wen_BHT),

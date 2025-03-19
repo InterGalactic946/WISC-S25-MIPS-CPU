@@ -22,15 +22,15 @@ module cpu (clk, rst_n, hlt, pc);
   wire rst; // Active high synchronous reset signal
   
   /* FETCH stage signals */
-  wire [15:0] PC_next;  // Next PC address
-  wire [15:0] PC_inst;  // Instruction at the current PC address
-  wire predicted_taken; // Predicted taken signal from the branch history table
+  wire [15:0] PC_next;   // Next PC address
+  wire [15:0] PC_inst;   // Instruction at the current PC address
+  wire [1:0] prediction; // 2-bit Prediction from the branch history table
 
   /* IF/ID Pipeline Register signals */
   wire [3:0] IF_ID_PC_curr;   // Pipelined lower 4-bits of current instruction (previous PC) address from the fetch stage
   wire [15:0] IF_ID_PC_next;  // Pipelined next instruction (previous PC_next) address from the fetch stage
   wire [15:0] IF_ID_PC_inst;  // Pipelined instruction word (previous PC_inst) from the fetch stage
-  wire IF_ID_predicted_taken; // Pipelined branch prediction (previous predicted_taken) from the fetch stage
+  wire [1:0] IF_ID_prediction;// Pipelined branch prediction (previous predicted_taken) from the fetch stage
 
   /* DECODE stage signals */
   wire [15:0] branch_target; // Computed branch target address
@@ -118,12 +118,13 @@ module cpu (clk, rst_n, hlt, pc);
       .actual_taken(actual_taken), 
       .was_branch(Branch),
       .branch_mispredicted(misprediction),
-      .IF_ID_PC_curr(IF_ID_PC_curr), 
+      .IF_ID_PC_curr(IF_ID_PC_curr),
+      .IF_ID_prediction(IF_ID_prediction), 
       
       .PC_next(PC_next), 
       .PC_inst(PC_inst), 
       .PC_curr(pc),
-      .predicted_taken(predicted_taken)
+      .prediction(prediction)
   );
   ///////////////////////////////////
 
@@ -137,25 +138,26 @@ module cpu (clk, rst_n, hlt, pc);
     .PC_curr(pc),
     .PC_next(PC_next),
     .PC_inst(PC_inst),
-    .predicted_taken(predicted_taken),
+    .prediction(prediction),
     
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_PC_next(IF_ID_PC_next),
     .IF_ID_PC_inst(IF_ID_PC_inst),
-    .IF_ID_predicted_taken(IF_ID_predicted_taken)
+    .IF_ID_prediction(IF_ID_prediction)
   );
   /////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
   // DECODE instruction word, resolve branches, and access register file   //
   ///////////////////////////////////////////////////////////////////////////
+  // IF_ID_predicted_taken = IF_ID_prediction[1].
   Decode iDECODE (
     .clk(clk),
     .rst(rst),
     .pc_inst(IF_ID_PC_inst),
     .pc_next(IF_ID_PC_next),
     .flags({ZF, VF, NF}), 
-    .IF_ID_predicted_taken(IF_ID_predicted_taken),
+    .IF_ID_predicted_taken(IF_ID_prediction[1]),
     .MEM_WB_RegWrite(MEM_WB_RegWrite),
     .MEM_WB_reg_rd(MEM_WB_reg_rd),
     .RegWriteData(RegWriteData),

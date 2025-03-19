@@ -134,7 +134,7 @@ module DynamicBranchPredictor_tb();
       rst = 1'b0;              // Initially rst is low
       enable = 1'b1;           // Enable the branch predictor
       is_branch = 1'b0;        // Initially no branch
-      misprediction = 1'b0;    // No misprediction yet
+      mispredicted = 1'b0;    // No misprediction yet
       target_miscomputed = 1'b0; // None yet
       branch_taken = 1'b0; // Not yet
       wen_BTB = 1'b0; 

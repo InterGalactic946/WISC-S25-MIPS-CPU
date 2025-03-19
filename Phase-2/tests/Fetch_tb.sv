@@ -22,7 +22,6 @@ module DynamicBranchPredictor_tb();
   logic [15:0] actual_target;             // Actual target address of the branch
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
   logic [15:0] IF_ID_predicted_target;    // Predicted target passed to the decode stage
-  logic [15:0] PC_curr;                   // Current PC value
   logic [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
   logic mispredicted;                     // Indicates previous instruction's fetch mispredicted.
@@ -36,18 +35,25 @@ module DynamicBranchPredictor_tb();
   integer test_counter;                   // Number of tests executed.
   integer stalls;                         // Number of PC stalls.
   integer num_tests;                      // Number of test cases to execute.
-
-  wire [1:0] prediction;                  // The 2-bit predicted taken flag from the predictor
-  wire [15:0] predicted_target;           // The predicted target address from the predictor
-  wire [1:0] expected_prediction;         // The expected prediction from the model DBP
-  wire [15:0] expected_predicted_target;  // The expected predicted target address from from the model DBP
+    
+  logic [15:0] PC_next,                   // Computed next PC value
+  logic [15:0] PC_inst,                   // Instruction fetched from the current PC address
+  logic [15:0] PC_curr;                   // Current PC value
+  logic [1:0] prediction;                 // The 2-bit predicted taken flag from the predictor
+  logic [15:0] predicted_target;          // The predicted target address from the predictor
+  
+  logic [15:0] expected_PC_next,          // The expected computed next PC value
+  logic [15:0] expected_PC_inst,          // The expected instruction fetched from the current PC address
+  logic [15:0] expected_PC_curr;          // The expected current PC value
+  logic [1:0] expected_prediction;        // The expected prediction from the model DBP
+  logic [15:0] expected_predicted_target; // The expected predicted target address from from the model DBP
 
   // Instantiate the DUT: Dynamic Branch Predictor.
   Fetch iDUT (
       .clk(clk), 
       .rst(rst), 
-      .stall(PC_stall), 
-      .actual_target(branch_target), 
+      .stall(enable), 
+      .actual_target(actual_target), 
       .actual_taken(actual_taken), 
       .wen_BTB(wen_BTB),
       .wen_BHT(wen_BHT),
@@ -57,7 +63,7 @@ module DynamicBranchPredictor_tb();
       
       .PC_next(PC_next), 
       .PC_inst(PC_inst), 
-      .PC_curr(pc),
+      .PC_curr(PC_curr),
       .prediction(prediction),
       .predicted_target(predicted_target)
   );
@@ -75,16 +81,34 @@ module DynamicBranchPredictor_tb();
       .IF_ID_PC_curr(IF_ID_PC_curr),
       .IF_ID_prediction(IF_ID_prediction), 
       
-      .PC_next(PC_next), 
-      .PC_inst(PC_inst), 
-      .PC_curr(pc),
-      .prediction(prediction),
-      .predicted_target(predicted_target)
+      .PC_next(expected_PC_next), 
+      .PC_inst(expected_PC_inst), 
+      .PC_curr(expected_PC_curr),
+      .prediction(expected_prediction),
+      .predicted_target(expected_predicted_target)
   );
 
-  // A task to verify the prediction and target.
-  task verify_prediction_and_target();
-    begin
+  // A task to verify the DUT vs model.
+  task verify_DUT();
+    begin      
+      // Verify the PC next.
+      if (PC_next !== expected_PC_next) begin
+        $display("ERROR: PC_next=0x%h, expected_PC_next=0x%h.", PC_next, expected_PC_next);
+        $stop();
+      end
+
+      // Verify the PC instruction.
+      if (PC_inst !== expected_PC_inst) begin
+        $display("ERROR: PC_inst=0x%h, expected_PC_inst=0x%h.", PC_curr, expected_PC_inst);
+        $stop();
+      end
+
+      // Verify the PC.
+      if (PC_curr !== expected_PC_curr) begin
+        $display("ERROR: PC_curr=0x%h, expected_PC_curr=0x%h.", PC_curr, expected_PC_curr);
+        $stop();
+      end
+
       // Verify the prediction.
       if (prediction !== expected_prediction) begin
         $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, prediction[1], expected_prediction[1]);
@@ -101,39 +125,13 @@ module DynamicBranchPredictor_tb();
 
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin
-    // Verify the predictions.
-    verify_prediction_and_target();
+    // Verify the DUT.
+    verify_DUT();
 
     // // Dump the contents of memory whenever we write to the BTB or BHT.
     // if (wen_BHT || wen_BTB)
     //   dump_BHT_BTB();
   end
-
-  // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
-  // for both the DUT and Model, along with the PC_curr values.
-  task dump_BHT_BTB(); 
-  begin
-    // Loop variable.
-    integer i;
-
-    // Read out the memory contents.
-    $display("\n====== Branch History Table (BHT) - MODEL vs DUT ======");
-      for (i = 0; i < 16; i = i + 1) begin
-        $display("BHT[%0d] -> Model: %b | DUT: %b | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
-                i, 
-                iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0], 
-                iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
-      end
-
-      $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
-      for (i = 0; i < 16; i = i + 1) begin
-        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
-                i, 
-                iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i], 
-                iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
-      end
-    end
-  endtask
 
   // Initialize the testbench.
   initial begin
@@ -143,7 +141,6 @@ module DynamicBranchPredictor_tb();
       is_branch = 1'b0;        // Initially no branch
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
-      PC_curr = 16'h0000;       // Start with PC = 0
       IF_ID_PC_curr = 4'h0;    // Start with PC = 0
       IF_ID_prediction = 2'b00; // Start with strongly not taken prediction (prediction[1] = 0)
 
@@ -156,7 +153,7 @@ module DynamicBranchPredictor_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 10000000;
+      num_tests = 20;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
@@ -171,7 +168,7 @@ module DynamicBranchPredictor_tb();
       repeat (num_tests) @(posedge clk);
 
       // Dump memory conteents.
-      dump_BHT_BTB();
+      // dump_BHT_BTB();
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);
@@ -190,19 +187,6 @@ module DynamicBranchPredictor_tb();
   always 
     #5 clk = ~clk; // toggle clock every 5 time units.
 
-  // Model the PC register.
-  always @(posedge clk) begin
-    if (rst)
-      PC_curr <= 16'h0000;
-    else if (enable) begin
-      if (update_PC)
-        PC_curr <= actual_target;
-      else if (expected_prediction[1])
-        PC_curr <= expected_predicted_target;
-      else
-        PC_curr <= PC_curr + 16'h0002;
-    end
-  end
 
   // Model Decode stage.
   always @(posedge clk) begin
@@ -257,7 +241,7 @@ module DynamicBranchPredictor_tb();
     if (rst)
       IF_ID_PC_curr <= 4'h0;
     else if (enable)
-      IF_ID_PC_curr <= PC_curr[3:0];
+      IF_ID_PC_curr <= expected_PC_curr[3:0];
   
   // Model the prediction register.
   always @(posedge clk)

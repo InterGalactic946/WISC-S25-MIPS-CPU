@@ -66,7 +66,7 @@ module DynamicBranchPredictor (
     .wen(branch_mispredicted), 
     .actual_taken(actual_taken),
     
-    .prediction(prediction),
+    .prediction(prediction)
   ); 
   ////////////////////////////////////////////////
 

@@ -24,7 +24,6 @@ module DynamicBranchPredictor_model (
   ///////////////////////////////////////////////
   logic wen_BTB;                  // Write enable for BTB.
   logic [1:0] updated_prediction; // The new prediction to be stored in the BHT on an incorrect prediction.
-  logic [1:0] prediction;         // The predicted value of the current branch instruction.
   logic [1:0] BHT [15:0];         // 2-bit, 16 entry Branch History Table (BHT) memory.
   logic [15:0] BTB [15:0];        // 16 entry Branch Target Buffer (BTB) memory.
   logic error;                    // Error flag raised when prediction state is invalid.

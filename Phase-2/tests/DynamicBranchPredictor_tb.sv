@@ -215,13 +215,13 @@ module DynamicBranchPredictor_tb();
     // Go with PC = 0x8. (Branch instruction)
     PC_curr = 4'h8; // Should predict taken
     
-    // Verify the prediction after reset.
-    if (predicted_taken !== expected_predicted_taken) begin
-      $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, predicted_taken, expected_predicted_taken);
+    // Verify the prediction.
+    if (prediction !== expected_prediction) begin
+      $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.",PC_curr, prediction[1], expected_prediction[1]);
       $stop();
     end
 
-    // Verify the predicted target after reset.
+    // Verify the predicted target.
     if (predicted_target !== expected_predicted_target) begin
       $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
       $stop();

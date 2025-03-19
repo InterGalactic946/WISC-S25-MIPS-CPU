@@ -18,7 +18,7 @@ module DynamicBranchPredictor_tb();
   logic branch_mispredicted;              // Output indicating if the branch was mispredicted
   logic [3:0] PC_curr;                      // Current PC value
   logic [3:0] IF_ID_PC_curr;                // IF/ID stage current PC value
-  logic cycle_count;
+  integer cycle_count;
 
   integer actual_taken_count;           // Number of times branch was actually taken.
   integer predicted_taken_count;        // Number of times branch was predicted to be taken.

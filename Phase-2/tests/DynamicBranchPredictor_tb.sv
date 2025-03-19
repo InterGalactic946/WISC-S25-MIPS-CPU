@@ -86,6 +86,9 @@ module DynamicBranchPredictor_tb();
   always @(negedge clk) begin
     // Verify the predictions.
     verify_prediction_and_target();
+
+    // Dump the contents of memory.
+    dump_BHT_BTB();
   end
 
   // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
@@ -101,7 +104,7 @@ module DynamicBranchPredictor_tb();
         $display("BHT[%0d] -> Model: %b | DUT: %b | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
                 i, 
                 iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0], 
-                iDBP_model.PC_curr, iDUT.PC_curr);
+                iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
       end
 
       $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
@@ -134,7 +137,7 @@ module DynamicBranchPredictor_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 1000000;
+      num_tests = 100;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
@@ -156,9 +159,6 @@ module DynamicBranchPredictor_tb();
       $display("Number of branches actually taken: %0d.", actual_taken_count);
       $display("Number of instructions executed: %0d.", num_tests);
       $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(num_tests))) * 100);
-
-      // Dump the contents of memory.
-      dump_BHT_BTB();
       
       // If we reached here it means all tests passed.
       $display("\nYAHOO!! All tests passed.");

@@ -11,7 +11,7 @@ module DynamicBranchPredictor_tb();
   logic clk;                              // Clock signal
   logic rst;                              // Reset signal
   logic enable;                           // Enable signal for the branch predictor
-  logic was_branch;                       // Flag to indicate if the current instruction was a branch
+  logic is_branch;                        // Flag to indicate if the previous instruction was a branch
   logic actual_taken;                     // Flag indicating whether the branch was actually taken
   logic [15:0] actual_target;             // Actual target address of the branch
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
@@ -23,6 +23,7 @@ module DynamicBranchPredictor_tb();
   integer predicted_taken_count;        // Number of times branch was predicted to be taken.
   integer predicted_not_taken_count;    // Number of times branch was predicted to not be taken.
   integer misprediction_count;          // Number of times branch was mispredicted.
+  integer stalls;                       // Number of PC stalls.
 
   wire [1:0] prediction;                // The 2-bit predicted taken flag from the predictor
   wire [15:0] predicted_target;         // The predicted target address from the predictor
@@ -37,7 +38,7 @@ module DynamicBranchPredictor_tb();
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
-    .was_branch(was_branch),
+    .was_branch(is_branch),
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
     .branch_mispredicted(branch_mispredicted), 
@@ -54,7 +55,7 @@ module DynamicBranchPredictor_tb();
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
-    .was_branch(was_branch),
+    .was_branch(is_branch),
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
     .branch_mispredicted(branch_mispredicted), 
@@ -64,15 +65,15 @@ module DynamicBranchPredictor_tb();
   );
 
   // A task to verify the prediction and target.
-  task verify_prediction_and_target;
+  task verify_prediction_and_target();
     begin
-      // Verify the prediction (expecting weakly not taken or weakly taken after a few cycles)
-      if (prediction[1] !== expected_prediction[1]) begin
+      // Verify the prediction.
+      if (prediction !== expected_prediction) begin
         $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, prediction[1], expected_prediction[1]);
         $stop();
       end
       
-      // Verify the predicted target
+      // Verify the predicted target.
       if (predicted_target !== expected_predicted_target) begin
         $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
         $stop();
@@ -80,12 +81,41 @@ module DynamicBranchPredictor_tb();
     end
   endtask
 
+  // At negative edge of clock, verify the predictions match the model.
+  always @(negedge clk)
+    // Verify the predictions.
+    verify_prediction_and_target();
+
+  // Dumps the contents of the branch history table and branch target buffers for both the DUT and model.
+  task dump_BHT_BTB() 
+  begin
+    // Loop variable.
+    integer i;
+
+    // Enable the memories to read out the contents.
+    @(negedge clk) enable = 1'b1;
+
+    // Read out the memory contents.
+    @(negedge clk) begin
+      $display("\n====== Branch History Table (BHT) - MODEL vs DUT ======");
+      for (i = 0; i < 16; i = i + 1) begin
+        $display("BHT[%0d] -> Model: %b | DUT: %b", i, model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i]);
+      end
+
+      $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
+      for (i = 0; i < 16; i = i + 1) begin
+        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+      end
+    end
+  end
+  endtask
+
   // Initialize the testbench.
   initial begin
       clk = 1'b0;              // Initially clk is low
       rst = 1'b0;              // Initially rst is low
       enable = 1'b1;           // Enable the branch predictor
-      was_branch = 1'b0;       // Initially no branch
+      is_branch = 1'b0;        // Initially no branch
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
       PC_curr = 16'h0000;       // Start with PC = 0
@@ -105,155 +135,92 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) rst = 1'b1;
 
       // Deassert reset and start testing.
-      @(negedge clk) begin
-        rst = 1'b0;
+      @(negedge clk) rst = 1'b0;
 
-        // Check initial prediction (Strongly not taken)
-        verify_prediction_and_target();
-
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Execute 11 instructions.
-      repeat (11) @(negedge clk) begin
-        // Go to the next instruction.
-        PC_curr = PC_curr + 4'h2;
-
-        // Check prediction for 11 instructions.
-        verify_prediction_and_target();
-
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Fetch the branch instruction.
-      @(negedge clk) begin
-        // This is the branch instruction's address.
-        PC_curr = PC_curr + 4'h2;
-
-        // Check prediction for the branch instruction.
-        verify_prediction_and_target();
-
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // At decode stage.
-      @(posedge clk);
-
-      // Update conditions for branch.
-      @(negedge clk) begin
-        was_branch = 1'b1;        // Indicates branch
-        actual_taken = 1'b1;      // Actually taken
-        actual_target = 16'h0014; // Branch target loops back to the LW
-        PC_curr = PC_curr + 4'h2; // Update PC to the next instrcution. (predict not taken)
-
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Flush the wrong instruction and update with target PC.
-      @(negedge clk) begin
-        was_branch = 1'b0;        // Deassert signals
-        actual_taken = 1'b0;      // Deassert signals
-        actual_target = 16'h0000; // Branch target loops back to the LW
-        PC_curr = 16'h0014;       // Update PC with the target.
-
-        // Check prediction for target.
-        verify_prediction_and_target();
-        
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Run till the branch instruction.
-      repeat(2) @(negedge clk) begin
-        // This is the branch instruction's address after 2 iterations.
-        PC_curr = PC_curr + 4'h2;
-
-        // Check prediction for both instructions.
-        verify_prediction_and_target();
-        
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // At decode stage.
-      @(posedge clk);
-
-      // Update conditions for branch
-      @(negedge clk) begin
-        was_branch = 1'b1;        // Indicates branch
-        actual_taken = 1'b1;      // Actually taken
-        actual_target = 16'h0014; // Branch target loops back to the LW
-        PC_curr = PC_curr + 4'h2; // Update PC to the next instrcution. (predict not taken)
-        
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Flush the wrong instruction and update with target PC.
-      @(negedge clk) begin
-        was_branch = 1'b0;        // Deassert signals
-        actual_taken = 1'b0;      // Deassert signals
-        actual_target = 16'h0000; // Branch target loops back to the LW
-        PC_curr = 16'h0014;       // Update PC.
-        
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Run till the branch instruction.
-      repeat(2) @(negedge clk) begin
-        // This is the branch instruction's address after 2 iterations.
-        PC_curr = PC_curr + 4'h2;
-
-        // Check prediction for both instructions.
-        verify_prediction_and_target();
-        
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Fetch the branch instruction (SHOULD PREDICT TAKEN).
-      @(negedge clk) begin
-        // This is the branch instruction's target address, if correct.
-        PC_curr = (prediction[1]) ? predicted_target : PC_curr + 2'h2;
-
-        // Check prediction for branch.
-        verify_prediction_and_target();
-        
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
+      // Run for 1000000 tests.
+      repeat (1000000) @(posedge clk);
 
       // If all predictions are correct, print out the counts.
+      $display("Number of PC stall cycles: %0d.", stalls);
       $display("Number of branches predicted to be taken: %0d.", predicted_taken_count);
       $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);
       $display("Number of mispredictions: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
-      $display("YAHOO!! All tests passed. Branch predictor predicted correctly after %0d cycles.", misprediction_count);
+      
+      // If we reached here it means all tests passed.
+      $display("YAHOO!! All tests passed.");
       $stop();
   end
 
   always 
     #5 clk = ~clk; // toggle clock every 5 time units.
 
+  // Model the PC register.
+  always @(posedge clk) begin
+    if (rst)
+      PC_curr <= 16'h0000;
+    else if (enable) begin
+      if (branch_mispredicted && actual_taken)
+        PC_curr <= actual_target;
+      else if (expected_predicted_taken[1])
+        PC_curr <= expected_predicted_target;
+      else
+        PC_curr <= PC_curr + 16'h0002;
+    end
+  end
+
+  // Model the fetch decode cycle.
+  always @(posedge clk) begin
+    // Get a random 1-bit value for the branch flag.
+    is_branch = $random % 2;
+
+    // Indicate if it is taken or not.
+    actual_taken = $random % 2;
+
+    // Randomly enable or disable the PC.
+    enable = $random % 2;
+
+    // Update the actual target as a random 16-bit value if it is taken, otherwise, ignored.
+    actual_target = (actual_taken) ? $random : 16'h0000;
+  end
+
+  // Get the counts for debugging.
+  always @(negedge clk) begin
+    // Count the number of stalls.
+    if (!enable) begin
+      stalls++;
+    end else if (is_branch) begin
+      // Track actual taken count.
+      if (actual_taken)
+        actual_taken_count++;
+
+      // Track predicted counts.
+      if (IF_ID_prediction[1]) 
+        predicted_taken_count++;
+      else 
+        predicted_not_taken_count++;
+
+      // Track mispredictions.
+      if (IF_ID_prediction[1] !== actual_taken) 
+        misprediction_count++;
+    end
+  end
+
   // Model the PC curr register.
   always @(posedge clk)
     if (rst)
       IF_ID_PC_curr <= 4'h0;
-    else
+    else if (enable)
       IF_ID_PC_curr <= PC_curr[3:0];
   
   // Model the prediction register.
   always @(posedge clk)
     if (rst)
       IF_ID_prediction <= 2'b00;
-    else
+    else if (enable)
       IF_ID_prediction <= expected_prediction;
   
   // We get the branch mispredicted condition.
-  assign branch_mispredicted = (IF_ID_prediction[1] !== actual_taken) && (was_branch);
+  assign branch_mispredicted = (IF_ID_prediction[1] !== actual_taken) && (is_branch);
 
 endmodule

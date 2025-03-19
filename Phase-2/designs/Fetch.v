@@ -43,9 +43,7 @@ module Fetch (
 
   // Update the PC with correct target on misprediction and taken, or the predicted target address 
   // if predicted to be taken, otherwise assume not taken.
-  assign PC_new = (branch_mispredicted) ? 
-                    ((actual_taken) ? actual_target : PC_next) : 
-                    ((prediction[1]) ? predicted_target : PC_next);
+  assign PC_new = (branch_mispredicted & actual_taken) ?  actual_target : ((prediction[1]) ? predicted_target : PC_next);
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
   DynamicBranchPredictor iDBP (

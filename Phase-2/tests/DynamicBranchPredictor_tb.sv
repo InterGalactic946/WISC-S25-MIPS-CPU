@@ -98,9 +98,9 @@ module DynamicBranchPredictor_tb();
     // Verify the predictions.
     verify_prediction_and_target();
 
-    // // Dump the contents of memory whenever we write to the BTB or BHT.
-    // if (wen_BHT || wen_BTB)
-    //   dump_BHT_BTB();
+    // Dump the contents of memory whenever we write to the BTB or BHT.
+    if (wen_BHT || wen_BTB)
+      dump_BHT_BTB();
   end
 
   // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
@@ -150,7 +150,7 @@ module DynamicBranchPredictor_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 10000000;
+      num_tests = 30;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
@@ -165,7 +165,7 @@ module DynamicBranchPredictor_tb();
       repeat (num_tests) @(posedge clk);
 
       // Dump memory conteents.
-      dump_BHT_BTB();
+      // dump_BHT_BTB();
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);

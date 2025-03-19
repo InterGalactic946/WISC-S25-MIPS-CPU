@@ -90,28 +90,30 @@ module DynamicBranchPredictor_tb();
     dump_BHT_BTB();
   end
 
-  // Dumps the contents of the branch history table and branch target buffers for both the DUT and model.
+  // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
+  // for both the DUT and Model, along with the PC_curr values.
   task dump_BHT_BTB(); 
   begin
     // Loop variable.
     integer i;
 
-    // Enable the memories to read out the contents.
-    @(negedge clk) enable = 1'b1;
-
     // Read out the memory contents.
-    @(negedge clk) begin
-      $display("\n====== Branch History Table (BHT) - MODEL vs DUT ======");
+    $display("\n====== Branch History Table (BHT) - MODEL vs DUT ======");
       for (i = 0; i < 16; i = i + 1) begin
-        $display("BHT[%0d] -> Model: %b | DUT: %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i]);
+        $display("BHT[%0d] -> Model: %b | DUT: %b | PC_curr -> Model: 0x%h | DUT: 0x%h", 
+                i, 
+                iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0], 
+                iDBP_model.PC_curr, iDUT.PC_curr);
       end
 
       $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
       for (i = 0; i < 16; i = i + 1) begin
-        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h | PC_curr -> Model: 0x%h | DUT: 0x%h", 
+                i, 
+                iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i][1:0], 
+                iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
       end
     end
-  end
   endtask
 
   // Initialize the testbench.

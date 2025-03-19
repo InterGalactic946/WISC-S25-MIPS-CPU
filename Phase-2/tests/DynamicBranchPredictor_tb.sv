@@ -19,16 +19,17 @@ module DynamicBranchPredictor_tb();
   logic [15:0] PC_curr;                   // Current PC value
   logic [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
-  integer actual_taken_count;           // Number of times branch was actually taken.
-  integer predicted_taken_count;        // Number of times branch was predicted to be taken.
-  integer predicted_not_taken_count;    // Number of times branch was predicted to not be taken.
-  integer misprediction_count;          // Number of times branch was mispredicted.
-  integer stalls;                       // Number of PC stalls.
+  integer actual_taken_count;             // Number of times branch was actually taken.
+  integer predicted_taken_count;          // Number of times branch was predicted to be taken.
+  integer predicted_not_taken_count;      // Number of times branch was predicted to not be taken.
+  integer misprediction_count;            // Number of times branch was mispredicted.
+  integer stalls;                         // Number of PC stalls.
+  integer num_tests;                      // Number of test cases to execute.
 
-  wire [1:0] prediction;                // The 2-bit predicted taken flag from the predictor
-  wire [15:0] predicted_target;         // The predicted target address from the predictor
-  wire [1:0] expected_prediction;       // The expected prediction from the model DBP
-  wire [15:0] expected_predicted_target;// The expected predicted target address from from the model DBP
+  wire [1:0] prediction;                  // The 2-bit predicted taken flag from the predictor
+  wire [15:0] predicted_target;           // The predicted target address from the predictor
+  wire [1:0] expected_prediction;         // The expected prediction from the model DBP
+  wire [15:0] expected_predicted_target;  // The expected predicted target address from from the model DBP
 
   // Instantiate the DUT: Dynamic Branch Predictor.
   DynamicBranchPredictor iDUT (
@@ -85,9 +86,6 @@ module DynamicBranchPredictor_tb();
   always @(negedge clk) begin
     // Verify the predictions.
     verify_prediction_and_target();
-
-    // Dump the contents of memory.
-    dump_BHT_BTB();
   end
 
   // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
@@ -135,6 +133,9 @@ module DynamicBranchPredictor_tb();
       misprediction_count = 0;
       stalls = 0;
 
+      // initialize num_tests.
+      num_tests = 1000000;
+
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
       
@@ -144,8 +145,8 @@ module DynamicBranchPredictor_tb();
       // Deassert reset and start testing.
       @(negedge clk) rst = 1'b0;
 
-      // Run for 1000000 tests.
-      repeat (16) @(posedge clk);
+      // Run for num_tests.
+      repeat (num_tests) @(posedge clk);
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);
@@ -153,6 +154,11 @@ module DynamicBranchPredictor_tb();
       $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);
       $display("Number of mispredictions: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
+      $display("Number of instructions executed: %0d.", num_tests);
+      $display("Accuracy of predcitor: %0d%%.", (misprediction_count/num_tests) * 100);
+
+      // Dump the contents of memory.
+      dump_BHT_BTB();
       
       // If we reached here it means all tests passed.
       $display("\nYAHOO!! All tests passed.");

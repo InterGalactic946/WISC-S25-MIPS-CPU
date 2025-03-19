@@ -15,6 +15,8 @@ module Fetch_tb();
   logic update_PC;                        // Signal to update the PC with the actual target
 
   logic is_branch;                        // Flag to indicate if the previous instruction was a branch
+
+  logic loaded;                           // Indicates if the instruction memory has been loaded
   
   logic actual_taken;                     // Flag indicating whether the branch was actually taken
   logic [15:0] actual_target;             // Actual target address of the branch
@@ -183,6 +185,7 @@ module Fetch_tb();
       rst = 1'b0;              // Initially rst is low
       enable = 1'b1;           // Enable the branch predictor
       is_branch = 1'b0;        // Initially no branch
+      loaded = 1'b0;           // initially we didnt load
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
       IF_ID_PC_curr = 4'h0;    // Start with PC = 0
@@ -203,7 +206,10 @@ module Fetch_tb();
       @(posedge clk);
       
       // Assert reset
-      @(negedge clk) rst = 1'b1;
+      @(negedge clk) begin
+        rst = 1'b1;
+        loaded = 1'b1;
+      end
 
       // Deassert reset and start testing.
       @(negedge clk) rst = 1'b0;

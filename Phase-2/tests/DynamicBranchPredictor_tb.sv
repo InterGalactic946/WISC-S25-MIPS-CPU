@@ -73,7 +73,6 @@ module DynamicBranchPredictor_tb();
       was_branch = 1'b0;       // Initially no branch
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
-      branch_mispredicted = 1'b0; // Initially branch is not mispredicted
       PC_curr = 4'h0;          // Start with PC = 0
       IF_ID_PC_curr = 4'h0;    // Start with PC = 0
       IF_ID_prediction = 2'b00; // Start with strongly not taken prediction (prediction[1] = 0)

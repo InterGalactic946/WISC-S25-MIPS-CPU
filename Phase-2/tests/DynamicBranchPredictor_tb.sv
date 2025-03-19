@@ -135,7 +135,7 @@ module DynamicBranchPredictor_tb();
       cycle_count = 0;
       while (prediction[1] !== 1'b1 && cycle_count < 10) begin
         // Print the prediction and target for debugging
-        $display("Cycle %0d: PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h", cycle_count, PC_curr, prediction[1], predicted_target);
+        $display("Cycle %0d: PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", cycle_count, PC_curr, prediction[1], predicted_target, branch_mispredicted);
 
         // Verify the prediction and target
         verify_prediction_and_target();

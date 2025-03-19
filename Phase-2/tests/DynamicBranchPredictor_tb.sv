@@ -16,9 +16,8 @@ module DynamicBranchPredictor_tb();
   logic [15:0] actual_target;             // Actual target address of the branch
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
   logic branch_mispredicted;              // Output indicating if the branch was mispredicted
-  logic [3:0] PC_curr;                      // Current PC value
-  logic [3:0] IF_ID_PC_curr;                // IF/ID stage current PC value
-  integer cycle_count;
+  logic [3:0] PC_curr;                    // Current PC value
+  logic [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
   integer actual_taken_count;           // Number of times branch was actually taken.
   integer predicted_taken_count;        // Number of times branch was predicted to be taken.
@@ -64,6 +63,22 @@ module DynamicBranchPredictor_tb();
     .predicted_target(expected_predicted_target)
   );
 
+  // A task to verify the prediction and target.
+  task verify_prediction_and_target;
+    begin
+      // Verify the prediction (expecting weakly not taken or weakly taken after a few cycles)
+      if (prediction[1] !== expected_prediction[1]) begin
+        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, prediction[1], expected_prediction[1]);
+        $stop();
+      end
+      
+      // Verify the predicted target
+      if (predicted_target !== expected_predicted_target) begin
+        $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
+        $stop();
+      end
+    end
+  endtask
 
   // Initialize the testbench.
   initial begin
@@ -95,70 +110,101 @@ module DynamicBranchPredictor_tb();
       // Deassert reset and start testing.
       @(negedge clk) begin
         rst = 1'b0;
-        PC_curr = 4'h2;   // Fetch instruction at PC=0x2 (Branch instruction)
 
         // Check initial prediction (Strongly not taken)
         verify_prediction_and_target();
+
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // At fetch stage.
-      @(posedge clk);
-      // Initial fetch, verify the prediction and target
-      verify_prediction_and_target();
+      // Execute 12 instructions.
+      repeat (12) @(negedge clk) begin
+        PC_curr = PC_curr + 4'h2;
+
+        // Check prediction for 12 instructions.
+        verify_prediction_and_target();
+
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
+      end
+
+      // Fetch the branch instruction.
+      @(negedge clk) begin
+        PC_curr = PC_curr + 4'h2;
+
+        // Check prediction for 12 instructions.
+        verify_prediction_and_target();
+
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
+      end
 
       // At decode stage.
       @(posedge clk);
-      // Update signals for branch taken and set target
+
+      // Update conditions for branch
       @(negedge clk) begin
         was_branch = 1'b1;        // Indicates branch
         actual_taken = 1'b1;      // Actually taken
-        actual_target = 16'h0020; // Target if taken
-        PC_curr = actual_target[3:0]; // Update PC to the target address
+        actual_target = 16'h0014; // Branch target loops back to the LW
+        PC_curr = actual_target[3:0]; // Update to the target.
       end
 
-      // Fetch the target again, simulate branch misprediction.
-      @(posedge clk);
-      // Second fetch at target, expect a misprediction again
-      verify_prediction_and_target();
+      // Run till the branch instruction.
+      repeat(2) @(negedge clk) begin
+        was_branch = 1'b0;        // Deassert signals
+        actual_taken = 1'b0;      // Deassert signals
+        actual_target = 16'h0000; // Branch target loops back to the LW
+        
+        PC_curr = PC_curr + 4'h2; // Update PC.
 
-      // At decode stage again.
-      @(posedge clk);
-      // Update conditions for second branch
-      @(negedge clk) begin
-        was_branch = 1'b1;        // Indicates branch
-        actual_taken = 1'b1;      // Actually taken
-        actual_target = 16'h0020; // Branch target loops back to the same place
-        PC_curr = actual_target[3:0];
-      end
-
-      // Set up a counter to prevent infinite loops
-      cycle_count = 0;
-      while (prediction[1] !== 1'b1 && cycle_count < 10) begin
-        // Print the prediction and target for debugging
-        $display("Cycle %0d: PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", cycle_count, PC_curr, prediction[1], predicted_target, branch_mispredicted);
-
-        // Verify the prediction and target
+        // Check prediction for branch instruction again.
         verify_prediction_and_target();
 
-        // At decode stage again, update signals
-        @(posedge clk);
-        @(negedge clk) begin
-          was_branch = 1'b1;
-          actual_taken = 1'b1;
-          actual_target = 16'h0020; // Target if taken, loop back to the branch instruction
-          PC_curr = actual_target[3:0];
-        end
-
-        // Wait for the next fetch cycle
-        @(posedge clk);
-        
-        // Increment cycle count
-        cycle_count = cycle_count + 1;
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      if (cycle_count >= 10) begin
-        $display("ERROR: Exceeded max cycles without correctly predicting branch.");
-        $stop();
+      // Fetch the branch instruction.
+      @(negedge clk) begin
+        PC_curr = PC_curr + 4'h2;
+
+        // Check prediction for 12 instructions.
+        verify_prediction_and_target();
+        
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
+      end
+
+      // At decode stage.
+      @(posedge clk);
+
+      // Update conditions for branch
+      @(negedge clk) begin
+        was_branch = 1'b1;        // Indicates branch
+        actual_taken = 1'b1;      // Actually taken
+        actual_target = 16'h0014; // Branch target loops back to the LW
+        PC_curr = actual_target[3:0]; // Update to the target.
+      end
+
+      // Run till the branch instruction.
+      repeat(2) @(negedge clk) begin
+        was_branch = 1'b0;        // Deassert signals
+        actual_taken = 1'b0;      // Deassert signals
+        actual_target = 16'h0000; // Branch target loops back to the LW
+        
+        PC_curr = PC_curr + 4'h2; // Update PC.
+
+        // Check prediction for branch instruction again.
+        verify_prediction_and_target();
+
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
+      end
+
+      // Fetch the branch instruction (SHOULD PREDICT TAKEN).
+      @(negedge clk) begin
+        PC_curr = PC_curr + 4'h2;
+
+        // Check prediction for 12 instructions.
+        verify_prediction_and_target();
+
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
       // If all predictions are correct, print out the counts.
@@ -169,23 +215,6 @@ module DynamicBranchPredictor_tb();
       $display("YAHOO!! All tests passed. Branch predictor predicted correctly after %0d cycles.", misprediction_count);
       $stop();
   end
-
-  // A task to verify the prediction and target.
-  task verify_prediction_and_target;
-    begin
-      // Verify the prediction (expecting weakly not taken or weakly taken after a few cycles)
-      if (prediction[1] !== expected_prediction[1]) begin
-        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, prediction[1], expected_prediction[1]);
-        $stop();
-      end
-      
-      // Verify the predicted target
-      if (predicted_target !== expected_predicted_target) begin
-        $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
-        $stop();
-      end
-    end
-  endtask
 
   always 
     #5 clk = ~clk; // toggle clock every 5 time units.

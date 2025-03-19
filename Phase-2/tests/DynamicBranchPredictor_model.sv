@@ -42,7 +42,7 @@ module DynamicBranchPredictor_model (
       BTB <= '{default: 16'h0000};
     end else if (enable & wen_BTB) begin
       // Update BTB with the target address if the branch was taken.
-      $display("Reached here. 0x%h", BHT[PC_curr[3:1]]);
+      $display("Reached here. 0x%h", BTB[PC_curr[3:1]]);
       BTB[IF_ID_PC_curr[3:1]] <= actual_target;
     end
   end

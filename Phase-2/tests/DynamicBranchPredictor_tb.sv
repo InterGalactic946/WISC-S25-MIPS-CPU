@@ -219,16 +219,6 @@ module DynamicBranchPredictor_tb();
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Update conditions for branch
-      @(negedge clk) begin
-        was_branch = 1'b1;        // Indicates branch
-        actual_taken = 1'b1;      // Actually taken
-        actual_target = 16'h0014; // Branch target loops back to the LW
-        //PC_curr = PC_curr + 4'h2; // Update PC to next PC.
-
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
       // If all predictions are correct, print out the counts.
       $display("Number of branches predicted to be taken: %0d.", predicted_taken_count);
       $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);

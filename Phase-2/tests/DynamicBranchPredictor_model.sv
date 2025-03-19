@@ -60,7 +60,7 @@ module DynamicBranchPredictor_model (
       BHT <= '{default: 2'h0};
     end else if (enable & branch_mispredicted) begin
       // Update BHT based on a mispredicted branch instruction.
-      $display("Reached here.");
+      $display("Reached here. 0x%h", BHT[PC_curr[3:1]]);
       BHT[IF_ID_PC_curr[3:1]] <= updated_prediction;
     end
   end

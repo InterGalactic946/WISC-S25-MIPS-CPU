@@ -43,37 +43,43 @@ module DynamicBranchPredictor_tb();
   wire [15:0] expected_predicted_target;  // The expected predicted target address from from the model DBP
 
   // Instantiate the DUT: Dynamic Branch Predictor.
-  DynamicBranchPredictor iDUT (
-    .clk(clk), 
-    .rst(rst), 
-    .PC_curr(PC_curr[3:0]), 
-    .IF_ID_PC_curr(IF_ID_PC_curr), 
-    .IF_ID_prediction(IF_ID_prediction), 
-    .enable(enable),
-    .wen_BTB(wen_BTB),
-    .wen_BHT(wen_BHT),
-    .actual_taken(actual_taken),
-    .actual_target(actual_target),  
-    
-    .prediction(prediction), 
-    .predicted_target(predicted_target)
+  Fetch iDUT (
+      .clk(clk), 
+      .rst(rst), 
+      .stall(PC_stall), 
+      .actual_target(branch_target), 
+      .actual_taken(actual_taken), 
+      .wen_BTB(wen_BTB),
+      .wen_BHT(wen_BHT),
+      .update_PC(update_PC),
+      .IF_ID_PC_curr(IF_ID_PC_curr),
+      .IF_ID_prediction(IF_ID_prediction), 
+      
+      .PC_next(PC_next), 
+      .PC_inst(PC_inst), 
+      .PC_curr(pc),
+      .prediction(prediction),
+      .predicted_target(predicted_target)
   );
 
-  // Instantiate the model dynamic branch predictor.
-  DynamicBranchPredictor_model iDBP_model (
-    .clk(clk), 
-    .rst(rst), 
-    .PC_curr(PC_curr[3:0]), 
-    .IF_ID_PC_curr(IF_ID_PC_curr), 
-    .IF_ID_prediction(IF_ID_prediction), 
-    .enable(enable),
-    .wen_BTB(wen_BTB),
-    .wen_BHT(wen_BHT),
-    .actual_taken(actual_taken),
-    .actual_target(actual_target),  
-    
-    .prediction(expected_prediction), 
-    .predicted_target(expected_predicted_target)
+  // Instantiate the model fetch unit.
+  Fetch_model iFETCH_model (
+      .clk(clk), 
+      .rst(rst), 
+      .stall(PC_stall), 
+      .actual_target(branch_target), 
+      .actual_taken(actual_taken), 
+      .wen_BTB(wen_BTB),
+      .wen_BHT(wen_BHT),
+      .update_PC(update_PC),
+      .IF_ID_PC_curr(IF_ID_PC_curr),
+      .IF_ID_prediction(IF_ID_prediction), 
+      
+      .PC_next(PC_next), 
+      .PC_inst(PC_inst), 
+      .PC_curr(pc),
+      .prediction(prediction),
+      .predicted_target(predicted_target)
   );
 
   // A task to verify the prediction and target.

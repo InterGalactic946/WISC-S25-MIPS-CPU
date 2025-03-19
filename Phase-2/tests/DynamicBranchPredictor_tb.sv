@@ -134,6 +134,8 @@ module DynamicBranchPredictor_tb();
         // Check prediction for the branch instruction.
         verify_prediction_and_target();
 
+        $display("Branch instrcution fetched.");
+
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 

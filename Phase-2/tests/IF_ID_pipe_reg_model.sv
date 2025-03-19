@@ -4,19 +4,19 @@
 // This module represents a model IF/ID pipeline register for the CPU.   //
 ///////////////////////////////////////////////////////////////////////////
 module IF_ID_pipe_reg_model (
-    input logic clk,                   // System clock
-    input logic rst,                   // Active high synchronous reset
-    input logic stall,                 // Stall signal (prevents updates)
-    input logic flush,                 // Flush pipeline register (clears the instruction word)
-    input logic [15:0] PC_curr,        // Current PC from the fetch stage
-    input logic [15:0] PC_next,        // Next PC from the fetch stage
-    input logic [15:0] PC_inst,        // Current instruction word from the fetch sage
-    input logic predicted_taken,       // Predicted branch taken signal from the fetch stage
+    input wire clk,                   // System clock
+    input wire rst,                   // Active high synchronous reset
+    input wire stall,                 // Stall signal (prevents updates)
+    input wire flush,                 // Flush pipeline register (clears the instruction word)
+    input wire [15:0] PC_curr,        // Current PC from the fetch stage
+    input wire [15:0] PC_next,        // Next PC from the fetch stage
+    input wire [15:0] PC_inst,        // Current instruction word from the fetch stage
+    input wire [1:0] prediction,      // The 2-bit predicted value of the current branch instruction from the fetch stage
     
-    output logic [3:0] IF_ID_PC_curr,   // Pipelined lower 4-bits of current instruction address passed to the decode stage
-    output logic [15:0] IF_ID_PC_next,  // Pipelined next PC passed to the decode stage
-    output logic [15:0] IF_ID_PC_inst,  // Pipelined current instruction word passed to the decode stage
-    output logic IF_ID_predicted_taken  // Pipelined predicted branch taken signal passed to the decode stage
+    output wire [3:0] IF_ID_PC_curr,   // Pipelined lower 4-bits of current instruction address passed to the decode stage
+    output wire [15:0] IF_ID_PC_next,  // Pipelined next PC passed to the decode stage
+    output wire [15:0] IF_ID_PC_inst,  // Pipelined current instruction word passed to the decode stage
+    output wire [1:0] IF_ID_prediction // Pipelined 2-bit branch prediction signal passed to the decode stage
 );
 
   ///////////////////////////////////////////////
@@ -59,9 +59,9 @@ module IF_ID_pipe_reg_model (
   // Model register for storing the predicted branch taken signal (clear the signal on flush).
   always @(posedge clk)
     if (clr)
-      IF_ID_predicted_taken <= 1'b0;
+      IF_ID_prediction <= 2'b00;
     else if (wen)
-      IF_ID_predicted_taken <= predicted_taken;
+      IF_ID_prediction <= prediction;
   /////////////////////////////////////////////////////////////////////////////
 
 endmodule

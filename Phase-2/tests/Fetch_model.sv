@@ -4,22 +4,22 @@
 // This module models the fetch stage of the CPU            //
 //////////////////////////////////////////////////////////////
 module Fetch_model (
-    input logic clk,                  // System clock
-    input logic rst,                  // Active high synchronous reset
-    input logic stall,                // Stall signal for the PC (from the hazard detection unit)
-    input logic [15:0] actual_target, // Target address for branch instructions (from the decode stage)
-    input logic actual_taken,         // Indicates whether the branch is actually taken (from the decode stage)
-    input logic was_branch,           // Indicates that the previous instruction was a branch instruction
-    input logic branch_mispredicted,  // Indicates if the branch prediction was incorrect (from the decode stage)
-    input logic [3:0] IF_ID_PC_curr,  // Pipelined lower 4-bits of previous PC value (from the fetch stage)
+    input wire clk,                    // System clock
+    input wire rst,                    // Active high synchronous reset
+    input wire stall,                  // Stall signal for the PC (from the hazard detection unit)
+    input wire [15:0] actual_target,   // Target address for branch instructions (from the decode stage)
+    input wire actual_taken,           // Indicates whether the branch is actually taken (from the decode stage)
+    input wire was_branch,             // Indicates that the previous instruction was a branch instruction
+    input wire branch_mispredicted,    // Indicates if the branch prediction was incorrect (from the decode stage)
+    input wire [3:0] IF_ID_PC_curr,    // Pipelined lower 4-bits of previous PC value (from the fetch stage)
+    input wire [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
     input logic loaded,              // Indicates that the instruction memory file is loaded
     
-    output logic [15:0] PC_next,      // Computed next PC value
-    output logic [15:0] PC_inst,      // Instruction fetched from the current PC address
-    output logic [15:0] PC_curr,      // Current PC value
-    output logic predicted_taken      // Predicted taken signal from the branch history table
+    output wire [15:0] PC_next,      // Computed next PC value
+    output wire [15:0] PC_inst,      // Instruction fetched from the current PC address
+    output wire [15:0] PC_curr,      // Current PC value
+    output wire [1:0] prediction     // The 2-bit predicted value of the current branch instruction.
 );
-
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
@@ -39,7 +39,7 @@ module Fetch_model (
   // if predicted to be taken, otherwise assume not taken.
   assign PC_new = (branch_mispredicted) ? 
                     ((actual_taken) ? actual_target : PC_next) : 
-                    ((predicted_taken) ? predicted_target : PC_next);
+                    ((prediction[1]) ? predicted_target : PC_next);
 
   // Instantiate the Dynamic Branch Predictor model.
   DynamicBranchPredictor_model iDBP_model (
@@ -47,13 +47,14 @@ module Fetch_model (
     .rst(rst), 
     .PC_curr(PC_curr[3:0]), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
+    .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
     .was_branch(was_branch),
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
     .branch_mispredicted(branch_mispredicted), 
     
-    .predicted_taken(predicted_taken), 
+    .prediction(prediction), 
     .predicted_target(predicted_target)
   );
 

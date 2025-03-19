@@ -188,7 +188,7 @@ module DynamicBranchPredictor_tb();
     actual_taken = $random % 2;
 
     // Randomly enable or disable the PC.
-    //enable = $random % 2;
+    enable = $random % 2;
 
     // Update the actual target as a random 16-bit value if it is taken, otherwise, ignored.
     actual_target = (actual_taken) ? $random : 16'h0000;

@@ -117,11 +117,11 @@ module DynamicBranchPredictor_tb();
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Execute 12 instructions.
-      repeat (12) @(negedge clk) begin
+      // Execute 11 instructions.
+      repeat (11) @(negedge clk) begin
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for 12 instructions.
+        // Check prediction for 11 instructions.
         verify_prediction_and_target();
 
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
@@ -131,7 +131,7 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) begin
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for 12 instructions.
+        // Check prediction for the branch instruction.
         verify_prediction_and_target();
 
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
@@ -144,12 +144,12 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) begin
         was_branch = 1'b1;        // Indicates branch
         actual_taken = 1'b1;      // Actually taken
-        actual_target = 16'h0018; // Branch target loops back to the LW
+        actual_target = 16'h0014; // Branch target loops back to the LW
         PC_curr = actual_target; // Update to the target.
       end
 
       // Run till the branch instruction.
-      repeat(2) @(negedge clk) begin
+      repeat(1) @(negedge clk) begin
         was_branch = 1'b0;        // Deassert signals
         actual_taken = 1'b0;      // Deassert signals
         actual_target = 16'h0000; // Branch target loops back to the LW
@@ -180,11 +180,11 @@ module DynamicBranchPredictor_tb();
         was_branch = 1'b1;        // Indicates branch
         actual_taken = 1'b1;      // Actually taken
         actual_target = 16'h0014; // Branch target loops back to the LW
-        PC_curr = actual_target[3:0]; // Update to the target.
+        PC_curr = actual_target; // Update to the target.
       end
 
       // Run till the branch instruction.
-      repeat(2) @(negedge clk) begin
+      repeat(1) @(negedge clk) begin
         was_branch = 1'b0;        // Deassert signals
         actual_taken = 1'b0;      // Deassert signals
         actual_target = 16'h0000; // Branch target loops back to the LW

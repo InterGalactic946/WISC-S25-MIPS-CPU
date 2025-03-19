@@ -24,6 +24,7 @@ module Decode (
     output wire [62:0] EX_signals,        // Execute stage control signals
     output wire [17:0] MEM_signals,       // Memory stage control signals
     output wire [7:0] WB_signals,         // Write-back stage control signals
+    
     output wire is_branch,                // Indicates a branch instruction
     output wire is_BR,                    // Indicates a branch register instruction
     output wire [15:0] branch_target,     // Computed branch target address
@@ -77,25 +78,32 @@ module Decode (
   // Get the opcode from the instructions.
   assign opcode = pc_inst[15:12];
 
-  // We detect a misprediction if the instruction is a branch and prediction from the fetch stage differs from the decode stage.
-  assign branch_mispredicted = is_branch & (actual_taken != IF_ID_predicted_taken);
-
   // Instantiate the Control Unit.
   ControlUnit iCC (
-      .Opcode(opcode),
-      .ALUSrc(ALUSrc),
-      .MemtoReg(MemToReg),
-      .RegWrite(RegWrite),
-      .RegSrc(RegSrc),
-      .MemEnable(MemEnable),
-      .MemWrite(MemWrite),
-      .Branch(is_branch),
-      .HLT(HLT),
-      .PCS(PCS),
-      .ALUOp(ALUOp),
-      .Z_en(Z_en),
-      .NV_en(NV_en)
-  );
+    .Opcode(opcode),
+    .actual_taken(actual_taken),
+    .IF_ID_predicted_taken(IF_ID_predicted_taken),
+    .IF_ID_predicted_target(IF_ID_predicted_target),
+    .actual_target(branch_target),
+    
+    .Branch(Branch),
+    .wen_BTB(wen_BTB),
+    .wen_BHT(wen_BHT),
+    .update_PC(update_PC),
+    
+    .ALUOp(ALUOp),
+    .ALUSrc(ALUSrc),
+    .RegSrc(RegSrc),
+    .Z_en(Z_en),
+    .NV_en(NV_en),
+    
+    .MemEnable(MemEnable),
+    .MemWrite(MemWrite),
+    .RegWrite(RegWrite),
+    .MemtoReg(MemtoReg),
+    .HLT(HLT),
+    .PCS(PCS)
+    );
   //////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////

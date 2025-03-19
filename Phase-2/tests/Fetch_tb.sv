@@ -15,8 +15,6 @@ module Fetch_tb();
   logic update_PC;                        // Signal to update the PC with the actual target
 
   logic is_branch;                        // Flag to indicate if the previous instruction was a branch
-
-  logic loaded;                           // Indicates if the instruction memory has been loaded
   
   logic actual_taken;                     // Flag indicating whether the branch was actually taken
   logic [15:0] actual_target;             // Actual target address of the branch

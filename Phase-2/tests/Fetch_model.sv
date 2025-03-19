@@ -14,7 +14,6 @@ module Fetch_model (
     input logic update_PC,              // Signal to update the PC with the actual target (from the decode stage)
     input logic [3:0] IF_ID_PC_curr,    // Pipelined lower 4-bits of previous PC value (from the fetch stage)
     input logic [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
-    input logic loaded,                // Indicates if the instruction memory has been loaded
     
     output logic [15:0] PC_next,         // Computed next PC value
     output logic [15:0] PC_inst,         // Instruction fetched from the current PC address
@@ -68,9 +67,8 @@ module Fetch_model (
   // Model the instruction memory (read only).
   always @(posedge clk) begin
     if (rst) begin
-      if (!loaded)
-        // Initialize the instruction memory on reset.
-        $readmemh("./tests/instructions.img", inst_mem);
+      // Initialize the instruction memory on reset.
+      $readmemh("./tests/instructions.img", inst_mem);
     end
   end
 

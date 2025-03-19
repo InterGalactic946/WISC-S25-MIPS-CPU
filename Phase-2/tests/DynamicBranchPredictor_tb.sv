@@ -202,7 +202,7 @@ module DynamicBranchPredictor_tb();
     actual_taken = $random % 2;
 
     // Randomly enable or disable the PC.
-    enable = $random % 2;
+    // enable = $random % 2;
 
     // Update the actual target as a random 16-bit value if it is taken, otherwise, ignored.
     actual_target = (actual_taken) ? $random : 16'h0000;
@@ -213,19 +213,19 @@ module DynamicBranchPredictor_tb();
     // Count the number of stalls.
     if (!enable) begin
       stalls++;
-    end else if (is_branch) begin
+    end else begin
       // Track actual taken count.
-      if (actual_taken)
+      if (actual_taken && is_branch)
         actual_taken_count++;
 
       // Track predicted counts.
-      if (IF_ID_prediction[1]) 
+      if (IF_ID_prediction[1] && is_branch) 
         predicted_taken_count++;
       else 
         predicted_not_taken_count++;
-
-      // Track mispredictions.
-      if (mispredicted && branch_taken) 
+      
+      // Track penalty count (how many times we update the PC).
+      if (update_PC) 
         misprediction_count++;
     end
   end

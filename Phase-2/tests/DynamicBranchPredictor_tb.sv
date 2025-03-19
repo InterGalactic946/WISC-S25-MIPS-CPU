@@ -267,10 +267,10 @@ module DynamicBranchPredictor_tb();
   assign target_miscomputed = (IF_ID_predicted_target != actual_target);
 
   // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
-  assign wen_BTB = (Branch) & ((actual_taken) | (target_miscomputed));
+  assign wen_BTB = (is_branch) & ((actual_taken) | (target_miscomputed));
 
   // Update BHT on a mispredicted branch instruction.
-  assign wen_BHT = (Branch & mispredicted);
+  assign wen_BHT = (is_branch & mispredicted);
 
   // We update the PC to fetch the actual target when the predictor either predicted incorrectly
   // or when the target was miscomputed and the branch was actually taken.

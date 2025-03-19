@@ -203,10 +203,7 @@ module Fetch_tb();
       @(posedge clk);
       
       // Assert reset
-      @(negedge clk) begin
-        rst = 1'b1;
-        loaded = 1'b1;
-      end
+      @(negedge clk) rst = 1'b1;
 
       // Deassert reset and start testing.
       @(negedge clk) rst = 1'b0;

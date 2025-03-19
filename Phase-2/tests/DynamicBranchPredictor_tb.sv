@@ -117,23 +117,57 @@ module DynamicBranchPredictor_tb();
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Execute 12 instructions.
-      repeat (12) @(negedge clk) begin
+      // Execute 11 instructions.
+      repeat (11) @(negedge clk) begin
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for 12 instructions.
+        // Check prediction for 11 instructions.
         verify_prediction_and_target();
 
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Fetch the instruction past the branch instruction.
+      // Fetch the branch instruction.
       @(negedge clk) begin
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for the next instruction.
+        // Check prediction for the branch instruction.
         verify_prediction_and_target();
 
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
+      end
+
+      // At decode stage.
+      @(posedge clk);
+
+      // Update conditions for branch.
+      @(negedge clk) begin
+        was_branch = 1'b1;        // Indicates branch
+        actual_taken = 1'b1;      // Actually taken
+        actual_target = 16'h0014; // Branch target loops back to the LW
+        PC_curr = PC_curr + 4'h2; // Update PC to the next instrcution. (predict not taken)
+      end
+
+      // Run till the branch instruction.
+      @(negedge clk) begin
+        was_branch = 1'b0;        // Deassert signals
+        actual_taken = 1'b0;      // Deassert signals
+        actual_target = 16'h0000; // Branch target loops back to the LW
+        PC_curr = 16'h0014;       // Update PC with the target.
+
+        // Check prediction for branch instruction again.
+        verify_prediction_and_target();
+
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
+      end
+
+      // Run till the branch instruction.
+      repeat(2) @(negedge clk) begin
+        PC_curr = PC_curr + 4'h2;
+
+        // Check prediction for 12 instructions.
+        verify_prediction_and_target();
+        
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
@@ -145,55 +179,24 @@ module DynamicBranchPredictor_tb();
         was_branch = 1'b1;        // Indicates branch
         actual_taken = 1'b1;      // Actually taken
         actual_target = 16'h0014; // Branch target loops back to the LW
-        PC_curr = actual_target; // Update to the target.
+        PC_curr = PC_curr + 4'h2; // Update PC to next PC.
+      end
+
+      // Run till the branch instruction.
+      @(negedge clk) begin
+        was_branch = 1'b0;        // Deassert signals
+        actual_taken = 1'b0;      // Deassert signals
+        actual_target = 16'h0000; // Branch target loops back to the LW
+        PC_curr = 16'h0014;       // Update PC.
       end
 
       // Run till the branch instruction.
       repeat(2) @(negedge clk) begin
-        was_branch = 1'b0;        // Deassert signals
-        actual_taken = 1'b0;      // Deassert signals
-        actual_target = 16'h0000; // Branch target loops back to the LW
-        
-        PC_curr = PC_curr + 4'h2; // Update PC.
-
-        // Check prediction for branch instruction again.
-        verify_prediction_and_target();
-
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Fetch the next instruction.
-      @(negedge clk) begin
         PC_curr = PC_curr + 4'h2;
 
         // Check prediction for 12 instructions.
         verify_prediction_and_target();
         
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // At decode stage.
-      @(posedge clk);
-
-      // Update conditions for branch
-      @(negedge clk) begin
-        was_branch = 1'b1;        // Indicates branch
-        actual_taken = 1'b1;      // Actually taken
-        actual_target = 16'h0014; // Branch target loops back to the LW
-        PC_curr = actual_target; // Update to the target.
-      end
-
-      // Run till the branch instruction.
-      repeat(2) @(negedge clk) begin
-        was_branch = 1'b0;        // Deassert signals
-        actual_taken = 1'b0;      // Deassert signals
-        actual_target = 16'h0000; // Branch target loops back to the LW
-        
-        PC_curr = PC_curr + 4'h2; // Update PC.
-
-        // Check prediction for branch instruction again.
-        verify_prediction_and_target();
-
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
@@ -203,6 +206,16 @@ module DynamicBranchPredictor_tb();
 
         // Check prediction for 12 instructions.
         verify_prediction_and_target();
+
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
+      end
+
+      // Update conditions for branch
+      @(negedge clk) begin
+        was_branch = 1'b1;        // Indicates branch
+        actual_taken = 1'b1;      // Actually taken
+        actual_target = 16'h0014; // Branch target loops back to the LW
+        //PC_curr = PC_curr + 4'h2; // Update PC to next PC.
 
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end

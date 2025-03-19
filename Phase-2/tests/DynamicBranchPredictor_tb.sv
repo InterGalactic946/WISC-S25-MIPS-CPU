@@ -217,22 +217,11 @@ module DynamicBranchPredictor_tb();
 
       // Fetch the branch instruction (SHOULD PREDICT TAKEN).
       @(negedge clk) begin
-        // This is the branch instruction's address.
-        PC_curr = PC_curr + 4'h2;
+        // This is the branch instruction's target address, if correct.
+        PC_curr = (predicted_taken[1]) ? predicted_target : PC_curr + 2'h2;
 
         // Check prediction for branch.
         verify_prediction_and_target();
-        
-        // Print out the current state.
-        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
-      end
-
-      // Update with target PC with the predicted target (SHOULD BE BRANCH TARGET).
-      @(negedge clk) begin
-        was_branch = 1'b0;          // Deassert signals
-        actual_taken = 1'b0;        // Deassert signals
-        actual_target = 16'h0000;   // Branch target loops back to the LW
-        PC_curr = predicted_target; // Update PC.
         
         // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);

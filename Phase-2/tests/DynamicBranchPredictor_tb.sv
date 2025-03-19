@@ -198,24 +198,28 @@ module DynamicBranchPredictor_tb();
     end
   end
 
-  // Model the Decode stage.
+  // Model Decode stage.
   always @(posedge clk) begin
     test_counter = test_counter + 1;
 
-    case (test_counter % 10)
-      0, 1, 2:  // 30% of the time, randomize is_branch
+    case (test_counter % 8)
+      0, 1:  // 25% of the time, randomize is_branch
         is_branch = $random % 2;
       
-      3, 4, 5:  // 30% of the time, randomize actual_taken
+      2, 3:  // 25% of the time, randomize actual_taken
         actual_taken = $random % 2;
       
-      6, 7, 8:  // 30% of the time, randomize actual_target
+      4, 5:  // 25% of the time, randomize actual_target
         actual_target = (actual_taken) ? $random : 16'h0000;
+
+      6:  // 12.5% of the time, randomize enable
+        enable = $random % 2;
       
-      default: begin  // 10% of the time, randomize everything
+      default: begin  // 12.5% of the time, randomize everything
         is_branch = $random % 2;
         actual_taken = $random % 2;
         actual_target = (actual_taken) ? $random : 16'h0000;
+        enable = $random % 2;
       end
     endcase
   end

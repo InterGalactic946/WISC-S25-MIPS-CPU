@@ -132,7 +132,7 @@ module Fetch_tb();
     // Print full BHT contents (without IF_ID_PC_curr)
     $display("\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
     for (i = 0; i < 16; i = i + 1) begin
-      $display("BHT[%0d] -> Model: %b | DUT: %b", i, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
+      $display("BHT[%0d] -> Model: %b | DUT: %b", i, iFETCH_model.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
     end
 
     // Print update statements for BHT

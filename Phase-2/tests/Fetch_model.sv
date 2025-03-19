@@ -26,9 +26,9 @@ module Fetch_model (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  logic [15:0] PC_new;           // The new address the PC is updated with.
-  logic [15:0] inst_mem [15:0];  // Models the instruction memory.
-  logic enable;                  // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
+  logic [15:0] PC_new;              // The new address the PC is updated with.
+  logic [15:0] inst_mem [0:65535];  // Models the instruction memory.
+  logic enable;                     // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
   ////////////////////////////////////////////////
 
   ///////////////////////////

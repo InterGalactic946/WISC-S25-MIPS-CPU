@@ -98,9 +98,6 @@ module DynamicBranchPredictor_tb();
       predicted_not_taken_count = 0;
       misprediction_count = 0;
 
-      // Maximum number of cycles to avoid infinite loop
-      // max_cycles = 10; // Set a threshold for the number of cycles
-
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
       
@@ -119,23 +116,25 @@ module DynamicBranchPredictor_tb();
 
       // Execute 11 instructions.
       repeat (11) @(negedge clk) begin
+        // Go to the next instruction.
         PC_curr = PC_curr + 4'h2;
 
         // Check prediction for 11 instructions.
         verify_prediction_and_target();
 
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
       // Fetch the branch instruction.
       @(negedge clk) begin
+        // This is the branch instruction's address.
         PC_curr = PC_curr + 4'h2;
 
         // Check prediction for the branch instruction.
         verify_prediction_and_target();
 
-        $display("Branch instrcution fetched.");
-
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
@@ -149,73 +148,93 @@ module DynamicBranchPredictor_tb();
         actual_target = 16'h0014; // Branch target loops back to the LW
         PC_curr = PC_curr + 4'h2; // Update PC to the next instrcution. (predict not taken)
 
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Run till the branch instruction.
+      // Flush the wrong instruction and update with target PC.
       @(negedge clk) begin
         was_branch = 1'b0;        // Deassert signals
         actual_taken = 1'b0;      // Deassert signals
         actual_target = 16'h0000; // Branch target loops back to the LW
         PC_curr = 16'h0014;       // Update PC with the target.
 
-        // Check prediction for branch instruction again.
+        // Check prediction for target.
         verify_prediction_and_target();
-
+        
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
       // Run till the branch instruction.
       repeat(2) @(negedge clk) begin
+        // This is the branch instruction's address after 2 iterations.
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for 12 instructions.
+        // Check prediction for both instructions.
         verify_prediction_and_target();
         
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
       // At decode stage.
       @(posedge clk);
-      $display("Branch instrcution fetched.");
 
       // Update conditions for branch
       @(negedge clk) begin
         was_branch = 1'b1;        // Indicates branch
         actual_taken = 1'b1;      // Actually taken
         actual_target = 16'h0014; // Branch target loops back to the LW
-        PC_curr = PC_curr + 4'h2; // Update PC to next PC.
-
+        PC_curr = PC_curr + 4'h2; // Update PC to the next instrcution. (predict not taken)
+        
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Run till the branch instruction.
+      // Flush the wrong instruction and update with target PC.
       @(negedge clk) begin
         was_branch = 1'b0;        // Deassert signals
         actual_taken = 1'b0;      // Deassert signals
         actual_target = 16'h0000; // Branch target loops back to the LW
         PC_curr = 16'h0014;       // Update PC.
-
+        
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
       // Run till the branch instruction.
       repeat(2) @(negedge clk) begin
+        // This is the branch instruction's address after 2 iterations.
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for 12 instructions.
+        // Check prediction for both instructions.
         verify_prediction_and_target();
         
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
       // Fetch the branch instruction (SHOULD PREDICT TAKEN).
       @(negedge clk) begin
+        // This is the branch instruction's address.
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for 12 instructions.
+        // Check prediction for branch.
         verify_prediction_and_target();
+        
+        // Print out the current state.
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
+      end
 
+      // Update with target PC with the predicted target (SHOULD BE BRANCH TARGET).
+      @(negedge clk) begin
+        was_branch = 1'b0;          // Deassert signals
+        actual_taken = 1'b0;        // Deassert signals
+        actual_target = 16'h0000;   // Branch target loops back to the LW
+        PC_curr = predicted_target; // Update PC.
+        
+        // Print out the current state.
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 

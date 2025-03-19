@@ -107,26 +107,41 @@ module DynamicBranchPredictor_tb();
   // for both the DUT and Model, along with the PC_curr values.
   task dump_BHT_BTB(); 
   begin
-    // Loop variable.
     integer i;
 
-    // Read out the memory contents.
+    static reg [1:0] prev_BHT_DUT [0:15];  // Store previous BHT state for DUT
+    static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
+
     $display("\n====== Branch History Table (BHT) - MODEL vs DUT ======");
-      for (i = 0; i < 16; i = i + 1) begin
-        $display("BHT[%0d] -> Model: %b | DUT: %b | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
-                i, 
-                iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0], 
-                iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
+    for (i = 0; i < 16; i = i + 1) begin
+      // Detect if BHT entry changed
+      if (iDUT.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
+        $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
+                 i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+        prev_BHT_DUT[i] = iDUT.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
+      end
+      
+      $display("BHT[%0d] -> Model: %b | DUT: %b | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
+              i, 
+              iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0], 
+              iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
+    end
+
+    $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
+    for (i = 0; i < 16; i = i + 1) begin
+      // Detect if BTB entry changed
+      if (iDUT.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
+        $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
+                 i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+        prev_BTB_DUT[i] = iDUT.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
       end
 
-      $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
-      for (i = 0; i < 16; i = i + 1) begin
-        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
-                i, 
-                iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i], 
-                iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
-      end
+      $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
+              i, 
+              iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i], 
+              iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
     end
+  end
   endtask
 
   // Initialize the testbench.

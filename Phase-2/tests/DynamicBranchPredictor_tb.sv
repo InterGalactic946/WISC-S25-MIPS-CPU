@@ -99,12 +99,12 @@ module DynamicBranchPredictor_tb();
     @(negedge clk) begin
       $display("\n====== Branch History Table (BHT) - MODEL vs DUT ======");
       for (i = 0; i < 16; i = i + 1) begin
-        $display("BHT[%0d] -> Model: %b | DUT: %b", i, model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i]);
+        $display("BHT[%0d] -> Model: %b | DUT: %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i]);
       end
 
       $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
       for (i = 0; i < 16; i = i + 1) begin
-        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
       end
     end
   end

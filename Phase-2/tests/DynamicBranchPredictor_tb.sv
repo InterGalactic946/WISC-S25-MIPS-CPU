@@ -120,11 +120,6 @@ module DynamicBranchPredictor_tb();
                  i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
         prev_BHT_DUT[i] = iDUT.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
       end
-      
-      $display("BHT[%0d] -> Model: %b | DUT: %b | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
-              i, 
-              iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0], 
-              iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
     end
 
     $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
@@ -135,11 +130,6 @@ module DynamicBranchPredictor_tb();
                  i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
         prev_BTB_DUT[i] = iDUT.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
       end
-
-      $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
-              i, 
-              iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i], 
-              iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
     end
   end
   endtask

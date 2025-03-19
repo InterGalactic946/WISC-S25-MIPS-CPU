@@ -151,7 +151,7 @@ module Fetch_tb();
       if (iDUT.iDBP.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
         $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
                 i, iDUT.iDBP.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
-        prev_BTB_DUT[i] = iDUT.iDBP.iMEM_BTB.mem[i]; // Update tracking variable
+        prev_BTB_DUT[i] = iDUT.iDBP.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
       end
     end
 

@@ -134,12 +134,6 @@ module DynamicBranchPredictor_tb();
       rst = 1'b0;              // Initially rst is low
       enable = 1'b1;           // Enable the branch predictor
       is_branch = 1'b0;        // Initially no branch
-      mispredicted = 1'b0;    // No misprediction yet
-      target_miscomputed = 1'b0; // None yet
-      branch_taken = 1'b0; // Not yet
-      wen_BTB = 1'b0; 
-      wen_BHT = 1'b0;  //   Disabled Signals so far 
-      update_PC = 1'b0; 
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
       PC_curr = 16'h0000;       // Start with PC = 0

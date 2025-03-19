@@ -188,16 +188,15 @@ module DynamicBranchPredictor_tb();
     if (rst)
       PC_curr <= 16'h0000;
     else if (enable) begin
-      if (update_PC)
+      // Force looping over 16 instructions
+      if (PC_curr >= 16'h001E)  // Assuming 16 instructions, each 2 bytes
+        PC_curr <= 16'h0000;  // Restart sequence
+      else if (update_PC)
         PC_curr <= actual_target;
       else if (expected_prediction[1])
         PC_curr <= expected_predicted_target;
       else
         PC_curr <= PC_curr + 16'h0002;
-
-      // Force looping over 16 instructions
-      if (PC_curr >= 16'h001E)  // Assuming 16 instructions, each 2 bytes
-        PC_curr <= 16'h0000;  // Restart sequence
     end
   end
 

@@ -103,7 +103,7 @@ module Decode (
     .MemEnable(MemEnable),
     .MemWrite(MemWrite),
     .RegWrite(RegWrite),
-    .MemtoReg(MemtoReg),
+    .MemtoReg(MemToReg),
     .HLT(HLT),
     .PCS(PCS)
     );

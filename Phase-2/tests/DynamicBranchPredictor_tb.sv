@@ -212,10 +212,11 @@ module DynamicBranchPredictor_tb();
       6, 7, 8:  // 30% of the time, randomize actual_target
         actual_target = (actual_taken) ? $random : 16'h0000;
       
-      default:  // 10% of the time, randomize everything
+      default: begin  // 10% of the time, randomize everything
         is_branch = $random % 2;
         actual_taken = $random % 2;
         actual_target = (actual_taken) ? $random : 16'h0000;
+      end
     endcase
   end
 

@@ -97,9 +97,9 @@ module DynamicBranchPredictor_tb();
     // Verify the predictions.
     verify_prediction_and_target();
 
-    // Dump the contents of memory whenever we write to the BTB or BHT.
-    if (wen_BHT || wen_BTB)
-      dump_BHT_BTB();
+    // // Dump the contents of memory whenever we write to the BTB or BHT.
+    // if (wen_BHT || wen_BTB)
+    //   dump_BHT_BTB();
   end
 
   // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
@@ -148,7 +148,7 @@ module DynamicBranchPredictor_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 100;
+      num_tests = 10000000;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
@@ -162,11 +162,14 @@ module DynamicBranchPredictor_tb();
       // Run for num_tests.
       repeat (num_tests) @(posedge clk);
 
+      // Dump memory conteents.
+      dump_BHT_BTB();
+
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);
       $display("Number of branches predicted to be taken: %0d.", predicted_taken_count);
       $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);
-      $display("Number of mispredictions: %0d.", misprediction_count);
+      $display("Number of penalty cycles for misprediction: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
       $display("Number of instructions executed: %0d.", num_tests);
       $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(num_tests))) * 100);
@@ -221,7 +224,7 @@ module DynamicBranchPredictor_tb();
       // Track predicted counts.
       if (IF_ID_prediction[1] && is_branch) 
         predicted_taken_count++;
-      else 
+      else if (is_branch)
         predicted_not_taken_count++;
       
       // Track penalty count (how many times we update the PC).

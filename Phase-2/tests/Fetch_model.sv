@@ -4,22 +4,22 @@
 // This module models the fetch stage of the CPU            //
 //////////////////////////////////////////////////////////////
 module Fetch_model (
-    input wire clk,                    // System clock
-    input wire rst,                    // Active high synchronous reset
-    input wire stall,                  // Stall signal for the PC (from the hazard detection unit)
-    input wire [15:0] actual_target,   // Target address for branch instructions (from the decode stage)
-    input wire actual_taken,           // Indicates whether the branch is actually taken (from the decode stage)
-    input wire wen_BTB,                // Write enable for BTB (Branch Target Buffer) (from the decode stage)
-    input wire wen_BHT,                // Write enable for BHT (Branch History Table) (from the decode stage)
-    input wire update_PC,              // Signal to update the PC with the actual target (from the decode stage)
-    input wire [3:0] IF_ID_PC_curr,    // Pipelined lower 4-bits of previous PC value (from the fetch stage)
-    input wire [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
+    input logic clk,                    // System clock
+    input logic rst,                    // Active high synchronous reset
+    input logic stall,                  // Stall signal for the PC (from the hazard detection unit)
+    input logic [15:0] actual_target,   // Target address for branch instructions (from the decode stage)
+    input logic actual_taken,           // Indicates whether the branch is actually taken (from the decode stage)
+    input logic wen_BTB,                // Write enable for BTB (Branch Target Buffer) (from the decode stage)
+    input logic wen_BHT,                // Write enable for BHT (Branch History Table) (from the decode stage)
+    input logic update_PC,              // Signal to update the PC with the actual target (from the decode stage)
+    input logic [3:0] IF_ID_PC_curr,    // Pipelined lower 4-bits of previous PC value (from the fetch stage)
+    input logic [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
     
-    output wire [15:0] PC_next,         // Computed next PC value
-    output wire [15:0] PC_inst,         // Instruction fetched from the current PC address
-    output wire [15:0] PC_curr,         // Current PC value
-    output wire [1:0] prediction,       // The 2-bit predicted value of the current branch instruction
-    output wire [15:0] predicted_target // The predicted target from the BTB.
+    output logic [15:0] PC_next,         // Computed next PC value
+    output logic [15:0] PC_inst,         // Instruction fetched from the current PC address
+    output logic [15:0] PC_curr,         // Current PC value
+    output logic [1:0] prediction,       // The 2-bit predicted value of the current branch instruction
+    output logic [15:0] predicted_target // The predicted target from the BTB.
 );
 
   /////////////////////////////////////////////////

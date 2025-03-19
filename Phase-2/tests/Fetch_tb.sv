@@ -1,12 +1,10 @@
-///////////////////////////////////////////////////////////////////////
-// DynamicBranchPredictor_tb.v: Testbench for the Dynamic Branch     //
-// Predictor module with BHT and BTB. This testbench verifies the    //
-// functionality of the branch predictor by applying various test    //
-// cases and checking the outputs, including both correct and        //
-// mispredicted branch predictions, by comparing against a model DBP //
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+// Fetch_tb.sv: Testbench for the Fetch Stage of the CPU          //
+// Verifies functionality by comparing outputs with a scoreboard  //
+// class.                                                         //
+////////////////////////////////////////////////////////////////////
 
-module DynamicBranchPredictor_tb();
+module Fetch_tb();
 
   logic clk;                              // Clock signal
   logic rst;                              // Reset signal

@@ -100,7 +100,7 @@ module DynamicBranchPredictor_tb();
     // Read out the memory contents.
     $display("\n====== Branch History Table (BHT) - MODEL vs DUT ======");
       for (i = 0; i < 16; i = i + 1) begin
-        $display("BHT[%0d] -> Model: %b | DUT: %b | PC_curr -> Model: 0x%h | DUT: 0x%h", 
+        $display("BHT[%0d] -> Model: %b | DUT: %b | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
                 i, 
                 iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0], 
                 iDBP_model.PC_curr, iDUT.PC_curr);
@@ -108,7 +108,7 @@ module DynamicBranchPredictor_tb();
 
       $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
       for (i = 0; i < 16; i = i + 1) begin
-        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h | PC_curr -> Model: 0x%h | DUT: 0x%h", 
+        $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h | IF_ID_PC_curr -> Model: 0x%h | DUT: 0x%h", 
                 i, 
                 iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i], 
                 iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);

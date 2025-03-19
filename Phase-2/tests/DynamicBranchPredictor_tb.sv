@@ -110,7 +110,7 @@ module DynamicBranchPredictor_tb();
       for (i = 0; i < 16; i = i + 1) begin
         $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h | PC_curr -> Model: 0x%h | DUT: 0x%h", 
                 i, 
-                iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i][1:0], 
+                iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i], 
                 iDBP_model.IF_ID_PC_curr, iDUT.IF_ID_PC_curr);
       end
     end

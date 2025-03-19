@@ -183,7 +183,6 @@ module Fetch_tb();
       rst = 1'b0;              // Initially rst is low
       enable = 1'b1;           // Enable the branch predictor
       is_branch = 1'b0;        // Initially no branch
-      loaded = 1'b0;           // initially we didnt load
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
       IF_ID_PC_curr = 4'h0;    // Start with PC = 0

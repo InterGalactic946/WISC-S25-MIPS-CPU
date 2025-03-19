@@ -218,7 +218,7 @@ module DynamicBranchPredictor_tb();
       // Fetch the branch instruction (SHOULD PREDICT TAKEN).
       @(negedge clk) begin
         // This is the branch instruction's target address, if correct.
-        PC_curr = (predicted_taken[1]) ? predicted_target : PC_curr + 2'h2;
+        PC_curr = (prediction[1]) ? predicted_target : PC_curr + 2'h2;
 
         // Check prediction for branch.
         verify_prediction_and_target();

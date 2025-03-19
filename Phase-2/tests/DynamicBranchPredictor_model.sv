@@ -13,7 +13,8 @@ module DynamicBranchPredictor_model (
     input logic was_branch,               // Indicates that the previous instruction was a branch instruction
     input logic actual_taken,             // Actual branch taken value (from the decode stage)
     input logic [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
-    input logic branch_mispredicted,      // Indicates if there was a branch misprediction (from the decode stage)
+    input wire target_mismatch,           // Indicates if there was a target address misprediction (from the decode stage)
+    input wire prediction_mismatch,       // Indicates if there was a branch misprediction (from the decode stage)
 
     output logic [1:0] prediction,        // 2-bit Predicted branch signal (from BHT)
     output logic [15:0] predicted_target  // Predicted target address (from BTB)
@@ -32,8 +33,9 @@ module DynamicBranchPredictor_model (
   ///////////////////////////////////////////
   // Model the Branch Target Buffer (BTB) //
   /////////////////////////////////////////
-  // We update the BTB when the instruction was a branch and is actually taken.
-  assign wen_BTB = actual_taken & was_branch;
+  // We update the BTB when the instruction was a branch and is actually taken
+  // and when there is a target mismatch.
+  assign wen_BTB = actual_taken & was_branch & target_mismatch;
 
   // Model the BTB memory.
   always @(posedge clk) begin
@@ -58,14 +60,14 @@ module DynamicBranchPredictor_model (
     if (rst) begin
       // Initialize the BHT entries to 0 on reset.
       BHT <= '{default: 2'h0};
-    end else if (enable & branch_mispredicted) begin
+    end else if (enable & prediction_mismatch) begin
       // Update BHT based on a mispredicted branch instruction.
       BHT[IF_ID_PC_curr[3:1]] <= updated_prediction;
     end
   end
 
   // Asynchronously read out the prediction when read enabled.
-  assign prediction = (enable & ~branch_mispredicted) ? BHT[PC_curr[3:1]] : 2'h0;
+  assign prediction = (enable & ~prediction_mismatch) ? BHT[PC_curr[3:1]] : 2'h0;
  
   // Model the prediction states.
   always_comb begin

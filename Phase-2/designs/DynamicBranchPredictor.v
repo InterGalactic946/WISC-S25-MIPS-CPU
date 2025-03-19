@@ -19,7 +19,8 @@ module DynamicBranchPredictor (
     input wire was_branch,               // Indicates that the previous instruction was a branch instruction
     input wire actual_taken,             // Actual branch taken value (from the decode stage)
     input wire [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
-    input wire branch_mispredicted,      // Indicates if there was a branch misprediction (from the decode stage)
+    input wire target_mismatch,          // Indicates if there was a target address misprediction (from the decode stage)
+    input wire prediction_mismatch,      // Indicates if there was a branch misprediction (from the decode stage)
 
     output wire [1:0] prediction,        // The 2-bit predicted value of the current branch instruction.
     output wire [15:0] predicted_target  // Predicted target address (from BTB)
@@ -29,14 +30,14 @@ module DynamicBranchPredictor (
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
   wire wen_BTB;  // Write enable for BTB.
-  wire wen_BHT;  // Write enable for BHT.
   ////////////////////////////////////////////////
 
   ////////////////////////////////////////////////
   // Instantiate the Branch Target Buffer (BTB) //
   ////////////////////////////////////////////////
-  // We update the BTB when the instruction was a branch and is actually taken.
-  assign wen_BTB = actual_taken & was_branch;
+  // We update the BTB when the instruction was a branch and is actually taken and 
+  // the target was incorrectly computed.
+  assign wen_BTB = actual_taken & was_branch & target_mismatch;
 
   // Instantiate the branch target buffer.
   BTB iBTB (
@@ -63,7 +64,7 @@ module DynamicBranchPredictor (
     .PC_curr(PC_curr), 
     .IF_ID_PC_curr(IF_ID_PC_curr),
     .IF_ID_prediction(IF_ID_prediction), 
-    .wen(branch_mispredicted), 
+    .wen(prediction_mismatch), 
     .actual_taken(actual_taken),
     
     .prediction(prediction)

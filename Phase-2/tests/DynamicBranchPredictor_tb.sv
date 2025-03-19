@@ -15,7 +15,9 @@ module DynamicBranchPredictor_tb();
   logic actual_taken;                     // Flag indicating whether the branch was actually taken
   logic [15:0] actual_target;             // Actual target address of the branch
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
-  logic branch_mispredicted;              // Output indicating if the branch was mispredicted
+  logic [15:0] IF_ID_predicted_target;    // Predicted target passed to the decode stage
+  logic prediction_mismatch;              // Indicating if the branch was mispredicted
+  logic target_mismatch;                  // Indicating if the branch target was mis-computed.
   logic [15:0] PC_curr;                   // Current PC value
   logic [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
@@ -42,7 +44,8 @@ module DynamicBranchPredictor_tb();
     .was_branch(is_branch),
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
-    .branch_mispredicted(branch_mispredicted), 
+    .target_mismatch(target_mismatch), 
+    .prediction_mismatch(prediction_mismatch),
     
     .prediction(prediction), 
     .predicted_target(predicted_target)
@@ -59,7 +62,8 @@ module DynamicBranchPredictor_tb();
     .was_branch(is_branch),
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
-    .branch_mispredicted(branch_mispredicted), 
+    .target_mismatch(target_mismatch), 
+    .prediction_mismatch(prediction_mismatch),
     
     .prediction(expected_prediction), 
     .predicted_target(expected_predicted_target)
@@ -214,7 +218,7 @@ module DynamicBranchPredictor_tb();
         predicted_not_taken_count++;
 
       // Track mispredictions.
-      if (IF_ID_prediction[1] !== actual_taken) 
+      if (((IF_ID_prediction[1] !== actual_taken) || (IF_ID_predicted_target !== actual_target)) && is_branch) 
         misprediction_count++;
     end
   end
@@ -233,7 +237,17 @@ module DynamicBranchPredictor_tb();
     else if (enable)
       IF_ID_prediction <= expected_prediction;
   
+  // Model the prediction target register.
+  always @(posedge clk)
+    if (rst)
+      IF_ID_predicted_target <= 16'h0000;
+    else if (enable)
+      IF_ID_predicted_target <= actual_target;
+  
   // We get the branch mispredicted condition.
-  assign branch_mispredicted = (IF_ID_prediction[1] !== actual_taken) && (is_branch);
+  assign prediction_mismatch = (IF_ID_prediction[1] !== actual_taken) && (is_branch);
+
+  // We get the branch miscomputed targets.
+  assign target_mismatch = (IF_ID_predicted_target !== actual_target);
 
 endmodule

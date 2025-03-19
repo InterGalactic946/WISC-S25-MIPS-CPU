@@ -37,9 +37,9 @@ module cpu (clk, rst_n, hlt, pc);
   /* DECODE stage signals */
   wire [15:0] branch_target; // Computed branch target address
   wire actual_taken;         // Signal used to determine whether an instruction met condition codes
-  wire wen_BTB,              // Write enable for BTB (Branch Target Buffer)
-  wire wen_BHT,              // Write enable for BHT (Branch History Table)
-  wire update_PC,            // Signal to update the PC with the actual target
+  wire wen_BTB;              // Write enable for BTB (Branch Target Buffer)
+  wire wen_BHT;              // Write enable for BHT (Branch History Table)
+  wire update_PC;            // Signal to update the PC with the actual target
   wire Branch;               // Indicates it is a branch instruction
   wire BR;                   // Indicates it is a branch register instruction
   wire [62:0] EX_signals;    // Execute stage control signals

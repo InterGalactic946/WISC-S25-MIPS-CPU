@@ -148,6 +148,8 @@ module DynamicBranchPredictor_tb();
         actual_taken = 1'b1;      // Actually taken
         actual_target = 16'h0014; // Branch target loops back to the LW
         PC_curr = PC_curr + 4'h2; // Update PC to the next instrcution. (predict not taken)
+
+        $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
       // Run till the branch instruction.

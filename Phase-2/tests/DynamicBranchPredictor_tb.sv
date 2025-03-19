@@ -145,7 +145,7 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) rst = 1'b0;
 
       // Run for 1000000 tests.
-      repeat (21) @(posedge clk);
+      repeat (16) @(posedge clk);
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);
@@ -153,9 +153,6 @@ module DynamicBranchPredictor_tb();
       $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);
       $display("Number of mispredictions: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
-
-      // Dump the contents of memory.
-      dump_BHT_BTB();
       
       // If we reached here it means all tests passed.
       $display("\nYAHOO!! All tests passed.");

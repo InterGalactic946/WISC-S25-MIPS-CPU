@@ -97,7 +97,7 @@ module Fetch_tb();
 
       // Verify the PC instruction.
       if (PC_inst !== expected_PC_inst) begin
-        $display("ERROR: PC_inst=0x%h, expected_PC_inst=0x%h.", PC_curr, expected_PC_inst);
+        $display("ERROR: PC_inst=0x%h, expected_PC_inst=0x%h.", PC_inst, expected_PC_inst);
         $stop();
       end
 
@@ -168,8 +168,9 @@ module Fetch_tb();
 
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin
-    // Verify the DUT.
-    verify_DUT();
+    // Verify the DUT other than reset.
+    if (!rst)
+      verify_DUT();
 
     // Dump the contents of memory whenever we write to the BTB or BHT.
     if (wen_BHT || wen_BTB)

@@ -127,6 +127,7 @@ module DynamicBranchPredictor_tb();
       predicted_taken_count = 0;
       predicted_not_taken_count = 0;
       misprediction_count = 0;
+      stalls = 0;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
@@ -146,6 +147,9 @@ module DynamicBranchPredictor_tb();
       $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);
       $display("Number of mispredictions: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
+
+      // Dump the contents of memory.
+      dump_BHT_BTB();
       
       // If we reached here it means all tests passed.
       $display("YAHOO!! All tests passed.");

@@ -65,15 +65,15 @@ module Fetch_model (
       PC_curr <= PC_new;
 
   // Model the instruction memory (read only).
-  always @(posedge clk) begin
-    if (rst) begin
-      // Initialize the instruction memory on reset.
-      $readmemh("./tests/instructions.img", inst_mem);
-    end
-  end
-
-  // Asynchronously read out the instruction when read enabled.
-  assign PC_inst = (enable) ? inst_mem[PC_curr[15:1]] : 16'h0000;
+  memory1c iINSTR_MEM (.data_out(PC_inst),
+                       .data_in(16'h0000),
+                        .addr(PC_curr),
+                        .enable(enable),
+                        .data(1'b0),
+                        .wr(1'b0),
+                        .clk(clk),
+                        .rst(rst)
+                      );
 
   // Compute PC_next as the next instruction address.
   assign PC_next = PC_curr + 16'h0002;

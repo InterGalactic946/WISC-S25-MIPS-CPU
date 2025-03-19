@@ -117,21 +117,21 @@ module DynamicBranchPredictor_tb();
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Execute 11 instructions.
-      repeat (11) @(negedge clk) begin
+      // Execute 12 instructions.
+      repeat (12) @(negedge clk) begin
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for 11 instructions.
+        // Check prediction for 12 instructions.
         verify_prediction_and_target();
 
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Fetch the branch instruction.
+      // Fetch the instruction past the branch instruction.
       @(negedge clk) begin
         PC_curr = PC_curr + 4'h2;
 
-        // Check prediction for the branch instruction.
+        // Check prediction for the next instruction.
         verify_prediction_and_target();
 
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
@@ -149,7 +149,7 @@ module DynamicBranchPredictor_tb();
       end
 
       // Run till the branch instruction.
-      repeat(1) @(negedge clk) begin
+      repeat(2) @(negedge clk) begin
         was_branch = 1'b0;        // Deassert signals
         actual_taken = 1'b0;      // Deassert signals
         actual_target = 16'h0000; // Branch target loops back to the LW
@@ -162,7 +162,7 @@ module DynamicBranchPredictor_tb();
         $display("PC_curr=0x%h, prediction[1]=0b%b, predicted_target=0x%h, branch_misprediction=0x%h", PC_curr, prediction[1], predicted_target, branch_mispredicted);
       end
 
-      // Fetch the branch instruction.
+      // Fetch the next instruction.
       @(negedge clk) begin
         PC_curr = PC_curr + 4'h2;
 
@@ -184,7 +184,7 @@ module DynamicBranchPredictor_tb();
       end
 
       // Run till the branch instruction.
-      repeat(1) @(negedge clk) begin
+      repeat(2) @(negedge clk) begin
         was_branch = 1'b0;        // Deassert signals
         actual_taken = 1'b0;      // Deassert signals
         actual_target = 16'h0000; // Branch target loops back to the LW

@@ -16,7 +16,7 @@ module DynamicBranchPredictor_tb();
   logic [15:0] actual_target;             // Actual target address of the branch
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
   logic branch_mispredicted;              // Output indicating if the branch was mispredicted
-  logic [3:0] PC_curr;                    // Current PC value
+  logic [15:0] PC_curr;                   // Current PC value
   logic [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
 
   integer actual_taken_count;           // Number of times branch was actually taken.
@@ -33,7 +33,7 @@ module DynamicBranchPredictor_tb();
   DynamicBranchPredictor iDUT (
     .clk(clk), 
     .rst(rst), 
-    .PC_curr(PC_curr), 
+    .PC_curr(PC_curr[3:0]), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
@@ -50,7 +50,7 @@ module DynamicBranchPredictor_tb();
   DynamicBranchPredictor_model iDBP_model (
     .clk(clk), 
     .rst(rst), 
-    .PC_curr(PC_curr), 
+    .PC_curr(PC_curr[3:0]), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
@@ -88,7 +88,7 @@ module DynamicBranchPredictor_tb();
       was_branch = 1'b0;       // Initially no branch
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
-      PC_curr = 4'h0;          // Start with PC = 0
+      PC_curr = 16'h0000;       // Start with PC = 0
       IF_ID_PC_curr = 4'h0;    // Start with PC = 0
       IF_ID_prediction = 2'b00; // Start with strongly not taken prediction (prediction[1] = 0)
 
@@ -224,7 +224,7 @@ module DynamicBranchPredictor_tb();
     if (rst)
       IF_ID_PC_curr <= 4'h0;
     else
-      IF_ID_PC_curr <= PC_curr;
+      IF_ID_PC_curr <= PC_curr[3:0];
   
   // Model the prediction register.
   always @(posedge clk)

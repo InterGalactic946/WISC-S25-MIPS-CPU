@@ -33,6 +33,7 @@ module DynamicBranchPredictor_tb();
   integer predicted_taken_count;          // Number of times branch was predicted to be taken.
   integer predicted_not_taken_count;      // Number of times branch was predicted to not be taken.
   integer misprediction_count;            // Number of times branch was mispredicted.
+  integer test_counter;                   // Number of tests executed.
   integer stalls;                         // Number of PC stalls.
   integer num_tests;                      // Number of test cases to execute.
 
@@ -145,6 +146,7 @@ module DynamicBranchPredictor_tb();
       predicted_taken_count = 0;
       predicted_not_taken_count = 0;
       misprediction_count = 0;
+      test_counter = 0;
       stalls = 0;
 
       // initialize num_tests.
@@ -196,19 +198,25 @@ module DynamicBranchPredictor_tb();
     end
   end
 
-  // Model the fetch decode cycle.
+  // Model the Decode stage.
   always @(posedge clk) begin
-    // Get a random 1-bit value for the branch flag.
-    is_branch = $random % 2;
+    test_counter = test_counter + 1;
 
-    // Indicate if it is taken or not.
-    actual_taken = $random % 2;
-
-    // Randomly enable or disable the PC.
-    // enable = $random % 2;
-
-    // Update the actual target as a random 16-bit value if it is taken, otherwise, ignored.
-    actual_target = (actual_taken) ? $random : 16'h0000;
+    case (test_counter % 10)
+      0, 1, 2:  // 30% of the time, randomize is_branch
+        is_branch = $random % 2;
+      
+      3, 4, 5:  // 30% of the time, randomize actual_taken
+        actual_taken = $random % 2;
+      
+      6, 7, 8:  // 30% of the time, randomize actual_target
+        actual_target = (actual_taken) ? $random : 16'h0000;
+      
+      default:  // 10% of the time, randomize everything
+        is_branch = $random % 2;
+        actual_taken = $random % 2;
+        actual_target = (actual_taken) ? $random : 16'h0000;
+    endcase
   end
 
   // Get the counts for debugging.

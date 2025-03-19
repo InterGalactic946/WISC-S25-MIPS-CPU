@@ -155,7 +155,7 @@ module DynamicBranchPredictor_tb();
       $display("Number of mispredictions: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
       $display("Number of instructions executed: %0d.", num_tests);
-      $display("Accuracy of predcitor: %0d%%.", (misprediction_count/num_tests) * 100);
+      $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(num_tests))) * 100);
 
       // Dump the contents of memory.
       dump_BHT_BTB();

@@ -67,10 +67,8 @@ module Fetch_model (
   // Model the instruction memory (read only).
   always @(posedge clk) begin
     if (rst) begin
-      if (!loaded) begin
-        // Initialize the instruction memory on reset.
-        $readmemh("./tests/instructions.img", inst_mem);
-      end
+      // Initialize the instruction memory on reset.
+      $readmemh("./tests/instructions.img", inst_mem);
     end
   end
 

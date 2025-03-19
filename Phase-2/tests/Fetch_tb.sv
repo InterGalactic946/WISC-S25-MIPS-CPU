@@ -184,6 +184,7 @@ module DynamicBranchPredictor_tb();
   always 
     #5 clk = ~clk; // toggle clock every 5 time units.
 
+  // Model the PC register.
   always @(posedge clk) begin
     if (rst)
       PC_curr <= 16'h0000;
@@ -194,10 +195,6 @@ module DynamicBranchPredictor_tb();
         PC_curr <= expected_predicted_target;
       else
         PC_curr <= PC_curr + 16'h0002;
-
-      // Force looping over 16 instructions
-      if (PC_curr >= 16'h001E)  // Assuming 16 instructions, each 2 bytes
-        PC_curr <= 16'h0000;  // Restart sequence
     end
   end
 

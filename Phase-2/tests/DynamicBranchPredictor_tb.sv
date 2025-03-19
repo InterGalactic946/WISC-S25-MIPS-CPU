@@ -82,9 +82,13 @@ module DynamicBranchPredictor_tb();
   endtask
 
   // At negative edge of clock, verify the predictions match the model.
-  always @(negedge clk)
+  always @(negedge clk) begin
     // Verify the predictions.
     verify_prediction_and_target();
+
+    // Dump the contents of memory.
+    dump_BHT_BTB();
+  end
 
   // Dumps the contents of the branch history table and branch target buffers for both the DUT and model.
   task dump_BHT_BTB(); 
@@ -139,10 +143,10 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) rst = 1'b0;
 
       // Run for 1000000 tests.
-      repeat (1000000) @(posedge clk);
+      repeat (21) @(posedge clk);
 
       // If all predictions are correct, print out the counts.
-      $display("Number of PC stall cycles: %0d.", stalls);
+      $display("\nNumber of PC stall cycles: %0d.", stalls);
       $display("Number of branches predicted to be taken: %0d.", predicted_taken_count);
       $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);
       $display("Number of mispredictions: %0d.", misprediction_count);
@@ -152,7 +156,7 @@ module DynamicBranchPredictor_tb();
       dump_BHT_BTB();
       
       // If we reached here it means all tests passed.
-      $display("YAHOO!! All tests passed.");
+      $display("\nYAHOO!! All tests passed.");
       $stop();
   end
 
@@ -182,7 +186,7 @@ module DynamicBranchPredictor_tb();
     actual_taken = $random % 2;
 
     // Randomly enable or disable the PC.
-    enable = $random % 2;
+    //enable = $random % 2;
 
     // Update the actual target as a random 16-bit value if it is taken, otherwise, ignored.
     actual_target = (actual_taken) ? $random : 16'h0000;

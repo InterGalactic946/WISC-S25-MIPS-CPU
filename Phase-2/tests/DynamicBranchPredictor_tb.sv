@@ -106,6 +106,31 @@ module DynamicBranchPredictor_tb();
       end
     end
 
+    integer i;
+    for (i = 0; i < 5; i = i + 1) begin  // Repeat test multiple times to check learning
+
+      @(posedge clk);
+      PC_curr = 4'h8; // Branch instruction
+
+      // Verify the prediction.
+      $display("Cycle %0d | PC=0x%h | Predicted Taken: %b | Expected Taken: %b", i, PC_curr, prediction[1], expected_prediction[1]);
+      if (prediction !== expected_prediction) begin
+        $display("ERROR: Mismatch in prediction!");
+        $stop();
+      end
+
+      // Provide actual outcome
+      @(negedge clk);
+      was_branch = 1'b1;
+      actual_taken = 1'b1; // Always actually taken
+      actual_target = 16'h0080;
+      branch_mispredicted = (prediction[1] != actual_taken);
+
+      @(posedge clk);
+
+    end
+
+
     // Models the active clock edge the DUT just fetched the instruction.
     @(posedge clk);
     

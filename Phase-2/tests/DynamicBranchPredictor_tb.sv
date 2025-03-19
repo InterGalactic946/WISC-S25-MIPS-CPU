@@ -104,32 +104,46 @@ module DynamicBranchPredictor_tb();
   end
 
   // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
-  // for both the DUT and Model, along with the PC_curr values.
-  task dump_BHT_BTB(); 
+  task dump_BHT_BTB();
   begin
     integer i;
 
     static reg [1:0] prev_BHT_DUT [0:15];  // Store previous BHT state for DUT
     static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
 
-    $display("\n====== Branch History Table (BHT) - MODEL vs DUT ======");
+    // Print update statements for BHT
+    $display("\n====== BHT UPDATES - DUT ======");
     for (i = 0; i < 16; i = i + 1) begin
-      // Detect if BHT entry changed
       if (iDUT.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
         $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
-                 i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+                i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
         prev_BHT_DUT[i] = iDUT.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
       end
     end
 
-    $display("\n====== Branch Target Buffer (BTB) - MODEL vs DUT ======");
+    // Print update statements for BTB
+    $display("\n====== BTB UPDATES - DUT ======");
     for (i = 0; i < 16; i = i + 1) begin
-      // Detect if BTB entry changed
       if (iDUT.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
         $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                 i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+                i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
         prev_BTB_DUT[i] = iDUT.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
       end
+    end
+
+    // Break for clarity
+    $display("\n---------------------------------------------------");
+
+    // Print full BHT contents (without IF_ID_PC_curr)
+    $display("\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
+    for (i = 0; i < 16; i = i + 1) begin
+      $display("BHT[%0d] -> Model: %b | DUT: %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
+    end
+
+    // Print full BTB contents (without IF_ID_PC_curr)
+    $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
+    for (i = 0; i < 16; i = i + 1) begin
+      $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
     end
   end
   endtask

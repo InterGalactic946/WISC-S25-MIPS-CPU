@@ -144,8 +144,8 @@ module DynamicBranchPredictor_tb();
       @(negedge clk) begin
         was_branch = 1'b1;        // Indicates branch
         actual_taken = 1'b1;      // Actually taken
-        actual_target = 16'h0014; // Branch target loops back to the LW
-        PC_curr = actual_target[3:0]; // Update to the target.
+        actual_target = 16'h0018; // Branch target loops back to the LW
+        PC_curr = actual_target; // Update to the target.
       end
 
       // Run till the branch instruction.

@@ -235,7 +235,7 @@ module DynamicBranchPredictor_tb();
       branch_mispredicted = 1'b0;
     end
 
-    $display("PC_curr=0x%h, predictedion=0b%b, expected_prediction=0b%b.",PC_curr, prediction, expected_predicion);
+    $display("PC_curr=0x%h, predictedion=0b%b, expected_prediction=0b%b.",PC_curr, prediction, expected_prediction);
     $display("PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
     
     // // Apply controlled test cases before random stimulus.

@@ -27,6 +27,7 @@ module DynamicBranchPredictor_tb();
 
   logic mispredicted;                     // Indicates previous instruction's fetch mispredicted.
   logic target_miscomputed;               // Indicates previous instruction's fetch miscomputed the target.
+  logic branch_taken;                     // Indicates branch was actually taken.
 
   integer actual_taken_count;             // Number of times branch was actually taken.
   integer predicted_taken_count;          // Number of times branch was predicted to be taken.

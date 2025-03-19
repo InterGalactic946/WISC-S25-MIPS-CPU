@@ -117,15 +117,6 @@ module DynamicBranchPredictor_tb();
       $display("BHT[%0d] -> Model: %b | DUT: %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
     end
 
-    // Print full BTB contents (without IF_ID_PC_curr)
-    $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
-    for (i = 0; i < 16; i = i + 1) begin
-      $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
-    end
-    
-    // Break for clarity
-    $display("\n---------------------------------------------------");
-
     // Print update statements for BHT
     $display("\n====== BHT UPDATES - DUT ======");
     for (i = 0; i < 16; i = i + 1) begin
@@ -145,6 +136,15 @@ module DynamicBranchPredictor_tb();
         prev_BTB_DUT[i] = iDUT.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
       end
     end
+
+    // Print full BTB contents (without IF_ID_PC_curr)
+    $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
+    for (i = 0; i < 16; i = i + 1) begin
+      $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+    end
+    
+    // Break for clarity
+    $display("\n---------------------------------------------------");
   end
   endtask
 

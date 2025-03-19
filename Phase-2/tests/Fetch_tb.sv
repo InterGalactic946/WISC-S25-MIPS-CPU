@@ -36,14 +36,14 @@ module DynamicBranchPredictor_tb();
   integer stalls;                         // Number of PC stalls.
   integer num_tests;                      // Number of test cases to execute.
     
-  logic [15:0] PC_next,                   // Computed next PC value
-  logic [15:0] PC_inst,                   // Instruction fetched from the current PC address
+  logic [15:0] PC_next;                   // Computed next PC value
+  logic [15:0] PC_inst;                   // Instruction fetched from the current PC address
   logic [15:0] PC_curr;                   // Current PC value
   logic [1:0] prediction;                 // The 2-bit predicted taken flag from the predictor
   logic [15:0] predicted_target;          // The predicted target address from the predictor
   
-  logic [15:0] expected_PC_next,          // The expected computed next PC value
-  logic [15:0] expected_PC_inst,          // The expected instruction fetched from the current PC address
+  logic [15:0] expected_PC_next;          // The expected computed next PC value
+  logic [15:0] expected_PC_inst;          // The expected instruction fetched from the current PC address
   logic [15:0] expected_PC_curr;          // The expected current PC value
   logic [1:0] expected_prediction;        // The expected prediction from the model DBP
   logic [15:0] expected_predicted_target; // The expected predicted target address from from the model DBP
@@ -123,14 +123,59 @@ module DynamicBranchPredictor_tb();
     end
   endtask
 
+  // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
+  task dump_BHT_BTB();
+  begin
+    integer i;
+
+    static reg [1:0] prev_BHT_DUT [0:15];  // Store previous BHT state for DUT
+    static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
+
+    // Print full BHT contents (without IF_ID_PC_curr)
+    $display("\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
+    for (i = 0; i < 16; i = i + 1) begin
+      $display("BHT[%0d] -> Model: %b | DUT: %b", i, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
+    end
+
+    // Print update statements for BHT
+    $display("\n====== BHT UPDATES - DUT ======");
+    for (i = 0; i < 16; i = i + 1) begin
+      if (iDUT.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
+        $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
+                i, iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+        prev_BHT_DUT[i] = iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
+      end
+    end
+
+    // Print update statements for BTB
+    $display("\n====== BTB UPDATES - DUT ======");
+    for (i = 0; i < 16; i = i + 1) begin
+      if (iDUT.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
+        $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
+                i, iFETCH_model.iDBP_model.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+        prev_BTB_DUT[i] = iFETCH_model.iDBP_model.iMEM_BTB.mem[i]; // Update tracking variable
+      end
+    end
+
+    // Print full BTB contents (without IF_ID_PC_curr)
+    $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
+    for (i = 0; i < 16; i = i + 1) begin
+      $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, iFETCH_model.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
+    end
+    
+    // Break for clarity
+    $display("\n---------------------------------------------------");
+  end
+  endtask
+
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin
     // Verify the DUT.
     verify_DUT();
 
-    // // Dump the contents of memory whenever we write to the BTB or BHT.
-    // if (wen_BHT || wen_BTB)
-    //   dump_BHT_BTB();
+    // Dump the contents of memory whenever we write to the BTB or BHT.
+    if (wen_BHT || wen_BTB)
+      dump_BHT_BTB();
   end
 
   // Initialize the testbench.
@@ -168,7 +213,7 @@ module DynamicBranchPredictor_tb();
       repeat (num_tests) @(posedge clk);
 
       // Dump memory conteents.
-      // dump_BHT_BTB();
+      dump_BHT_BTB();
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);

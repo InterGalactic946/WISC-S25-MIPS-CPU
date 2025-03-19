@@ -23,6 +23,7 @@ module Branch_Control(C, I, F, Rs, BR, PC_next, taken, PC_branch);
   input wire [15:0] Rs;         // Register source input for the BR instruction
   input wire BR;                // indicates a BR instruction vs a B instruction
   input wire [15:0] PC_next;    // 16-bit address of the next (PC+2) instruction (from the fetch stage)
+  
   output wire taken;            // Signal used to determine whether branch instruction met condition codes
   output wire [15:0] PC_branch; // 16-bit address of the branch target
 

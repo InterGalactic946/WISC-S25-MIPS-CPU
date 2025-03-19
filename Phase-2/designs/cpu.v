@@ -22,20 +22,24 @@ module cpu (clk, rst_n, hlt, pc);
   wire rst; // Active high synchronous reset signal
   
   /* FETCH stage signals */
-  wire [15:0] PC_next;   // Next PC address
-  wire [15:0] PC_inst;   // Instruction at the current PC address
-  wire [1:0] prediction; // 2-bit Prediction from the branch history table
+  wire [15:0] PC_next;          // Next PC address
+  wire [15:0] PC_inst;          // Instruction at the current PC address
+  wire [1:0] prediction;        // 2-bit Prediction from the branch history table
+  wire [15:0] predicted_target; // Predicted target address of the branch instruction
 
   /* IF/ID Pipeline Register signals */
-  wire [3:0] IF_ID_PC_curr;   // Pipelined lower 4-bits of current instruction (previous PC) address from the fetch stage
-  wire [15:0] IF_ID_PC_next;  // Pipelined next instruction (previous PC_next) address from the fetch stage
-  wire [15:0] IF_ID_PC_inst;  // Pipelined instruction word (previous PC_inst) from the fetch stage
-  wire [1:0] IF_ID_prediction;// Pipelined branch prediction (previous predicted_taken) from the fetch stage
+  wire [3:0] IF_ID_PC_curr;           // Pipelined lower 4-bits of current instruction (previous PC) address from the fetch stage
+  wire [15:0] IF_ID_PC_next;          // Pipelined next instruction (previous PC_next) address from the fetch stage
+  wire [15:0] IF_ID_PC_inst;          // Pipelined instruction word (previous PC_inst) from the fetch stage
+  wire [1:0] IF_ID_prediction;        // Pipelined branch prediction (previous predicted_taken) from the fetch stage
+  wire [15:0] IF_ID_predicted_target; // Pipelined branch predicted target address (previous predicted_target) from the fetch stage
 
   /* DECODE stage signals */
   wire [15:0] branch_target; // Computed branch target address
   wire actual_taken;         // Signal used to determine whether an instruction met condition codes
-  wire misprediction;        // Indicates the branch was incorrectly predicted in the fetch stage
+  wire wen_BTB,              // Write enable for BTB (Branch Target Buffer)
+  wire wen_BHT,              // Write enable for BHT (Branch History Table)
+  wire update_PC,            // Signal to update the PC with the actual target
   wire Branch;               // Indicates it is a branch instruction
   wire BR;                   // Indicates it is a branch register instruction
   wire [62:0] EX_signals;    // Execute stage control signals
@@ -116,20 +120,22 @@ module cpu (clk, rst_n, hlt, pc);
       .stall(PC_stall), 
       .actual_target(branch_target), 
       .actual_taken(actual_taken), 
-      .was_branch(Branch),
-      .branch_mispredicted(misprediction),
+      .wen_BTB(wen_BTB),
+      .wen_BHT(wen_BHT),
+      .update_PC(update_PC),
       .IF_ID_PC_curr(IF_ID_PC_curr),
       .IF_ID_prediction(IF_ID_prediction), 
       
       .PC_next(PC_next), 
       .PC_inst(PC_inst), 
       .PC_curr(pc),
-      .prediction(prediction)
+      .prediction(prediction),
+      .predicted_target(predicted_target)
   );
   ///////////////////////////////////
 
   /////////////////////////////////////////////////
-  // Pass the instruction word, current PC, prediction, and the next PC address to the IF/ID pipeline register.
+  // Pass the instruction word, current PC, prediction & target, and the next PC address to the IF/ID pipeline register.
   IF_ID_pipe_reg iIF_ID (
     .clk(clk),
     .rst(rst),
@@ -139,11 +145,13 @@ module cpu (clk, rst_n, hlt, pc);
     .PC_next(PC_next),
     .PC_inst(PC_inst),
     .prediction(prediction),
+    .predicted_target(predicted_target),
     
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_PC_next(IF_ID_PC_next),
     .IF_ID_PC_inst(IF_ID_PC_inst),
-    .IF_ID_prediction(IF_ID_prediction)
+    .IF_ID_prediction(IF_ID_prediction),
+    .IF_ID_predicted_target(IF_ID_predicted_target)
   );
   /////////////////////////////////////////////////
 
@@ -165,11 +173,14 @@ module cpu (clk, rst_n, hlt, pc);
     .EX_signals(EX_signals),
     .MEM_signals(MEM_signals),
     .WB_signals(WB_signals),
+
     .is_branch(Branch),
     .is_BR(BR),
     .branch_target(branch_target),
     .actual_taken(actual_taken),
-    .branch_mispredicted(misprediction)
+    .wen_BTB(wen_BTB),
+    .wen_BHT(wen_BHT),
+    .update_PC(update_PC)
   );
   ///////////////////////////////////////////////////////////////////////////
 
@@ -196,7 +207,7 @@ module cpu (clk, rst_n, hlt, pc);
       .ID_EX_NV_en(ID_EX_NV_en),
       .Branch(Branch),
       .BR(BR),
-      .branch_mispredicted(misprediction),
+      .update_PC(update_PC),
       .actual_taken(actual_taken),
       .HLT(WB_signals[1]),
       

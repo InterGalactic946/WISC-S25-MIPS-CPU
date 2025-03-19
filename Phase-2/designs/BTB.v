@@ -13,7 +13,7 @@ module BTB (
     input wire rst,                    // Active high reset signal
     input wire [3:0] PC_curr,          // 4-bit address (lower 4-bits of current PC from the fetch stage)
     input wire [3:0] IF_ID_PC_curr,    // Pipelined 4-bit address (lower 4-bits of previous PC from the fetch stage)
-    input wire wen,                    // Write enable signal for updating BTB when the branch is actually taken
+    input wire wen,                    // Write enable signal for updating BTB when the branch is actually taken or when miscomputed
     input wire enable,                 // Enable signal for the BTB
     input wire [15:0] actual_target,   // 16-bit actual target address of the branched instruction (from the decode stage)
     

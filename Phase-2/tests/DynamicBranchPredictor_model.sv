@@ -10,11 +10,10 @@ module DynamicBranchPredictor_model (
     input logic [3:0] IF_ID_PC_curr,      // Pipelined lower 4-bits of previous PC address
     input wire [1:0] IF_ID_prediction,    // The predicted value of the previous branch instruction.
     input logic enable,                   // Enable signal for the DynamicBranchPredictor
-    input logic was_branch,               // Indicates that the previous instruction was a branch instruction
+    input wire wen_BTB,                  // Write enable for BTB (Branch Target Buffer) (from the decode stage)
+    input wire wen_BHT,                  // Write enable for BHT (Branch History Table) (from the decode stage)
     input logic actual_taken,             // Actual branch taken value (from the decode stage)
     input logic [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
-    input wire target_mismatch,           // Indicates if there was a target address misprediction (from the decode stage)
-    input wire prediction_mismatch,       // Indicates if there was a branch misprediction (from the decode stage)
 
     output logic [1:0] prediction,        // 2-bit Predicted branch signal (from BHT)
     output logic [15:0] predicted_target  // Predicted target address (from BTB)
@@ -23,7 +22,6 @@ module DynamicBranchPredictor_model (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  logic wen_BTB;                  // Write enable for BTB.
   logic [1:0] updated_prediction; // The new prediction to be stored in the BHT on an incorrect prediction.
   logic [1:0] BHT [15:0];         // 2-bit, 16 entry Branch History Table (BHT) memory.
   logic [15:0] BTB [15:0];        // 16 entry Branch Target Buffer (BTB) memory.
@@ -33,10 +31,6 @@ module DynamicBranchPredictor_model (
   ///////////////////////////////////////////
   // Model the Branch Target Buffer (BTB) //
   /////////////////////////////////////////
-  // We update the BTB when the instruction was a branch and is actually taken
-  // and when there is a target mismatch.
-  assign wen_BTB = actual_taken & was_branch & target_mismatch;
-
   // Model the BTB memory.
   always @(posedge clk) begin
     if (rst) begin
@@ -60,14 +54,14 @@ module DynamicBranchPredictor_model (
     if (rst) begin
       // Initialize the BHT entries to 0 on reset.
       BHT <= '{default: 2'h0};
-    end else if (enable & prediction_mismatch) begin
+    end else if (enable & wen_BHT) begin
       // Update BHT based on a mispredicted branch instruction.
       BHT[IF_ID_PC_curr[3:1]] <= updated_prediction;
     end
   end
 
   // Asynchronously read out the prediction when read enabled.
-  assign prediction = (enable & ~prediction_mismatch) ? BHT[PC_curr[3:1]] : 2'h0;
+  assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]] : 2'h0;
  
   // Model the prediction states.
   always_comb begin

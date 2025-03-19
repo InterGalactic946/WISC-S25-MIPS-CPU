@@ -17,6 +17,7 @@ module Decode (
     input wire [15:0] pc_next,            // The next instruction's address
     input wire [2:0] flags,               // Flag register signals (ZF, VF, NF)
     input wire IF_ID_predicted_taken,     // Predicted taken signal from the IF/ID stage
+    input wire [15:0] IF_ID_predicted_target, // Predicted target address from the branch predictor of the previous instruction
     input wire MEM_WB_RegWrite,           // Write enable to the register file (from the MEM/WB stage)
     input wire [3:0] MEM_WB_reg_rd,       // Register ID of the destination register (from the MEM/WB stage)
     input wire [15:0] RegWriteData,       // Data to write to the register file (from the MEM/WB stage)
@@ -29,7 +30,9 @@ module Decode (
     output wire is_BR,                    // Indicates a branch register instruction
     output wire [15:0] branch_target,     // Computed branch target address
     output wire actual_taken,             // Signal used to determine whether an instruction met condition codes
-    output wire branch_mispredicted       // Indicates a branch misprediction
+    output wire wen_BTB,                  // Write enable for BTB (Branch Target Buffer)
+    output wire wen_BHT,                  // Write enable for BHT (Branch History Table)
+    output wire update_PC                 // Signal to update the PC with the actual target
   );
   
   /////////////////////////////////////////////////
@@ -86,7 +89,7 @@ module Decode (
     .IF_ID_predicted_target(IF_ID_predicted_target),
     .actual_target(branch_target),
     
-    .Branch(Branch),
+    .Branch(is_branch),
     .wen_BTB(wen_BTB),
     .wen_BHT(wen_BHT),
     .update_PC(update_PC),
@@ -139,6 +142,7 @@ module Decode (
       .Rs(SrcReg1_data),
       .BR(is_BR),
       .PC_next(pc_next),
+      
       .taken(actual_taken),
       .PC_branch(branch_target)
   );
@@ -172,6 +176,7 @@ module Decode (
       .DstReg(MEM_WB_reg_rd),
       .WriteReg(MEM_WB_RegWrite),
       .DstData(RegWriteData),
+      
       .SrcData1(SrcReg1_data),
       .SrcData2(SrcReg2_data)
   );

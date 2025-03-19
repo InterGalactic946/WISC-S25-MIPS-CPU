@@ -16,7 +16,7 @@ module ControlUnit (
     input wire [15:0] IF_ID_predicted_target, // Predicted target address from the branch predictor of the previous instruction
     input wire [15:0] actual_target,          // Actual target address computed by the ALU
     
-    output wire Branch,                       // Used to signal that the PC should take the value from the branch adder
+    output wire Branch,                       // Used to signal that the PC fetched a branch instruction
     output wire wen_BTB,                      // Write enable for BTB (Branch Target Buffer)
     output wire wen_BHT,                      // Write enable for BHT (Branch History Table)
     output wire update_PC,                    // Signal to update the PC with the actual target
@@ -39,8 +39,9 @@ module ControlUnit (
     /////////////////////////////////////////////////
     // Declare any internal signals as type wire  //
     ///////////////////////////////////////////////
-    wire branch_mispredicted;        // Indicates previous instruction's fetch mispredicted the branch.
-    wire branch_target_miscomputed;  // Indicates previous instruction's fetch miscomputed the target.
+    wire mispredicted;        // Indicates previous instruction's fetch mispredicted.
+    wire target_miscomputed;  // Indicates previous instruction's fetch miscomputed the target.
+    wire branch_taken;        // Indicates branch was actually taken.
     ////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////
@@ -53,21 +54,24 @@ module ControlUnit (
     // Branch is only 1 for B and BR
     assign Branch = Opcode[3] & Opcode[2] & ~Opcode[1];
 
-    // Update BTB whenever the branch is actually taken or when the target was miscomputed.
-    assign wen_BTB = (Branch & actual_taken) | branch_target_miscomputed;
+    // Indicates branch is actually taken.
+    assign branch_taken = (Branch & actual_taken);
 
-    // Update BHT on every branch instruction.
-    assign wen_BHT = Branch;
+    // It is mispredicted when the predicted taken value doesn't match the actual taken value.
+    assign mispredicted = (IF_ID_predicted_taken != actual_taken);
 
-    // A branch is mispredicted when the predicted taken value doesn't match the actual taken value.
-    assign branch_mispredicted = (IF_ID_predicted_taken != actual_taken) & Branch;
+    // A target is miscomputed when the predicted target differs from the actual target.
+    assign target_miscomputed = (IF_ID_predicted_target != actual_target);
 
-    // A branch target is miscomputed when the predicted target differs from the actual target.
-    assign branch_target_miscomputed = (IF_ID_predicted_target != actual_target) & Branch;
+    // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
+    assign wen_BTB = (Branch) & ((actual_taken) | (target_miscomputed));
+
+    // Update BHT on a mispredicted branch instruction.
+    assign wen_BHT = (Branch & mispredicted);
 
     // We update the PC to fetch the actual target when the predictor either predicted incorrectly
     // or when the target was miscomputed and the branch was actually taken.
-    assign update_PC = (branch_mispredicted | branch_target_miscomputed) & actual_taken;
+    assign update_PC = (mispredicted | target_miscomputed) & (branch_taken);
     ////////////////////////
 
     //////////////////

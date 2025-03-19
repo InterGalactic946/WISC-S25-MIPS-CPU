@@ -10,16 +10,23 @@ module DynamicBranchPredictor_tb();
 
   logic clk;                              // Clock signal
   logic rst;                              // Reset signal
+  
   logic enable;                           // Enable signal for the branch predictor
+  logic wen_BTB;                          // Write enable for BTB (Branch Target Buffer) (from the decode stage)
+  logic wen_BHT;                          // Write enable for BHT (Branch History Table) (from the decode stage)
+  logic update_PC;                        // Signal to update the PC with the actual target
+
   logic is_branch;                        // Flag to indicate if the previous instruction was a branch
+  
   logic actual_taken;                     // Flag indicating whether the branch was actually taken
   logic [15:0] actual_target;             // Actual target address of the branch
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
   logic [15:0] IF_ID_predicted_target;    // Predicted target passed to the decode stage
-  logic prediction_mismatch;              // Indicating if the branch was mispredicted
-  logic target_mismatch;                  // Indicating if the branch target was mis-computed.
   logic [15:0] PC_curr;                   // Current PC value
   logic [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
+
+  logic mispredicted;                     // Indicates previous instruction's fetch mispredicted.
+  logic target_miscomputed;               // Indicates previous instruction's fetch miscomputed the target.
 
   integer actual_taken_count;             // Number of times branch was actually taken.
   integer predicted_taken_count;          // Number of times branch was predicted to be taken.
@@ -41,11 +48,10 @@ module DynamicBranchPredictor_tb();
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
-    .was_branch(is_branch),
+    .wen_BTB(wen_BTB),
+    .wen_BHT(wen_BHT),
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
-    .target_mismatch(target_mismatch), 
-    .prediction_mismatch(prediction_mismatch),
     
     .prediction(prediction), 
     .predicted_target(predicted_target)
@@ -59,11 +65,10 @@ module DynamicBranchPredictor_tb();
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
-    .was_branch(is_branch),
+    .wen_BTB(wen_BTB),
+    .wen_BHT(wen_BHT),
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
-    .target_mismatch(target_mismatch), 
-    .prediction_mismatch(prediction_mismatch),
     
     .prediction(expected_prediction), 
     .predicted_target(expected_predicted_target)
@@ -91,8 +96,9 @@ module DynamicBranchPredictor_tb();
     // Verify the predictions.
     verify_prediction_and_target();
 
-    // Dump the contents of memory.
-    dump_BHT_BTB();
+    // Dump the contents of memory whenever we write to the BTB or BHT.
+    if (wen_BHT || wen_BTB)
+      dump_BHT_BTB();
   end
 
   // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
@@ -177,7 +183,7 @@ module DynamicBranchPredictor_tb();
     if (rst)
       PC_curr <= 16'h0000;
     else if (enable) begin
-      if (branch_mispredicted && actual_taken)
+      if (update_PC)
         PC_curr <= actual_target;
       else if (expected_prediction[1])
         PC_curr <= expected_predicted_target;
@@ -218,7 +224,7 @@ module DynamicBranchPredictor_tb();
         predicted_not_taken_count++;
 
       // Track mispredictions.
-      if (((IF_ID_prediction[1] !== actual_taken) || (IF_ID_predicted_target !== actual_target)) && is_branch) 
+      if (mispredicted && branch_taken) 
         misprediction_count++;
     end
   end
@@ -249,5 +255,24 @@ module DynamicBranchPredictor_tb();
 
   // We get the branch miscomputed targets.
   assign target_mismatch = (IF_ID_predicted_target !== actual_target);
+
+  // Indicates branch is actually taken.
+  assign branch_taken = (is_branch & actual_taken);
+
+  // It is mispredicted when the predicted taken value doesn't match the actual taken value.
+  assign mispredicted = (IF_ID_prediction[1] != actual_taken);
+
+  // A target is miscomputed when the predicted target differs from the actual target.
+  assign target_miscomputed = (IF_ID_predicted_target != actual_target);
+
+  // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
+  assign wen_BTB = (Branch) & ((actual_taken) | (target_miscomputed));
+
+  // Update BHT on a mispredicted branch instruction.
+  assign wen_BHT = (Branch & mispredicted);
+
+  // We update the PC to fetch the actual target when the predictor either predicted incorrectly
+  // or when the target was miscomputed and the branch was actually taken.
+  assign update_PC = (mispredicted | target_miscomputed) & (branch_taken);
 
 endmodule

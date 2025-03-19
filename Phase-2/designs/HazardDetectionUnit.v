@@ -21,8 +21,7 @@ module HazardDetectionUnit (
     input wire ID_EX_NV_en,            // Negative/Overflow flag enable signal from ID/EX stage
     input wire Branch,                 // Branch signal indicating a branch instruction
     input wire BR,                     // BR signal indicating a BR instruction
-    input wire branch_mispredicted,    // Signal indicating branch misprediction
-    input wire actual_taken,           // Signal used to determine whether an instruction met condition codes
+    input wire update_PC,              // Signal that we need to update the PC
     input wire HLT,                    // Halt signal indicating a halt instruction
     
     output wire PC_stall,              // Stall signal for IF stage
@@ -59,9 +58,8 @@ module HazardDetectionUnit (
   // We flush the ID_EX pipeline register and send nops during load to use or branch hazards.
   assign ID_flush = load_to_use_hazard | B_hazard | BR_hazard;
 
-  // We flush the IF_ID pipeline instruction word whenever we predict the branch incorrectly and
-  // it is taken.
-  assign IF_flush = branch_mispredicted & actual_taken;
+  // We flush the IF_ID pipeline instruction word whenever we need to update the PC, i.e. on an incorrect branch fetch.
+  assign IF_flush = update_PC;
   /////////////////////////////////////////////////////////////
 
   //////////////////////////////////

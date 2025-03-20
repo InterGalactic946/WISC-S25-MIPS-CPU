@@ -195,12 +195,12 @@ module Fetch_tb();
 
       // Log full IMEM contents to file only
       $fdisplay(file, "\n====== FULL IMEM CONTENTS - MODEL vs DUT ======");
-      $fdisplay(file, "Addr  | Model    | DUT      | Match");
+      $fdisplay(file, "PC  | Model    | DUT      | Match");
       $fdisplay(file, "-------------------------------------");
-      for (i = 0; i < $size(iFETCH.inst_mem); i = i + 2) begin
+      for (i = 0; i < num_tests; i = i + 2) begin
         $fdisplay(file, "%4h  |  0x%h  |  0x%h  |  %s", 
-                  i/2, iFETCH.inst_mem[i], iDUT.iINSTR_MEM.mem[i], 
-                  (iFETCH.inst_mem[i] === iDUT.iINSTR_MEM.mem[i]) ? "YES" : "NO");
+                  i, iFETCH.inst_mem[i/2], iDUT.iINSTR_MEM.mem[i/2], 
+                  (iFETCH.inst_mem[i/2] === iDUT.iINSTR_MEM.mem[i/2]) ? "YES" : "NO");
       end
 
       // Close file

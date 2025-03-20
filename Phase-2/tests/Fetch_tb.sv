@@ -225,6 +225,7 @@ module Fetch_tb();
       $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);
       $display("Number of penalty cycles for misprediction: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
+      $display("Number of branch instructions executed: %0d.", branch_count);
       $display("Number of instructions executed: %0d.", num_tests);
       $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(branch_count))) * 100);
       

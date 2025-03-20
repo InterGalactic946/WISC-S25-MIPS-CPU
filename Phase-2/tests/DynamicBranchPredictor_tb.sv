@@ -111,7 +111,7 @@ module DynamicBranchPredictor_tb();
     static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
 
     // Open file for writing
-    file = $fopen("./tests/logs/transcript/bht_btb_dump.log", "w");
+    file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "w");
     
     // Print header with clock cycle info
     $display("\n===================================================");

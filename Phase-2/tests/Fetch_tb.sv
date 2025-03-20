@@ -121,50 +121,85 @@ module Fetch_tb();
     end
   endtask
 
-  // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
-  task dump_BHT_BTB();
-  begin
-    integer i;
 
-    static reg [1:0] prev_BHT_DUT [0:15];  // Store previous BHT state for DUT
-    static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
+    // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB) with formatted output
+    task dump_BHT_BTB();
+      integer i, file;
+      
+      static reg [1:0] prev_BHT_DUT [0:15];  // Store previous BHT state for DUT
+      static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
 
-    // Print full BHT contents (without IF_ID_PC_curr)
-    $display("\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
-    for (i = 0; i < 16; i = i + 1) begin
-      $display("BHT[%0d] -> Model: %b | DUT: %b", i, iFETCH_model.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
-    end
+      // Open file for writing
+      file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "w");
+      
+      // Print header with clock cycle info
+      $display("\n===================================================");
+      $display("Branch Predictor Dump - Clock Cycle: %0d", $time);
+      $display("===================================================\n");
 
-    // Print update statements for BHT
-    $display("\n====== BHT UPDATES - DUT ======");
-    for (i = 0; i < 16; i = i + 1) begin
-      if (iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
-        $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
-                i, iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
-        prev_BHT_DUT[i] = iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
+      $fdisplay(file, "\n===================================================");
+      $fdisplay(file, "Branch Predictor Dump - Clock Cycle: %0d", $time);
+      $fdisplay(file, "===================================================\n");
+
+      // Print full BHT contents
+      $display("\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
+      $display("Index | Model | DUT");
+      $display("--------------------");
+      $fdisplay(file, "\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
+      $fdisplay(file, "Index | Model | DUT");
+      $fdisplay(file, "--------------------");
+
+      for (i = 0; i < 16; i = i + 1) begin
+        $display("%2d    |  %b   |  %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
+        $fdisplay(file, "%2d    |  %b   |  %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
       end
-    end
 
-    // Print update statements for BTB
-    $display("\n====== BTB UPDATES - DUT ======");
-    for (i = 0; i < 16; i = i + 1) begin
-      if (iDUT.iDBP.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
-        $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                i, iDUT.iDBP.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
-        prev_BTB_DUT[i] = iDUT.iDBP.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
+      // Print BHT updates
+      $display("\n====== BHT UPDATES - DUT ======");
+      $fdisplay(file, "\n====== BHT UPDATES - DUT ======");
+      for (i = 0; i < 16; i = i + 1) begin
+        if (iDUT.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
+          $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
+                    i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+          $fdisplay(file, "BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
+                    i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+          prev_BHT_DUT[i] = iDUT.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
+        end
       end
-    end
 
-    // Print full BTB contents (without IF_ID_PC_curr)
-    $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
-    for (i = 0; i < 16; i = i + 1) begin
-      $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, iFETCH_model.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
-    end
-    
-    // Break for clarity
-    $display("\n---------------------------------------------------");
-  end
-  endtask
+      // Print BTB updates
+      $display("\n====== BTB UPDATES - DUT ======");
+      $fdisplay(file, "\n====== BTB UPDATES - DUT ======");
+      for (i = 0; i < 16; i = i + 1) begin
+        if (iDUT.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
+          $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
+                    i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+          $fdisplay(file, "BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
+                    i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+          prev_BTB_DUT[i] = iDUT.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
+        end
+      end
+
+      // Print full BTB contents
+      $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
+      $display("Index | Model  | DUT");
+      $display("----------------------");
+      $fdisplay(file, "\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
+      $fdisplay(file, "Index | Model  | DUT");
+      $fdisplay(file, "----------------------");
+
+      for (i = 0; i < 16; i = i + 1) begin
+        $display("%2d    |  0x%h  |  0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+        $fdisplay(file, "%2d    |  0x%h  |  0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+      end
+
+      // Closing section
+      $display("\n===================================================");
+      $fdisplay(file, "\n===================================================");
+
+      // Close file
+      $fclose(file);
+    endtask
 
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin
@@ -210,9 +245,6 @@ module Fetch_tb();
 
       // Run for num_tests.
       repeat (num_tests) @(posedge clk);
-
-      // Dump memory conteents.
-      dump_BHT_BTB();
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);

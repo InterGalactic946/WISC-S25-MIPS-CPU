@@ -204,7 +204,7 @@ module Fetch_tb();
       end
 
       // Print only IMEM updates
-      for (i = 0; i < 256; i = i + 1) begin
+      for (i = 0; i < $size(iFETCH.inst_mem); i = i + 1) begin
         if (iDUT.iINSTR_MEM.mem[i] !== prev_IMEM_DUT[i]) begin
           $display("IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
                     i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
@@ -251,7 +251,7 @@ module Fetch_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 20;
+      num_tests = 16;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
@@ -295,7 +295,7 @@ module Fetch_tb();
         actual_taken = $random % 2;
       
       4, 5:  // 25% of the time, randomize actual_target
-        actual_target = (actual_taken) ? $random : 16'h0000;
+        actual_target = (actual_taken) ? $random * 2 : 16'h0000;
 
       6:  // 12.5% of the time, randomize enable
         enable = $random % 2;

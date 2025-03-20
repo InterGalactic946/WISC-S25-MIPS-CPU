@@ -125,90 +125,71 @@ module Fetch_tb();
   endtask
 
 
-    // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB) with formatted output
-    task dump_BHT_BTB();
-      integer i, file;
-      
-      static reg [1:0] prev_BHT_DUT [0:15];  // Store previous BHT state for DUT
-      static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
+  task dump_BHT_BTB();
+    integer i, file;
+    
+    static reg [1:0] prev_BHT_DUT [0:15];  // Store previous BHT state for DUT
+    static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
+    static reg [15:0] prev_IF_ID_PC_curr_BHT [0:15]; // Store previous IF_ID_PC_curr for BHT
+    static reg [15:0] prev_IF_ID_PC_curr_BTB [0:15]; // Store previous IF_ID_PC_curr for BTB
 
-      // Open file for writing
-      file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "a");
-      
-      // Print header with clock cycle info to file only
-      $fdisplay(file, "\n===================================================");
-      $fdisplay(file, "Branch Predictor Dump - Clock Cycle: %0d", $time);
-      $fdisplay(file, "===================================================\n");
+    // Open file for writing
+    file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "a");
+    
+    // Print header with clock cycle info to file only
+    $fdisplay(file, "\n===================================================");
+    $fdisplay(file, "Branch Predictor Dump - Clock Cycle: %0d", $time);
+    $fdisplay(file, "===================================================\n");
 
-      // Log full BHT contents to file only
-      $fdisplay(file, "\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
-      $fdisplay(file, "Index | Model | DUT");
-      $fdisplay(file, "--------------------");
-      for (i = 0; i < 16; i = i + 1) begin
-        $fdisplay(file, "%2d    |  %b   |  %b", i, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
+    // Log BHT and BTB entries
+    for (i = 0; i < 16; i = i + 1) begin
+      // Format for the columns
+      // Adjust the width of the columns based on the expected sizes of the values (e.g., 8 hex digits for PC, 2-bit BHT, 16-bit BTB)
+      // Use %-10 for 10 characters wide, %-8 for 8 characters wide
+      if (prev_IF_ID_PC_curr_BHT[i] == iDUT.IF_ID_PC_curr) begin
+        // Print from prev if matched
+        $fdisplay(file, "%-10h  | %-8b  | %-8b            | %-10h  | %-8h  | %-8h", 
+                  prev_IF_ID_PC_curr_BHT[i], iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],
+                  iDUT.IF_ID_PC_curr, iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
+      end else if (prev_IF_ID_PC_curr_BHT[i] !== iDUT.IF_ID_PC_curr) begin
+        // Print DUT values if no match with prev
+        $fdisplay(file, "%-10h  | %-8b  | %-8b            | %-10h  | %-8h  | %-8h", 
+                  iDUT.IF_ID_PC_curr, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],
+                  iDUT.IF_ID_PC_curr, iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
+      end else begin
+        // If no value exists, print "xxxx"
+        $fdisplay(file, "%-10s  | %-8s  | %-8s            | %-10s  | %-8s  | %-8s", 
+                  "xxxx", "xxxx", "xxxx", "xxxx", "xxxx", "xxxx");
       end
 
-      // Print only BHT updates
-      for (i = 0; i < 16; i = i + 1) begin
-        if (iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
-          $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
-          $fdisplay(file, "BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
-          prev_BHT_DUT[i] = iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0];
-        end
+      // Store the previous IF_ID_PC_curr for future comparison
+      prev_IF_ID_PC_curr_BHT[i] = iDUT.IF_ID_PC_curr;
+
+      // Now check for BTB updates separately
+      if (prev_IF_ID_PC_curr_BTB[i] == iDUT.IF_ID_PC_curr) begin
+        // If BTB entry exists and matches the previous value, print from prev
+        $fdisplay(file, "%-10h  | %-8b  | %-8b            | %-10h  | %-8h  | %-8h", 
+                  prev_IF_ID_PC_curr_BTB[i], iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],
+                  prev_IF_ID_PC_curr_BTB[i], iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
+      end else if (prev_IF_ID_PC_curr_BTB[i] !== iDUT.IF_ID_PC_curr) begin
+        // Otherwise print DUT BTB state
+        $fdisplay(file, "%-10h  | %-8b  | %-8b            | %-10h  | %-8h  | %-8h", 
+                  iDUT.IF_ID_PC_curr, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],
+                  iDUT.IF_ID_PC_curr, iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
+      end else begin
+        // If no value exists, print "xxxx"
+        $fdisplay(file, "%-10s  | %-8s  | %-8s            | %-10s  | %-8s  | %-8s", 
+                  "xxxx", "xxxx", "xxxx", "xxxx", "xxxx", "xxxx");
       end
 
-      // Print only BTB updates
-      for (i = 0; i < 16; i = i + 1) begin
-        if (iDUT.iDBP.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
-          $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iDBP.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
-          $fdisplay(file, "BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iDBP.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
-          prev_BTB_DUT[i] = iDUT.iDBP.iBTB.iMEM_BTB.mem[i];
-        end
-      end
+      // Store the previous IF_ID_PC_curr for BTB as well
+      prev_IF_ID_PC_curr_BTB[i] = iDUT.IF_ID_PC_curr;
+    end
 
-      // Log full BTB contents to file only
-      $fdisplay(file, "\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
-      $fdisplay(file, "Index | Model  | DUT");
-      $fdisplay(file, "----------------------");
-      for (i = 0; i < 16; i = i + 1) begin
-        $fdisplay(file, "%2d    |  0x%h  |  0x%h", i, iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
-      end
+    // Close file
+    $fclose(file);
+  endtask
 
-      // Close file
-      $fclose(file);
-    endtask
-
-    // Dumps the contents of Instruction Memory (IMEM) and compares it against a reference model
-    task dump_IMEM_compare();
-      integer i, file;
-      
-      static reg [15:0] prev_IMEM_DUT [0:65535];
-
-      // Open file for writing
-      file = $fopen("./tests/output/logs/transcript/imem_dump.log", "a");
-      
-      // Print header with clock cycle info to file only
-      $fdisplay(file, "\n===================================================");
-      $fdisplay(file, "Instruction Memory Dump - Clock Cycle: %0d", $time);
-      $fdisplay(file, "===================================================\n");
-
-      // Log full IMEM contents to file only
-      $fdisplay(file, "\n====== FULL IMEM CONTENTS - MODEL vs DUT ======");
-      $fdisplay(file, "PC  | Model    | DUT      | Match");
-      $fdisplay(file, "-------------------------------------");
-      for (i = 0; i < num_tests; i = i + 2) begin
-        $fdisplay(file, "%4h  |  0x%h  |  0x%h  |  %s", 
-                  i, iFETCH.inst_mem[i/2], iDUT.iINSTR_MEM.mem[i/2], 
-                  (iFETCH.inst_mem[i/2] === iDUT.iINSTR_MEM.mem[i/2]) ? "YES" : "NO");
-      end
-
-      // Close file
-      $fclose(file);
-    endtask
 
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin
@@ -259,9 +240,6 @@ module Fetch_tb();
         rst = 1'b0;
         clr = 1'b0;
       end
-      
-      // Print contents if I-mem.
-      dump_IMEM_compare();
 
       // Run for num_tests.
       repeat(2) begin
@@ -303,7 +281,7 @@ module Fetch_tb();
         actual_taken = $random % 2;
       
       4, 5:  // 25% of the time, randomize actual_target
-      actual_target = (actual_taken) ? (16'h0000 + ($random % (2*num_tests))) : 16'h0000;
+      actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
 
       6:  // 12.5% of the time, randomize enable
         enable = $random % 2;
@@ -311,7 +289,7 @@ module Fetch_tb();
       default: begin  // 12.5% of the time, randomize everything
         is_branch = $random % 2;
         actual_taken = $random % 2;
-        actual_target = (actual_taken) ? (16'h0000 + ($random % (2*num_tests))) : 16'h0000;
+        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
         enable = $random % 2;
       end
     endcase

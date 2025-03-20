@@ -197,21 +197,10 @@ module Fetch_tb();
       $fdisplay(file, "\n====== FULL IMEM CONTENTS - MODEL vs DUT ======");
       $fdisplay(file, "Addr  | Model    | DUT      | Match");
       $fdisplay(file, "-------------------------------------");
-      for (i = 0; i < 256; i = i + 1) begin
+      for (i = 0; i < size(iFETCH.inst_mem); i = i + 2) begin
         $fdisplay(file, "%4h  |  0x%h  |  0x%h  |  %s", 
-                  i, iFETCH.inst_mem[i], iDUT.iINSTR_MEM.mem[i], 
+                  i/2, iFETCH.inst_mem[i], iDUT.iINSTR_MEM.mem[i], 
                   (iFETCH.inst_mem[i] === iDUT.iINSTR_MEM.mem[i]) ? "YES" : "NO");
-      end
-
-      // Print only IMEM updates
-      for (i = 0; i < $size(iFETCH.inst_mem); i = i + 1) begin
-        if (iDUT.iINSTR_MEM.mem[i] !== prev_IMEM_DUT[i]) begin
-          $display("IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
-          $fdisplay(file, "IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
-          prev_IMEM_DUT[i] = iDUT.iINSTR_MEM.mem[i];
-        end
       end
 
       // Close file

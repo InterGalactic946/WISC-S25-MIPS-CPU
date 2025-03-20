@@ -23,47 +23,65 @@ module DynamicBranchPredictor_model (
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
   logic [1:0] updated_prediction; // The new prediction to be stored in the BHT on an incorrect prediction.
-  logic [1:0] BHT [15:0];         // 2-bit, 16 entry Branch History Table (BHT) memory.
-  logic [15:0] BTB [15:0];        // 16 entry Branch Target Buffer (BTB) memory.
   logic error;                    // Error flag raised when prediction state is invalid.
   ////////////////////////////////////////////////
 
-  ///////////////////////////////////////////
-  // Model the Branch Target Buffer (BTB) //
-  /////////////////////////////////////////
-  // Model the BTB memory.
-  always @(posedge clk) begin
-    if (rst) begin
-      // Initialize the BTB entries to a default target address (e.g., 16'h0000).
-      BTB <= '{default: 16'h0000};
-    end else if (enable & wen_BTB) begin
-      // Update BTB with the target address if the branch was taken.
-      BTB[IF_ID_PC_curr[3:1]] <= actual_target;
-    end
-  end
+  //////////////////////////
+  // Initialize BHT & BTB //
+  //////////////////////////
+  typedef struct packed {
+      logic [15:0] PC_addr;   // 16-bit PC address
+      logic [1:0] prediction; // 2-bit prediction
+  } BHT_entry_t;
 
-  // Asynchronously read out the target when read enabled.
-  assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]] : 16'h0000;
-  ////////////////////////////////////////////////
+  typedef struct packed {
+      logic [15:0] PC_addr; // 16-bit PC address
+      logic [15:0] target;  // 16-bit target address
+  } BTB_entry_t;
 
-  ///////////////////////////////////////////
-  // Model the Branch History Table (BHT) //
-  /////////////////////////////////////////
-  // Model the BHT memory.
+  // Declare BHT
+  BHT_entry_t BHT [0:15];
+
+  // Declare BTB
+  BTB_entry_t BTB [0:15];
+  //////////////////////////
+
+  ////////////////////////////////////////
+  // Model the Dynamic Branch Predictor //
+  ////////////////////////////////////////
+  // Model the BTB/BHT memory.
   always @(posedge clk) begin
-    if (rst) begin
-      // Initialize the BHT entries to 0 on reset.
-      BHT <= '{default: 2'h0};
-    end else if (enable & wen_BHT) begin
-      // Update BHT based on a mispredicted branch instruction.
-      BHT[IF_ID_PC_curr[3:1]] <= updated_prediction;
-    end
+      if (rst) begin
+          // Initialize BHT: PC_addr = 'x, prediction = 2'b00
+          BHT <= '{default: '{PC_addr: 16'hxxxx, prediction: 2'b00}};
+          // Initialize BTB: PC_addr = 'x, target = 'x
+          BTB <= '{default: '{PC_addr: 16'hxxxx, target: 16'h0000}};
+      end 
+      else begin
+          // Update BHT entry if needed (for example, on a misprediction)
+          if (enable && wen_BHT) begin
+              BHT[IF_ID_PC_curr[3:1]].PC_addr  <= IF_ID_PC_curr;   // Store the PC address
+              BHT[IF_ID_PC_curr[3:1]].prediction <= updated_prediction; // Store the 2-bit prediction
+          end
+
+          // Update BTB entry if needed (when a branch is taken)
+          if (enable && wen_BTB) begin
+              BTB[IF_ID_PC_curr[3:1]].PC_addr <= IF_ID_PC_curr;  // Store the PC address
+              BTB[IF_ID_PC_curr[3:1]].target  <= actual_target;  // Store the target address
+          end
+      end
   end
 
   // Asynchronously read out the prediction when read enabled.
   assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]] : 2'h0;
- 
-  // Model the prediction states.
+
+  // Asynchronously read out the target when read enabled.
+  assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]] : 16'h0000;
+  //////////////////////////////////////////
+
+  /////////////////////////////////
+  // Model the prediction states //
+  /////////////////////////////////
   always_comb begin
       error = 1'b0;              // Default error state.
       updated_prediction = 2'h0; // Default predict not taken.
@@ -78,6 +96,6 @@ module DynamicBranchPredictor_model (
           end
       endcase
   end
-  ////////////////////////////////////////////////
+  ///////////////////////////////////
 
 endmodule

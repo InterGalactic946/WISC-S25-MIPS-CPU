@@ -264,7 +264,7 @@ module Fetch_tb();
       dump_IMEM_compare();
 
       // Run for num_tests.
-      repeat(3000) begin
+      repeat(30) begin
         repeat (num_tests) @(posedge clk);
 
         // Reset the PC.

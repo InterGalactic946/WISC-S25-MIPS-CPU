@@ -239,7 +239,7 @@ module Fetch_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 34;
+      num_tests = 32;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
@@ -286,7 +286,7 @@ module Fetch_tb();
         actual_taken = $random % 2;
       
       4, 5:  // 25% of the time, randomize actual_target
-      actual_target = (actual_taken) ? (16'h0000 + ($random % num_instructions) * 2) : 16'h0000;
+      actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
 
       6:  // 12.5% of the time, randomize enable
         enable = $random % 2;
@@ -294,7 +294,7 @@ module Fetch_tb();
       default: begin  // 12.5% of the time, randomize everything
         is_branch = $random % 2;
         actual_taken = $random % 2;
-        actual_target = (actual_taken) ? (16'h0000 + ($random % num_instructions) * 2) : 16'h0000;
+        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
         enable = $random % 2;
       end
     endcase

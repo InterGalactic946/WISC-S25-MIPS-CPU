@@ -167,7 +167,7 @@ module Fetch_tb();
               $fdisplay(file, "  0x%04X      0x%04X   0x%04X    %-3s", (model_PC_BTB === 16'hxxxx) ? 16'hXXXX : model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");
           end  
 
-          $fdisplay("\n");
+          $fdisplay(file, "\n");
 
           // Close the file
           $fclose(file);

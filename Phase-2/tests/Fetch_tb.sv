@@ -150,20 +150,20 @@ module Fetch_tb();
       $fdisplay(file, "--------------------");
 
       for (i = 0; i < 16; i = i + 1) begin
-        $display("%2d    |  %b   |  %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
-        $fdisplay(file, "%2d    |  %b   |  %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
+        $display("%2d    |  %b   |  %b", i, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
+        $fdisplay(file, "%2d    |  %b   |  %b", i, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
       end
 
       // Print BHT updates
       $display("\n====== BHT UPDATES - DUT ======");
       $fdisplay(file, "\n====== BHT UPDATES - DUT ======");
       for (i = 0; i < 16; i = i + 1) begin
-        if (iDUT.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
+        if (iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
           $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+                    i, iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
           $fdisplay(file, "BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
-          prev_BHT_DUT[i] = iDUT.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
+                    i, iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+          prev_BHT_DUT[i] = iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
         end
       end
 
@@ -171,12 +171,12 @@ module Fetch_tb();
       $display("\n====== BTB UPDATES - DUT ======");
       $fdisplay(file, "\n====== BTB UPDATES - DUT ======");
       for (i = 0; i < 16; i = i + 1) begin
-        if (iDUT.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
+        if (iDUT.iDBP.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
           $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+                    i, iDUT.iDBP.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
           $fdisplay(file, "BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                    i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
-          prev_BTB_DUT[i] = iDUT.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
+                    i, iDUT.iDBP.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+          prev_BTB_DUT[i] = iDUT.iDBP.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
         end
       end
 
@@ -189,8 +189,8 @@ module Fetch_tb();
       $fdisplay(file, "----------------------");
 
       for (i = 0; i < 16; i = i + 1) begin
-        $display("%2d    |  0x%h  |  0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
-        $fdisplay(file, "%2d    |  0x%h  |  0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+        $display("%2d    |  0x%h  |  0x%h", i, iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
+        $fdisplay(file, "%2d    |  0x%h  |  0x%h", i, iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
       end
 
       // Closing section

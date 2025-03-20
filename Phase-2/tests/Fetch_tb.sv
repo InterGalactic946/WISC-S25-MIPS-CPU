@@ -143,18 +143,18 @@ task dump_BHT_BTB();
     $fdisplay(file, "================================================================================\n");
 
     // Print column headers for BHT and BTB sections
-    $fdisplay(file, "-------------------------------------|-----------------------------------");
-    $fdisplay(file, "                 BHT                 |                 BTB");
-    $fdisplay(file, "-------------------------------------|-----------------------------------");
-    $fdisplay(file, "IF_ID_PC_curr | Model | DUT | MATCH  | IF_ID_PC_curr |  Model  |  DUT  | MATCH");
-    $fdisplay(file, "-------------------------------------|-----------------------------------");
+    $fdisplay(file, "---------------------------------------|-----------------------------------------");
+    $fdisplay(file, "                  BHT                  |                 BTB");
+    $fdisplay(file, "---------------------------------------|-----------------------------------------");
+    $fdisplay(file, " IF_ID_PC_curr  | Model | DUT | MATCH  | IF_ID_PC_curr  |  Model  |  DUT  | MATCH");
+    $fdisplay(file, "---------------------------------------|-----------------------------------------");
 
     // Log BHT and BTB entries
     for (i = 0; i < 16; i = i + 1) begin
         // Check BHT entries
         if (prev_IF_ID_PC_curr_BHT[i] == iDUT.IF_ID_PC_curr) begin
             // Print from prev if matched
-            $fdisplay(file, "   0x%-4h  | %-2b  | %-2b  |  %-4s  |   0x%-4h   | %-4h | %-4h | %-4s", 
+            $fdisplay(file, "   0x%-4h     | %-3b  | %-3b  |  %-4s  |   0x%-4h     | %-4h  | %-4h  | %-4s", 
                       prev_IF_ID_PC_curr_BHT[i], 
                       iFETCH.iDBP_model.BHT[i], 
                       iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],
@@ -165,7 +165,7 @@ task dump_BHT_BTB();
                       "YES");
         end else if (prev_IF_ID_PC_curr_BHT[i] !== iDUT.IF_ID_PC_curr) begin
             // Print DUT values if no match with prev
-            $fdisplay(file, "   0x%-4h  | %-2b  | %-2b  |  %-4s  |   0x%-4h   | %-4h | %-4h | %-4s", 
+            $fdisplay(file, "   0x%-4h     | %-3b  | %-3b  |  %-4s  |   0x%-4h     | %-4h  | %-4h  | %-4s", 
                       iDUT.IF_ID_PC_curr, 
                       iFETCH.iDBP_model.BHT[i], 
                       iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],
@@ -176,7 +176,7 @@ task dump_BHT_BTB();
                       "NO");
         end else begin
             // If no value exists, print "xxxx"
-            $fdisplay(file, "   xxxx     | xxxx  | xxxx  |  xxxx  |   xxxx     | xxxx  | xxxx  | xxxx");
+            $fdisplay(file, "   xxxx       | xxxx  | xxxx  |  xxxx  |   xxxx       | xxxx  | xxxx  | xxxx");
         end
 
         // Store the previous IF_ID_PC_curr for future comparison in BHT
@@ -185,7 +185,7 @@ task dump_BHT_BTB();
         // Now check for BTB updates separately
         if (prev_IF_ID_PC_curr_BTB[i] == iDUT.IF_ID_PC_curr) begin
             // If BTB entry exists and matches the previous value, print from prev
-            $fdisplay(file, "   0x%-4h  | %-2b  | %-2b  |  %-4s  |   0x%-4h   | %-4h | %-4h | %-4s", 
+            $fdisplay(file, "   0x%-4h     | %-3b  | %-3b  |  %-4s  |   0x%-4h     | %-4h  | %-4h  | %-4s", 
                       prev_IF_ID_PC_curr_BHT[i], 
                       iFETCH.iDBP_model.BHT[i], 
                       iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],
@@ -196,7 +196,7 @@ task dump_BHT_BTB();
                       "YES");
         end else if (prev_IF_ID_PC_curr_BTB[i] !== iDUT.IF_ID_PC_curr) begin
             // Otherwise print DUT BTB state
-            $fdisplay(file, "   0x%-4h  | %-2b  | %-2b  |  %-4s  |   0x%-4h   | %-4h | %-4h | %-4s", 
+            $fdisplay(file, "   0x%-4h     | %-3b  | %-3b  |  %-4s  |   0x%-4h     | %-4h  | %-4h  | %-4s", 
                       iDUT.IF_ID_PC_curr, 
                       iFETCH.iDBP_model.BHT[i], 
                       iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],
@@ -207,7 +207,7 @@ task dump_BHT_BTB();
                       "NO");
         end else begin
             // If no value exists, print "xxxx"
-            $fdisplay(file, "   xxxx     | xxxx  | xxxx  |  xxxx  |   xxxx     | xxxx  | xxxx  | xxxx");
+            $fdisplay(file, "   xxxx       | xxxx  | xxxx  |  xxxx  |   xxxx       | xxxx  | xxxx  | xxxx");
         end
 
         // Store the previous IF_ID_PC_curr for BTB as well
@@ -217,6 +217,7 @@ task dump_BHT_BTB();
     // Close file
     $fclose(file);
 endtask
+
 
 
   // At negative edge of clock, verify the predictions match the model.

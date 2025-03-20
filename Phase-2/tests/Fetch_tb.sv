@@ -174,10 +174,6 @@ module Fetch_tb();
       end  
   endtask
 
-
-
-
-
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin
     // Verify the DUT other than reset.

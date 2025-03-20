@@ -47,7 +47,7 @@ module DynamicBranchPredictor_tb();
     .clk(clk), 
     .rst(rst), 
     .PC_curr(PC_curr[3:0]), 
-    .IF_ID_PC_curr(IF_ID_PC_curr[3:0]), 
+    .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
     .wen_BTB(wen_BTB),
@@ -64,7 +64,7 @@ module DynamicBranchPredictor_tb();
     .clk(clk), 
     .rst(rst), 
     .PC_curr(PC_curr[3:0]), 
-    .IF_ID_PC_curr(IF_ID_PC_curr[3:0]), 
+    .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
     .wen_BTB(wen_BTB),
@@ -182,62 +182,6 @@ module DynamicBranchPredictor_tb();
     $fclose(file);
   endtask
 
-  // Dumps the contents of Instruction Memory (IMEM) and compares it against a reference model
-  task dump_IMEM_compare();
-    integer i, file;
-    
-    static reg [15:0] prev_IMEM_DUT [0:65535];  // Store previous IMEM state for DUT
-
-    // Open file for writing
-    file = $fopen("./tests/output/logs/transcript/imem_dump.log", "a");
-    
-    // Print header with clock cycle info
-    $display("\n===================================================");
-    $display("Instruction Memory Dump - Clock Cycle: %0d", $time);
-    $display("===================================================\n");
-
-    $fdisplay(file, "\n===================================================");
-    $fdisplay(file, "Instruction Memory Dump - Clock Cycle: %0d", $time);
-    $fdisplay(file, "===================================================\n");
-
-    // Print full IMEM contents
-    $display("\n====== FULL IMEM CONTENTS - MODEL vs DUT ======");
-    $display("Addr  | Model    | DUT      | Match");
-    $display("-------------------------------------");
-    $fdisplay(file, "\n====== FULL IMEM CONTENTS - MODEL vs DUT ======");
-    $fdisplay(file, "Addr  | Model    | DUT      | Match");
-    $fdisplay(file, "-------------------------------------");
-
-    for (i = 0; i < 256; i = i + 1) begin
-      $display("%4h  |  0x%h  |  0x%h  |  %s", 
-                i, iFETCH.inst_mem[i], iDUT.iINSTR_MEM.mem[i], 
-                (iFETCH.inst_mem[i] === iDUT.iINSTR_MEM.mem[i]) ? "YES" : "NO");
-      $fdisplay(file, "%4h  |  0x%h  |  0x%h  |  %s", 
-                i, iFETCH.inst_mem[i], iDUT.iINSTR_MEM.mem[i], 
-                (iFETCH.inst_mem[i] === iDUT.iINSTR_MEM.mem[i]) ? "YES" : "NO");
-    end
-
-    // Print IMEM updates in DUT
-    $display("\n====== IMEM UPDATES - DUT ======");
-    $fdisplay(file, "\n====== IMEM UPDATES - DUT ======");
-    for (i = 0; i < 256; i = i + 1) begin
-      if (iDUT.iINSTR_MEM.mem[i] !== prev_IMEM_DUT[i]) begin
-        $display("IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                  i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
-        $fdisplay(file, "IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                  i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
-        prev_IMEM_DUT[i] = iDUT.iINSTR_MEM.mem[i]; // Update tracking variable
-      end
-    end
-
-    // Closing section
-    $display("\n===================================================");
-    $fdisplay(file, "\n===================================================");
-
-    // Close file
-    $fclose(file);
-  endtask
-
 
   // Initialize the testbench.
   initial begin
@@ -248,7 +192,7 @@ module DynamicBranchPredictor_tb();
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
       PC_curr = 16'h0000;       // Start with PC = 0
-      IF_ID_PC_curr = 16'h0000;    // Start with PC = 0
+      IF_ID_PC_curr = 4'h0;    // Start with PC = 0
       IF_ID_prediction = 2'b00; // Start with strongly not taken prediction (prediction[1] = 0)
 
       // Initialize counter values.
@@ -355,9 +299,9 @@ module DynamicBranchPredictor_tb();
   // Model the PC curr register.
   always @(posedge clk)
     if (rst)
-      IF_ID_PC_curr <= 16'h0000;
+      IF_ID_PC_curr <= 4'h0;
     else if (enable)
-      IF_ID_PC_curr <= PC_curr;
+      IF_ID_PC_curr <= PC_curr[3:0];
   
   // Model the prediction register.
   always @(posedge clk)

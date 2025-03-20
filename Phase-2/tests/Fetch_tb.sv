@@ -212,7 +212,6 @@ module Fetch_tb();
     // Verify the DUT other than reset.
     if (!rst) begin
       verify_DUT();
-      dump_IMEM_compare();
 
       // Dump the contents of memory whenever we write to the BTB or BHT.
       if (wen_BHT || wen_BTB)
@@ -250,6 +249,9 @@ module Fetch_tb();
 
       // Deassert reset and start testing.
       @(negedge clk) rst = 1'b0;
+      
+      // Print contents if I-mem.
+      dump_IMEM_compare();
 
       // Run for num_tests.
       repeat (num_tests) @(posedge clk);

@@ -31,6 +31,7 @@ module Fetch_tb();
   integer predicted_not_taken_count;      // Number of times branch was predicted to not be taken.
   integer misprediction_count;            // Number of times branch was mispredicted.
   integer test_counter;                   // Number of tests executed.
+  integer branch_count;                   // Number of branches executed.
   integer stalls;                         // Number of PC stalls.
   integer num_tests;                      // Number of test cases to execute.
     
@@ -199,6 +200,7 @@ module Fetch_tb();
       predicted_taken_count = 0;
       predicted_not_taken_count = 0;
       misprediction_count = 0;
+      branch_count = 0;
       test_counter = 0;
       stalls = 0;
 
@@ -224,7 +226,7 @@ module Fetch_tb();
       $display("Number of penalty cycles for misprediction: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
       $display("Number of instructions executed: %0d.", num_tests);
-      $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(num_tests*2))) * 100);
+      $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(branch_count))) * 100);
       
       // If we reached here it means all tests passed.
       $display("\nYAHOO!! All tests passed.");
@@ -280,6 +282,10 @@ module Fetch_tb();
       // Track penalty count (how many times we update the PC).
       if (update_PC) 
         misprediction_count++;
+      
+      // Track how many times the instruction was a branch.
+      if (is_branch) 
+        branch_count++;
     end
   end
 

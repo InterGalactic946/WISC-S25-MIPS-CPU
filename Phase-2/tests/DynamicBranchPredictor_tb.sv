@@ -35,6 +35,7 @@ module DynamicBranchPredictor_tb();
   integer misprediction_count;            // Number of times branch was mispredicted.
   integer test_counter;                   // Number of tests executed.
   integer stalls;                         // Number of PC stalls.
+  integer branch_count;                   // Number of branches executed.
   integer num_tests;                      // Number of test cases to execute.
 
   wire [1:0] prediction;                  // The 2-bit predicted taken flag from the predictor
@@ -169,6 +170,7 @@ module DynamicBranchPredictor_tb();
       predicted_taken_count = 0;
       predicted_not_taken_count = 0;
       misprediction_count = 0;
+      branch_count = 0;
       test_counter = 0;
       stalls = 0;
 
@@ -194,7 +196,7 @@ module DynamicBranchPredictor_tb();
       $display("Number of penalty cycles for misprediction: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
       $display("Number of instructions executed: %0d.", num_tests);
-      $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(num_tests))) * 100);
+      $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(branch_count))) * 100);
       
       // If we reached here it means all tests passed.
       $display("\nYAHOO!! All tests passed.");
@@ -262,6 +264,10 @@ module DynamicBranchPredictor_tb();
       // Track penalty count (how many times we update the PC).
       if (update_PC) 
         misprediction_count++;
+      
+      // Track how many times the instruction was a branch.
+      if (is_branch) 
+        branch_count++;
     end
   end
 

@@ -103,49 +103,83 @@ module DynamicBranchPredictor_tb();
       dump_BHT_BTB();
   end
 
-  // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB)
+  // Dumps the contents of the Branch History Table (BHT) and Branch Target Buffer (BTB) with formatted output
   task dump_BHT_BTB();
-  begin
-    integer i;
-
+    integer i, file;
+    
     static reg [1:0] prev_BHT_DUT [0:15];  // Store previous BHT state for DUT
     static reg [15:0] prev_BTB_DUT [0:15]; // Store previous BTB state for DUT
 
-    // Print full BHT contents (without IF_ID_PC_curr)
+    // Open file for writing
+    file = $fopen("./tests/logs/transcript/bht_btb_dump.log", "w");
+    
+    // Print header with clock cycle info
+    $display("\n===================================================");
+    $display("Branch Predictor Dump - Clock Cycle: %0d", $time);
+    $display("===================================================\n");
+
+    $fdisplay(file, "\n===================================================");
+    $fdisplay(file, "Branch Predictor Dump - Clock Cycle: %0d", $time);
+    $fdisplay(file, "===================================================\n");
+
+    // Print full BHT contents
     $display("\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
+    $display("Index | Model | DUT");
+    $display("--------------------");
+    $fdisplay(file, "\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
+    $fdisplay(file, "Index | Model | DUT");
+    $fdisplay(file, "--------------------");
+
     for (i = 0; i < 16; i = i + 1) begin
-      $display("BHT[%0d] -> Model: %b | DUT: %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
+      $display("%2d    |  %b   |  %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
+      $fdisplay(file, "%2d    |  %b   |  %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
     end
 
-    // Print update statements for BHT
+    // Print BHT updates
     $display("\n====== BHT UPDATES - DUT ======");
+    $fdisplay(file, "\n====== BHT UPDATES - DUT ======");
     for (i = 0; i < 16; i = i + 1) begin
       if (iDUT.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
         $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
-                i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+                  i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
+        $fdisplay(file, "BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
+                  i, iDUT.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
         prev_BHT_DUT[i] = iDUT.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
       end
     end
 
-    // Print update statements for BTB
+    // Print BTB updates
     $display("\n====== BTB UPDATES - DUT ======");
+    $fdisplay(file, "\n====== BTB UPDATES - DUT ======");
     for (i = 0; i < 16; i = i + 1) begin
       if (iDUT.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
         $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+                  i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
+        $fdisplay(file, "BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
+                  i, iDUT.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
         prev_BTB_DUT[i] = iDUT.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
       end
     end
 
-    // Print full BTB contents (without IF_ID_PC_curr)
+    // Print full BTB contents
     $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
+    $display("Index | Model  | DUT");
+    $display("----------------------");
+    $fdisplay(file, "\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
+    $fdisplay(file, "Index | Model  | DUT");
+    $fdisplay(file, "----------------------");
+
     for (i = 0; i < 16; i = i + 1) begin
-      $display("BTB[%0d] -> Model: 0x%h | DUT: 0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+      $display("%2d    |  0x%h  |  0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
+      $fdisplay(file, "%2d    |  0x%h  |  0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
     end
-    
-    // Break for clarity
-    $display("\n---------------------------------------------------");
-  end
+
+    // Closing section
+    $display("\n===================================================");
+    $fdisplay(file, "\n===================================================");
+
+    // Close file
+    $fclose(file);
   endtask
 
   // Initialize the testbench.
@@ -183,9 +217,6 @@ module DynamicBranchPredictor_tb();
       // Run for num_tests.
       repeat (num_tests) @(posedge clk);
 
-      // Dump memory conteents.
-      // dump_BHT_BTB();
-
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);
       $display("Number of branches predicted to be taken: %0d.", predicted_taken_count);
@@ -207,10 +238,7 @@ module DynamicBranchPredictor_tb();
     if (rst)
       PC_curr <= 16'h0000;
     else if (enable) begin
-      // Force looping over 16 instructions
-      if (PC_curr >= 16'h001E)  // Assuming 16 instructions, each 2 bytes
-        PC_curr <= 16'h0000;  // Restart sequence
-      else if (update_PC)
+      if (update_PC)
         PC_curr <= actual_target;
       else if (expected_prediction[1])
         PC_curr <= expected_predicted_target;

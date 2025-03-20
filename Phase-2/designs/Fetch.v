@@ -13,6 +13,7 @@
 module Fetch (
     input wire clk,                    // System clock
     input wire rst,                    // Active high synchronous reset
+    input wire clr,                    // Active high synchronous reset
     input wire stall,                  // Stall signal for the PC (from the hazard detection unit)
     input wire [15:0] actual_target,   // Target address for branch instructions (from the decode stage)
     input wire actual_taken,           // Indicates whether the branch is actually taken (from the decode stage)
@@ -49,7 +50,7 @@ module Fetch (
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
   DynamicBranchPredictor iDBP (
     .clk(clk), 
-    .rst(rst), 
+    .rst(clr), 
     .PC_curr(PC_curr[3:0]), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 

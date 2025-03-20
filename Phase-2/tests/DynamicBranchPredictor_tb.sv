@@ -272,7 +272,7 @@ module DynamicBranchPredictor_tb();
       // Track predicted counts.
       if (IF_ID_prediction[1] && is_branch) 
         predicted_taken_count++;
-      else if (is_branch)
+      else if (!IF_ID_prediction[1] && is_branch)
         predicted_not_taken_count++;
       
       // Track penalty count (how many times we update the PC).
@@ -300,7 +300,7 @@ module DynamicBranchPredictor_tb();
     if (rst)
       IF_ID_predicted_target <= 16'h0000;
     else if (enable)
-      IF_ID_predicted_target <= actual_target;
+      IF_ID_predicted_target <= expected_predicted_target;
   
   // Indicates branch is actually taken.
   assign branch_taken = (is_branch & actual_taken);

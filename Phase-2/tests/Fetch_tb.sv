@@ -8,6 +8,7 @@ module Fetch_tb();
 
   logic clk;                              // Clock signal
   logic rst;                              // Reset signal
+  logic clr;                              // clear signal
   
   logic enable;                           // Enable signal for the branch predictor
   logic wen_BTB;                          // Write enable for BTB (Branch Target Buffer) (from the decode stage)
@@ -50,6 +51,7 @@ module Fetch_tb();
   Fetch iDUT (
       .clk(clk), 
       .rst(rst), 
+      .clr(clr),
       .stall(enable), 
       .actual_target(actual_target), 
       .actual_taken(actual_taken), 
@@ -70,6 +72,7 @@ module Fetch_tb();
   Fetch_model iFETCH (
       .clk(clk), 
       .rst(rst), 
+      .clr(clr),
       .stall(enable), 
       .actual_target(actual_target), 
       .actual_taken(actual_taken), 
@@ -223,6 +226,7 @@ module Fetch_tb();
   initial begin
       clk = 1'b0;              // Initially clk is low
       rst = 1'b0;              // Initially rst is low
+      clr = 1'b0;              // clr is low
       enable = 1'b1;           // Enable the branch predictor
       is_branch = 1'b0;        // Initially no branch
       actual_taken = 1'b0;     // Initially the branch is not taken
@@ -239,22 +243,35 @@ module Fetch_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 320000;
+      num_tests = 32;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
       
       // Assert reset
-      @(negedge clk) rst = 1'b1;
+      @(negedge clk) begin 
+        rst = 1'b1;
+        clr = 1'b1;
+      end
 
       // Deassert reset and start testing.
-      @(negedge clk) rst = 1'b0;
+      @(negedge clk) begin
+        rst = 1'b0;
+        clr = 1'b0;
+      end
       
       // Print contents if I-mem.
       dump_IMEM_compare();
 
       // Run for num_tests.
-      repeat (num_tests) @(posedge clk);
+      repeat(3000) begin
+        repeat (num_tests) @(posedge clk);
+
+        // Reset the PC.
+        @(negedge clk); rst = 1'b1;
+
+        @(negedge clk); rst = 1'b0;
+      end
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);
@@ -313,7 +330,7 @@ module Fetch_tb();
       // Track predicted counts.
       if (IF_ID_prediction[1] && is_branch) 
         predicted_taken_count++;
-      else if (is_branch)
+      else if (!IF_ID_prediction[1] && is_branch)
         predicted_not_taken_count++;
       
       // Track penalty count (how many times we update the PC).
@@ -341,8 +358,8 @@ module Fetch_tb();
     if (rst)
       IF_ID_predicted_target <= 16'h0000;
     else if (enable)
-      IF_ID_predicted_target <= actual_target;
-  
+      IF_ID_predicted_target <= expected_predicted_target;
+
   // Indicates branch is actually taken.
   assign branch_taken = (is_branch & actual_taken);
 

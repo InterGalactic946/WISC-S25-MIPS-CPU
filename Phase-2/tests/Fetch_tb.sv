@@ -171,11 +171,11 @@ module Fetch_tb();
               match_BTB    = (model_target === dut_target);  
               
               // Print to console  
-              $write("   0x%04X      %b     %b     %s   |", model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");  
+              $write("   0x%04X      %2b     %2b     %s   |", model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");  
               $display("   0x%04X      0x%04X   0x%04X    %s", model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");  
 
               // Write to file  
-              $fwrite(file, "   0x%04X      %b     %b     %s   |", model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");  
+              $fwrite(file, "   0x%04X      %2b     %2b     %s   |", model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");  
               $fdisplay(file, "   0x%04X      0x%04X   0x%04X    %s", model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");  
           end  
 

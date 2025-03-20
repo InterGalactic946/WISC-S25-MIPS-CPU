@@ -6,7 +6,6 @@
 module Fetch_model (
     input logic clk,                    // System clock
     input logic rst,                    // Active high synchronous reset
-    input wire clr,                     // Active high synchronous reset
     input logic stall,                  // Stall signal for the PC (from the hazard detection unit)
     input logic [15:0] actual_target,   // Target address for branch instructions (from the decode stage)
     input logic actual_taken,           // Indicates whether the branch is actually taken (from the decode stage)
@@ -44,7 +43,7 @@ module Fetch_model (
   // Instantiate the Dynamic Branch Predictor model.
   DynamicBranchPredictor_model iDBP_model (
     .clk(clk), 
-    .rst(clr), 
+    .rst(rst), 
     .PC_curr(PC_curr[3:0]), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 

@@ -8,7 +8,6 @@ module Fetch_tb();
 
   logic clk;                              // Clock signal
   logic rst;                              // Reset signal
-  logic clr;                              // clear signal
   
   logic enable;                           // Enable signal for the branch predictor
   logic wen_BTB;                          // Write enable for BTB (Branch Target Buffer) (from the decode stage)
@@ -51,7 +50,6 @@ module Fetch_tb();
   Fetch iDUT (
       .clk(clk), 
       .rst(rst), 
-      .clr(clr),
       .stall(enable), 
       .actual_target(actual_target), 
       .actual_taken(actual_taken), 
@@ -72,7 +70,6 @@ module Fetch_tb();
   Fetch_model iFETCH (
       .clk(clk), 
       .rst(rst), 
-      .clr(clr),
       .stall(enable), 
       .actual_target(actual_target), 
       .actual_taken(actual_taken), 
@@ -190,7 +187,6 @@ module Fetch_tb();
   initial begin
       clk = 1'b0;              // Initially clk is low
       rst = 1'b0;              // Initially rst is low
-      clr = 1'b0;              // clr is low
       enable = 1'b1;           // Enable the branch predictor
       is_branch = 1'b0;        // Initially no branch
       actual_taken = 1'b0;     // Initially the branch is not taken
@@ -213,26 +209,13 @@ module Fetch_tb();
       @(posedge clk);
       
       // Assert reset
-      @(negedge clk) begin 
-        rst = 1'b1;
-        clr = 1'b1;
-      end
+      @(negedge clk) rst = 1'b1;
 
       // Deassert reset and start testing.
-      @(negedge clk) begin
-        rst = 1'b0;
-        clr = 1'b0;
-      end
+      @(negedge clk) rst = 1'b0;
 
       // Run for num_tests.
-      repeat(2) begin
-        repeat (num_tests) @(posedge clk);
-
-        // Reset the PC.
-        @(negedge clk); rst = 1'b1;
-
-        @(negedge clk); rst = 1'b0;
-      end
+      repeat (num_tests) @(posedge clk);
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);

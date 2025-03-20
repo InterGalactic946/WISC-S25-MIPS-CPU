@@ -113,30 +113,21 @@ module DynamicBranchPredictor_tb();
     // Open file for writing
     file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "a");
     
-    // Print header with clock cycle info
-    $display("\n===================================================");
-    $display("Branch Predictor Dump - Clock Cycle: %0d", $time);
-    $display("===================================================\n");
-
+    // Print header with clock cycle info to file only
     $fdisplay(file, "\n===================================================");
     $fdisplay(file, "Branch Predictor Dump - Clock Cycle: %0d", $time);
     $fdisplay(file, "===================================================\n");
 
-    // Print full BHT contents
-    $display("\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
-    $display("Index | Model | DUT");
-    $display("--------------------");
+    // Log full BHT contents to file only
     $fdisplay(file, "\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
     $fdisplay(file, "Index | Model | DUT");
     $fdisplay(file, "--------------------");
 
     for (i = 0; i < 16; i = i + 1) begin
-      $display("%2d    |  %b   |  %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
       $fdisplay(file, "%2d    |  %b   |  %b", i, iDBP_model.BHT[i], iDUT.iBHT.iMEM_BHT.mem[i][1:0]);
     end
 
-    // Print BHT updates
-    $display("\n====== BHT UPDATES - DUT ======");
+    // Display only BHT updates in console, log all to file
     $fdisplay(file, "\n====== BHT UPDATES - DUT ======");
     for (i = 0; i < 16; i = i + 1) begin
       if (iDUT.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
@@ -148,8 +139,7 @@ module DynamicBranchPredictor_tb();
       end
     end
 
-    // Print BTB updates
-    $display("\n====== BTB UPDATES - DUT ======");
+    // Display only BTB updates in console, log all to file
     $fdisplay(file, "\n====== BTB UPDATES - DUT ======");
     for (i = 0; i < 16; i = i + 1) begin
       if (iDUT.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
@@ -161,21 +151,16 @@ module DynamicBranchPredictor_tb();
       end
     end
 
-    // Print full BTB contents
-    $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
-    $display("Index | Model  | DUT");
-    $display("----------------------");
+    // Log full BTB contents to file only
     $fdisplay(file, "\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
     $fdisplay(file, "Index | Model  | DUT");
     $fdisplay(file, "----------------------");
 
     for (i = 0; i < 16; i = i + 1) begin
-      $display("%2d    |  0x%h  |  0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
       $fdisplay(file, "%2d    |  0x%h  |  0x%h", i, iDBP_model.BTB[i], iDUT.iBTB.iMEM_BTB.mem[i]);
     end
 
     // Closing section
-    $display("\n===================================================");
     $fdisplay(file, "\n===================================================");
 
     // Close file

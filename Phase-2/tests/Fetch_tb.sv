@@ -132,130 +132,91 @@ module Fetch_tb();
       // Open file for writing
       file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "a");
       
-      // Print header with clock cycle info
-      $display("\n===================================================");
-      $display("Branch Predictor Dump - Clock Cycle: %0d", $time);
-      $display("===================================================\n");
-
+      // Print header with clock cycle info to file only
       $fdisplay(file, "\n===================================================");
       $fdisplay(file, "Branch Predictor Dump - Clock Cycle: %0d", $time);
       $fdisplay(file, "===================================================\n");
 
-      // Print full BHT contents
-      $display("\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
-      $display("Index | Model | DUT");
-      $display("--------------------");
+      // Log full BHT contents to file only
       $fdisplay(file, "\n====== FULL BHT CONTENTS - MODEL vs DUT ======");
       $fdisplay(file, "Index | Model | DUT");
       $fdisplay(file, "--------------------");
-
       for (i = 0; i < 16; i = i + 1) begin
-        $display("%2d    |  %b   |  %b", i, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
         $fdisplay(file, "%2d    |  %b   |  %b", i, iFETCH.iDBP_model.BHT[i], iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]);
       end
 
-      // Print BHT updates
-      $display("\n====== BHT UPDATES - DUT ======");
-      $fdisplay(file, "\n====== BHT UPDATES - DUT ======");
+      // Print only BHT updates
       for (i = 0; i < 16; i = i + 1) begin
         if (iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0] !== prev_BHT_DUT[i]) begin
           $display("BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
                     i, iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
           $fdisplay(file, "BHT[%0d] UPDATED! -> DUT: %b | IF_ID_PC_curr: 0x%h", 
                     i, iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0], iDUT.IF_ID_PC_curr);
-          prev_BHT_DUT[i] = iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0]; // Update tracking variable
+          prev_BHT_DUT[i] = iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0];
         end
       end
 
-      // Print BTB updates
-      $display("\n====== BTB UPDATES - DUT ======");
-      $fdisplay(file, "\n====== BTB UPDATES - DUT ======");
+      // Print only BTB updates
       for (i = 0; i < 16; i = i + 1) begin
         if (iDUT.iDBP.iBTB.iMEM_BTB.mem[i] !== prev_BTB_DUT[i]) begin
           $display("BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
                     i, iDUT.iDBP.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
           $fdisplay(file, "BTB[%0d] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
                     i, iDUT.iDBP.iBTB.iMEM_BTB.mem[i], iDUT.IF_ID_PC_curr);
-          prev_BTB_DUT[i] = iDUT.iDBP.iBTB.iMEM_BTB.mem[i]; // Update tracking variable
+          prev_BTB_DUT[i] = iDUT.iDBP.iBTB.iMEM_BTB.mem[i];
         end
       end
 
-      // Print full BTB contents
-      $display("\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
-      $display("Index | Model  | DUT");
-      $display("----------------------");
+      // Log full BTB contents to file only
       $fdisplay(file, "\n====== FULL BTB CONTENTS - MODEL vs DUT ======");
       $fdisplay(file, "Index | Model  | DUT");
       $fdisplay(file, "----------------------");
-
       for (i = 0; i < 16; i = i + 1) begin
-        $display("%2d    |  0x%h  |  0x%h", i, iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
         $fdisplay(file, "%2d    |  0x%h  |  0x%h", i, iFETCH.iDBP_model.BTB[i], iDUT.iDBP.iBTB.iMEM_BTB.mem[i]);
       end
-
-      // Closing section
-      $display("\n===================================================");
-      $fdisplay(file, "\n===================================================");
 
       // Close file
       $fclose(file);
     endtask
 
-  // Dumps the contents of Instruction Memory (IMEM) and compares it against a reference model
-  task dump_IMEM_compare();
-    integer i, file;
-    
-    static reg [15:0] prev_IMEM_DUT [0:65535];  // Store previous IMEM state for DUT
+    // Dumps the contents of Instruction Memory (IMEM) and compares it against a reference model
+    task dump_IMEM_compare();
+      integer i, file;
+      
+      static reg [15:0] prev_IMEM_DUT [0:65535];
 
-    // Open file for writing
-    file = $fopen("./tests/output/logs/transcript/imem_dump.log", "a");
-    
-    // Print header with clock cycle info
-    $display("\n===================================================");
-    $display("Instruction Memory Dump - Clock Cycle: %0d", $time);
-    $display("===================================================\n");
+      // Open file for writing
+      file = $fopen("./tests/output/logs/transcript/imem_dump.log", "a");
+      
+      // Print header with clock cycle info to file only
+      $fdisplay(file, "\n===================================================");
+      $fdisplay(file, "Instruction Memory Dump - Clock Cycle: %0d", $time);
+      $fdisplay(file, "===================================================\n");
 
-    $fdisplay(file, "\n===================================================");
-    $fdisplay(file, "Instruction Memory Dump - Clock Cycle: %0d", $time);
-    $fdisplay(file, "===================================================\n");
-
-    // Print full IMEM contents
-    $display("\n====== FULL IMEM CONTENTS - MODEL vs DUT ======");
-    $display("Addr  | Model    | DUT      | Match");
-    $display("-------------------------------------");
-    $fdisplay(file, "\n====== FULL IMEM CONTENTS - MODEL vs DUT ======");
-    $fdisplay(file, "Addr  | Model    | DUT      | Match");
-    $fdisplay(file, "-------------------------------------");
-
-    for (i = 0; i < 256; i = i + 1) begin
-      $display("%4h  |  0x%h  |  0x%h  |  %s", 
-                i, iFETCH.inst_mem[i], iDUT.iINSTR_MEM.mem[i], 
-                (iFETCH.inst_mem[i] === iDUT.iINSTR_MEM.mem[i]) ? "YES" : "NO");
-      $fdisplay(file, "%4h  |  0x%h  |  0x%h  |  %s", 
-                i, iFETCH.inst_mem[i], iDUT.iINSTR_MEM.mem[i], 
-                (iFETCH.inst_mem[i] === iDUT.iINSTR_MEM.mem[i]) ? "YES" : "NO");
-    end
-
-    // Print IMEM updates in DUT
-    $display("\n====== IMEM UPDATES - DUT ======");
-    $fdisplay(file, "\n====== IMEM UPDATES - DUT ======");
-    for (i = 0; i < 256; i = i + 1) begin
-      if (iDUT.iINSTR_MEM.mem[i] !== prev_IMEM_DUT[i]) begin
-        $display("IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                  i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
-        $fdisplay(file, "IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
-                  i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
-        prev_IMEM_DUT[i] = iDUT.iINSTR_MEM.mem[i]; // Update tracking variable
+      // Log full IMEM contents to file only
+      $fdisplay(file, "\n====== FULL IMEM CONTENTS - MODEL vs DUT ======");
+      $fdisplay(file, "Addr  | Model    | DUT      | Match");
+      $fdisplay(file, "-------------------------------------");
+      for (i = 0; i < 256; i = i + 1) begin
+        $fdisplay(file, "%4h  |  0x%h  |  0x%h  |  %s", 
+                  i, iFETCH.inst_mem[i], iDUT.iINSTR_MEM.mem[i], 
+                  (iFETCH.inst_mem[i] === iDUT.iINSTR_MEM.mem[i]) ? "YES" : "NO");
       end
-    end
 
-    // Closing section
-    $display("\n===================================================");
-    $fdisplay(file, "\n===================================================");
+      // Print only IMEM updates
+      for (i = 0; i < 256; i = i + 1) begin
+        if (iDUT.iINSTR_MEM.mem[i] !== prev_IMEM_DUT[i]) begin
+          $display("IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
+                    i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
+          $fdisplay(file, "IMEM[%0h] UPDATED! -> DUT: 0x%h | IF_ID_PC_curr: 0x%h", 
+                    i, iDUT.iINSTR_MEM.mem[i], IF_ID_PC_curr);
+          prev_IMEM_DUT[i] = iDUT.iINSTR_MEM.mem[i];
+        end
+      end
 
-    // Close file
-    $fclose(file);
-  endtask
+      // Close file
+      $fclose(file);
+    endtask
 
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin

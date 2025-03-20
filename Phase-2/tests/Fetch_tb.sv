@@ -124,7 +124,6 @@ module Fetch_tb();
     end
   endtask
 
-
   task print_BTB_BHT_dump();
       integer i, file;
       bit [15:0] model_PC_BHT, model_pred, dut_pred;
@@ -132,7 +131,7 @@ module Fetch_tb();
       bit match_BHT, match_BTB;
       
       begin
-          // Open file in write mode (overwrite each time). Use "a" for append mode if needed.
+          // Open file in append mode to keep logs from previous runs
           file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "a");
 
           // Ensure file opened successfully
@@ -141,50 +140,49 @@ module Fetch_tb();
               disable print_BTB_BHT_dump;
           end
 
-          // Header
-          $display("===============================================================================");  
-          $display("|        DYNAMIC BRANCH PREDICTOR MEMORY DUMP - CLOCK CYCLE %0d              |", $time);  
-          $display("===============================================================================");  
-          $display("-------------------------------------|----------------------------------------");  
-          $display("                 BHT                 |                   BTB                  ");  
-          $display("-------------------------------------|----------------------------------------");  
-          $display("IF_ID_PC_curr | Model | DUT | MATCH  |IF_ID_PC_curr |  Model  |  DUT  |  MATCH");
+          // Print Header to Console
+          $display("===============================================================================");
+          $display("|        DYNAMIC BRANCH PREDICTOR MEMORY DUMP - CLOCK CYCLE %0d              |", $time);
+          $display("===============================================================================");
+          $display("-------------------------------------|----------------------------------------");
+          $display("                 BHT                 |                   BTB                  ");
+          $display("-------------------------------------|----------------------------------------");
+          $display("IF_ID_PC_curr | Model | DUT | MATCH  | IF_ID_PC_curr |  Model  |  DUT  | MATCH");
 
-          $fdisplay(file, "===============================================================================");  
-          $fdisplay(file, "|        DYNAMIC BRANCH PREDICTOR MEMORY DUMP - CLOCK CYCLE %0d              |", $time);  
-          $fdisplay(file, "===============================================================================");  
-          $fdisplay(file, "-------------------------------------|----------------------------------------");  
-          $fdisplay(file, "                 BHT                 |                   BTB                  ");  
-          $fdisplay(file, "-------------------------------------|----------------------------------------");  
-          $fdisplay(file, "IF_ID_PC_curr | Model | DUT | MATCH  |IF_ID_PC_curr |  Model  |  DUT  |  MATCH");
+          // Write Header to File
+          $fdisplay(file, "===============================================================================");
+          $fdisplay(file, "|        DYNAMIC BRANCH PREDICTOR MEMORY DUMP - CLOCK CYCLE %0d              |", $time);
+          $fdisplay(file, "===============================================================================");
+          $fdisplay(file, "-------------------------------------|----------------------------------------");
+          $fdisplay(file, "                 BHT                 |                   BTB                  ");
+          $fdisplay(file, "-------------------------------------|----------------------------------------");
+          $fdisplay(file, "IF_ID_PC_curr | Model | DUT | MATCH  | IF_ID_PC_curr |  Model  |  DUT  | MATCH");
 
           for (i = 0; i < 16; i = i + 1) begin  
-              // Get values from model and DUT  
-              model_PC_BHT = iFETCH.iDBP_model.BHT[i].PC_addr;  
-              model_pred   = iFETCH.iDBP_model.BHT[i].prediction;  
-              dut_pred     = iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0];  
-              match_BHT    = (model_pred === dut_pred);  
+              // Fetch values from Model and DUT  
+              model_PC_BHT = iFETCH.iDBP_model.BHT[i].PC_addr;
+              model_pred   = iFETCH.iDBP_model.BHT[i].prediction;
+              dut_pred     = iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0];
+              match_BHT    = (model_pred === dut_pred);
 
-              model_PC_BTB = iFETCH.iDBP_model.BTB[i].PC_addr;  
-              model_target = iFETCH.iDBP_model.BTB[i].target;  
-              dut_target   = iDUT.iDBP.iBTB.iMEM_BTB.mem[i];  
-              match_BTB    = (model_target === dut_target);  
+              model_PC_BTB = iFETCH.iDBP_model.BTB[i].PC_addr;
+              model_target = iFETCH.iDBP_model.BTB[i].target;
+              dut_target   = iDUT.iDBP.iBTB.iMEM_BTB.mem[i];
+              match_BTB    = (model_target === dut_target);
               
-              // Print to console  
-              $write("   0x%04X      %2b     %2b     %s   |", model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");  
-              $display("   0x%04X      0x%04X   0x%04X    %s", model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");  
+              // Print to Console
+              $write("  0x%04X      %-2b     %-2b     %-3s   |", model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");
+              $display("  0x%04X      0x%04X   0x%04X    %-3s", model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");
 
-              // Write to file  
-              $fwrite(file, "   0x%04X      %2b     %2b     %s   |", model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");  
-              $fdisplay(file, "   0x%04X      0x%04X   0x%04X    %s", model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");  
+              // Write to File
+              $fwrite(file, "  0x%04X      %-2b     %-2b     %-3s   |", model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");
+              $fdisplay(file, "  0x%04X      0x%04X   0x%04X    %-3s", model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");
           end  
 
-          // Close the file  
+          // Close the file
           $fclose(file);
       end  
   endtask
-
-
 
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin

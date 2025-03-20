@@ -124,7 +124,7 @@ module Fetch_tb();
     end
   endtask
 
-  
+
   task dump_BHT_BTB();
       integer i, file;
       
@@ -191,11 +191,6 @@ module Fetch_tb();
       // Close file
       $fclose(file);
   endtask
-
-
-
-
-
 
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin

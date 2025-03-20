@@ -154,7 +154,7 @@ task dump_BHT_BTB();
         // Check BHT entries
         if (prev_IF_ID_PC_curr_BHT[i] == iDUT.IF_ID_PC_curr) begin
             // Print from prev if matched
-            $fdisplay(file, "   0x%-4h  | %-2b  | %-2b  |  %-4s  |   0x%-4h   | %-4h | %-4h | %-4s", 
+            $fdisplay(file, "   0x%-4h     | %-2b     | %-2b     |  %-4s     |   0x%-4h      | %-4h    | %-4h    | %-4s", 
                       prev_IF_ID_PC_curr_BHT[i], 
                       iFETCH.iDBP_model.BHT[i], 
                       iDUT.iDBP.iBHT.iMEM_BHT.mem[i][1:0],

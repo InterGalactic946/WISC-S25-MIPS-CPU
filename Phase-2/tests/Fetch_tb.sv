@@ -163,7 +163,7 @@ module Fetch_tb();
               match_BTB    = (model_target === dut_target);
               
               // Write to File with newline
-              $fwrite(file, "  0x%04X         %2b     %2b     %-3s   |", (model_PC_BHT === 16'hxxxx) ? 16'hXXXX : model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");
+              $fwrite(file, "  0x%04X         %2b  %2b  %-3s   |", (model_PC_BHT === 16'hxxxx) ? 16'hXXXX : model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");
               $fdisplay(file, "   0x%04X      0x%04X      0x%04X     %-3s", (model_PC_BTB === 16'hxxxx) ? 16'hXXXX : model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");
           end  
 

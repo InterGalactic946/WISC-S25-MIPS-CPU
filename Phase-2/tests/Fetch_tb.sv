@@ -70,7 +70,7 @@ module Fetch_tb();
   Fetch_model iFETCH_model (
       .clk(clk), 
       .rst(rst), 
-      .stall(PC_stall), 
+      .stall(enable), 
       .actual_target(actual_target), 
       .actual_taken(actual_taken), 
       .wen_BTB(wen_BTB),

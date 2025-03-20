@@ -194,7 +194,7 @@ module Fetch_tb();
 
       // Dump the contents of memory whenever we write to the BTB or BHT.
       if (wen_BHT || wen_BTB)
-        print_BTB_BHT_dump()
+        print_BTB_BHT_dump();
     end
   end
 

@@ -67,7 +67,7 @@ module Fetch_tb();
   );
 
   // Instantiate the model fetch unit.
-  Fetch_model iFETCH_model (
+  Fetch_model iFETCH (
       .clk(clk), 
       .rst(rst), 
       .stall(enable), 

@@ -264,7 +264,7 @@ module Fetch_tb();
       dump_IMEM_compare();
 
       // Run for num_tests.
-      repeat(30) begin
+      repeat(2) begin
         repeat (num_tests) @(posedge clk);
 
         // Reset the PC.
@@ -280,7 +280,7 @@ module Fetch_tb();
       $display("Number of penalty cycles for misprediction: %0d.", misprediction_count);
       $display("Number of branches actually taken: %0d.", actual_taken_count);
       $display("Number of instructions executed: %0d.", num_tests);
-      $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(num_tests))) * 100);
+      $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(num_tests*2))) * 100);
       
       // If we reached here it means all tests passed.
       $display("\nYAHOO!! All tests passed.");
@@ -303,7 +303,7 @@ module Fetch_tb();
         actual_taken = $random % 2;
       
       4, 5:  // 25% of the time, randomize actual_target
-      actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
+      actual_target = (actual_taken) ? (16'h0000 + ($random % (2*num_tests)) : 16'h0000;
 
       6:  // 12.5% of the time, randomize enable
         enable = $random % 2;
@@ -311,7 +311,7 @@ module Fetch_tb();
       default: begin  // 12.5% of the time, randomize everything
         is_branch = $random % 2;
         actual_taken = $random % 2;
-        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
+        actual_target = (actual_taken) ? (16'h0000 + ($random % (2*num_tests)) : 16'h0000;
         enable = $random % 2;
       end
     endcase

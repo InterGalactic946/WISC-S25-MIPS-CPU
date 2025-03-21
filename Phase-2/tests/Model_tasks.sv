@@ -10,6 +10,17 @@
 package Model_tasks;
 
   import ALU_tasks::*;
+
+  // Struct Definitions for BTB, BHT models.
+  typedef struct {
+    reg [15:0] PC_addr;
+    reg [1:0] prediction;
+  } model_BHT_t;
+  
+  typedef struct {
+    reg [15:0] PC_addr; 
+    reg [15:0] target;
+  } model_PC_BTB_t;
   
   // Task to initialize testbench signals.
   task automatic Initialize(ref logic clk, ref logic rst_n);

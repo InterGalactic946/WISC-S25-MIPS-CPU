@@ -136,7 +136,7 @@ module Fetch_tb();
           // Ensure file opened successfully.
           if (file == 0) begin
               $display("Error: Could not open file bht_btb_dump.log");
-              disable print_BTB_BHT_dump;
+              disable log_BTB_BHT_dump;
           end
 
           // Write Header to File

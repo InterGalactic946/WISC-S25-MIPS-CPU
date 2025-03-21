@@ -32,7 +32,7 @@ package Monitor_tasks;
 
           // Write Header to File
           $fdisplay(file, "===============================================================================");
-          $fdisplay(file, "|        DYNAMIC BRANCH PREDICTOR MEMORY DUMP - CLOCK CYCLE %0d               |", $time);
+          $fdisplay(file, "|        DYNAMIC BRANCH PREDICTOR MEMORY DUMP - CLOCK CYCLE %0d              |", $time);
           $fdisplay(file, "===============================================================================");
           $fdisplay(file, "-------------------------------------|----------------------------------------");
           $fdisplay(file, "                 BHT                 |                   BTB                  ");

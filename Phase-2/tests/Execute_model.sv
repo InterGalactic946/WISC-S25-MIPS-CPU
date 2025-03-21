@@ -51,39 +51,31 @@ module Execute_model (
   assign ALU_In2 = (ALUSrc) ? ALU_imm : ALU_In2_stg;
 
   // Execute the instruction on the ALU based on the opcode.
-  ALU iALU (.ALU_In1(ALU_In1),
-            .ALU_In2(ALU_In2),
-            .Opcode(ALUOp),
-            .ALU_Out(ALU_out),
-            .Z_set(Z_set),
-            .N_set(N_set),
-            .V_set(V_set)
-          );
+  ALU_model iALU_model (.ALU_In1(ALU_In1),
+                        .ALU_In2(ALU_In2),
+                        .Opcode(ALUOp),
+                        .ALU_Out(ALU_out),
+                        .Z_set(Z_set),
+                        .N_set(N_set),
+                        .V_set(V_set)
+                        );
   /////////////////////////////////////////////
 
   ////////////////////////////////////////////////////
   // Set FLAGS based on the output of the execution //
   ////////////////////////////////////////////////////
-  Flag_Register iFR (
-    .clk(clk),
-    .rst(rst),
-    .wen({Z_en, NV_en, NV_en}),
-    .flags_in({Z_set, V_set, N_set}),
-    .flags_out({ZF, VF, NF})
-  );
-    always @(posedge clk) begin
+  always @(posedge clk) begin
     if (rst) begin
-      EX_MEM_WB_signals[7:4] <= 16'h0000;
-      EX_MEM_WB_signals[3] <= 1'b0;
-      EX_MEM_WB_signals[2] <= 1'b0;
-      EX_MEM_WB_signals[1] <= 1'b0;
-      EX_MEM_WB_signals[0] <= 1'b0;
+      ZF <= 1'b0;
+      VF <= 1'b0;
+      NF <= 1'b0;
     end else begin
-      EX_MEM_WB_signals[7:4] <= ID_EX_WB_signals[7:4];
-      EX_MEM_WB_signals[3] <= ID_EX_WB_signals[3];
-      EX_MEM_WB_signals[2] <= ID_EX_WB_signals[2];
-      EX_MEM_WB_signals[1] <= ID_EX_WB_signals[1];
-      EX_MEM_WB_signals[0] <= ID_EX_WB_signals[0];
+      if (Z_en)
+        ZF <= Z_set;
+      else if (NV_en) begin
+        VF <= V_set;
+        NF <= N_set;
+      end
     end
   end
   ////////////////////////////////////////////////////

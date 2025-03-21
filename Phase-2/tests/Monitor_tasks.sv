@@ -47,7 +47,7 @@ package Monitor_tasks;
               match_BHT    = (model_pred === dut_pred);
 
               model_PC_BTB = model_BTB[i].PC_addr;
-              model_target = model_BHT[i].target;
+              model_target = model_BTB[i].target;
               dut_target   = dut_BTB[i];
               match_BTB    = (model_target === dut_target);
               

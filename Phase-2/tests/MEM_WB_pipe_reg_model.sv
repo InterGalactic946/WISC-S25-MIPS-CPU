@@ -18,55 +18,54 @@ module MEM_WB_pipe_reg_model (
     output logic [7:0] MEM_WB_WB_signals    // Pipelined write back stage signals passed to the write-back stage
 );
 
-  /////////////////////////////////////////////////
-  // Declare any internal signals as type wire  //
-  ///////////////////////////////////////////////
-  /////////////////////////// WRITE BACK STAGE ///////////////////////////////////
-  logic [3:0] MEM_WB_reg_rd;  // Pipelined Destination register address passed to the write-back stage
-  logic MEM_WB_RegWrite;      // Pipelined Register write enable signal passed to the write-back stage
-  wire MEM_WB_MemtoReg;      // Pipelined Memory to Register signal passed to the write-back stage
-  wire MEM_WB_HLT;           // Pipelined Halt signal passed to the write-back stage
-  wire MEM_WB_PCS;           // Pipelined PCS signal passed to the write-back stage
-  ////////////////////////////////////////////////////////////////////////////////
-
   //////////////////////////////////////////////////////////////////////////////////
   // Pipeline the next instruction's address to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////////////////////
-  CPU_Register iPC_NEXT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_PC_next), .data_out(MEM_WB_PC_next));
+  always @(posedge clk)
+    if (rst)
+      MEM_WB_PC_next <= 16'h0000;
+    else
+      MEM_WB_PC_next <= EX_MEM_PC_next;
   //////////////////////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////
   // Pipeline the ALU output to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////
-  CPU_Register iALU_OUT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_ALU_out), .data_out(MEM_WB_ALU_out));
+  always @(posedge clk)
+    if (rst)
+      MEM_WB_ALU_out <= 16'h0000;
+    else
+      MEM_WB_ALU_out <= EX_MEM_ALU_out;
   //////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////
   // Pipeline the MemData output to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////////
-  CPU_Register iMEM_DATA_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(MemData), .data_out(MEM_WB_MemData));
+  always @(posedge clk)
+    if (rst)
+      MEM_WB_MemData <= 16'h0000;
+    else
+      MEM_WB_MemData <= MemData;
   //////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////////////////
   // Pipeline the WRITE-BACK control signals to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////////////////////
-  // Register for storing Destination register address (EX_MEM_WB_signals[7:4] == reg_rd).
-  CPU_Register #(.WIDTH(4)) iReg_rd_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[7:4]), .data_out(MEM_WB_reg_rd));
-
-  // Register for storing Register write enable signal (EX_MEM_WB_signals[3] == RegWrite).
-  CPU_Register #(.WIDTH(1)) iRegWrite_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[3]), .data_out(MEM_WB_RegWrite));
-
-  // Register for storing Memory to Register signal (EX_MEM_WB_signals[2] == MemtoReg).
-  CPU_Register #(.WIDTH(1)) iMemtoReg_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[2]), .data_out(MEM_WB_MemtoReg));
-
-  // Register for storing Halt signal (EX_MEM_WB_signals[1] == HLT).
-  CPU_Register #(.WIDTH(1)) iHLT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[1]), .data_out(MEM_WB_HLT));
-
-  // Register for storing PCS signal (EX_MEM_WB_signals[0] == PCS).
-  CPU_Register #(.WIDTH(1)) iPCS_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[0]), .data_out(MEM_WB_PCS));
-
-  // Concatenate all pipelined write back stage signals.
-  assign MEM_WB_WB_signals = {MEM_WB_reg_rd, MEM_WB_RegWrite, MEM_WB_MemtoReg, MEM_WB_HLT, MEM_WB_PCS};
+  always @(posedge clk) begin
+    if (rst) begin
+      MEM_WB_WB_signals[7:4] <= 16'h0000;
+      MEM_WB_WB_signals[3] <= 1'b0;
+      MEM_WB_WB_signals[2] <= 1'b0;
+      MEM_WB_WB_signals[1] <= 1'b0;
+      MEM_WB_WB_signals[0] <= 1'b0;
+    end else begin
+      MEM_WB_WB_signals[7:4] <= EX_MEM_WB_signals[7:4];
+      MEM_WB_WB_signals[3] <= EX_MEM_WB_signals[3];
+      MEM_WB_WB_signals[2] <= EX_MEM_WB_signals[2];
+      MEM_WB_WB_signals[1] <= EX_MEM_WB_signals[1];
+      MEM_WB_WB_signals[0] <= EX_MEM_WB_signals[0];
+    end
+  end
   //////////////////////////////////////////////////////////////////////////////////
 
 endmodule

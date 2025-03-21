@@ -136,7 +136,7 @@ module Fetch_tb();
         .model_BHT(iFETCH.iDBP_model.BHT),
         .model_BTB(iFETCH.iDBP_model.BTB),
         .dut_BHT(iDUT.iDBP.iBTB.iMEM_BHT.mem),
-        .dut_BTB(iDUT.iDBP.iBTB.iMEM_BTB.mem),
+        .dut_BTB(iDUT.iDBP.iBTB.iMEM_BTB.mem)
       );
     end
   end

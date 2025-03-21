@@ -7,7 +7,7 @@ module DynamicBranchPredictor_model (
     input logic clk,                      // System clock
     input logic rst,                      // Active high reset signal
     input logic [3:0] PC_curr,            // Lower 4-bits of current PC address
-    input logic [3:0] IF_ID_PC_curr,      // Pipelined lower 4-bits of previous PC address
+    input logic [15:0] IF_ID_PC_curr,     // Pipelined lower 4-bits of previous PC address
     input wire [1:0] IF_ID_prediction,    // The predicted value of the previous branch instruction.
     input logic enable,                   // Enable signal for the DynamicBranchPredictor
     input wire wen_BTB,                  // Write enable for BTB (Branch Target Buffer) (from the decode stage)

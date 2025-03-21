@@ -77,7 +77,7 @@ module Fetch_tb();
       .wen_BTB(wen_BTB),
       .wen_BHT(wen_BHT),
       .update_PC(update_PC),
-      .IF_ID_PC_curr(IF_ID_PC_curr[3:0]),
+      .IF_ID_PC_curr(IF_ID_PC_curr),
       .IF_ID_prediction(IF_ID_prediction), 
       
       .PC_next(expected_PC_next), 
@@ -87,8 +87,8 @@ module Fetch_tb();
       .predicted_target(expected_predicted_target)
   );
 
-  // A task to verify the DUT vs model.
-  task verify_DUT();
+  // A task to verify the FETCH stage.
+  task verify_FETCH();
     begin      
       // Verify the PC next.
       if (PC_next !== expected_PC_next) begin
@@ -123,17 +123,17 @@ module Fetch_tb();
   endtask
 
 
-  task print_BTB_BHT_dump();
+  task log_BTB_BHT_dump();
       integer i, file;
       bit [15:0] model_PC_BHT, model_pred, dut_pred;
       bit [15:0] model_PC_BTB, model_target, dut_target;
       bit match_BHT, match_BTB;
 
       begin
-          // Open file in append mode to keep logs from previous runs
+          // Open file in append mode to keep logs from previous runs.
           file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "a");
 
-          // Ensure file opened successfully
+          // Ensure file opened successfully.
           if (file == 0) begin
               $display("Error: Could not open file bht_btb_dump.log");
               disable print_BTB_BHT_dump;
@@ -176,11 +176,11 @@ module Fetch_tb();
   always @(negedge clk) begin
     // Verify the DUT other than reset.
     if (!rst) begin
-      verify_DUT();
+      verify_FETCH();
 
       // Dump the contents of memory whenever we write to the BTB or BHT.
       if (wen_BHT || wen_BTB)
-        print_BTB_BHT_dump();
+        log_BTB_BHT_dump();
     end
   end
 

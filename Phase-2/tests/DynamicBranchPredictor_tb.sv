@@ -23,7 +23,7 @@ module DynamicBranchPredictor_tb();
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
   logic [15:0] IF_ID_predicted_target;    // Predicted target passed to the decode stage
   logic [15:0] PC_curr;                   // Current PC value
-  logic [3:0] IF_ID_PC_curr;              // IF/ID stage current PC value
+  logic [15:0] IF_ID_PC_curr;             // IF/ID stage current PC value
 
   logic mispredicted;                     // Indicates previous instruction's fetch mispredicted.
   logic target_miscomputed;               // Indicates previous instruction's fetch miscomputed the target.
@@ -275,9 +275,9 @@ module DynamicBranchPredictor_tb();
   // Model the PC curr register.
   always @(posedge clk)
     if (rst)
-      IF_ID_PC_curr <= 4'h0;
+      IF_ID_PC_curr <= 16'h0000;
     else if (enable)
-      IF_ID_PC_curr <= PC_curr[3:0];
+      IF_ID_PC_curr <= PC_curr;
   
   // Model the prediction register.
   always @(posedge clk)

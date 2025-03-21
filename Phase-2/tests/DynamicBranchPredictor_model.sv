@@ -58,10 +58,10 @@ module DynamicBranchPredictor_model (
   end
 
   // Asynchronously read out the prediction when read enabled.
-  assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]] : 2'h0;
+  assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]].prediction : 2'h0;
 
   // Asynchronously read out the target when read enabled.
-  assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]] : 16'h0000;
+  assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]].target : 16'h0000;
   //////////////////////////////////////////
 
   /////////////////////////////////

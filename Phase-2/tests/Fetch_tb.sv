@@ -135,8 +135,8 @@ module Fetch_tb();
       log_BTB_BHT_dump (
         .model_BHT(iFETCH.iDBP_model.BHT),
         .model_BTB(iFETCH.iDBP_model.BTB),
-        .DUT_BHT(iDUT.iDBP.iBTB.iMEM_BHT.mem),
-        .DUT_BTB(iDUT.iDBP.iBTB.iMEM_BTB.mem),
+        .dut_BHT(iDUT.iDBP.iBTB.iMEM_BHT.mem),
+        .dut_BTB(iDUT.iDBP.iBTB.iMEM_BTB.mem),
       );
     end
   end

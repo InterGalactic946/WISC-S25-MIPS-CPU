@@ -3,6 +3,9 @@
 //                                                              //
 // This module model the dynamic branch predictor of the CPU.   //
 //////////////////////////////////////////////////////////////////
+
+import Model_tasks::*;
+
 module DynamicBranchPredictor_model (
     input logic clk,                      // System clock
     input logic rst,                      // Active high reset signal
@@ -24,27 +27,9 @@ module DynamicBranchPredictor_model (
   ///////////////////////////////////////////////
   logic [1:0] updated_prediction; // The new prediction to be stored in the BHT on an incorrect prediction.
   logic error;                    // Error flag raised when prediction state is invalid.
+  model_BHT_t BHT [0:15];         // Declare BHT
+  model_BTB_t BTB [0:15];        // Declare BTB
   ////////////////////////////////////////////////
-
-  //////////////////////////
-  // Initialize BHT & BTB //
-  //////////////////////////
-  typedef struct packed {
-      logic [15:0] PC_addr;   // 16-bit PC address
-      logic [1:0] prediction; // 2-bit prediction
-  } BHT_entry_t;
-
-  typedef struct packed {
-      logic [15:0] PC_addr; // 16-bit PC address
-      logic [15:0] target;  // 16-bit target address
-  } BTB_entry_t;
-
-  // Declare BHT
-  BHT_entry_t BHT [0:15];
-
-  // Declare BTB
-  BTB_entry_t BTB [0:15];
-  //////////////////////////
 
   ////////////////////////////////////////
   // Model the Dynamic Branch Predictor //

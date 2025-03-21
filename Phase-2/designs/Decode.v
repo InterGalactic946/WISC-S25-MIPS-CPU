@@ -194,8 +194,9 @@ module Decode (
   // Get the first ALU input as the first register read out.
   assign ALU_In1 = SrcReg1_data;
 
-  // Determine the 2nd ALU input, either immediate or SrcReg2 data (Rd for save word or Rt otherwise).
-  assign ALU_In2 = (ALUSrc) ? ALU_imm : SrcReg2_data;
+  // Get the second ALU input as the second register read out (we pass the ALU_imm and ALUSrc to the 
+  // pipeline to choose b/w regfile data or immediate).
+  assign ALU_In2 = SrcReg2_data;
   /////////////////////////////////////////////////////////////////////////////
 
 endmodule

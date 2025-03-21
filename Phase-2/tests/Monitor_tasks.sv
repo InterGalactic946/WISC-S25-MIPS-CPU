@@ -46,9 +46,9 @@ package Monitor_tasks;
               dut_pred     = dut_BHT[i][1:0];
               match_BHT    = (model_pred === dut_pred);
 
-              model_PC_BTB = iFETCH.iDBP_model.BTB[i].PC_addr;
-              model_target = iFETCH.iDBP_model.BTB[i].target;
-              dut_target   = iDUT.iDBP.iBTB.iMEM_BTB.mem[i];
+              model_PC_BTB = model_BTB[i].PC_addr;
+              model_target = model_BHT[i].target;
+              dut_target   = dut_BTB[i];
               match_BTB    = (model_target === dut_target);
               
               // Write to File with newline

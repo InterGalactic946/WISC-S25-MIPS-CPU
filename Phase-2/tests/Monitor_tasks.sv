@@ -11,8 +11,8 @@ package Monitor_tasks;
   task log_BTB_BHT_dump(
     input model_BHT_t model_BHT [0:15],  
     input model_BTB_t model_BTB [0:15], 
-    input [15:0] dut_BHT [0:65535], 
-    input [15:0] dut_BTB [0:65535] 
+    input [15:0] dut_BHT [0:15], 
+    input [15:0] dut_BTB [0:15] 
   );
 
     integer i, file;

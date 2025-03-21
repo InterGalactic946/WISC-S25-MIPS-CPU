@@ -13,13 +13,13 @@ package Model_tasks;
 
   // Struct Definitions for BTB, BHT models.
   typedef struct {
-    reg [15:0] PC_addr;
-    reg [1:0] prediction;
+    logic [15:0] PC_addr;
+    logic [1:0] prediction;
   } model_BHT_t;
   
   typedef struct {
-    reg [15:0] PC_addr; 
-    reg [15:0] target;
+    logic [15:0] PC_addr; 
+    logic [15:0] target;
   } model_BTB_t;
   
   // Task to initialize testbench signals.

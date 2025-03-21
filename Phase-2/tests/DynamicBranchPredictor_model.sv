@@ -28,7 +28,7 @@ module DynamicBranchPredictor_model (
   logic [1:0] updated_prediction; // The new prediction to be stored in the BHT on an incorrect prediction.
   logic error;                    // Error flag raised when prediction state is invalid.
   model_BHT_t BHT [0:15];         // Declare BHT
-  model_BTB_t BTB [0:15];        // Declare BTB
+  model_BTB_t BTB [0:15];         // Declare BTB
   ////////////////////////////////////////////////
 
   ////////////////////////////////////////

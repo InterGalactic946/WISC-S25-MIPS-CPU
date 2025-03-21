@@ -12,7 +12,7 @@ module Fetch_model (
     input logic wen_BTB,                // Write enable for BTB (Branch Target Buffer) (from the decode stage)
     input logic wen_BHT,                // Write enable for BHT (Branch History Table) (from the decode stage)
     input logic update_PC,              // Signal to update the PC with the actual target (from the decode stage)
-    input logic IF_ID_PC_curr,          // Pipelined lower 4-bits of previous PC value (from the fetch stage)
+    input logic [15:0] IF_ID_PC_curr,   // Pipelined lower 4-bits of previous PC value (from the fetch stage)
     input logic [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
     
     output logic [15:0] PC_next,         // Computed next PC value

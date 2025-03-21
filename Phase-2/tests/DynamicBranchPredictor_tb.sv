@@ -49,7 +49,7 @@ module DynamicBranchPredictor_tb();
     .rst(rst), 
     .PC_curr(PC_curr[3:0]), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
-    .IF_ID_prediction(IF_ID_prediction), 
+    .IF_ID_prediction(IF_ID_prediction[3:0]), 
     .enable(enable),
     .wen_BTB(wen_BTB),
     .wen_BHT(wen_BHT),
@@ -96,12 +96,14 @@ module DynamicBranchPredictor_tb();
 
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin
-    // Verify the predictions.
-    verify_prediction_and_target();
+    if (!rst) begin
+      // Verify the predictions.
+      verify_prediction_and_target();
 
-    // Dump the contents of memory whenever we write to the BTB or BHT.
-    if (wen_BHT || wen_BTB)
-      print_BTB_BHT_dump();
+      // Dump the contents of memory whenever we write to the BTB or BHT.
+      if (wen_BHT || wen_BTB)
+        print_BTB_BHT_dump();
+    end
   end
 
   task print_BTB_BHT_dump();

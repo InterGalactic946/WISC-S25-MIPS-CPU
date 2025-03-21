@@ -12,13 +12,14 @@ package Monitor_tasks;
     input model_BHT_t model_BHT [0:15],  
     input model_PC_BTB_t model_PC_BTB [0:15], 
     input [15:0] dut_BHT [0:65535], 
-    input [15:0] dut_BTB [0:65535], 
+    input [15:0] dut_BTB [0:65535] 
   );
+
     integer i, file;
     logic [15:0] model_PC_BHT, model_pred, dut_pred;
     logic [15:0] model_PC_BTB, model_target, dut_target;
     logic match_BHT, match_BTB;
-    
+
       begin
           // Open file in append mode to keep logs from previous runs.
           file = $fopen("./tests/output/logs/transcript/bht_btb_dump.log", "a");

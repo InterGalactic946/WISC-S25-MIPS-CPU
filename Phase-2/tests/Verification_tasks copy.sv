@@ -180,16 +180,14 @@ package Verification_tasks;
           // Get the decoded instruction.
           display_decoded_info(.opcode(EX_signals[6:3]), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
           
-          // Store success message.
-                  // Print if there is a stall/flush in the PC/IF_ID registers.
+        // Print if there is a stall/flush in the PC/IF_ID registers.
         if (stall) 
-            stage_msg = $sformatf("[%s] STALL: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.",
-                                              stage, PC_curr, PC_next, PC_inst);
+            decode_msg = $sformatf("[DECODE] STALL: %s.", instr_state);
         else if (flush)
-            stage_msg = $sformatf("[%s] FLUSH: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.",
-                                              stage, PC_curr, PC_next, PC_inst);
+            decode_msg = $sformatf("[DECODE] FLUSH: %s.", instr_state);
         else
-          decode_msg = $sformatf("[DECODE] SUCCESS: %s.", instr_state);
+            // Store success message.
+            decode_msg = $sformatf("[DECODE] SUCCESS: %s.", instr_state);
       end
   endtask
 

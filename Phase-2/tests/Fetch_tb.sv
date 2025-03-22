@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////
 
 import Monitor_tasks::*;
+import Verification_tasks::*;
 
 module Fetch_tb();
 
@@ -89,46 +90,22 @@ module Fetch_tb();
       .predicted_target(expected_predicted_target)
   );
 
-  // A task to verify the FETCH stage.
-  task verify_FETCH();
-    begin      
-      // Verify the PC next.
-      if (PC_next !== expected_PC_next) begin
-        $display("ERROR: PC_next=0x%h, expected_PC_next=0x%h.", PC_next, expected_PC_next);
-        $stop();
-      end
-
-      // Verify the PC instruction.
-      if (PC_inst !== expected_PC_inst) begin
-        $display("ERROR: PC_inst=0x%h, expected_PC_inst=0x%h.", PC_inst, expected_PC_inst);
-        $stop();
-      end
-
-      // Verify the PC.
-      if (PC_curr !== expected_PC_curr) begin
-        $display("ERROR: PC_curr=0x%h, expected_PC_curr=0x%h.", PC_curr, expected_PC_curr);
-        $stop();
-      end
-
-      // Verify the prediction.
-      if (prediction !== expected_prediction) begin
-        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, prediction[1], expected_prediction[1]);
-        $stop();
-      end
-      
-      // Verify the predicted target.
-      if (predicted_target !== expected_predicted_target) begin
-        $display("ERROR: PC_curr=0x%h, predicted_target=0x%h, expected_predicted_target=0x%h.", PC_curr, predicted_target, expected_predicted_target);
-        $stop();
-      end
-    end
-  endtask
-
   // At negative edge of clock, verify the predictions match the model.
   always @(negedge clk) begin
     // Verify the DUT other than reset.
     if (!rst) begin
-      verify_FETCH();
+      verify_FETCH(
+          .PC_next(PC_next), 
+          .expected_PC_next(expected_PC_next), 
+          .PC_inst(PC_inst), 
+          .expected_PC_inst(expected_PC_inst), 
+          .PC_curr(PC_curr), 
+          .expected_PC_curr(expected_PC_curr), 
+          .prediction(prediction), 
+          .expected_prediction(expected_prediction), 
+          .predicted_target(predicted_target), 
+          .expected_predicted_target (expected_predicted_target)
+      );
 
       // Dump the contents of memory whenever we write to the BTB or BHT.
       if (wen_BHT || wen_BTB)

@@ -11,7 +11,7 @@ package Model_tasks;
 
   import ALU_tasks::*;
 
-  // Struct Definitions for BTB, BHT models.
+  // Struct Definitions for BTB, BHT, and data memory models.
   typedef struct {
     logic [15:0] PC_addr;
     logic [1:0] prediction;
@@ -21,23 +21,20 @@ package Model_tasks;
     logic [15:0] PC_addr; 
     logic [15:0] target;
   } model_BTB_t;
+
+  typedef struct {
+    logic [15:0] mem_addr [0:65535]; 
+    logic [15:0] data_mem [0:65535];
+  } model_data_mem_t;
   
   // Task to initialize testbench signals.
   task automatic Initialize(ref logic clk, ref logic rst_n);
     begin
       clk = 1'b0;
+      @(posedge clk);
       @(negedge clk) rst_n = 1'b0;
       repeat (2) @(posedge clk);   // Wait for 2 clock cycles
       @(negedge clk) rst_n = 1'b1; // Deassert reset
-    end
-  endtask
-
-
-  // Task to load an image file into memory.
-  task automatic LoadImage(input string filename, ref logic [15:0] memory [0:65535]);
-    begin
-      // Use $readmemh to load the file contents into memory
-      $readmemh(filename, memory);
     end
   endtask
 
@@ -55,29 +52,7 @@ package Model_tasks;
   
 
   // Task to decode an instruction and identify its opcode and operands.
-  task automatic decode_opcode(input logic [3:0] opcode, output string instr_name);
-    begin
-        case (opcode)
-            4'h0: instr_name = "ADD";     // 0000: Addition
-            4'h1: instr_name = "SUB";     // 0001: Subtraction
-            4'h2: instr_name = "XOR";     // 0010: Bitwise XOR
-            4'h3: instr_name = "RED";     // 0011: Reduction Addition
-            4'h4: instr_name = "SLL";     // 0100: Shift Left Logical
-            4'h5: instr_name = "SRA";     // 0101: Shift Right Arithmetic
-            4'h6: instr_name = "ROR";     // 0110: Rotate Right
-            4'h7: instr_name = "PADDSB";  // 0111: Parallel Sub-word Addition
-            4'h8: instr_name = "LW";      // 1000: Load Word
-            4'h9: instr_name = "SW";      // 1001: Store Word
-            4'hA: instr_name = "LLB";     // 1010: Load Low Byte
-            4'hB: instr_name = "LHB";     // 1011: Load High Byte
-            4'hC: instr_name = "B";       // 1100: Branch (Conditional)
-            4'hD: instr_name = "BR";      // 1101: Branch (Unconditional)
-            4'hE: instr_name = "PCS";     // 1110: PCS (Program Counter Store)
-            4'hF: instr_name = "HLT";     // 1111: Halt
-            default: instr_name = "INVALID"; // Invalid opcode
-        endcase
-    end
-  endtask
+
 
 
   // Task to decode an instruction and display the decoded information.
@@ -222,27 +197,7 @@ package Model_tasks;
   endtask
 
 
-  // Display the decoded information based on instruction type.
-  task automatic display_decoded_info(input logic [3:0] opcode, input string instr_name, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] imm, input logic [2:0] cc, input logic [2:0] flag_reg);
-      begin
-          case (opcode)
-              4'h0, 4'h1, 4'h2, 4'h3, 4'h7: // Instructions with 2 registers (like ADD, SUB, XOR, etc.)
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, rd = 0x%h.", opcode, instr_name, rs, rt, rd);
-              4'h4, 4'h5, 4'h6, 4'h8, 4'h9: // LW and SW have an immediate but no rd register.
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, imm = 0x%h.", opcode, instr_name, rs, rd, imm);
-              4'hA, 4'hB: // LLB and LHB have an immediate but no rt register.
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rd, imm);
-              4'hC: // B instruction does not have registers like `rs`, `rt`, or `rd`.
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, imm = 0x%h, ZF = 0b%b, VF = 0b%b, NF = 0b%b.", opcode, instr_name, cc, imm, flag_reg[2], flag_reg[1], flag_reg[0]);
-              4'hD: // BR instruction does not have registers like `rt`, or `rd`. It only has a source register `rs`.
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, CC: 0b%3b, rs = 0x%h, ZF = 0b%b, VF = 0b%b, NF = 0b%b.", opcode, instr_name, cc, rs, flag_reg[2], flag_reg[1], flag_reg[0]); 
-              4'hE: // (PCS) does not have registers like `rs`, `rt`. It only has a destination register `rd`.
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s, rd = 0x%h.", opcode, instr_name, rd);
-              default: // HLT/Invalid opcode
-                  $display("Model Decoded instruction: Opcode = 0b%4b, Instr: %s.", opcode, instr_name);
-          endcase
-      end
-  endtask
+
 
 
   // Task to execute an instruction.
@@ -332,29 +287,29 @@ package Model_tasks;
 
   // TASK: It determines if the condition code is met based on the flags.
   task DetermineNextPC(input logic Branch, input logic BR, input logic [15:0] Rs,  input logic [2:0] C, input logic [2:0] F, input logic [15:0] imm, input logic [15:0] PC_in, output logic taken, output logic [15:0] next_PC);
-  begin    
-    // The branch is taken either unconditionally when C = 3'b111 
-    // or when the condition code matches the flag register setting.
-    taken = (C === 3'b000) ? ~F[2]               : // Not Equal (Z = 0)
-            (C === 3'b001) ?  F[2]               : // Equal (Z = 1)
-            (C === 3'b010) ? (~F[2] & ~F[0])     : // Greater Than (Z = N = 0)
-            (C === 3'b011) ?  F[0]               : // Less Than (N = 1)
-            (C === 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
-            (C === 3'b101) ? (F[2] | F[0])       : // Less Than or Equal (Z = 1 or N = 1)
-            (C === 3'b110) ?  F[1]               : // Overflow (V = 1)
-            (C === 3'b111) ?  1'b1               : // Unconditional (always executes)
-                            1'b0;                // Default: Condition not met (shouldn't happen if C is valid)
-    
-    // The expected PC addr is the current PC addr + 2 or PC addr + 2 + (I << 1) if branch is taken, or Rs if BR.
-    next_PC = (taken === 1'b1 && Branch === 1'b1) ? ((BR === 1'b1) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1))) : (PC_in + 16'h0002);
-    
-    // Display a message if and when a branch is taken.
-    if (taken && Branch)
-      $display("Model took the branch.");
-    else if (!taken && Branch) begin
-      $display("Model did not take the branch.");
+    begin    
+      // The branch is taken either unconditionally when C = 3'b111 
+      // or when the condition code matches the flag register setting.
+      taken = (C === 3'b000) ? ~F[2]               : // Not Equal (Z = 0)
+              (C === 3'b001) ?  F[2]               : // Equal (Z = 1)
+              (C === 3'b010) ? (~F[2] & ~F[0])     : // Greater Than (Z = N = 0)
+              (C === 3'b011) ?  F[0]               : // Less Than (N = 1)
+              (C === 3'b100) ? (F[2] | (~F[2] & ~F[0])) : // Greater Than or Equal (Z = 1 or Z = N = 0)
+              (C === 3'b101) ? (F[2] | F[0])       : // Less Than or Equal (Z = 1 or N = 1)
+              (C === 3'b110) ?  F[1]               : // Overflow (V = 1)
+              (C === 3'b111) ?  1'b1               : // Unconditional (always executes)
+                              1'b0;                // Default: Condition not met (shouldn't happen if C is valid)
+      
+      // The expected PC addr is the current PC addr + 2 or PC addr + 2 + (I << 1) if branch is taken, or Rs if BR.
+      next_PC = (taken === 1'b1 && Branch === 1'b1) ? ((BR === 1'b1) ? Rs : (PC_in + 16'h0002 + ($signed(imm) <<< 1'b1))) : (PC_in + 16'h0002);
+      
+      // Display a message if and when a branch is taken.
+      if (taken && Branch)
+        $display("Model took the branch.");
+      else if (!taken && Branch) begin
+        $display("Model did not take the branch.");
+      end
     end
-  end
   endtask
 
 endpackage

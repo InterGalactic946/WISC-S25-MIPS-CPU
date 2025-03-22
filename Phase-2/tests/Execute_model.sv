@@ -54,6 +54,7 @@ module Execute_model (
   ALU_model iALU_model (.ALU_In1(ALU_In1),
                         .ALU_In2(ALU_In2),
                         .Opcode(ALUOp),
+                        
                         .ALU_Out(ALU_out),
                         .Z_set(Z_set),
                         .N_set(N_set),
@@ -72,7 +73,7 @@ module Execute_model (
     end else begin
       if (Z_en)
         ZF <= Z_set;
-      else if (NV_en) begin
+      if (NV_en) begin
         VF <= V_set;
         NF <= N_set;
       end

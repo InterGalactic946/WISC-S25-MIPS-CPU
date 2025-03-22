@@ -121,17 +121,21 @@ module CPU (
     input logic [15:0] predicted_target   // Predicted target for branch
 );
 
-    // Define a structure to hold stage information
+    // Define a structure to hold stage information.
     typedef struct {
-        string fetch_msg;  // Store the fetch stage message
-        string decode_msg; // Store the decode stage message
+        string fetch_msg;   // Store the fetch stage message
+        string if_id_msg;   // Stores the IF_ID pipeline message
+        string decode_msg;  // Store the decode stage message
+        string id_ex_msg;   // Stores the ID_EX pipeline message
         string execute_msg; // Store the execute stage message
+        string ex_mem_msg;  // Stores the EX_MEM pipeline message
         string memory_msg;  // Store the memory stage message
-        string wb_msg; // Store the write-back stage message
+        string mem_wb_msg;  // Stores the MEM_WB pipeline message
+        string wb_msg;      // Store the write-back stage message
     } debug_info_t;
 
     // Declare an array to hold the state of each stage (fetch, decode, execute, memory, write-back)
-    debug_info_t pipeline[0:4]; // 5-stage pipeline
+    debug_info_t pipeline[0:7]; // 5-stage pipeline, with 7 stages of messages.
 
     // Fetch Stage: Store instruction and generate fetch message
     always_ff @(posedge clk or posedge reset) begin

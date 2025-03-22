@@ -19,6 +19,7 @@ package Verification_tasks;
       input logic [15:0] PC_curr, expected_PC_curr,
       input logic [1:0]  prediction, expected_prediction,
       input logic [15:0] predicted_target, expected_predicted_target,
+      input logic stall, flush,
       input string stage,
       output string stage_msg 
   );
@@ -55,25 +56,34 @@ package Verification_tasks;
               stage_msg = $sformatf("[%s] ERROR: predicted_target: 0x%h, expected_pred_target: 0x%h.", stage, predicted_target, expected_predicted_target);
               return;  // Exit task on error
           end
-
-        // If all checks pass, store success message.
-        if (prediction[1]) begin
-            // Branch is predicted taken
-            stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
-                                              stage, PC_curr, PC_next, PC_inst, predicted_target);
-        end else begin
-            // Branch is not predicted taken
-            stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
+        
+        // Print if there is a stall/flush in the PC/IF_ID registers.
+        if (stall) 
+            stage_msg = $sformatf("[%s] STALL: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.",
                                               stage, PC_curr, PC_next, PC_inst);
+        else if (flush)
+            stage_msg = $sformatf("[%s] FLUSH: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.",
+                                              stage, PC_curr, PC_next, PC_inst);
+        else begin
+            // If all checks pass, store success message.
+            if (prediction[1]) begin
+                // Branch is predicted taken.
+                stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
+                                                stage, PC_curr, PC_next, PC_inst, predicted_target);
+            end else begin
+                // Branch is not predicted taken.
+                stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
+                                                stage, PC_curr, PC_next, PC_inst);
+            end
         end
-      end
+    end
   endtask
 
 
   // Task: Verifies IF/ID Pipeline Register.
   task automatic verify_IF_ID(
-      input logic [65:0] IF_ID_signals, input logic [65:0] expected_IF_ID_signals,
-      output string if_id_fetch_msg
+      input logic [65:0] IF_ID_signals, input logic [65:0] expected_IF_ID_signals, input logic stall, input logic flush,
+      output string if_id_msg
   );
     verify_FETCH(
         .PC_next(IF_ID_signals[65:50]), 
@@ -87,7 +97,9 @@ package Verification_tasks;
         .predicted_target(IF_ID_signals[15:0]), 
         .expected_predicted_target (expected_IF_ID_signals[15:0]),
         .stage("IF_ID"),
-        .stage_message(if_id_fetch_msg)
+        .stage_message(if_id_msg),
+        .stall(stall),
+        .flush(flush)
     );
   endtask
 
@@ -169,6 +181,14 @@ package Verification_tasks;
           display_decoded_info(.opcode(EX_signals[6:3]), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
           
           // Store success message.
+                  // Print if there is a stall/flush in the PC/IF_ID registers.
+        if (stall) 
+            stage_msg = $sformatf("[%s] STALL: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.",
+                                              stage, PC_curr, PC_next, PC_inst);
+        else if (flush)
+            stage_msg = $sformatf("[%s] FLUSH: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.",
+                                              stage, PC_curr, PC_next, PC_inst);
+        else
           decode_msg = $sformatf("[DECODE] SUCCESS: %s.", instr_state);
       end
   endtask
@@ -506,34 +526,24 @@ package Verification_tasks;
   // Task: Verifies Write-Back (WB) Stage Signals.
   task automatic verify_WRITEBACK(
       input logic [3:0] MEM_WB_DstReg,
-      input logic MEM_WB_RegWrite, MEM_WB_MemToReg
+      input logic MEM_WB_RegWrite,
       input logic [15:0] RegWriteData, expected_RegWriteData,
       output string wb_verify_msg
   );
       // Initialize output message
       wb_verify_msg = "";
 
-      // Verify register write enable signal
+      // Verify register data to be written.
       if (RegWriteData !== expected_RegWriteData) begin
           wb_verify_msg = $sformatf("[WRITE-BACK] ERROR: RegWriteData: 0x%h, expected: 0x%h.", RegWriteData, expected_RegWriteData);
           return;
       end
 
-      // Verify Mem-to-Reg control signal
-      if (MEM_WB_MemtoReg !== expected_MEM_WB_MemtoReg) begin
-          wb_verify_msg = $sformatf("[WB] ERROR: MEM_WB_MemtoReg: %b, expected: %b.", MEM_WB_MemtoReg, expected_MEM_WB_MemtoReg);
-          return; // Exit on error
-      end
-
-      // If all checks pass, output success message
+      // If all checks pass, output success message.
       if (MEM_WB_RegWrite) begin
-          if (MEM_WB_MemtoReg) begin
-              wb_verify_msg = $sformatf("[WB] SUCCESS: Register %d written with Memory Data: 0x%h.", MEM_WB_DestReg, MEM_WB_WriteData);
-          end else begin
-              wb_verify_msg = $sformatf("[WB] SUCCESS: Register %d written with ALU Result: 0x%h.", MEM_WB_DestReg, MEM_WB_WriteData);
-          end
+        wb_verify_msg = $sformatf("[WRITE-BACK] SUCCESS: Register R[%0d] written with data: 0x%h.", MEM_WB_DestReg, RegWriteData);
       end else begin
-          wb_verify_msg = "[WB] SUCCESS: No register write in this cycle.";
+        wb_verify_msg = "[WRITE-BACK] SUCCESS: No register write in this cycle.";
       end
   endtask
 

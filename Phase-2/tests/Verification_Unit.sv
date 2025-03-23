@@ -53,8 +53,7 @@ module Verification_Unit (
     always @(posedge clk) begin
         if (rst) begin
             // Reset the pipeline indices
-            fetch_id  <= 0;
-            pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
+            fetch_id  <= -1;
             decode_id <= -2;
             execute_id <= -3;
             memory_id  <= -4;

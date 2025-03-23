@@ -131,8 +131,8 @@ module cpu_tb();
         .predicted_target(iDUT.predicted_target),
         .expected_predicted_target(iMODEL.predicted_target),
         
-        .stage(fetch_stage),
-        .stage_msg("FETCH")
+        .stage("FETCH"),
+        .stage_msg(fetch_msg)
       );
     end
   end

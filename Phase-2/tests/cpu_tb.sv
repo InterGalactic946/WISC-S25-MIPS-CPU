@@ -219,7 +219,7 @@ module cpu_tb();
   //   );
   // end
 
-  // Always block for verify_EX_MEM stage
+  // Always block for verify_EX_MEM stage.
   always @(posedge clk) begin
     if (rst_n) begin
       verify_EX_MEM(
@@ -236,7 +236,7 @@ module cpu_tb();
   end
 
   // Always block for verify_MEMORY stage
-  always @(posedge clk) begin
+  always @(negedge clk) begin
     if (rst_n) begin
       verify_MEMORY(
         .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),

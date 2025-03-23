@@ -66,7 +66,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
     // ADD or SUB operations
     if (Opcode == 4'h1)
         SUM_step = Input_A - Input_B;
-    else if (Opcode === 4'h0 || Opcode === 4'h8 || opcode === 4'h9)
+    else if (Opcode === 4'h0 || Opcode === 4'h8 || Opcode === 4'h9)
         SUM_step = Input_A + Input_B;
 
     // Check for overflow only for ADD and SUB instructions.

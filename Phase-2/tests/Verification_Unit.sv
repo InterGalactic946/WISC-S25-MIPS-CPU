@@ -117,7 +117,7 @@ module Verification_Unit (
                 
                 if (stall)
                     print_stall_messages(.inst_id(wb_id), .size(pc_idx), .msg_type("pc"), .cycle(pipeline_msgs[wb_id].fetch_cycle));
-                else 
+                else if (pipeline_msgs[wb_id].fetch_msg !== "")
                     $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
                 
                 if (stall)

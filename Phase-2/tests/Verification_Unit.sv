@@ -59,9 +59,9 @@ module Verification_Unit (
             memory_id  <= -4;
             wb_id <= -5;
 
-            pc_idx <= -1;
-            if_id_idx <= -1;
-            id_ex_idx <= -2;
+            pc_idx <= 0;
+            if_id_idx <= 0;
+            id_ex_idx <= 0;
         end else begin
             // Fetch Stage
             if (fetch_id >= 0) begin

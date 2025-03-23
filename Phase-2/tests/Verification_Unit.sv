@@ -54,6 +54,7 @@ module Verification_Unit (
         if (rst) begin
             // Reset the pipeline indices
             fetch_id  <= 0;
+            pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
             decode_id <= -2;
             execute_id <= -3;
             memory_id  <= -4;

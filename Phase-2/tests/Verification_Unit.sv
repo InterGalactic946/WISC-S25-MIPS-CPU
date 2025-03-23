@@ -109,7 +109,7 @@ module Verification_Unit (
             end
 
             // Move all stage indices forward if not stalling or flushing.
-            if (!stall || !flush) begin
+            if (!stall && !flush) begin
                 fetch_id  <= fetch_id + 1;
                 decode_id <= decode_id + 1;
                 execute_id <= execute_id + 1;

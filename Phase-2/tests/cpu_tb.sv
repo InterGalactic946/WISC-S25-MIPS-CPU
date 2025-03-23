@@ -72,8 +72,6 @@ module cpu_tb();
     // Initialize the testbench
     Initialize(.clk(clk), .rst_n(rst_n));
 
-    @(posedge clk);
-
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
     TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 

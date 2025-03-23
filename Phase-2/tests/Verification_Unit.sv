@@ -44,11 +44,11 @@ module Verification_Unit (
     always @(posedge clk) begin
         if (rst) begin
             // Reset the pipeline indices
-            fetch_id  <= 0;
-            decode_id <= -1;
-            execute_id <= -2;
-            memory_id  <= -3;
-            wb_id <= -4;
+            fetch_id  <= -1;
+            decode_id <= -2;
+            execute_id <= -3;
+            memory_id  <= -4;
+            wb_id <= -5;
         end else begin
             // Fetch Stage
             if (fetch_id >= 0) begin

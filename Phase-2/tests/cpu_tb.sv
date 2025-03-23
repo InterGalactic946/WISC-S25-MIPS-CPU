@@ -117,7 +117,7 @@ module cpu_tb();
   end
 
   // Always block for verify_FETCH stage
-  always @(posedge clk) begin
+  always @(negedge clk) begin
     if (rst_n) begin
       verify_FETCH(
         .PC_next(iDUT.PC_next),

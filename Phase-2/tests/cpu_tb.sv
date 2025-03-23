@@ -11,6 +11,7 @@
 module cpu_tb();
 
   // Importing task libraries
+  import Display_tasks::*;
   import Monitor_tasks::*;
   import Verification_tasks::*;
 
@@ -63,6 +64,10 @@ module cpu_tb();
     .mem_verify_msg(mem_verify_msg),
     .mem_wb_message(mem_wb_message),
     .wb_verify_msg(wb_verify_msg),
+    .pc_message(pc_message),
+    .if_id_message(if_id_message),
+    .id_ex_message(id_ex_message),
+    .flush_message(flush_message),
     .stall(stall),
     .flush(flush)
   );
@@ -85,6 +90,26 @@ module cpu_tb();
 
   // We flush IF, or ID stage.
   assign flush = iDUT.IF_flush || iDUT.ID_flush;
+
+  // Get the hazard messages.
+  always @(negedge clk) begin
+      if (rst_n) begin
+          get_hazard_messages(
+              .pc_stall(iDUT.PC_stall), 
+              .if_id_stall(iDUT.IF_ID_stall), 
+              .if_flush(iDUT.IF_flush), 
+              .id_ex_flush(iDUT.ID_flush),
+              .br_hazard(iDUT.iHDU.BR_hazard), 
+              .b_hazard(iDUT.iHDU.B_hazard), 
+              .load_use_hazard(iDUT.iHDU.load_use_hazard),
+              .pc_message(pc_message),
+              .if_id_message(if_id_message),
+              .id_ex_message(id_ex_message),
+              .flush_message(flush_message)
+          );
+      end
+  end
+
 
   // Dump contents of BHT, BTB, Data memory, and Regfile contents.
   always @(negedge clk) begin

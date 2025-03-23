@@ -2,13 +2,13 @@
 // Verification_Unit.sv: Verification Unit Module        //  
 //                                                       //
 // This module is responsible for verifying and          //
-// displaying debug messages for each instruction in     //  
-// the CPU pipeline stages. It tracks the instruction's  //  
-// journey through the fetch, decode, execute, memory,   //  
-// and write-back stages. The module also stores debug   //  
-// messages at each stage and prints the full pipeline   //  
-// information when the instruction reaches the          //  
-// write-back stage. This helps in debugging and         //  
+// displaying debug messages for each instruction in     //
+// the CPU pipeline stages. It tracks the instruction's  //
+// journey through the fetch, decode, execute, memory,   //
+// and write-back stages. The module also stores debug   //
+// messages at each stage and prints the full pipeline   //
+// information when the instruction reaches the          //
+// write-back stage. This helps in debugging and         //
 // ensuring correct operation of the CPU's pipeline.     //
 ///////////////////////////////////////////////////////////
 
@@ -26,44 +26,29 @@ module Verification_Unit (
     input string mem_verify_msg,           // Memory stage message
     input string mem_wb_message,           // MEM/WB Register message
     input string wb_verify_msg,            // Write-back stage message
-    input logic stall, flush               // stall/flush signals of the CPU
+    input logic stall, flush               // stall/flsuh signals of the CPU
 );
 
     ///////////////////////////////////
     // Declare any internal signals //
-    ///////////////////////////////////
-    integer fetch_id;                     // Fetch instruction ID
-    integer decode_id;                    // Decode instruction ID
-    integer execute_id;                   // Execute instruction ID
-    integer memory_id;                    // Memory instruction ID
-    integer wb_id;                         // Write back instruction ID
-    debug_info_t pipeline_msgs[0:71];     // Array to store debug messages for each instruction (assuming 72 instructions)
-
-    // Stall message storage
-    string stall_messages_pc[10];          // Store up to 10 stall messages for PC
-    string stall_messages_if_id[10];       // Store up to 10 stall messages for IF/ID
-    string stall_messages_id_ex[10];       // Store up to 10 stall messages for ID/EX
-
-    // Stall counters
-    integer stall_pc_count = 0;
-    integer stall_if_id_count = 0;
-    integer stall_id_ex_count = 0;
-
+    /////////////////////////////////
+    integer fetch_id;                 // Fetch instruction ID
+    integer decode_id;                // Decode instruction ID
+    integer execute_id;               // Execute instruction ID
+    integer memory_id;                // Memory instruction ID
+    integer wb_id;                    // Write back instruction ID
+    debug_info_t pipeline_msgs[0:71]; // Array to store debug messages for each instruction (assuming 72 instructions)
     //////////////////////////////////
 
+    // Keep track of all instructions in the pipeline.
     always @(posedge clk) begin
         if (rst) begin
-            // Reset pipeline indices
+            // Reset the pipeline indices
             fetch_id  <= -1;
             decode_id <= -2;
             execute_id <= -3;
             memory_id  <= -4;
             wb_id <= -5;
-
-            // Reset stall message counters
-            stall_pc_count  <= 0;
-            stall_if_id_count <= 0;
-            stall_id_ex_count <= 0;
         end else begin
             // Fetch Stage
             if (fetch_id >= 0) begin
@@ -120,40 +105,10 @@ module Verification_Unit (
                 $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
                 $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].mem_wb_msg, pipeline_msgs[wb_id].mem_wb_cycle);
                 $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);
-                
-                // Print stall messages if any
-                if (stall_pc_count > 0) begin
-                    $display("PC Stalls:");
-                    for (int i = 0; i < stall_pc_count; i++) begin
-                        $display("  - %s", stall_messages_pc[i]);
-                    end
-                end
-                
-                if (stall_if_id_count > 0) begin
-                    $display("IF/ID Stalls:");
-                    for (int i = 0; i < stall_if_id_count; i++) begin
-                        $display("  - %s", stall_messages_if_id[i]);
-                    end
-                end
-
-                if (stall_id_ex_count > 0) begin
-                    $display("ID/EX Stalls:");
-                    for (int i = 0; i < stall_id_ex_count; i++) begin
-                        $display("  - %s", stall_messages_id_ex[i]);
-                    end
-                end
-                
                 $display("=====================================================\n");
             end
 
-            // Handle stall messages
-            if (stall) begin
-                if (stall_pc_count < 10) stall_messages_pc[stall_pc_count++] = "PC Stalled";
-                if (stall_if_id_count < 10) stall_messages_if_id[stall_if_id_count++] = "IF/ID Stalled";
-                if (stall_id_ex_count < 10) stall_messages_id_ex[stall_id_ex_count++] = "ID/EX Stalled";
-            end
-
-            // Move pipeline indices forward if not stalling or flushing
+            // Move all stage indices forward if not stalling or flushing.
             if (!stall || !flush) begin
                 fetch_id  <= fetch_id + 1;
                 decode_id <= decode_id + 1;

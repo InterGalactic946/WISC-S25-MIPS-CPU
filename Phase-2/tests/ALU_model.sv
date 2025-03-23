@@ -38,7 +38,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
       case (Opcode)
           4'h0, 4'h1, 4'h8, 4'h9: begin
             // Get the addition or subtraction.
-            SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) ? (Input_A + Input_B);
+            SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);
             
             // Get overflow for the sum.
             get_overflow(

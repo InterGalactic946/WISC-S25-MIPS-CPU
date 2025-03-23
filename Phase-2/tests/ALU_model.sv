@@ -34,10 +34,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   ////////////////////////////////////////////
   always_comb begin
       error = 1'b0;  
-      ALU_Out = 16'h0000;  
-      pos_ov = 1'b0;
-      neg_ov = 1'b0;
-
+      ALU_Out = 16'h0000;
       case (Opcode)
           4'h0, 4'h1, 4'h8, 4'h9: ALU_Out = SUM_Out;
           4'h2: ALU_Out = Input_A ^ Input_B; // XOR
@@ -51,8 +48,6 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
           default: begin
               ALU_Out = 16'h0000;
               error = 1'b1;
-              pos_ov = 1'b0;
-              neg_ov = 1'b0;
           end
       endcase
   end
@@ -70,7 +65,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
         SUM_step = Input_A + Input_B;
 
     // Check for overflow only for ADD and SUB instructions.
-    if (Opcode[3:1] == 3'h0) begin
+    if (Opcode[3:1] === 3'h0) begin
         get_overflow(
             .A(Input_A), 
             .B(Input_B), 

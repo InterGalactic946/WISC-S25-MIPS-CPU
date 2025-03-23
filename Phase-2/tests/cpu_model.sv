@@ -8,7 +8,7 @@
 // and control unit to facilitate program execution.     //
 ///////////////////////////////////////////////////////////
 
-import Model_tasks::*;
+import Monitor_tasks::*;
 
 module cpu_model (clk, rst_n, hlt, pc);
 
@@ -84,7 +84,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   logic [15:0] EX_MEM_PC_next;      // Pipelined next instruction (previous PC_next) address from the fetch stage
 
   /* MEMORY stage signals */
-  logic model_data_mem_t;           // Model data memory
+  model_data_mem_t data_mem;        // Model data memory
   logic [15:0] MemData;             // Data read from memory
   logic [15:0] MemWriteData;        // Data written to memory
 
@@ -315,18 +315,18 @@ module cpu_model (clk, rst_n, hlt, pc);
   always_ff @(posedge clk) begin
       if (rst) begin
           // Initialize the data memory on reset.
-          $readmemh("./tests/data.img", model_data_mem_t.data_mem);
-          model_data_mem_t.mem_addr <= '{default: 16'hxxxx};
+          $readmemh("./tests/data.img", data_memory.data_mem);
+          data_memory.mem_addr <= '{default: 16'hxxxx};
       end 
       else if (EX_MEM_MemEnable && EX_MEM_MemWrite) begin // SW (store word)
           // Save the address that was used to access memory
-          model_data_mem_t.mem_addr[EX_MEM_ALU_out[15:1]] <= EX_MEM_ALU_out;
-          model_data_mem_t.data_mem[EX_MEM_ALU_out[15:1]] <= MemWriteData;
+          data_memory.mem_addr[EX_MEM_ALU_out[15:1]] <= EX_MEM_ALU_out;
+          data_memory.data_mem[EX_MEM_ALU_out[15:1]] <= MemWriteData;
       end
   end
 
   // Asynchronously read out the data when read enabled (LW).
-  assign MemData = (EX_MEM_MemEnable && !EX_MEM_MemWrite) ? model_data_mem_t.data_mem[EX_MEM_ALU_out[15:1]] : 16'h0000;
+  assign MemData = (EX_MEM_MemEnable && !EX_MEM_MemWrite) ? data_memory.data_mem[EX_MEM_ALU_out[15:1]] : 16'h0000;
   //////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////////////

@@ -12,6 +12,33 @@ package Verification_tasks;
 
   import Display_tasks::*;
 
+  // Task to initialize testbench signals.
+  task automatic Initialize(ref logic clk, ref logic rst_n);
+    begin
+      clk = 1'b0;
+      @(posedge clk);
+      @(negedge clk) rst_n = 1'b0;
+      repeat (2) @(posedge clk);   // Wait for 2 clock cycles
+      @(negedge clk) rst_n = 1'b1; // Deassert reset
+    end
+  endtask
+
+
+  // Task to wait for a signal to be asserted, otherwise times out.
+  task automatic TimeoutTask(ref sig, ref clk, input int clks2wait, input string signal);
+    fork
+      begin : timeout
+        repeat(clks2wait) @(posedge clk);
+        $display("ERROR: %s not getting asserted and/or held at its value.", signal);
+        $stop(); // Stop simulation on error.
+      end : timeout
+      begin
+        @(posedge sig) disable timeout; // Disable timeout if sig is asserted.
+      end
+    join
+  endtask
+
+
   // Task: A task to verify the FETCH stage.
   task automatic verify_FETCH(
       input logic [15:0] PC_next, expected_PC_next,
@@ -55,7 +82,7 @@ package Verification_tasks;
               stage_msg = $sformatf("[%s] ERROR: predicted_target: 0x%h, expected_pred_target: 0x%h.", stage, predicted_target, expected_predicted_target);
               return;  // Exit task on error
           end
-        
+          
           // If all checks pass, store success message.
           if (prediction[1]) begin
               // Branch is predicted taken.

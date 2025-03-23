@@ -12,16 +12,6 @@ package Model_tasks;
   import ALU_tasks::*;
 
   
-  // Task to initialize testbench signals.
-  task automatic Initialize(ref logic clk, ref logic rst_n);
-    begin
-      clk = 1'b0;
-      @(posedge clk);
-      @(negedge clk) rst_n = 1'b0;
-      repeat (2) @(posedge clk);   // Wait for 2 clock cycles
-      @(negedge clk) rst_n = 1'b1; // Deassert reset
-    end
-  endtask
 
 
   // Task to fetch an instruction from memory.

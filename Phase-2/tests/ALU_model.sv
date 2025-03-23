@@ -29,6 +29,24 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   assign Input_A = (Opcode[3:1] == 3'h4) ? ALU_In1 & 16'hFFFE : ALU_In1;
   assign Input_B = (Opcode[3:1] == 3'h4) ? {ALU_In2[14:0], 1'b0} : ALU_In2;
 
+  // Form the step sum.
+  assign SUM_step = (Opcode == 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);  
+
+  // Overflow detection logic (only for ADD and SUB).
+  assign pos_ov = (Opcode[3:1] == 3'h0) && 
+                  ((Opcode == 4'h0 && ~Input_A[15] && ~Input_B[15] && SUM_step[15]) || // ADD Overflow
+                   (Opcode == 4'h1 && ~Input_A[15] && Input_B[15] && SUM_step[15]));  // SUB Overflow
+
+  assign neg_ov = (Opcode[3:1] == 3'h0) && 
+                  ((Opcode == 4'h0 && Input_A[15] && Input_B[15] && ~SUM_step[15]) || // ADD Negative Overflow
+                   (Opcode == 4'h1 && Input_A[15] && ~Input_B[15] && ~SUM_step[15])); // SUB Negative Overflow
+
+  // Saturate result based on overflow condition for ADD/SUB but wrap around if LW/SW.
+  assign SUM_Out = (Opcode[3:1] == 3'h0) ? 
+                   ((pos_ov) ? 16'h7FFF : 
+                    (neg_ov) ? 16'h8000 : SUM_step) 
+                  : SUM_step;
+
   //////////////////////////////////////////////
   // Generate ALU output based on the opcode //
   ////////////////////////////////////////////
@@ -51,38 +69,6 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
           end
       endcase
   end
-
- //////////////////////////////////////
- // Generate SUM output for the ALU //
- ////////////////////////////////////
- always_comb begin
-    SUM_Out = 16'h0000; // Default to 0
-
-    // ADD or SUB operations
-    if (Opcode == 4'h1)
-        SUM_step = Input_A - Input_B;
-    else if (Opcode === 4'h0 || Opcode === 4'h8 || Opcode === 4'h9)
-        SUM_step = Input_A + Input_B;
-
-    // Check for overflow only for ADD and SUB instructions.
-    if (Opcode[3:1] === 3'h0) begin
-        get_overflow(
-            .A(Input_A), 
-            .B(Input_B), 
-            .opcode(Opcode), 
-            .result(SUM_step), 
-            .expected_pos_overflow(pos_ov), 
-            .expected_neg_overflow(neg_ov)
-        );
-
-        // Saturate the result if overflow occurs.
-        if (pos_ov) 
-            SUM_Out = 16'h7FFF;  // Saturate to maximum positive value
-        else if (neg_ov) 
-            SUM_Out = 16'h8000;  // Saturate to maximum negative value
-    end
- end
-  ////////////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////
   // Set flag signals based on ALU output  //

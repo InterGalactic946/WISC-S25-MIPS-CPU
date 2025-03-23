@@ -71,38 +71,38 @@ package Display_tasks;
       end
   endtask
 
-   // Task: To get the full instruction string.
-   task automatic get_full_instruction (
-        input logic [3:0] opcode, 
-        input logic [3:0] rs, 
-        input logic [3:0] rt, 
-        input logic [3:0] rd, 
-        input logic [15:0] ALU_imm, 
-        input logic [2:0] cc, 
-        input logic [15:0] actual_target,
-        output string instr_name
-   );
-      case (opcode) 
-            begin
-                4'h0: instr_name = $sformatf("ADD R%0d, R%0d, R%0d", rd, rs, rt);        // 0000: Addition
-                4'h1: instr_name = $sformatf("SUB R%0d, R%0d, R%0d", rd, rs, rt);        // 0001: Subtraction
-                4'h2: instr_name = $sformatf("XOR R%0d, R%0d, R%0d", rd, rs, rt);        // 0010: Bitwise XOR
-                4'h3: instr_name = $sformatf("RED R%0d, R%0d, R%0d", rd, rs, rt);        // 0011: Reduction Addition
-                4'h4: instr_name = $sformatf("SLL R%0d, R%0d, R%0d", rd, rs, rt);        // 0100: Shift Left Logical
-                4'h5: instr_name = $sformatf("SRA R%0d, R%0d, R%0d", rd, rs, rt);        // 0101: Shift Right Arithmetic
-                4'h6: instr_name = $sformatf("ROR R%0d, R%0d, R%0d", rd, rs, rt);        // 0110: Rotate Right
-                4'h7: instr_name = $sformatf("PADDSB R%0d, R%0d, R%0d", rd, rs, rt);     // 0111: Parallel Sub-word Addition
-                4'h8: instr_name = $sformatf("LW R%0d, R%0d, 0x%h", rd, rs, ALU_imm);    // 1000: Load Word
-                4'h9: instr_name = $sformatf("SW R%0d, R%0d, 0x%h", rd, rs, ALU_imm);    // 1001: Store Word
-                4'hA: instr_name = $sformatf("LLB R%0d, 0x%h", rd, ALU_imm);             // 1010: Load Low Byte
-                4'hB: instr_name = $sformatf("LLB R%0d, 0x%h", rd, ALU_immm);            // 1011: Load High Byte
-                4'hC: instr_name = $sformatf("B %3b, TARGET: 0x%h", cc, actual_target);  // 1100: Branch (Conditional)
-                4'hD: instr_name = $sformatf("BR %3b, R%0d", cc, rs);                    // 1101: Branch (Unconditional)
-                4'hE: instr_name = $sformatf("PCS R%0d", rd);                            // 1110: PCS (Program Counter Store)
-                4'hF: instr_name = "HLT";                                                // 1111: Halt
-                default: instr_name = "INVALID";                                         // Invalid opcode
-            end
+
+  // Task: To get the full instruction string.
+  task automatic get_full_instruction (
+      input logic [3:0] opcode, 
+      input logic [3:0] rs, 
+      input logic [3:0] rt, 
+      input logic [3:0] rd, 
+      input logic [15:0] ALU_imm, 
+      input logic [2:0] cc, 
+      input logic [15:0] actual_target,
+      output string instr_name
+  );
+      case (opcode)
+          4'h0: instr_name = $sformatf("ADD R%0d, R%0d, R%0d", rd, rs, rt);        // 0000: Addition
+          4'h1: instr_name = $sformatf("SUB R%0d, R%0d, R%0d", rd, rs, rt);        // 0001: Subtraction
+          4'h2: instr_name = $sformatf("XOR R%0d, R%0d, R%0d", rd, rs, rt);        // 0010: Bitwise XOR
+          4'h3: instr_name = $sformatf("RED R%0d, R%0d, R%0d", rd, rs, rt);        // 0011: Reduction Addition
+          4'h4: instr_name = $sformatf("SLL R%0d, R%0d, R%0d", rd, rs, rt);        // 0100: Shift Left Logical
+          4'h5: instr_name = $sformatf("SRA R%0d, R%0d, R%0d", rd, rs, rt);        // 0101: Shift Right Arithmetic
+          4'h6: instr_name = $sformatf("ROR R%0d, R%0d, R%0d", rd, rs, rt);        // 0110: Rotate Right
+          4'h7: instr_name = $sformatf("PADDSB R%0d, R%0d, R%0d", rd, rs, rt);     // 0111: Parallel Sub-word Addition
+          4'h8: instr_name = $sformatf("LW R%0d, R%0d, 0x%h", rd, rs, ALU_imm);    // 1000: Load Word
+          4'h9: instr_name = $sformatf("SW R%0d, R%0d, 0x%h", rd, rs, ALU_imm);    // 1001: Store Word
+          4'hA: instr_name = $sformatf("LLB R%0d, 0x%h", rd, ALU_imm);             // 1010: Load Low Byte
+          4'hB: instr_name = $sformatf("LHB R%0d, 0x%h", rd, ALU_imm);             // 1011: Load High Byte (Fixed Typo)
+          4'hC: instr_name = $sformatf("B %3b, TARGET: 0x%h", cc, actual_target);  // 1100: Branch (Conditional)
+          4'hD: instr_name = $sformatf("BR %3b, R%0d", cc, rs);                    // 1101: Branch (Unconditional)
+          4'hE: instr_name = $sformatf("PCS R%0d", rd);                            // 1110: PCS (Program Counter Store)
+          4'hF: instr_name = "HLT";                                                // 1111: Halt
+          default: instr_name = "INVALID";                                         // Invalid opcode
       endcase
-   endtask
+  endtask
+
 
 endpackage

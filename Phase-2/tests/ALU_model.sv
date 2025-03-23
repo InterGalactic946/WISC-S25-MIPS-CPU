@@ -39,17 +39,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
       neg_ov = 1'b0;
 
       case (Opcode)
-          4'h0, 4'h1, 4'h8, 4'h9: begin
-              SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);
-              get_overflow(.A(Input_A), .B(Input_B), .opcode(Opcode), 
-                          .result(SUM_step), .expected_pos_overflow(pos_ov), 
-                          .expected_neg_overflow(neg_ov));
-
-              if (Opcode === 4'h0 || Opcode === 4'h1)
-                  SUM_Out = pos_ov ? 16'h7FFF : (neg_ov ? 16'h8000 : SUM_step);
-
-              ALU_Out = SUM_Out;
-          end
+          4'h0, 4'h1, 4'h8, 4'h9: ALU_Out = SUM_Out;
           4'h2: ALU_Out = Input_A ^ Input_B; // XOR
           4'h3: get_red_sum(.A(Input_A), .B(Input_B), .expected_sum(ALU_Out)); // RED
           4'h4, 4'h5, 4'h6: get_shifted_result(.A(Input_A), .B(Input_B[3:0]), 
@@ -66,6 +56,37 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
           end
       endcase
   end
+
+ //////////////////////////////////////
+ // Generate SUM output for the ALU //
+ ////////////////////////////////////
+ always_comb begin
+    SUM_Out = 16'h0000; // Default to 0
+
+    // ADD or SUB operations
+    if (Opcode == 4'h1)
+        SUM_step = Input_A - Input_B;
+    else if (Opcode === 4'h0 || Opcode === 4'h8 || opcode === 4'h9)
+        SUM_step = Input_A + Input_B;
+
+    // Check for overflow only for ADD and SUB instructions.
+    if (Opcode[3:1] == 3'h0) begin
+        get_overflow(
+            .A(Input_A), 
+            .B(Input_B), 
+            .opcode(Opcode), 
+            .result(SUM_step), 
+            .expected_pos_overflow(pos_ov), 
+            .expected_neg_overflow(neg_ov)
+        );
+
+        // Saturate the result if overflow occurs.
+        if (pos_ov) 
+            SUM_Out = 16'h7FFF;  // Saturate to maximum positive value
+        else if (neg_ov) 
+            SUM_Out = 16'h8000;  // Saturate to maximum negative value
+    end
+ end
   ////////////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////

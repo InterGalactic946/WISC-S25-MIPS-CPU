@@ -37,7 +37,7 @@ module memory (data_out, data_in, addr, enable, wr, clk, rst);
    always_ff @(posedge clk) begin
       if (rst) begin
           // Initialize memory on reset: load data from a file and set memory address to 'xxxx'
-          $readmemh("./tests/data.img", data_memory.data_mem);
+          data_memory.data_mem <= '{default: 16'h0000};
           data_memory.mem_addr <= '{default: 16'hxxxx};
       end 
       else if (enable && wr) begin

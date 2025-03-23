@@ -32,22 +32,22 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   //////////////////////////////////////////////
   // Generate ALU output based on the opcode //
   ////////////////////////////////////////////
-
-  assign SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);
-
-  assign SUM_Out = (Opcode === 4'h0 || Opcode === 4'h1) ? ((pos_ov) ? 16'h7FFF : (neg_ov ? 16'h8000 : SUM_step)) : SUM_step;
-
-  assign pos_ov = (~Opcode[0] & (~Input_A[15] & ~Input_B[15] & SUM_step[15])) | 
-                (Opcode[0] & (~Input_A[15] & Input_B[15] & SUM_step[15]));
-
-  assign neg_ov = (~Opcode[0] & (Input_A[15] & Input_B[15] & ~SUM_step[15])) | 
-                    (Opcode[0] & (Input_A[15] & ~Input_B[15] & ~SUM_step[15]));
-
   always_comb begin
       error = 1'b0;  
-      ALU_Out = 16'h0000;
+      ALU_Out = 16'h0000;  
+      pos_ov = 1'b0;
+      neg_ov = 1'b0;
+
       case (Opcode)
           4'h0, 4'h1, 4'h8, 4'h9: begin
+              SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);
+              get_overflow(.A(Input_A), .B(Input_B), .opcode(Opcode), 
+                          .result(SUM_step), .expected_pos_overflow(pos_ov), 
+                          .expected_neg_overflow(neg_ov));
+
+              if (Opcode === 4'h0 || Opcode === 4'h1)
+                  SUM_Out = pos_ov ? 16'h7FFF : (neg_ov ? 16'h8000 : SUM_step);
+
               ALU_Out = SUM_Out;
           end
           4'h2: ALU_Out = Input_A ^ Input_B; // XOR
@@ -61,6 +61,8 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
           default: begin
               ALU_Out = 16'h0000;
               error = 1'b1;
+              pos_ov = 1'b0;
+              neg_ov = 1'b0;
           end
       endcase
   end

@@ -52,11 +52,18 @@ module RegisterFile_model (clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData
     end
   end
 
-  // Reads in the latest data being written into the first register to allow for RF bypassing.
-  assign SrcData1 = (WriteReg && (DstReg === SrcReg1)) ? DstData_operand : ReadData1;
-  
-  // Reads in the latest data being written into the second register to allow for RF bypassing.
-  assign SrcData2 = (WriteReg && (DstReg === SrcReg2)) ? DstData_operand : ReadData2;
+  // **Full RF Bypassing Implementation**
+  always_comb begin
+    if (WriteReg && (DstReg == SrcReg1) && (DstReg != 4'h0)) 
+      SrcData1 = DstData_operand;  // Bypass new data to SrcReg1
+    else 
+      SrcData1 = ReadData1;        // Read normally
+    
+    if (WriteReg && (DstReg == SrcReg2) && (DstReg != 4'h0)) 
+      SrcData2 = DstData_operand;  // Bypass new data to SrcReg2
+    else 
+      SrcData2 = ReadData2;        // Read normally
+  end
 
 endmodule
 

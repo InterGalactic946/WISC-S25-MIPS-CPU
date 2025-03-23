@@ -234,21 +234,22 @@ module cpu_tb();
   //   );
   // end
 
-  // // Always block for verify_MEMORY stage
-  // always @(posedge clk) begin
-  //   if (rst_n)
-  //   verify_MEMORY(
-  //     .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),
-  //     .MemData(iDUT.MemData),
-  //     .expected_MemData(iMODEL.MemData),
-  //     .MemWriteData(iDUT.MemWriteData),
-  //     .expected_MemWriteData(iMODEL.MemWriteData),
-  //     .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
-  //     .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
-      
-  //     .mem_verify_msg(mem_verify_msg)
-  //   );
-  // end
+  // Always block for verify_MEMORY stage
+  always @(posedge clk) begin
+    if (rst_n) begin
+      verify_MEMORY(
+        .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),
+        .MemData(iDUT.MemData),
+        .expected_MemData(iMODEL.MemData),
+        .MemWriteData(iDUT.MemWriteData),
+        .expected_MemWriteData(iMODEL.MemWriteData),
+        .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
+        .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
+        
+        .mem_verify_msg(mem_verify_msg)
+      );
+    end
+  end
 
   // Always block for verify_MEM_WB stage
   always @(posedge clk) begin

@@ -81,7 +81,7 @@ end
 always @(posedge clk) begin
     if (!rst) begin
         // Fetch Stage
-        if (fetch_id >= 0) begin
+        if (fetch_id >= 1) begin
             pipeline_msgs[fetch_id].pc_message[pc_idx] <= pc_message;
             pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
             pipeline_msgs[fetch_id].fetch_cycle <= $time / 10;
@@ -128,7 +128,7 @@ always @(posedge clk) begin
 end
 
 
-always @(negedge clk) begin
+always @(posedge clk) begin
     if (!rst && wb_id >= 0) begin
         // Print messages for instruction reaching WB stage
         $display("=====================================================");

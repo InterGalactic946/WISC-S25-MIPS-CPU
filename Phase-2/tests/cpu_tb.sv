@@ -132,10 +132,10 @@ module cpu_tb();
           );
         end
         
-        // Log the regfile contents.
-        if (iDUT.MEM_WB_RegWrite) begin
-          log_regfile_dump(.regfile(iMODEL.iDECODE.iRF.regfile));
-        end
+        // // Log the regfile contents.
+        // if (iDUT.MEM_WB_RegWrite) begin
+        //   log_regfile_dump(.regfile(iMODEL.iDECODE.iRF.regfile));
+        // end
       end
   end
 

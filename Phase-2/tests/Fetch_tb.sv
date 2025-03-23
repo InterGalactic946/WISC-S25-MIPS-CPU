@@ -104,7 +104,9 @@ module Fetch_tb();
           .prediction(prediction), 
           .expected_prediction(expected_prediction), 
           .predicted_target(predicted_target), 
-          .expected_predicted_target (expected_predicted_target)
+          .expected_predicted_target (expected_predicted_target),
+          .stage("FETCH"),
+          .stage_msg(fetch_msg)
       );
 
       // Dump the contents of memory whenever we write to the BTB or BHT.
@@ -128,6 +130,7 @@ module Fetch_tb();
       actual_target = 16'h0000; // Set target to 0 initially
       IF_ID_PC_curr = 16'h0000;    // Start with PC = 0
       IF_ID_prediction = 2'b00; // Start with strongly not taken prediction (prediction[1] = 0)
+      fetch_msg = "";
 
       // Initialize counter values.
       actual_taken_count = 0;
@@ -151,7 +154,11 @@ module Fetch_tb();
       @(negedge clk) rst = 1'b0;
 
       // Run for num_tests.
-      repeat (num_tests) @(posedge clk);
+      repeat (num_tests) begin
+        @(posedge clk);
+
+        $display(fetch_msg);
+      end
 
       // If all predictions are correct, print out the counts.
       $display("\nNumber of PC stall cycles: %0d.", stalls);

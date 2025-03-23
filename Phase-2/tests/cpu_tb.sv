@@ -101,7 +101,7 @@ module cpu_tb();
               .id_ex_flush(iDUT.ID_flush),
               .br_hazard(iDUT.iHDU.BR_hazard), 
               .b_hazard(iDUT.iHDU.B_hazard), 
-              .load_use_hazard(iDUT.iHDU.load_use_hazard),
+              .load_use_hazard(iDUT.iHDU.load_to_use_hazard),
               .pc_message(pc_message),
               .if_id_message(if_id_hz_message),
               .id_ex_message(id_ex_hz_message),

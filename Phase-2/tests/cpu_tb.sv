@@ -231,6 +231,8 @@ module cpu_tb();
       verify_EXECUTE(
         .Input_A(iDUT.iEXECUTE.iALU.Input_A),
         .Input_B(iDUT.iEXECUTE.iALU.Input_B),
+        .expected_Input_A(iMODEL.iEXECUTE.iALU_model.Input_B),
+        .expected_Input_B(iMODEL.iEXECUTE.iALU_model.Input_B),
         .ALU_out(iDUT.ALU_out),
         .Z_set(iDUT.iEXECUTE.iALU.Z_set),
         .V_set(iDUT.iEXECUTE.iALU.V_set),

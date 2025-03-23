@@ -389,6 +389,8 @@ package Verification_tasks;
   task automatic verify_EXECUTE(
       input logic [15:0] Input_A,      
       input logic [15:0] Input_B, 
+      input logic [15:0] expected_Input_A,      
+      input logic [15:0] expected_Input_B, 
       input logic [15:0] ALU_out,
       input logic Z_set, V_set, N_set,
       input logic [15:0] expected_ALU_out,          
@@ -402,6 +404,12 @@ package Verification_tasks;
   );
      // Initialize message.
      execute_msg = "";
+      
+      // Verify ALU result.
+      if (ALU_out !== expected_ALU_out) begin
+          execute_msg = $sformatf("[EXECUTE] ERROR: Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, expected_Input_A = 0x%h, expected_Input_B = 0x%h, expected_ALU_out = 0x%h.", Input_A, Input_B, ALU_out, expected_Input_A, expected_Input_B, expected_ALU_out);
+          return;
+      end
 
        // Verify ALU result.
       if (ALU_out !== expected_ALU_out) begin

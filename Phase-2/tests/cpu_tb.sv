@@ -26,7 +26,7 @@ module cpu_tb();
 
   // Messages from each stage.
   string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_message, 
-         execute_msg, ex_mem_message, mem_verify_msg, mem_wb_message, wb_verify_msg;
+         execute_msg, ex_mem_message, mem_verify_msg, mem_wb_message, wb_verify_msg, pc_message, if_id_hz_message, id_ex_hz_message, flush_message;
 
   //////////////////////
   // Instantiate DUT //
@@ -65,8 +65,8 @@ module cpu_tb();
     .mem_wb_message(mem_wb_message),
     .wb_verify_msg(wb_verify_msg),
     .pc_message(pc_message),
-    .if_id_message(if_id_message),
-    .id_ex_message(id_ex_message),
+    .if_id_hz_message(if_id_hz_message),
+    .id_ex_hz_message(id_ex_hz_message),
     .flush_message(flush_message),
     .stall(stall),
     .flush(flush)
@@ -103,8 +103,8 @@ module cpu_tb();
               .b_hazard(iDUT.iHDU.B_hazard), 
               .load_use_hazard(iDUT.iHDU.load_use_hazard),
               .pc_message(pc_message),
-              .if_id_message(if_id_message),
-              .id_ex_message(id_ex_message),
+              .if_id_message(if_id_hz_message),
+              .id_ex_message(id_ex_hz_message),
               .flush_message(flush_message)
           );
       end

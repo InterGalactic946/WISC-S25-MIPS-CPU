@@ -50,12 +50,8 @@ module Verification_Unit (
     //////////////////////////////////
 
     // Keep track of all instructions in the pipeline.
-    always @(posedge clk) begin
+    always @(negedge clk, posedge rst) begin
         if (rst) begin
-            // Reset the pipeline indices
-            pipeline_msgs[fetch_id].pc_message[pc_idx] <= pc_message;
-            pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
-            pipeline_msgs[fetch_id].fetch_cycle <= $time / 10;
             fetch_id <= 0;
             decode_id <= -1;
             execute_id <= -2;
@@ -67,7 +63,7 @@ module Verification_Unit (
             id_ex_idx <= 0;
         end else begin
             // Fetch Stage
-            if (fetch_id >= 1) begin
+            if (fetch_id >= 0) begin
                 pipeline_msgs[fetch_id].pc_message[pc_idx] <= pc_message;
                 pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
                 pipeline_msgs[fetch_id].fetch_cycle <= $time / 10;

@@ -37,15 +37,17 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
 
   assign SUM_Out = (Opcode === 4'h0 || Opcode === 4'h1) ? ((pos_ov) ? 16'h7FFF : (neg_ov ? 16'h8000 : SUM_step)) : SUM_step;
 
+  assign pos_ov = (~Opcode[0] & (~Input_A[15] & ~Input_B[15] & SUM_step[15])) | 
+                (Opcode[0] & (~Input_A[15] & Input_B[15] & SUM_step[15]));
+
+  assign neg_ov = (~Opcode[0] & (Input_A[15] & Input_B[15] & ~SUM_step[15])) | 
+                    (Opcode[0] & (Input_A[15] & ~Input_B[15] & ~SUM_step[15]));
+
   always_comb begin
       error = 1'b0;  
       ALU_Out = 16'h0000;
       case (Opcode)
           4'h0, 4'h1, 4'h8, 4'h9: begin
-              get_overflow(.A(Input_A), .B(Input_B), .opcode(Opcode), 
-                          .result(SUM_step), .expected_pos_overflow(pos_ov), 
-                          .expected_neg_overflow(neg_ov));
-
               ALU_Out = SUM_Out;
           end
           4'h2: ALU_Out = Input_A ^ Input_B; // XOR

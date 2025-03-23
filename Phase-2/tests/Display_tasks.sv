@@ -122,13 +122,10 @@ package Display_tasks;
     // Determine the type of hazard and generate the appropriate message
     if (load_use_hazard) begin
         hazard_type = "load-to-use";
-        $display("load");
     end else if (br_hazard) begin
         hazard_type = "Branch (BR)";
-        $display("BR hazard");
     end else if (b_hazard) begin
         hazard_type = "Branch (B)";
-        $display("B hazard");
     end else begin
         hazard_type = "unknown"; // Fallback case
     end

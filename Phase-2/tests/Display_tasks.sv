@@ -82,8 +82,7 @@ package Display_tasks;
         input logic [15:0] actual_target,
         output string instr_name
    );
-    begin
-        case (opcode) 
+      case (opcode) 
             begin
                 4'h0: instr_name = $sformatf("ADD R%0d, R%0d, R%0d", rd, rs, rt);        // 0000: Addition
                 4'h1: instr_name = $sformatf("SUB R%0d, R%0d, R%0d", rd, rs, rt);        // 0001: Subtraction
@@ -103,8 +102,7 @@ package Display_tasks;
                 4'hF: instr_name = "HLT";                                                // 1111: Halt
                 default: instr_name = "INVALID";                                         // Invalid opcode
             end
-        endcase
-    end
+      endcase
    endtask
 
 endpackage

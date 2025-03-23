@@ -8,6 +8,8 @@
 // and control unit to facilitate program execution.     //
 ///////////////////////////////////////////////////////////
 
+import Monitor_tasks::*;
+
 module cpu_model (clk, rst_n, hlt, pc);
 
   input logic clk;         // System clock
@@ -82,12 +84,6 @@ module cpu_model (clk, rst_n, hlt, pc);
   logic [15:0] EX_MEM_PC_next;      // Pipelined next instruction (previous PC_next) address from the fetch stage
 
   /* MEMORY stage signals */
-  typedef struct {
-    logic [15:0] mem_addr [0:65535]; 
-    logic [15:0] data_mem [0:65535];
-  } model_data_mem_t;
-
-  model_data_mem_t data_mem;        // Model data memory
   logic [15:0] MemData;             // Data read from memory
   logic [15:0] MemWriteData;        // Data written to memory
 
@@ -313,23 +309,17 @@ module cpu_model (clk, rst_n, hlt, pc);
   // Use the value read out from data memory from the previous instruction 
   // or previous ALU result if forwarded otherwise the current value. 
   assign MemWriteData = (ForwardMEM) ? RegWriteData : EX_MEM_MemWriteData;
-
-  // Model the data memory.
-  always_ff @(posedge clk) begin
-      if (rst) begin
-          // Initialize the data memory on reset.
-          $readmemh("./tests/data.img", data_memory.data_mem);
-          data_memory.mem_addr <= '{default: 16'hxxxx};
-      end 
-      else if (EX_MEM_MemEnable && EX_MEM_MemWrite) begin // SW (store word)
-          // Save the address that was used to access memory
-          data_memory.mem_addr[EX_MEM_ALU_out[15:1]] <= EX_MEM_ALU_out;
-          data_memory.data_mem[EX_MEM_ALU_out[15:1]] <= MemWriteData;
-      end
-  end
-
-  // Asynchronously read out the data when read enabled (LW).
-  assign MemData = (EX_MEM_MemEnable && !EX_MEM_MemWrite) ? data_memory.data_mem[EX_MEM_ALU_out[15:1]] : 16'h0000;
+  
+  // Access data memory.
+  memory iDATA_MEM  (.data_out(MemData),
+                      .data_in(MemWriteData),
+                      .addr(EX_MEM_ALU_out),
+                      .data(1'b1),
+                      .enable(EX_MEM_MemEnable),
+                      .wr(EX_MEM_MemWrite),
+                      .clk(clk),
+                      .rst(rst)
+                    );
   //////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////////////

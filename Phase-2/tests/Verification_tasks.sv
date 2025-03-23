@@ -56,16 +56,16 @@ package Verification_tasks;
               return;  // Exit task on error
           end
         
-        // If all checks pass, store success message.
-        if (prediction[1]) begin
-            // Branch is predicted taken.
-            stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
+          // If all checks pass, store success message.
+          if (prediction[1]) begin
+              // Branch is predicted taken.
+              stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
                                                 stage, PC_curr, PC_next, PC_inst, predicted_target);
-        end else begin
-            // Branch is not predicted taken.
-            stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
+          end else begin
+              // Branch is not predicted taken.
+              stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
                                                 stage, PC_curr, PC_next, PC_inst);
-        end
+          end
     end
   endtask
 

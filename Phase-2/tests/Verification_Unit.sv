@@ -24,7 +24,7 @@ module Verification_Unit (
     input string ex_mem_message,           // EX/MEM Register message
     input string mem_verify_msg,           // Memory stage message
     input string mem_wb_message,           // MEM/WB Register message
-    input string wb_verify_msg             // Write-back stage message
+    input string wb_verify_msg,            // Write-back stage message
     input logic stall, flush               // stall/flsuh signals of the CPU
 );
 

@@ -86,7 +86,7 @@ module cpu_tb();
 
   // Dump contents of BHT, BTB, Data memory, and Regfile contents.
   always @(negedge clk) begin
-      if (!rst) begin
+      if (rst_n) begin
         // Dump the contents of memory whenever we write to the BTB or BHT.
         if (iDUT.wen_BHT || iDUT.wen_BTB)
           log_BTB_BHT_dump (

@@ -50,6 +50,9 @@ package Verification_tasks;
       output string stage_msg 
   );
     begin
+        // Initialize message.
+        stage_msg = "";
+
           // Verify the PC next.
           if (PC_next !== expected_PC_next) begin
               stage_msg = $sformatf("[%s] ERROR: PC_next: 0x%h, expected_PC_next: 0x%h.", stage, PC_next, expected_PC_next);
@@ -359,6 +362,9 @@ package Verification_tasks;
       input logic [104:0] ID_EX_signals, input logic [104:0] expected_ID_EX_signals,
       output string id_ex_message
   );  
+      // Initialize message.
+      id_ex_message = "";
+
       // Verify the PC next.
       if (ID_EX_signals[104:89] !== expected_ID_EX_signals[104:89]) begin
         id_ex_message = $sformatf("[ID_EX] ERROR: ID_EX_PC_next: 0x%h, expected_ID_EX_PC_next: 0x%h.", ID_EX_signals[104:89], expected_ID_EX_signals[104:89]);
@@ -394,7 +400,10 @@ package Verification_tasks;
       input  logic expected_NF,
       output string execute_msg 
   );
-      // Verify ALU result.
+     // Initialize message.
+     execute_msg = "";
+
+       // Verify ALU result.
       if (ALU_out !== expected_ALU_out) begin
           execute_msg = $sformatf("[EXECUTE] ERROR: Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, expected_ALU_out = 0x%h.", Input_A, Input_B, ALU_out, expected_ALU_out);
           return;
@@ -426,6 +435,9 @@ package Verification_tasks;
       input logic [61:0] EX_MEM_signals, input logic [61:0] expected_EX_MEM_signals,
       output string ex_mem_message
   );
+    // Initialize message.
+    ex_mem_message = "";
+
       // Verify the PC next.
       if (EX_MEM_signals[61:46] !== expected_EX_MEM_signals[61:46]) begin
         ex_mem_message = $sformatf("[EX_MEM] ERROR: EX_MEM_PC_next: 0x%h, expected_EX_MEM_PC_next: 0x%h.", EX_MEM_signals[61:46] , expected_EX_MEM_signals[61:46]);
@@ -503,6 +515,9 @@ package Verification_tasks;
     input logic [55:0] MEM_WB_signals, input logic [55:0] expected_MEM_WB_signals,
     output string mem_wb_message
   );  
+      // Initialize message.
+      mem_wb_message = "";
+
       // Verify the PC next.
       if (MEM_WB_signals[55:40] !== expected_MEM_WB_signals[55:40]) begin
         mem_wb_message = $sformatf("[MEM_WB] ERROR: MEM_WB_PC_next: 0x%h, expected_MEM_WB_PC_next: 0x%h.", MEM_WB_signals[55:40] , expected_MEM_WB_signals[55:40]);

@@ -43,118 +43,89 @@ module ControlUnit_model (
     // Generate control signals by decoding the opcode //
     ////////////////////////////////////////////////////
     always_comb begin
-     ALUSrc = 1'b0;   
-     MemtoReg = 1'b0;
-     RegWrite = 1'b1; 
-     MemEnable = 1'b0;
-     MemWrite = 1'b0; 
-     Branch = 1'b0; 
-     RegSrc = 1'b0;  
-     PCS = 1'b0;    
-     HLT = 1'b0;     
-     ALUOp = Opcode;
-     Z_en = 1'b0;    
-     NV_en = 1'b0; 
-     branch_taken = 1'b0;
-     mispredicted = 1'b0;
-     target_miscomputed = 1'b0;
-     wen_BTB = 1'b0;
-     wen_BHT = 1'b0;
-     update_PC = 1'b0;
-      // Decode the control signals based on the opcode.
-      case (Opcode)
-          4'b0000, 4'b0001: begin  // ADD, SUB (opcode 0, 1, 2, 3, 7)
-            Z_en = 1'b1;           // Z flag enable
-            NV_en = 1'b1;          // N/V flag enable
-          end
-          4'b0010: begin      // XOR (opcode 2)
-              Z_en = 1'b1;    // Z flag enable
-          end
-          4'b0100, 4'b0101, 4'b0110: begin  // SLL, SRA, ROR (opcode 4, 5, 6)
-              ALUSrc = 1'b1;                // ALUSrc is 1 for shift operations
-              Z_en = 1'b1;                  // Z flag enable
-          end
-          4'b0111: begin // PADDSB (opcode 7)
-            // Has all the default values.
-          end
-          4'b1000: begin  // LW (opcode 8)
-              ALUSrc = 1'b1;     // ALUSrc is 1 for LW
-              MemtoReg = 1'b1;   // Memory to register operation
-              MemEnable = 1'b1;  // Memory enable
-          end
-          4'b1001: begin  // SW (opcode 9)
-              ALUSrc = 1'b1;    // ALUSrc is 1 for SW
-              MemtoReg = 1'b0;  // MemtoReg is x for SW operations
-              RegWrite = 1'b0;  // No register write
-              MemEnable = 1'b1; // Memory enable
-              MemWrite = 1'b1;  // Memory write operation
-          end
-          4'b1010, 4'b1011: begin  // LLB, LHB (opcode 10, 11)
-              ALUSrc = 1'b1;       // ALUSrc is 1 for LW
-              RegSrc = 1'b1;       // Register source for LLB/LHB
-          end
-          4'b1100, 4'b1101: begin  // Branch (B, BR) instructions
-            ALUSrc = 1'b0;       // ALUSrc is  a don't care for B instructions
-            MemtoReg = 1'b0;     // MemtoReg is x for B operations
-            RegWrite = 1'b0;     // No register write
-            Branch = 1'b1;       // Branch operation
-            RegSrc = 1'b0;       // Register source is x for B operations
+        // Default values
+        ALUSrc = 1'b0;   
+        MemtoReg = 1'b0;
+        RegWrite = 1'b1; 
+        MemEnable = 1'b0;
+        MemWrite = 1'b0; 
+        Branch = 1'b0; 
+        RegSrc = 1'b0;  
+        PCS = 1'b0;    
+        HLT = 1'b0;     
+        ALUOp = Opcode;
+        Z_en = 1'b0;    
+        NV_en = 1'b0; 
+        branch_taken = 1'b0;
+        mispredicted = 1'b0;
+        target_miscomputed = 1'b0;
+        wen_BTB = 1'b0;
+        wen_BHT = 1'b0;
+        update_PC = 1'b0;
 
-            // Branch is taken.
-            branch_taken = actual_taken;
-            
-            // It is mispredicted when the prev instruction is different from actual taken.
-            mispredicted = (IF_ID_predicted_taken !== actual_taken);
+        // Decode the control signals based on the opcode.
+        case (Opcode)
+            4'b0000, 4'b0001: begin  // ADD, SUB
+                Z_en = 1'b1;     // Zero flag enable
+                NV_en = 1'b1;    // Negative/Overflow flag enable
+            end
+            4'b0010: begin  // XOR
+                Z_en = 1'b1;    // Zero flag enable
+            end
+            4'b0100, 4'b0101, 4'b0110: begin  // SLL, SRA, ROR
+                ALUSrc = 1'b1;  // Shift operations use immediate shift amount
+                Z_en = 1'b1;    // Zero flag enable
+            end
+            4'b0111: begin  // PADDSB
+                // Default values apply.
+            end
+            4'b1000: begin  // LW
+                ALUSrc = 1'b1;     // Load word uses immediate offset
+                MemtoReg = 1'b1;   // Memory to register
+                MemEnable = 1'b1;  // Enable memory read
+            end
+            4'b1001: begin  // SW
+                ALUSrc = 1'b1;    // Store word uses immediate offset
+                RegWrite = 1'b0;  // No register write
+                MemEnable = 1'b1; // Enable memory access
+                MemWrite = 1'b1;  // Memory write operation
+            end
+            4'b1010, 4'b1011: begin  // LLB, LHB
+                ALUSrc = 1'b1;   // Immediate used for upper/lower byte load
+                RegSrc = 1'b1;   // Source is immediate-based
+            end
+            4'b1100, 4'b1101: begin  // Branch (B, BR)
+                Branch = 1'b1;
 
-            // A target is miscomputed when the predicted target differs from the actual target.
-            target_miscomputed = (IF_ID_predicted_target !== actual_target);
+                // Determine if branch is taken
+                branch_taken = actual_taken;
 
-            // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
-            wen_BTB = ((actual_taken) || (target_miscomputed));
+                // Detect misprediction
+                mispredicted = (IF_ID_predicted_taken !== actual_taken);
 
-            // Update BHT on a mispredicted branch instruction.
-            wen_BHT = mispredicted;
+                // Detect miscomputed target
+                target_miscomputed = (IF_ID_predicted_target !== actual_target);
 
-            // We update the PC to fetch the actual target when the predictor either predicted incorrectly
-            // or when the target was miscomputed and the branch was actually taken.
-            update_PC = (mispredicted || target_miscomputed) && (branch_taken);
-          end
-          4'b1110: begin  // PCS instruction (opcode 14)
-              ALUSrc = 1'b0;    // ALUSrc is a don't care for PCS operation
-              RegSrc = 1'b0;    // RegSrc is a don't care for PCS
-              PCS = 1'b1;       // PCS operation
-          end
-          4'b1111: begin  // HLT instruction (opcode 15)
-              HLT = 1'b1;      // HLT operation
-              ALUSrc = 1'b0;   // ALUSrc is 0 for HLT operations
-              MemtoReg = 1'b0; // MemtoReg is 0 for HLT operations
-              RegWrite = 1'b0; // Register write is 0 for HLT
-              MemEnable = 1'b0;// Memory enable is off for HLT
-              MemWrite = 1'b0; // No memory write for HLT
-              Branch = 1'b0;   // No branch for HLT
-              RegSrc = 1'b0;   // Register source is 0 for HLT
-          end
-          default: begin
-              ALUSrc = 1'b0;   
-              MemtoReg = 1'b0;
-              RegWrite = 1'b1; 
-              MemEnable = 1'b0;
-              MemWrite = 1'b0; 
-              Branch = 1'b0; 
-              RegSrc = 1'b0;  
-              PCS = 1'b0;    
-              HLT = 1'b0;     
-              ALUOp = Opcode;
-              Z_en = 1'b0;    
-              NV_en = 1'b0; 
-              branch_taken = 1'b0;
-              mispredicted = 1'b0;
-              target_miscomputed = 1'b0;
-              wen_BTB = 1'b0;
-              wen_BHT = 1'b0;
-              update_PC = 1'b0;
-          end
-      endcase
+                // Update BTB if branch was actually taken or if target was miscomputed
+                wen_BTB = actual_taken || target_miscomputed;
+
+                // Update BHT if branch was mispredicted
+                wen_BHT = mispredicted;
+
+                // Update PC if misprediction or miscomputed target occurs
+                update_PC = (mispredicted || target_miscomputed) && branch_taken;
+            end
+            4'b1110: begin  // PCS
+                PCS = 1'b1;   // Enable PCS operation
+            end
+            4'b1111: begin  // HLT
+                HLT = 1'b1;    // Halt execution
+                RegWrite = 1'b0;
+            end
+            default: begin
+                // Already handled by default values.
+            end
+        endcase
     end
     ///////////////////////////////////////////////////////////////////////
 

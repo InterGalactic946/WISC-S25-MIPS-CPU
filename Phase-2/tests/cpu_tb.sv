@@ -38,6 +38,8 @@ module cpu_tb();
   // Instantiate Verification Unit //
   //////////////////////////////////
   Verification_Unit iVERIFY (
+    .clk(clk),
+    .rst(~rst_n),
     .fetch_msg(fetch_msg),
     .if_id_msg(if_id_msg),
     .decode_msg(decode_msg),

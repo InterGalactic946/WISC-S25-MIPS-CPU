@@ -15,6 +15,7 @@
 import Monitor_tasks::*;
 
 module Verification_Unit (
+    input logic clk, rst                   // Clock and rst 
     input string fetch_msg,                // Fetch stage message
     input string if_id_msg,                // IF/ID Register message
     input string decode_msg,               // Decode stage messages

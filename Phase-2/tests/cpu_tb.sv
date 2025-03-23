@@ -118,7 +118,7 @@ module cpu_tb();
   // Always block for verify_FETCH stage
   always @(posedge clk) begin
     if (rst_n)
-    fetch_msg = verify_FETCH(
+    verify_FETCH(
       .PC_next(iDUT.PC_next),
       .expected_PC_next(iMODEL.PC_next),
       .PC_inst(iDUT.PC_inst),
@@ -130,7 +130,8 @@ module cpu_tb();
       .predicted_target(iDUT.predicted_target),
       .expected_predicted_target(iMODEL.predicted_target),
       
-      .stage(fetch_stage)
+      .stage(fetch_stage),
+      .stage_msg(fetch_msg)
     );
   end
 

@@ -678,6 +678,7 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
                 resolved_files.insert(0, dep_file)
                 find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
     
+    print(resolved_files)
     return resolved_files
 
 

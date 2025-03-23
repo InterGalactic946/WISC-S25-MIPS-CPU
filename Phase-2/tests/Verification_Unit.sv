@@ -78,7 +78,7 @@ always @(posedge clk) begin
 end
 
 
-always @(negedge clk) begin
+always @(posedge clk) begin
     if (!rst) begin
         // Fetch Stage
         if (fetch_id >= 0) begin

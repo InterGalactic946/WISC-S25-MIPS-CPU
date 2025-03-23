@@ -87,8 +87,8 @@ module cpu_tb();
   end
 
   // Output the verifaction signal.
-  always @(negedge clk, posedge rst)
-    if (rst)
+  always @(negedge clk, negedge rst_n)
+    if (!rst_n)
       verify <= 1'b0;
     else
       verify <= verify + 1'b1;

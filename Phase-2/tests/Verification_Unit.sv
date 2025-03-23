@@ -50,7 +50,7 @@ module Verification_Unit (
     //////////////////////////////////
 
     // Keep track of all instructions in the pipeline.
-    always @(negedge clk, posedge rst) begin
+    always @(negedge clk) begin
         if (rst) begin
             fetch_id <= 0;
             decode_id <= -1;

@@ -119,69 +119,72 @@ module cpu_tb();
   end
 
   // Always block for verify_FETCH stage
-  //always @(posedge clk) begin
-    //if (rst_n)
-    // verify_FETCH(
-    //   .PC_next(iDUT.PC_next),
-    //   .expected_PC_next(iMODEL.PC_next),
-    //   .PC_inst(iDUT.PC_inst),
-    //   .expected_PC_inst(iMODEL.PC_inst),
-    //   .PC_curr(pc),
-    //   .expected_PC_curr(expected_pc),
-    //   .prediction(iDUT.prediction),
-    //   .expected_prediction(iMODEL.prediction),
-    //   .predicted_target(iDUT.predicted_target),
-    //   .expected_predicted_target(iMODEL.predicted_target),
-      
-    //   .stage(fetch_stage),
-    //   .stage_msg(fetch_msg)
-    // );
-  //end
+  always @(negedge clk) begin
+    if (rst_n) begin
+      verify_FETCH(
+        .PC_next(iDUT.PC_next),
+        .expected_PC_next(iMODEL.PC_next),
+        .PC_inst(iDUT.PC_inst),
+        .expected_PC_inst(iMODEL.PC_inst),
+        .PC_curr(pc),
+        .expected_PC_curr(expected_pc),
+        .prediction(iDUT.prediction),
+        .expected_prediction(iMODEL.prediction),
+        .predicted_target(iDUT.predicted_target),
+        .expected_predicted_target(iMODEL.predicted_target),
+        
+        .stage(fetch_stage),
+        .stage_msg(fetch_msg)
+      );
+    end
+  end
 
-  // // Always block for verify_IF_ID stage
-  // always @(posedge clk) begin
-  //   if (rst_n)
-  //   verify_IF_ID(
-  //     .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
-  //                     iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
-  //     .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr[3:0], iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
-  //                              iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
-      
-  //     .if_id_msg(if_id_msg)
-  //   );
-  // end
+  // Always block for verify_IF_ID stage
+  always @(negedge clk) begin
+    if (rst_n) begin
+      verify_IF_ID(
+        .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
+                        iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
+        .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr[3:0], iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
+                                iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
+        
+        .if_id_msg(if_id_msg)
+      );
+    end
+  end
 
-  // // Always block for verify_DECODE stage
-  // always @(posedge clk) begin
-  //   if (rst_n)
-  //   verify_DECODE(
-  //     .EX_signals(iDUT.EX_signals),
-  //     .expected_EX_signals(iMODEL.EX_signals),
-  //     .MEM_signals(iDUT.MEM_signals),
-  //     .expected_MEM_signals(iMODEL.MEM_signals),
-  //     .WB_signals(iDUT.WB_signals),
-  //     .expected_WB_signals(iMODEL.WB_signals),
-  //     .cc(iDUT.iDECODE.c_codes),
-  //     .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
-  //     .is_branch(iDUT.BR),
-  //     .expected_is_branch(iMODEL.Branch),
-  //     .is_BR(iDUT.BR),
-  //     .expected_is_BR(iMODEL.BR),
-  //     .branch_target(iDUT.branch_target),
-  //     .expected_branch_target(iMODEL.branch_target),
-  //     .actual_taken(iDUT.actual_taken),
-  //     .expected_actual_taken(iMODEL.actual_taken),
-  //     .wen_BTB(iDUT.wen_BTB),
-  //     .expected_wen_BTB(iMODEL.wen_BTB),
-  //     .wen_BHT(iDUT.wen_BHT),
-  //     .expected_wen_BHT(iMODEL.wen_BHT),
-  //     .update_PC(iDUT.update_PC),
-  //     .expected_update_PC(iMODEL.update_PC),
-      
-  //     .decode_msg(decode_msg),
-  //     .instruction_full(instruction_full_msg)
-  //   );
-  // end
+  // Always block for verify_DECODE stage
+  always @(negedge clk) begin
+    if (rst_n) begin
+      verify_DECODE(
+        .EX_signals(iDUT.EX_signals),
+        .expected_EX_signals(iMODEL.EX_signals),
+        .MEM_signals(iDUT.MEM_signals),
+        .expected_MEM_signals(iMODEL.MEM_signals),
+        .WB_signals(iDUT.WB_signals),
+        .expected_WB_signals(iMODEL.WB_signals),
+        .cc(iDUT.iDECODE.c_codes),
+        .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
+        .is_branch(iDUT.BR),
+        .expected_is_branch(iMODEL.Branch),
+        .is_BR(iDUT.BR),
+        .expected_is_BR(iMODEL.BR),
+        .branch_target(iDUT.branch_target),
+        .expected_branch_target(iMODEL.branch_target),
+        .actual_taken(iDUT.actual_taken),
+        .expected_actual_taken(iMODEL.actual_taken),
+        .wen_BTB(iDUT.wen_BTB),
+        .expected_wen_BTB(iMODEL.wen_BTB),
+        .wen_BHT(iDUT.wen_BHT),
+        .expected_wen_BHT(iMODEL.wen_BHT),
+        .update_PC(iDUT.update_PC),
+        .expected_update_PC(iMODEL.update_PC),
+        
+        .decode_msg(decode_msg),
+        .instruction_full(instruction_full_msg)
+      );
+    end
+  end
 
   // Always block for verify_ID_EX stage
   always @(negedge clk) begin

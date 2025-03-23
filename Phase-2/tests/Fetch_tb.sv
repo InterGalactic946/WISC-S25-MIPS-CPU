@@ -20,6 +20,7 @@ module Fetch_tb();
   logic is_branch;                        // Flag to indicate if the previous instruction was a branch
   
   logic actual_taken;                     // Flag indicating whether the branch was actually taken
+  string fetch_msg;                       // Systematically prints out the state of the instruction fetched
   logic [15:0] actual_target;             // Actual target address of the branch
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
   logic [15:0] IF_ID_predicted_target;    // Predicted target passed to the decode stage

@@ -83,7 +83,7 @@ package Monitor_tasks;
 
 
   // Task: Prints data memory to a file with the current clock cycle.
-  task automatic log_data_dump(input model_BHT_t model_data_mem, 
+  task automatic log_data_dump(input model_data_mem_t model_data_mem, 
                               input logic [15:0] dut_data_mem [0:65535]);
       integer addr;
       integer file;  // File handle

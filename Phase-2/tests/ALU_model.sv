@@ -33,37 +33,34 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   // Generate ALU output based on the opcode //
   ////////////////////////////////////////////
   always_comb begin
-      error = 1'b0;  // Default error state.
-      ALU_Out = 16'h0000; // Default output.
+      error = 1'b0;  
+      ALU_Out = 16'h0000;  
+      pos_ov = 1'b0;
+      neg_ov = 1'b0;
+
       case (Opcode)
           4'h0, 4'h1, 4'h8, 4'h9: begin
-            // Get the addition or subtraction.
-            SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);
-            
-            // Get overflow for the sum.
-            get_overflow(
-              .A(Input_A), 
-              .B(Input_B), 
-              .opcode(Opcode), 
-              .result(SUM_step), 
-              .expected_pos_overflow(pos_ov), 
-              .expected_neg_overflow(neg_ov)
-            );
-            
-            // If it is subtraction or addition, saturate the sum based on overflow.
-            if (Opcode === 4'h0 || Opcode === 4'h1)
-              SUM_Out = (pos_ov) ? 16'h7FFF : ((neg_ov) ? 16'h8000 : SUM_step);            
+              SUM_step = (Opcode == 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);
+              get_overflow(.A(Input_A), .B(Input_B), .opcode(Opcode), 
+                          .result(SUM_step), .expected_pos_overflow(pos_ov), 
+                          .expected_neg_overflow(neg_ov));
 
-            ALU_Out = SUM_Out; // ADD/SUB/LW/SW
+              if (Opcode == 4'h0 || Opcode == 4'h1)
+                  SUM_Out = pos_ov ? 16'h7FFF : (neg_ov ? 16'h8000 : SUM_step);
+
+              ALU_Out = SUM_Out;
           end
           4'h2: ALU_Out = Input_A ^ Input_B; // XOR
           4'h3: get_red_sum(.A(Input_A), .B(Input_B), .expected_sum(ALU_Out)); // RED
-          4'h4, 4'h5, 4'h6: get_shifted_result(.A(Input_A), .B(Input_B[3:0]), .mode(Opcode[1:0]), .expected_result(ALU_Out)); // SLL/SRA/ROR
+          4'h4, 4'h5, 4'h6: get_shifted_result(.A(Input_A), .B(Input_B[3:0]), 
+                                                .mode(Opcode[1:0]), 
+                                                .expected_result(ALU_Out)); // SLL/SRA/ROR
           4'h7: get_paddsb_sum(.A(Input_A), .B(Input_B), .expected_result(ALU_Out)); // PADDSB
-          4'hA, 4'hB: get_LB_result(.A(Input_A), .B(Input_B), .mode(Opcode[0]), .expected_result(ALU_Out));    // LLB/LHB
+          4'hA, 4'hB: get_LB_result(.A(Input_A), .B(Input_B), .mode(Opcode[0]), 
+                                    .expected_result(ALU_Out)); // LLB/LHB
           default: begin
-            ALU_Out = 16'h0000; // Default output.
-            error = 1'b1; // Invalid opcode
+              ALU_Out = 16'h0000;
+              error = 1'b1;
           end
       endcase
   end

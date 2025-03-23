@@ -231,7 +231,7 @@ module cpu_tb();
       .MemData(iDUT.MemData),
       .expected_MemData(iMODEL.MemData),
       .MemWriteData(iDUT.MemWriteData),
-      .expectedMemWriteData(iMODEL.MemWriteData),
+      .expected_MemWriteData(iMODEL.MemWriteData),
       .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
       .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
       

@@ -471,7 +471,7 @@ package Verification_tasks;
       // Verify memory data read.
       if (EX_MEM_MemEnable && !EX_MEM_MemWrite) begin
         if (MemData !== expected_MemData) begin
-            mem_verify_msg = $sformatf("[MEMORY] ERROR: MemData (Read): 0x%h, expected: 0x%h.", MemData, expected_MemData);
+            mem_verify_msg = $sformatf("[MEMORY] ERROR: MemData (Read): 0x%h, expected_MemData: 0x%h.", MemData, expected_MemData);
             return;
         end
       end
@@ -479,7 +479,7 @@ package Verification_tasks;
       // Verify memory data written.
       if (EX_MEM_MemEnable && EX_MEM_MemWrite) begin
         if (MemData !== expected_MemData) begin
-        mem_verify_msg = $sformatf("[MEMORY] ERROR: MemWriteData (Written): 0x%h, expected: 0x%h.", MemWriteData, expected_MemWriteData);
+        mem_verify_msg = $sformatf("[MEMORY] ERROR: MemWriteData (Written): 0x%h, expected_MemWriteData: 0x%h.", MemWriteData, expected_MemWriteData);
         return;
         end
       end

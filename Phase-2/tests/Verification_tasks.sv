@@ -22,7 +22,7 @@ package Verification_tasks;
       input string stage,
       output string stage_msg 
   );
-      begin
+    begin
           // Initialize stage message.
           stage_msg = ""; 
 

@@ -21,6 +21,37 @@ package Monitor_tasks;
     logic [15:0] data_mem [0:65535];
   } model_data_mem_t;
 
+  // Structure to store debug information for each pipeline stage
+  typedef struct {
+    string fetch_msg;
+    integer fetch_cycle;
+
+    string if_id_msg;   // IF/ID Register message
+    integer if_id_cycle;
+
+    string decode_msg[0:1];
+    integer decode_cycle;
+
+    string id_ex_msg;   // ID/EX Register message
+    integer id_ex_cycle;
+
+    string execute_msg;
+    integer execute_cycle;
+
+    string ex_mem_msg;  // EX/MEM Register message
+    integer ex_mem_cycle;
+
+    string memory_msg;
+    integer memory_cycle;
+
+    string mem_wb_msg;  // MEM/WB Register message
+    integer mem_wb_cycle;
+
+    string wb_msg;
+    integer wb_cycle;
+  } debug_info_t;
+
+
   // Task: Dumps contents of DUT and model BHT and BTB memory.
   task automatic log_BTB_BHT_dump(
     input model_BHT_t model_BHT [0:15],  

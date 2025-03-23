@@ -2,7 +2,7 @@
 // cpu_tb.sv: CPU Testbench Module                       //  
 //                                                       //
 // This module serves as the testbench for the CPU core. //
-// It verifies the correct functionality of instruction  //
+// It verifies the correct functionality of instruction //
 // fetching, decoding, execution, and memory operations. //
 // The testbench initializes memory, loads instructions, //
 // and monitors register updates and ALU results. It     //
@@ -10,18 +10,29 @@
 ///////////////////////////////////////////////////////////
 module cpu_tb();
 
+  // Importing task libraries
   import Monitor_tasks::*;
   import Verification_tasks::*;
 
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  cpu iDUT (.clk(clk), .rst_n(rst_n), .hlt(hlt), .pc(pc));
+  cpu iDUT (
+    .clk(clk),
+    .rst_n(rst_n),
+    .hlt(hlt),
+    .pc(pc)
+  );
 
   ////////////////////////
   // Instantiate Model //
   //////////////////////
-  cpu_model iMODEL (.clk(clk), .rst_n(rst_n), .hlt(expected_hlt), .pc(expected_pc));
+  cpu_model iMODEL (
+    .clk(clk),
+    .rst_n(rst_n),
+    .hlt(expected_hlt),
+    .pc(expected_pc)
+  );
 
   ////////////////////////////////////
   // Instantiate Verification Unit //
@@ -36,200 +47,198 @@ module cpu_tb();
     .ex_mem_message(ex_mem_message),
     .mem_verify_msg(mem_verify_msg),
     .mem_wb_message(mem_wb_message),
-    .wb_verify_msg(wb_verify_msg)
+    .wb_verify_msg(wb_verify_msg),
+    .stall(stall),
+    .flush(flush)
   );
 
   ///////////////////////////
   // Stimulus of type reg //
   /////////////////////////
-  logic clk, rst_n;          // clock and rst signals
-  logic hlt, expected_hlt;   // Halt signals for execution stop for each DUT and model
-  logic [15:0] expected_pc;  // Expected program counter value for verification
-  logic [15:0] pc;           // Current program counter value
+  logic clk, rst_n;           // Clock and reset signals
+  logic hlt, expected_hlt;    // Halt signals for execution stop for each DUT and model
+  logic [15:0] expected_pc;   // Expected program counter value for verification
+  logic [15:0] pc;            // Current program counter value
+  logic stall, flush;         // Indicates a stall and/or a flush in the pipeline.
 
-  // Get the messages from each stage.
-  string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_message, execute_msg, ex_mem_message, mem_verify_msg, mem_wb_message, wb_verify_msg
+  // Messages from each stage.
+  string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_message, 
+         execute_msg, ex_mem_message, mem_verify_msg, mem_wb_message, wb_verify_msg;
 
   // Test procedure to apply stimulus and check responses.
   initial begin
-    // Initialize the testbench.
+    // Initialize the testbench
     Initialize(.clk(clk), .rst_n(rst_n));
 
-    // Run the simulation for each instruction in the instruction memory, until HLT reaches WB.
-    TimeoutTask(.sig(iMODEL.MEM_WB_HLT), .clk(clk), .clks2wait(1000000), .signal("HLT"));
+    // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
+    TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
     // If we reached here, that means all test cases were successful
     $display("YAHOO!! All tests passed.");
     $stop();
   end
-  
 
-  // Always block for verify_FETCH stage.
+  // We stall on PC or IF.
+  assign stall = iDUT.PC_stall || iDUT.IF_ID_stall;
+
+  // We flush IF, or ID stage.
+  assign flush = iDUT.IF_flush || iDUT.ID_flush;
+
+  // Always block for verify_FETCH stage
   always @(posedge clk) begin
-        verify_FETCH(
-            .PC_next(iDUT.PC_next),
-            .expected_PC_next(iMODEL.PC_next),
-            .PC_inst(iDUT.PC_inst),
-            .expected_PC_inst(iMODEL.PC_inst),
-            .PC_curr(iDUT.PC_curr),
-            .expected_PC_curr(iMODEL.PC_curr),
-            .prediction(iDUT.prediction),
-            .expected_prediction(iMODEL.prediction),
-            .predicted_target(iDUT.predicted_target),
-            .expected_predicted_target(iMODEL.predicted_target),
-            .stage("FETCH"),
-            
-            .stage_msg(fetch_msg)
-        );
+    verify_FETCH(
+      .PC_next(iDUT.PC_next),
+      .expected_PC_next(iMODEL.PC_next),
+      .PC_inst(iDUT.PC_inst),
+      .expected_PC_inst(iMODEL.PC_inst),
+      .PC_curr(iDUT.PC_curr),
+      .expected_PC_curr(iMODEL.PC_curr),
+      .prediction(iDUT.prediction),
+      .expected_prediction(iMODEL.prediction),
+      .predicted_target(iDUT.predicted_target),
+      .expected_predicted_target(iMODEL.predicted_target),
+      
+      .stage("FETCH"),
+      .stage_msg(fetch_msg)
+    );
   end
 
-
-  // Always block for verify_IF_ID stage.
+  // Always block for verify_IF_ID stage
   always @(posedge clk) begin
-      verify_IF_ID(
-            .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
-            .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr, iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
-            
-            .if_id_msg(if_id_msg)
-        );
+    verify_IF_ID(
+      .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
+                      iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
+      .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr, iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
+                               iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
+      
+      .if_id_msg(if_id_msg)
+    );
   end
 
+  // Always block for verify_DECODE stage
+  always @(posedge clk) begin
+    verify_DECODE(
+      .EX_signals(iDUT.EX_signals),
+      .expected_EX_signals(iMODEL.EX_signals),
+      .MEM_signals(iDUT.MEM_signals),
+      .expected_MEM_signals(iMODEL.MEM_signals),
+      .WB_signals(iDUT.WB_signals),
+      .expected_WB_signals(iMODEL.WB_signals),
+      .cc(iDUT.iDECODE.c_codes),
+      .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
+      .is_branch(iDUT.BR),
+      .expected_is_branch(iMODEL.Branch),
+      .is_BR(iDUT.BR),
+      .expected_is_BR(iMODEL.BR),
+      .branch_target(iDUT.branch_target),
+      .expected_branch_target(iMODEL.branch_target),
+      .actual_taken(iDUT.actual_taken),
+      .expected_actual_taken(iMODEL.actual_taken),
+      .wen_BTB(iDUT.wen_BTB),
+      .expected_wen_BTB(iMODEL.wen_BTB),
+      .wen_BHT(iDUT.wen_BHT),
+      .expected_wen_BHT(iMODEL.wen_BHT),
+      .update_PC(iDUT.update_PC),
+      .expected_update_PC(iMODEL.update_PC),
+      
+      .decode_msg(decode_msg),
+      .instruction_full(instruction_full_msg)
+    );
+  end
 
-    // Always block for verify_DECODE stage.
-    always @(posedge clk) begin
-      // Call verify_DECODE task using named arguments with iDUT and iMODEL signals
-      verify_DECODE(
-          .EX_signals(iDUT.EX_signals),
-          .expected_EX_signals(iMODEL.EX_signals),
-          .MEM_signals(iDUT.MEM_signals),
-          .expected_MEM_signals(iMODEL.MEM_signals),
-          .WB_signals(iDUT.WB_signals),
-          .expected_WB_signals(iMODEL.WB_signals),
-          .cc(iDUT.iDECODE.c_codes),
-          .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
-          .is_branch(iDUT.BR),
-          .expected_is_branch(iMODEL.Branch),
-          .is_BR(iDUT.BR),
-          .expected_is_BR(iMODEL.BR),
-          .branch_target(iDUT.branch_target),
-          .expected_branch_target(iMODEL.branch_target),
-          .actual_taken(iDUT.actual_taken),
-          .expected_actual_taken(iMODEL.actual_taken),
-          .wen_BTB(iDUT.wen_BTB),
-          .expected_wen_BTB(iMODEL.wen_BTB),
-          .wen_BHT(iDUT.wen_BHT),
-          .expected_wen_BHT(iMODEL.wen_BHT),
-          .update_PC(iDUT.update_PC),
-          .expected_update_PC(iMODEL.update_PC),
-          
-          .decode_msg(decode_msg),
-          .instruction_full(instruction_full_msg)
-      );
-    end
+  // Always block for verify_ID_EX stage
+  always @(posedge clk) begin
+    verify_ID_EX(
+      .ID_EX_signals({iDUT.ID_EX_PC_next, iDUT.ID_EX_SrcReg1, iDUT.ID_EX_SrcReg2, 
+                      iDUT.ID_EX_ALU_In1, iDUT.ID_EX_ALU_imm, iDUT.ID_EX_ALU_In2, 
+                      iDUT.ID_EX_ALUOp, iDUT.ID_EX_ALUSrc, iDUT.ID_EX_Z_en, 
+                      iDUT.ID_EX_NV_en, iDUT.ID_EX_MEM_signals, iDUT.ID_EX_WB_signals}),
+      .expected_ID_EX_signals({iMODEL.ID_EX_PC_next, iMODEL.ID_EX_SrcReg1, iMODEL.ID_EX_SrcReg2, 
+                               iMODEL.ID_EX_ALU_In1, iMODEL.ID_EX_ALU_imm, iMODEL.ID_EX_ALU_In2, 
+                               iMODEL.ID_EX_ALUOp, iMODEL.ID_EX_ALUSrc, iMODEL.ID_EX_Z_en, 
+                               iMODEL.ID_EX_NV_en, iMODEL.ID_EX_MEM_signals, iMODEL.ID_EX_WB_signals}),
+      
+      .id_ex_message(id_ex_message)
+    );
+  end
 
+  // Always block for verify_EXECUTE stage
+  always @(posedge clk) begin
+    verify_EXECUTE(
+      .Input_A(iDUT.iEXECUTE.iALU.Input_A),
+      .Input_B(iDUT.iEXECUTE.iALU.Input_B),
+      .ALU_out(iDUT.ALU_out),
+      .Z_set(iDUT.iEXECUTE.iALU.Z_set),
+      .V_set(iDUT.iEXECUTE.iALU.V_set),
+      .N_set(iDUT.iEXECUTE.iALU.N_set),
+      .expected_ALU_out(iMODEL.ALU_out),
+      .ZF(iDUT.ZF),
+      .NF(iDUT.NF),
+      .VF(iDUT.VF),
+      .expected_ZF(iMODEL.ZF),
+      .expected_VF(iMODEL.VF),
+      .expected_NF(iMODEL.NF),
+      
+      .execute_msg(execute_msg)
+    );
+  end
 
-    // Always block for verify_ID_EX stage.
-    always @(posedge clk) begin
-        // Call verify_ID_EX task using iDUT and iMODEL directly
-        verify_ID_EX(
-            .ID_EX_signals({iDUT.ID_EX_PC_next, iDUT.ID_EX_SrcReg1, iDUT.ID_EX_SrcReg2, iDUT.ID_EX_ALU_In1, 
-                            iDUT.ID_EX_ALU_imm, iDUT.ID_EX_ALU_In2, iDUT.ID_EX_ALUOp, 
-                            iDUT.ID_EX_ALUSrc, iDUT.ID_EX_Z_en, iDUT.ID_EX_NV_en, 
-                            iDUT.ID_EX_MEM_signals, iDUT.ID_EX_WB_signals}),
-            .expected_ID_EX_signals({iMODEL.ID_EX_PC_next, iMODEL.ID_EX_SrcReg1, iMODEL.ID_EX_SrcReg2, iMODEL.ID_EX_ALU_In1, 
-                                    iMODEL.ID_EX_ALU_imm, iMODEL.ID_EX_ALU_In2, iMODEL.ID_EX_ALUOp, 
-                                    iMODEL.ID_EX_ALUSrc, iMODEL.ID_EX_Z_en, iMODEL.ID_EX_NV_en, 
-                                    iMODEL.ID_EX_MEM_signals, iMODEL.ID_EX_WB_signals}),
-            
-            .id_ex_message(id_ex_message)
-        );
-    end
+  // Always block for verify_EX_MEM stage
+  always @(posedge clk) begin
+    verify_EX_MEM(
+      .EX_MEM_signals({iDUT.EX_MEM_PC_next, iDUT.EX_MEM_ALU_out, iDUT.EX_MEM_SrcReg2, 
+                       iDUT.EX_MEM_MemWriteData, iDUT.EX_MEM_MemEnable, iDUT.EX_MEM_MemWrite, 
+                       iDUT.EX_MEM_WB_signals}),
+      .expected_EX_MEM_signals({iMODEL.EX_MEM_PC_next, iMODEL.EX_MEM_ALU_out, iMODEL.EX_MEM_SrcReg2, 
+                                iMODEL.EX_MEM_MemWriteData, iMODEL.EX_MEM_MemEnable, 
+                                iMODEL.EX_MEM_MemWrite, iMODEL.EX_MEM_WB_signals}),
+      
+      .ex_mem_message(ex_mem_message)
+    );
+  end
 
+  // Always block for verify_MEMORY stage
+  always @(posedge clk) begin
+    verify_MEMORY(
+      .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),
+      .MemData(iDUT.MemData),
+      .expected_MemData(iMODEL.MemData),
+      .MemWriteData(iDUT.MemWriteData),
+      .expectedMemWriteData(iMODEL.MemWriteData),
+      .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
+      .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
+      
+      .mem_verify_msg(mem_verify_msg)
+    );
+  end
 
-    // Always block for verify_EXECUTE stage.
-    always @(posedge clk) begin
-        // Call verify_EXECUTE task using named arguments.
-        verify_EXECUTE(
-            .Input_A(iDUT.iEXECUTE.iALU.Input_A),
-            .Input_B(iDUT.iEXECUTE.iALU.Input_B),
-            .ALU_out(iDUT.ALU_out),
-            .Z_set(iDUT.iEXECUTE.iALU.Z_set),
-            .V_set(iDUT.iEXECUTE.iALU.V_set),
-            .N_set(iDUT.iEXECUTE.iALU.N_set),
-            .expected_ALU_out(iMODEL.ALU_out),
-            .ZF(iDUT.ZF),
-            .NF(iDUT.NF),
-            .VF(iDUT.VF),
-            .expected_ZF(iMODEL.ZF),
-            .expected_VF(iMODEL.VF),
-            .expected_NF(iMODEL.NF),
-            
-            .execute_msg(execute_msg)
-        );
-    end
+  // Always block for verify_MEM_WB stage
+  always @(posedge clk) begin
+    verify_MEM_WB(
+      .MEM_WB_signals({iDUT.MEM_WB_PC_next, iDUT.MEM_WB_ALU_out, iDUT.MEM_WB_MemData, 
+                       iDUT.MEM_WB_reg_rd, iDUT.MEM_WB_RegWrite, iDUT.MEM_WB_MemToReg, 
+                       iDUT.MEM_WB_HLT, iDUT.MEM_WB_PCS}),
+      .expected_MEM_WB_signals({iMODEL.MEM_WB_PC_next, iMODEL.MEM_WB_ALU_out, iMODEL.MEM_WB_MemData, 
+                                iMODEL.MEM_WB_reg_rd, iMODEL.MEM_WB_RegWrite, iMODEL.MEM_WB_MemToReg, 
+                                iMODEL.MEM_WB_HLT, iMODEL.MEM_WB_PCS}),
+      
+      .mem_wb_message(mem_wb_message)
+    );
+  end
 
+  // Always block for verify_WRITEBACK stage
+  always @(posedge clk) begin
+    verify_WRITEBACK(
+      .MEM_WB_DstReg(iDUT.MEM_WB_DstReg),
+      .MEM_WB_RegWrite(iDUT.MEM_WB_RegWrite),
+      .RegWriteData(iDUT.RegWriteData),
+      .expected_RegWriteData(iMODEL.RegWriteData),
+      
+      .wb_verify_msg(wb_verify_msg)
+    );
+  end
 
-    // Always block for verify_EX_MEM stage.
-    always @(posedge clk) begin
-        verify_EX_MEM(
-            .EX_MEM_signals({iDUT.EX_MEM_PC_next, iDUT.EX_MEM_ALU_out, iDUT.EX_MEM_SrcReg2, iDUT.EX_MEM_MemWriteData, 
-                            iDUT.EX_MEM_MemEnable, iDUT.EX_MEM_MemWrite, iDUT.EX_MEM_WB_signals}),
-            .expected_EX_MEM_signals({iMODEL.EX_MEM_PC_next, iMODEL.EX_MEM_ALU_out, iMODEL.EX_MEM_SrcReg2, 
-                                      iMODEL.EX_MEM_MemWriteData, iMODEL.EX_MEM_MemEnable, 
-                                      iMODEL.EX_MEM_MemWrite, iMODEL.EX_MEM_WB_signals}),
-            
-            .ex_mem_message(ex_mem_message)
-        );
-    end
-
-
-    // Always block for verify_MEMORY stage.
-    always @(posedge clk) begin
-        // Call verify_MEMORY task using named arguments.
-        verify_MEMORY(
-            .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),
-            .MemData(iDUT.MemData),
-            .expected_MemData(iMODEL.MemData),
-            .MemWriteData(iDUT.MemWriteData),
-            .expectedMemWriteData(iMODEL.MemWriteData),
-            .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
-            .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
-            
-            .mem_verify_msg(mem_verify_msg)
-        );
-    end
-
-
-    // Always block for verify_MEM_WB stage.
-    always @(posedge clk) begin
-      verify_MEM_WB(
-            .MEM_WB_signals({iDUT.MEM_WB_PC_next, iDUT.MEM_WB_ALU_out, iDUT.MEM_WB_MemData, iDUT.MEM_WB_reg_rd, 
-                            iDUT.MEM_WB_RegWrite, iDUT.MEM_WB_MemToReg, iDUT.MEM_WB_HLT, 
-                            iDUT.MEM_WB_PCS}),
-            .expected_MEM_WB_signals({iMODEL.MEM_WB_PC_next, iMODEL.MEM_WB_ALU_out, iMODEL.MEM_WB_MemData, 
-                                      iMODEL.MEM_WB_reg_rd, iMODEL.MEM_WB_RegWrite, 
-                                      iMODEL.MEM_WB_MemToReg, iMODEL.MEM_WB_HLT, 
-                                      iMODEL.MEM_WB_PCS}),
-            
-            .mem_wb_message(mem_wb_message)
-      );
-    end
-
-
-    // Always block for verify_WRITEBACK stage.
-    always @(posedge clk) begin
-        // Call verify_WRITEBACK task using named arguments
-        verify_WRITEBACK(
-            .MEM_WB_DstReg(iDUT.MEM_WB_DstReg),
-            .MEM_WB_RegWrite(iDUT.MEM_WB_RegWrite),
-            .RegWriteData(iDUT.RegWriteData),
-            .expected_RegWriteData(iMODEL.RegWriteData),
-            
-            .wb_verify_msg(wb_verify_msg)
-        );
-    end
-
-  // Generate clock signal with 10 ns period.
+  // Generate clock signal with 10 ns period
   always 
     #5 clk = ~clk;
 

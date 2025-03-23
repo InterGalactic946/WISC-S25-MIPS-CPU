@@ -183,44 +183,46 @@ module cpu_tb();
   //   );
   // end
 
-  // // Always block for verify_ID_EX stage
-  // always @(posedge clk) begin
-  //   if (rst_n)
-  //   verify_ID_EX(
-  //     .ID_EX_signals({iDUT.ID_EX_PC_next, iDUT.ID_EX_SrcReg1, iDUT.ID_EX_SrcReg2, 
-  //                     iDUT.ID_EX_ALU_In1, iDUT.ID_EX_ALU_imm, iDUT.ID_EX_ALU_In2, 
-  //                     iDUT.ID_EX_ALUOp, iDUT.ID_EX_ALUSrc, iDUT.ID_EX_Z_en, 
-  //                     iDUT.ID_EX_NV_en, iDUT.ID_EX_MEM_signals, iDUT.ID_EX_WB_signals}),
-  //     .expected_ID_EX_signals({iMODEL.ID_EX_PC_next, iMODEL.ID_EX_SrcReg1, iMODEL.ID_EX_SrcReg2, 
-  //                              iMODEL.ID_EX_ALU_In1, iMODEL.ID_EX_ALU_imm, iMODEL.ID_EX_ALU_In2, 
-  //                              iMODEL.ID_EX_ALUOp, iMODEL.ID_EX_ALUSrc, iMODEL.ID_EX_Z_en, 
-  //                              iMODEL.ID_EX_NV_en, iMODEL.ID_EX_MEM_signals, iMODEL.ID_EX_WB_signals}),
-      
-  //     .id_ex_message(id_ex_message)
-  //   );
-  // end
+  // Always block for verify_ID_EX stage
+  always @(negedge clk) begin
+    if (rst_n) begin
+      verify_ID_EX(
+        .ID_EX_signals({iDUT.ID_EX_PC_next, iDUT.ID_EX_SrcReg1, iDUT.ID_EX_SrcReg2, 
+                        iDUT.ID_EX_ALU_In1, iDUT.ID_EX_ALU_imm, iDUT.ID_EX_ALU_In2, 
+                        iDUT.ID_EX_ALUOp, iDUT.ID_EX_ALUSrc, iDUT.ID_EX_Z_en, 
+                        iDUT.ID_EX_NV_en, iDUT.ID_EX_MEM_signals, iDUT.ID_EX_WB_signals}),
+        .expected_ID_EX_signals({iMODEL.ID_EX_PC_next, iMODEL.ID_EX_SrcReg1, iMODEL.ID_EX_SrcReg2, 
+                                iMODEL.ID_EX_ALU_In1, iMODEL.ID_EX_ALU_imm, iMODEL.ID_EX_ALU_In2, 
+                                iMODEL.ID_EX_ALUOp, iMODEL.ID_EX_ALUSrc, iMODEL.ID_EX_Z_en, 
+                                iMODEL.ID_EX_NV_en, iMODEL.ID_EX_MEM_signals, iMODEL.ID_EX_WB_signals}),
+        
+        .id_ex_message(id_ex_message)
+      );
+    end
+  end
 
-  // // Always block for verify_EXECUTE stage
-  // always @(posedge clk) begin
-  //   if (rst_n)
-  //   verify_EXECUTE(
-  //     .Input_A(iDUT.iEXECUTE.iALU.Input_A),
-  //     .Input_B(iDUT.iEXECUTE.iALU.Input_B),
-  //     .ALU_out(iDUT.ALU_out),
-  //     .Z_set(iDUT.iEXECUTE.iALU.Z_set),
-  //     .V_set(iDUT.iEXECUTE.iALU.V_set),
-  //     .N_set(iDUT.iEXECUTE.iALU.N_set),
-  //     .expected_ALU_out(iMODEL.ALU_out),
-  //     .ZF(iDUT.ZF),
-  //     .NF(iDUT.NF),
-  //     .VF(iDUT.VF),
-  //     .expected_ZF(iMODEL.ZF),
-  //     .expected_VF(iMODEL.VF),
-  //     .expected_NF(iMODEL.NF),
-      
-  //     .execute_msg(execute_msg)
-  //   );
-  // end
+  // Always block for verify_EXECUTE stage
+  always @(negedge clk) begin
+    if (rst_n) begin
+      verify_EXECUTE(
+        .Input_A(iDUT.iEXECUTE.iALU.Input_A),
+        .Input_B(iDUT.iEXECUTE.iALU.Input_B),
+        .ALU_out(iDUT.ALU_out),
+        .Z_set(iDUT.iEXECUTE.iALU.Z_set),
+        .V_set(iDUT.iEXECUTE.iALU.V_set),
+        .N_set(iDUT.iEXECUTE.iALU.N_set),
+        .expected_ALU_out(iMODEL.ALU_out),
+        .ZF(iDUT.ZF),
+        .NF(iDUT.NF),
+        .VF(iDUT.VF),
+        .expected_ZF(iMODEL.ZF),
+        .expected_VF(iMODEL.VF),
+        .expected_NF(iMODEL.NF),
+        
+        .execute_msg(execute_msg)
+      );
+    end
+  end
 
   // Always block for verify_EX_MEM stage.
   always @(negedge clk) begin
@@ -256,7 +258,7 @@ module cpu_tb();
   end
 
   // Always block for verify_MEM_WB stage
-  always @(posedge clk) begin
+  always @(negedge clk) begin
     if (rst_n) begin
       verify_MEM_WB(
         .MEM_WB_signals({iDUT.MEM_WB_PC_next, iDUT.MEM_WB_ALU_out, iDUT.MEM_WB_MemData, 
@@ -272,7 +274,7 @@ module cpu_tb();
   end
 
   // Always block for verify_WRITEBACK stage
-  always @(posedge clk) begin
+  always @(negedge clk) begin
     if (rst_n) begin
       verify_WRITEBACK(
         .MEM_WB_DstReg(iDUT.MEM_WB_reg_rd),

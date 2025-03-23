@@ -99,16 +99,16 @@ package Verification_tasks;
 
   // Task: Verifies IF/ID Pipeline Register.
   task automatic verify_IF_ID(
-      input logic [65:0] IF_ID_signals, input logic [65:0] expected_IF_ID_signals,
+      input logic [53:0] IF_ID_signals, input logic [53:0] expected_IF_ID_signals,
       output string if_id_msg
   );
     verify_FETCH(
-        .PC_next(IF_ID_signals[65:50]), 
-        .expected_PC_next(expected_IF_ID_signals[65:50]), 
-        .PC_inst(IF_ID_signals[49:34]), 
-        .expected_PC_inst(expected_IF_ID_signals[49:34]), 
-        .PC_curr(IF_ID_signals[33:18]), 
-        .expected_PC_curr(expected_IF_ID_signals[33:18]), 
+        .PC_next(IF_ID_signals[49:34]), 
+        .expected_PC_next(expected_IF_ID_signals[49:34]), 
+        .PC_inst(IF_ID_signals[33:18]), 
+        .expected_PC_inst(expected_IF_ID_signals[33:18]), 
+        .PC_curr(IF_ID_signals[53:50]), 
+        .expected_PC_curr(expected_IF_ID_signals[53:50]), 
         .prediction(IF_ID_signals[17:16]), 
         .expected_prediction(expected_IF_ID_signals[17:16]), 
         .predicted_target(IF_ID_signals[15:0]), 

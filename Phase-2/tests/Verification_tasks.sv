@@ -426,7 +426,7 @@ package Verification_tasks;
       verify_WB(.WB_signals(EX_MEM_signals[7:0]), .expected_WB_signals(expected_EX_MEM_signals[7:0]), .stage("EX_MEM"), .stage_msg(ex_mem_message));
 
       // Print the success message.
-      ex_mem_message = "[EX_MEM] SUCCESS: All signals valid."
+      ex_mem_message = "[EX_MEM] SUCCESS: All signals valid.";
   endtask
 
 

@@ -21,7 +21,6 @@ module cpu_tb();
   logic hlt, expected_hlt;    // Halt signals for execution stop for each DUT and model
   logic [15:0] expected_pc;   // Expected program counter value for verification
   logic [15:0] pc;            // Current program counter value
-  string fetch_stage;         // Indicates fetch stage
   logic stall, flush;         // Indicates a stall and/or a flush in the pipeline.
 
   // Messages from each stage.
@@ -70,11 +69,10 @@ module cpu_tb();
 
   // Test procedure to apply stimulus and check responses.
   initial begin
-    // Initialize the string.
-    fetch_stage = "FETCH";
-
     // Initialize the testbench
     Initialize(.clk(clk), .rst_n(rst_n));
+
+    @(posedge clk);
 
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
     TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
@@ -119,7 +117,7 @@ module cpu_tb();
   end
 
   // Always block for verify_FETCH stage
-  always @(negedge clk) begin
+  always @(posedge clk) begin
     if (rst_n) begin
       verify_FETCH(
         .PC_next(iDUT.PC_next),
@@ -134,7 +132,7 @@ module cpu_tb();
         .expected_predicted_target(iMODEL.predicted_target),
         
         .stage(fetch_stage),
-        .stage_msg(fetch_msg)
+        .stage_msg("FETCH")
       );
     end
   end

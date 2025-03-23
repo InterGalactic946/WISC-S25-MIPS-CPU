@@ -48,9 +48,9 @@ package Display_tasks;
               4'h0, 4'h1, 4'h2, 4'h3, 4'h7: // Instructions with 2 registers (like ADD, SUB, XOR, etc.)
                 instr_state = $sformatf("Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, rd = 0x%h.", opcode, instr_name, rs, rt, rd);
               4'h4, 4'h5, 4'h6, 4'h8, 4'h9: // LW and SW have an immediate but no rd register.
-                instr_state = $sformatf("Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, imm = 0x%h.", opcode, instr_name, rs, rd, imm);
+                instr_state = $sformatf("Opcode = 0b%4b, Instr: %s, rs = 0x%h, rt = 0x%h, imm = 0x%h.", opcode, instr_name, rs, rd, ALU_imm);
               4'hA, 4'hB: // LLB and LHB have an immediate but no rt register.
-                instr_state = $sformatf("Opcode = 0b%4b, Instr: %s, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rd, imm);              
+                instr_state = $sformatf("Opcode = 0b%4b, Instr: %s, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rd, ALU_imm);              
               4'hC, 4'hD: begin // B, BR instructions
                 if (opcode === 4'hC) begin
                     if (actual_taken)

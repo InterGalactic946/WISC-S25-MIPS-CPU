@@ -56,7 +56,6 @@ package Verification_tasks;
               return;  // Exit task on error
           end
         
-        // Print if there is a stall/flush in the PC/IF_ID registers.
         // If all checks pass, store success message.
         if (prediction[1]) begin
             // Branch is predicted taken.
@@ -88,7 +87,7 @@ package Verification_tasks;
         .predicted_target(IF_ID_signals[15:0]), 
         .expected_predicted_target (expected_IF_ID_signals[15:0]),
         .stage("IF_ID"),
-        .stage_message(if_id_msg)
+        .stage_msg(if_id_msg)
     );
   endtask
 
@@ -522,7 +521,7 @@ package Verification_tasks;
 
       // If all checks pass, output success message.
       if (MEM_WB_RegWrite) begin
-        wb_verify_msg = $sformatf("[WRITE-BACK] SUCCESS: Register R[%0d] written with data: 0x%h.", MEM_WB_DestReg, RegWriteData);
+        wb_verify_msg = $sformatf("[WRITE-BACK] SUCCESS: Register R[%0d] written with data: 0x%h.", MEM_WB_DstReg, RegWriteData);
       end else begin
         wb_verify_msg = "[WRITE-BACK] SUCCESS: No register write in this cycle.";
       end

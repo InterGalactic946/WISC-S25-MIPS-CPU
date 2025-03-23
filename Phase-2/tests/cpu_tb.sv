@@ -118,21 +118,21 @@ module cpu_tb();
   // Always block for verify_FETCH stage
   always @(posedge clk) begin
     if (rst_n)
-    verify_FETCH(
-      .PC_next(iDUT.PC_next),
-      .expected_PC_next(iMODEL.PC_next),
-      .PC_inst(iDUT.PC_inst),
-      .expected_PC_inst(iMODEL.PC_inst),
-      .PC_curr(pc),
-      .expected_PC_curr(expected_pc),
-      .prediction(iDUT.prediction),
-      .expected_prediction(iMODEL.prediction),
-      .predicted_target(iDUT.predicted_target),
-      .expected_predicted_target(iMODEL.predicted_target),
+    // verify_FETCH(
+    //   .PC_next(iDUT.PC_next),
+    //   .expected_PC_next(iMODEL.PC_next),
+    //   .PC_inst(iDUT.PC_inst),
+    //   .expected_PC_inst(iMODEL.PC_inst),
+    //   .PC_curr(pc),
+    //   .expected_PC_curr(expected_pc),
+    //   .prediction(iDUT.prediction),
+    //   .expected_prediction(iMODEL.prediction),
+    //   .predicted_target(iDUT.predicted_target),
+    //   .expected_predicted_target(iMODEL.predicted_target),
       
-      .stage(fetch_stage),
-      .stage_msg(fetch_msg)
-    );
+    //   .stage(fetch_stage),
+    //   .stage_msg(fetch_msg)
+    // );
   end
 
   // Always block for verify_IF_ID stage

@@ -209,7 +209,6 @@ module cpu (clk, rst_n, hlt, pc);
       .Branch(Branch),
       .BR(BR),
       .update_PC(update_PC),
-      .actual_taken(actual_taken),
       .HLT(WB_signals[1]),
       
       .PC_stall(PC_stall),

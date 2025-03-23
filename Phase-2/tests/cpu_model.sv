@@ -207,7 +207,6 @@ module cpu_model (clk, rst_n, hlt, pc);
       .Branch(Branch),
       .BR(BR),
       .update_PC(update_PC),
-      .actual_taken(actual_taken),
       .HLT(WB_signals[1]),
       
       .PC_stall(PC_stall),
@@ -311,8 +310,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   memory iDATA_MEM  (.data_out(MemData),
                       .data_in(MemWriteData),
                       .addr(EX_MEM_ALU_out),
-                      .data(1'b1),
-                      .enable(EX_MEM_MemEnable),
+\                     .enable(EX_MEM_MemEnable),
                       .wr(EX_MEM_MemWrite),
                       .clk(clk),
                       .rst(rst)

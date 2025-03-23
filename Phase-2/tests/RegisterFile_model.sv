@@ -12,7 +12,7 @@ module RegisterFile_model (clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData
   input logic [3:0] DstReg;              // 4-bit register ID for the destination register
   input logic WriteReg;                  // used to enable writing to a register
   input logic [15:0] DstData;            // 16-bit data to be written to the destination register
-  inout logic [15:0] SrcData1, SrcData2; // read outputs of both source registers
+  output logic [15:0] SrcData1, SrcData2; // read outputs of both source registers
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //

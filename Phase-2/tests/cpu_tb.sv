@@ -116,8 +116,8 @@ module cpu_tb();
   end
 
   // Always block for verify_FETCH stage
-  always @(posedge clk) begin
-    if (rst_n)
+  //always @(posedge clk) begin
+    //if (rst_n)
     // verify_FETCH(
     //   .PC_next(iDUT.PC_next),
     //   .expected_PC_next(iMODEL.PC_next),
@@ -133,7 +133,7 @@ module cpu_tb();
     //   .stage(fetch_stage),
     //   .stage_msg(fetch_msg)
     // );
-  end
+  //end
 
   // Always block for verify_IF_ID stage
   always @(posedge clk) begin

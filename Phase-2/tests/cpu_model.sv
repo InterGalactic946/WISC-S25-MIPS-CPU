@@ -7,9 +7,6 @@
 // instruction memory, program counter, ALU, registers,  //
 // and control unit to facilitate program execution.     //
 ///////////////////////////////////////////////////////////
-
-import Monitor_tasks::*;
-
 module cpu_model (clk, rst_n, hlt, pc);
 
   input logic clk;         // System clock

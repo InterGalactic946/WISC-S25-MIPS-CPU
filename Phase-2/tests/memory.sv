@@ -1,3 +1,4 @@
+import Monitor_tasks::*;
 
 module memory (data_out, data_in, addr, enable, wr, clk, rst);
 

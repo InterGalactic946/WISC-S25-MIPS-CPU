@@ -44,24 +44,24 @@ module ControlUnit_model (
     ////////////////////////////////////////////////////
     always_comb begin
      ALUSrc = 1'b0;   
-              MemtoReg = 1'b0;
-              RegWrite = 1'b1; 
-              MemEnable = 1'b0;
-              MemWrite = 1'b0; 
-              Branch = 1'b0; 
-              RegSrc = 1'b0;  
-              PCS = 1'b0;    
-              HLT = 1'b0;     
-              ALUOp = Opcode;
-              Z_en = 1'b0;    
-              NV_en = 1'b0; 
-              branch_taken = 1'b0;
-              mispredicted = 1'b0;
-              target_miscomputed = 1'b0;
-              wen_BTB = 1'b0;
-              wen_BHT = 1'b0;
-              update_PC = 1'b0;
-    // Decode the control signals based on the opcode.
+     MemtoReg = 1'b0;
+     RegWrite = 1'b1; 
+     MemEnable = 1'b0;
+     MemWrite = 1'b0; 
+     Branch = 1'b0; 
+     RegSrc = 1'b0;  
+     PCS = 1'b0;    
+     HLT = 1'b0;     
+     ALUOp = Opcode;
+     Z_en = 1'b0;    
+     NV_en = 1'b0; 
+     branch_taken = 1'b0;
+     mispredicted = 1'b0;
+     target_miscomputed = 1'b0;
+     wen_BTB = 1'b0;
+     wen_BHT = 1'b0;
+     update_PC = 1'b0;
+      // Decode the control signals based on the opcode.
       case (Opcode)
           4'b0000, 4'b0001: begin  // ADD, SUB (opcode 0, 1, 2, 3, 7)
             Z_en = 1'b1;           // Z flag enable

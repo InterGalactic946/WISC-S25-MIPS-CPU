@@ -421,7 +421,7 @@ package Verification_tasks;
       end
 
       if (NF !== expected_NF) begin
-          execute_msg = $sformatf("[EXECUTE] ERROR: NF: 0x%h, expected_ZF: 0x%h.", NF, expected_NF);
+          execute_msg = $sformatf("[EXECUTE] ERROR: NF: 0x%h, expected_NF: 0x%h.", NF, expected_NF);
         return;
       end
       

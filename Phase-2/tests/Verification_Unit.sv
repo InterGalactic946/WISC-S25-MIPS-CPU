@@ -83,8 +83,8 @@ module Verification_Unit (
 
             // Execute Stage (ID/EX pipeline register & execute)
             if (execute_id >= 0) begin
-                pipeline_msgs[decode_id].id_ex_hz_message[id_ex_idx] <= if_id_hz_message;
-                pipeline_msgs[decode_id].flush_message[id_ex_idx] <= flush_message;
+                pipeline_msgs[execute_id].id_ex_hz_message[id_ex_idx] <= if_id_hz_message;
+                pipeline_msgs[execute_id].flush_message[id_ex_idx] <= flush_message;
                 pipeline_msgs[execute_id].id_ex_msg   <= id_ex_message;
                 pipeline_msgs[execute_id].execute_msg   <= execute_msg;
                 pipeline_msgs[execute_id].id_ex_cycle <= $time / 10;

@@ -8,8 +8,6 @@
 // and control unit to facilitate program execution.     //
 ///////////////////////////////////////////////////////////
 
-import Monitor_tasks::*;
-
 module cpu_model (clk, rst_n, hlt, pc);
 
   input logic clk;         // System clock
@@ -84,6 +82,11 @@ module cpu_model (clk, rst_n, hlt, pc);
   logic [15:0] EX_MEM_PC_next;      // Pipelined next instruction (previous PC_next) address from the fetch stage
 
   /* MEMORY stage signals */
+  typedef struct {
+    logic [15:0] mem_addr [0:65535]; 
+    logic [15:0] data_mem [0:65535];
+  } model_data_mem_t;
+
   model_data_mem_t data_mem;        // Model data memory
   logic [15:0] MemData;             // Data read from memory
   logic [15:0] MemWriteData;        // Data written to memory

@@ -500,7 +500,7 @@ package Verification_tasks;
       verify_WB(.WB_signals(MEM_WB_signals[7:0]), .expected_WB_signals(expected_MEM_WB_signals[7:0]), .stage("MEM_WB"), .stage_msg(mem_wb_message));
 
       // Print the success message.
-      mem_wb_message = "[MEM_WB] SUCCESS: All signals valid."
+      mem_wb_message = "[MEM_WB] SUCCESS: All signals valid.";
   endtask
 
 

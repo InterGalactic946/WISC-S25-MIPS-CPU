@@ -250,20 +250,21 @@ module cpu_tb();
   //   );
   // end
 
-  // // Always block for verify_MEM_WB stage
-  // always @(posedge clk) begin
-  //   if (rst_n)
-  //   verify_MEM_WB(
-  //     .MEM_WB_signals({iDUT.MEM_WB_PC_next, iDUT.MEM_WB_ALU_out, iDUT.MEM_WB_MemData, 
-  //                      iDUT.MEM_WB_reg_rd, iDUT.MEM_WB_RegWrite, iDUT.MEM_WB_MemToReg, 
-  //                      iDUT.MEM_WB_HLT, iDUT.MEM_WB_PCS}),
-  //     .expected_MEM_WB_signals({iMODEL.MEM_WB_PC_next, iMODEL.MEM_WB_ALU_out, iMODEL.MEM_WB_MemData, 
-  //                               iMODEL.MEM_WB_reg_rd, iMODEL.MEM_WB_RegWrite, iMODEL.MEM_WB_MemToReg, 
-  //                               iMODEL.MEM_WB_HLT, iMODEL.MEM_WB_PCS}),
-      
-  //     .mem_wb_message(mem_wb_message)
-  //   );
-  // end
+  // Always block for verify_MEM_WB stage
+  always @(posedge clk) begin
+    if (rst_n) begin
+      verify_MEM_WB(
+        .MEM_WB_signals({iDUT.MEM_WB_PC_next, iDUT.MEM_WB_ALU_out, iDUT.MEM_WB_MemData, 
+                        iDUT.MEM_WB_reg_rd, iDUT.MEM_WB_RegWrite, iDUT.MEM_WB_MemToReg, 
+                        iDUT.MEM_WB_HLT, iDUT.MEM_WB_PCS}),
+        .expected_MEM_WB_signals({iMODEL.MEM_WB_PC_next, iMODEL.MEM_WB_ALU_out, iMODEL.MEM_WB_MemData, 
+                                  iMODEL.MEM_WB_reg_rd, iMODEL.MEM_WB_RegWrite, iMODEL.MEM_WB_MemToReg, 
+                                  iMODEL.MEM_WB_HLT, iMODEL.MEM_WB_PCS}),
+        
+        .mem_wb_message(mem_wb_message)
+      );
+    end
+  end
 
   // Always block for verify_WRITEBACK stage
   always @(posedge clk) begin

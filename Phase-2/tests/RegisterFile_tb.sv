@@ -27,7 +27,7 @@ module RegisterFile_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  RegisterFile iDUT (.clk(clk), .rst(rst), .SrcReg1(stim[12:9]), .SrcReg2(stim[8:5]), .DstReg(stim[4:1]), .WriteReg(wen), .DstData(stim[28:13]), .SrcData1(src_data_1), .SrcData2(src_data_2));
+  RegisterFile_model iDUT (.clk(clk), .rst(rst), .SrcReg1(stim[12:9]), .SrcReg2(stim[8:5]), .DstReg(stim[4:1]), .WriteReg(wen), .DstData(stim[28:13]), .SrcData1(src_data_1), .SrcData2(src_data_2));
 
   task automatic read_write_reg(
     input reg [3:0] reg_read1,   // First register to read from

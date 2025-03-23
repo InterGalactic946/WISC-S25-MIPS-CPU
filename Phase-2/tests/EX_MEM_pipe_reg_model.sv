@@ -25,7 +25,7 @@ module EX_MEM_pipe_reg_model (
   //////////////////////////////////////////////////////////////////////////////
   always @(posedge clk)
     if (rst)
-      ID_EX_PC_next <= 16'h0000;
+      EX_MEM_PC_next <= 16'h0000;
     else
       EX_MEM_PC_next <= ID_EX_PC_next;
   //////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ module EX_MEM_pipe_reg_model (
   //////////////////////////////////////////////////////////////
   always @(posedge clk)
     if (rst)
-      ID_EX_PC_next <= 16'h0000;
+      EX_MEM_ALU_out <= 16'h0000;
     else
       EX_MEM_ALU_out <= ALU_out;
   //////////////////////////////////////////////////////////////

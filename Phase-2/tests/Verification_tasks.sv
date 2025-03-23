@@ -40,46 +40,47 @@ package Verification_tasks;
 
 
   // Task: A task to verify the FETCH stage.
-  function automatic verify_FETCH(
+  task automatic verify_FETCH(
       input logic [15:0] PC_next, expected_PC_next,
       input logic [15:0] PC_inst, expected_PC_inst,
       input logic [15:0] PC_curr, expected_PC_curr,
       input logic [1:0]  prediction, expected_prediction,
       input logic [15:0] predicted_target, expected_predicted_target,
-      input string stage
-   );
+      input string stage,
+      ref string stage_msg 
+  );
     begin
         // Initialize message.
-        string stage_msg = "";
+        stage_msg = "";
 
           // Verify the PC next.
           if (PC_next !== expected_PC_next) begin
               stage_msg = $sformatf("[%s] ERROR: PC_next: 0x%h, expected_PC_next: 0x%h.", stage, PC_next, expected_PC_next);
-              return stage_msg;  // Exit task on error
+              return;  // Exit task on error
           end
 
           // Verify the PC instruction.
           if (PC_inst !== expected_PC_inst) begin
               stage_msg = $sformatf("[%s] ERROR: PC_inst: 0x%h, expected_PC_inst: 0x%h.", stage, PC_inst, expected_PC_inst);
-              return stage_msg;  // Exit task on error
+              return;  // Exit task on error
           end
 
           // Verify the PC.
           if (PC_curr !== expected_PC_curr) begin
               stage_msg = $sformatf("[%s] ERROR: PC_curr: 0x%h, expected_PC_curr: 0x%h.", stage, PC_curr, expected_PC_curr);
-              return stage_msg;  // Exit task on error
+              return;  // Exit task on error
           end
 
           // Verify the prediction.
           if (prediction !== expected_prediction) begin
               stage_msg = $sformatf("[%s] ERROR: predicted_taken: %b, expected_predicted_taken: %b.", stage, prediction[1], expected_prediction[1]);
-              return stage_msg;  // Exit task on error
+              return;  // Exit task on error
           end
 
           // Verify the predicted target.
           if (predicted_target !== expected_predicted_target) begin
               stage_msg = $sformatf("[%s] ERROR: predicted_target: 0x%h, expected_pred_target: 0x%h.", stage, predicted_target, expected_predicted_target);
-              return stage_msg;  // Exit task on error
+              return;  // Exit task on error
           end
           
           // If all checks pass, store success message.
@@ -92,10 +93,8 @@ package Verification_tasks;
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
                                                 stage, PC_curr, PC_next, PC_inst);
           end
-
-          return stage_msg;
     end
-  endfunction
+  endtask
 
 
   // Task: Verifies IF/ID Pipeline Register.

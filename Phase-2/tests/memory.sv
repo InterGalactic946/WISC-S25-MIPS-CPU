@@ -16,13 +16,13 @@ module memory (data_out, data_in, addr, enable, wr, clk, rst);
    // Parameter for the width of the address bus
    parameter ADDR_WIDTH = 16;
     
-    output  [15:0] data_out,                // Output data read from memory
-    input  [15:0] data_in,                  // Input data to be written to memory
-    input  [ADDR_WIDTH-1:0] addr,           // Address to read/write from memory
-    input          enable,                  // Enable signal for memory operations
-    input          wr,                      // Write signal (1 for write, 0 for read)
-    input          clk,                     // Clock signal for synchronizing operations
-    input          rst                      // Reset signal to initialize memory
+    output  [15:0] data_out;                // Output data read from memory
+    input  [15:0] data_in;                  // Input data to be written to memory
+    input  [ADDR_WIDTH-1:0] addr;           // Address to read/write from memory
+    input          enable;                 // Enable signal for memory operations
+    input          wr;                     // Write signal (1 for write, 0 for read)
+    input          clk;                     // Clock signal for synchronizing operations
+    input          rst;                      // Reset signal to initialize memory
 
    // Internal signal to hold the output data
    logic [15:0]    data_out;

@@ -14,6 +14,19 @@ module cpu_tb();
   import Monitor_tasks::*;
   import Verification_tasks::*;
 
+  ///////////////////////////
+  // Stimulus of type reg //
+  /////////////////////////
+  logic clk, rst_n;           // Clock and reset signals
+  logic hlt, expected_hlt;    // Halt signals for execution stop for each DUT and model
+  logic [15:0] expected_pc;   // Expected program counter value for verification
+  logic [15:0] pc;            // Current program counter value
+  logic stall, flush;         // Indicates a stall and/or a flush in the pipeline.
+
+  // Messages from each stage.
+  string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_message, 
+         execute_msg, ex_mem_message, mem_verify_msg, mem_wb_message, wb_verify_msg;
+
   //////////////////////
   // Instantiate DUT //
   ////////////////////
@@ -53,19 +66,6 @@ module cpu_tb();
     .stall(stall),
     .flush(flush)
   );
-
-  ///////////////////////////
-  // Stimulus of type reg //
-  /////////////////////////
-  logic clk, rst_n;           // Clock and reset signals
-  logic hlt, expected_hlt;    // Halt signals for execution stop for each DUT and model
-  logic [15:0] expected_pc;   // Expected program counter value for verification
-  logic [15:0] pc;            // Current program counter value
-  logic stall, flush;         // Indicates a stall and/or a flush in the pipeline.
-
-  // Messages from each stage.
-  string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_message, 
-         execute_msg, ex_mem_message, mem_verify_msg, mem_wb_message, wb_verify_msg;
 
   // Test procedure to apply stimulus and check responses.
   initial begin

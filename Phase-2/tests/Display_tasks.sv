@@ -39,6 +39,7 @@ package Display_tasks;
   task automatic display_decoded_info(input logic [3:0] opcode, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] ALU_imm, input logic actual_taken, input logic [15:0] actual_target, output string instr_state);
       begin
           // Local var for instruction name.
+          string instr_name;
 
           // Decode the instruction name.
           get_instr_name(.opcode(opcode), .instr_name(instr_name));  // Decode the opcode to instruction name

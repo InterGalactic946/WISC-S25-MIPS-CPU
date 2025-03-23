@@ -51,16 +51,17 @@ package Display_tasks;
               4'hA, 4'hB: // LLB and LHB have an immediate but no rt register.
                 instr_state = $sformatf("Opcode = 0b%4b, Instr: %s, rd = 0x%h, imm = 0x%h.", opcode, instr_name, rd, imm);              
               4'hC, 4'hD: begin // B, BR instructions
-                4'hC:
+                if (opcode === 4'hC) begin
                     if (actual_taken)
                         instr_state = $sformatf("Branch (B) is actually taken. The actual target is: 0x%h.", actual_target);
                     else 
                         instr_state = $sformatf("Branch (B) is actually NOT taken. The actual target is: 0x%h.", actual_target);
-                4'hD:
+                end else if (opcode === 4'hD) begin
                     if (actual_taken)
                         instr_state = $sformatf("Branch (BR) is actually taken. The actual target is: 0x%h.", actual_target);
                     else 
                         instr_state = $sformatf("Branch (BR) is actually NOT taken. The actual target is: 0x%h.", actual_target);
+                end
               end
               4'hE: // (PCS) does not have registers like `rs`, `rt`. It only has a destination register `rd`.
                 instr_state = $sformatf("Opcode = 0b%4b, Instr: %s, rd = 0x%h.", opcode, instr_name, rd);

@@ -265,18 +265,19 @@ module cpu_tb();
   //   );
   // end
 
-  // // Always block for verify_WRITEBACK stage
-  // always @(posedge clk) begin
-  //   if (rst_n)
-  //   verify_WRITEBACK(
-  //     .MEM_WB_DstReg(iDUT.MEM_WB_reg_rd),
-  //     .MEM_WB_RegWrite(iDUT.MEM_WB_RegWrite),
-  //     .RegWriteData(iDUT.RegWriteData),
-  //     .expected_RegWriteData(iMODEL.RegWriteData),
-      
-  //     .wb_verify_msg(wb_verify_msg)
-  //   );
-  // end
+  // Always block for verify_WRITEBACK stage
+  always @(posedge clk) begin
+    if (rst_n) begin
+      verify_WRITEBACK(
+        .MEM_WB_DstReg(iDUT.MEM_WB_reg_rd),
+        .MEM_WB_RegWrite(iDUT.MEM_WB_RegWrite),
+        .RegWriteData(iDUT.RegWriteData),
+        .expected_RegWriteData(iMODEL.RegWriteData),
+        
+        .wb_verify_msg(wb_verify_msg)
+      );
+    end
+  end
 
   // Generate clock signal with 10 ns period
   always 

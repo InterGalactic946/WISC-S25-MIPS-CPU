@@ -107,7 +107,7 @@ module cpu_tb();
         
         // Log the regfile contents.
         if (iDUT.MEM_WB_RegWrite)
-          log_regfile_dump(.regfile(regfile));
+          log_regfile_dump(.regfile(iMODEL.iDECODE.iRF.regfile));
       end
   end
 

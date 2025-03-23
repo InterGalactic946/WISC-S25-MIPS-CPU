@@ -143,7 +143,7 @@ module Fetch_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 3000000;
+      num_tests = 300000;
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);

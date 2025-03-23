@@ -32,16 +32,23 @@ module RegisterFile_model (clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData
   always_ff @(posedge clk) begin
     if (rst) begin
       // Reset all registers to zero
-      regfile <= '{default: 16'h0000};
       ReadData1 <= 16'h0000;
       ReadData2 <= 16'h0000;
-    end else if(WriteReg) begin
-      // Write operation (avoid writing to register 0).
-      regfile[DstReg] <= DstData_operand;
     end else begin
       // Read values on clock edge
       ReadData1 <= regfile[SrcReg1];
       ReadData2 <= regfile[SrcReg2];
+    end
+  end
+
+  // Synchronous Write Process.
+  always_ff @(posedge clk) begin
+    if (rst) begin
+      // Reset all registers to zero
+      regfile <= '{default: 16'h0000};
+    end else if(WriteReg) begin
+      // Write operation (avoid writing to register 0).
+      regfile[DstReg] <= DstData_operand;
     end
   end
 

@@ -618,6 +618,7 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
         resolved_files = []
     if dep_file not in resolved_files:
         resolved_files.insert(0, dep_file)
+        print(f"Added {dep_file} to resolved_files.")  # Debugging statement
 
     # Build module and package definitions if not provided.
     if module_definitions is None or package_definitions is None:
@@ -628,41 +629,38 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
         module_def_pattern = re.compile(r'^\s*module\s+(\w+)', re.MULTILINE)
         package_def_pattern = re.compile(r'^\s*package\s+(\w+)', re.MULTILINE)
 
-        # Scan .v files in DESIGNS_DIR and .sv files in TESTS_DIR separately
-        # First, scan for .v files in the DESIGN_DIR (for modules)
-        for root, _, files in os.walk(DESIGNS_DIR):  # Scan for design files
-            for file in files:
-                if file.endswith('.v'):  # Only scan .v files in DESIGN_DIR
-                    file_path = os.path.join(root, file)
-                    with open(file_path, 'r') as f:
-                        content = f.read()
-                        # Find module definitions and add to the map.
-                        for match in module_def_pattern.finditer(content):
-                            module_name = match.group(1)
-                            module_definitions.setdefault(module_name, file_path)
+        # Scan all .v files in the DESIGN_DIR (for modules) and .sv files in the TESTS_DIR (for packages).
+        for directory in [DESIGNS_DIR]:
+            for root, _, files in os.walk(directory): # Scan for design files
+                for file in files:
+                    if file.endswith('.v'):  # Only scan .v files in DESIGN_DIR
+                        file_path = os.path.join(root, file)
+                        with open(file_path, 'r') as f:
+                            content = f.read()
+                            # Find module definitions and add to the map.
+                            for match in module_def_pattern.finditer(content):
+                                module_name = match.group(1)
+                                module_definitions.setdefault(module_name, file_path)
+                                print(f"Module found in .v file: {module_name} in {file_path}")  # Debugging statement
 
-        # Then, scan for .sv files (modules) in TESTS_DIR
-        for root, _, files in os.walk(TESTS_DIR):  # Scan for package files
-            for file in files:
-                if file.endswith('.sv'):  # Only scan .sv files in TESTS_DIR
-                    file_path = os.path.join(root, file)
-                    with open(file_path, 'r') as f:
-                        content = f.read()
-                        # Find module definitions and add to the map.
-                        for match in module_def_pattern.finditer(content):
-                            module_name = match.group(1)
-                            module_definitions.setdefault(module_name, file_path)
+        for directory in [TESTS_DIR]:
+            for root, _, files in os.walk(directory):  # Scan for .sv files for modules and packages
+                for file in files:
+                    if file.endswith('.sv'):  # Scan .sv files in TESTS_DIR
+                        file_path = os.path.join(root, file)
+                        with open(file_path, 'r') as f:
+                            content = f.read()
+                            # Find module definitions and add to the map.
+                            for match in module_def_pattern.finditer(content):
+                                module_name = match.group(1)
+                                module_definitions.setdefault(module_name, file_path)
+                                print(f"Module found in .sv file: {module_name} in {file_path}")  # Debugging statement
 
-        for root, _, files in os.walk(TESTS_DIR):  # Scan for package files
-            for file in files:
-                if file.endswith('.sv'):  # Package files are .sv
-                    file_path = os.path.join(root, file)
-                    with open(file_path, 'r') as f:
-                        content = f.read()
-                        # Find package definitions and add to the map.
-                        for match in package_def_pattern.finditer(content):
-                            package_name = match.group(1)
-                            package_definitions.setdefault(package_name, file_path)
+                            # Find package definitions and add to the map.
+                            for match in package_def_pattern.finditer(content):
+                                package_name = match.group(1)
+                                package_definitions.setdefault(package_name, file_path)
+                                print(f"Package found: {package_name} in {file_path}")  # Debugging statement
 
     # Regular expressions for identifying dependencies in the testbench file.
     module_inst_pattern = re.compile(r'^\s*(\w+)\s*(#\([^)]*\))?\s+\w+\s*(\[[^\]]*\])?\s*\(.*?\);', re.DOTALL | re.MULTILINE)
@@ -677,19 +675,24 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
     dependencies.update(match.group(1) for match in module_inst_pattern.finditer(v_file_content))
     dependencies.update(match.group(1) for match in import_pattern.finditer(v_file_content))
 
+    print(f"Dependencies found in {dep_file}: {dependencies}")  # Debugging statement
+
     # Resolve dependencies recursively, ensuring each file is processed only once.
     for dep in dependencies:
+        print(f"Resolving dependency: {dep}")  # Debugging statement
         if dep in module_definitions:
             dep_file = module_definitions[dep]
             if dep_file not in resolved_files:
                 resolved_files.insert(0, dep_file)
+                print(f"Added {dep_file} for module {dep}")  # Debugging statement
                 find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
         elif dep in package_definitions:
             dep_file = package_definitions[dep]
             if dep_file not in resolved_files:
                 resolved_files.insert(0, dep_file)
+                print(f"Added {dep_file} for package {dep}")  # Debugging statement
                 find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
-    
+
     return resolved_files
 
 

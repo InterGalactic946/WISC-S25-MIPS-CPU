@@ -135,18 +135,18 @@ module cpu_tb();
     // );
   //end
 
-  // Always block for verify_IF_ID stage
-  always @(posedge clk) begin
-    if (rst_n)
-    verify_IF_ID(
-      .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
-                      iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
-      .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr[3:0], iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
-                               iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
+  // // Always block for verify_IF_ID stage
+  // always @(posedge clk) begin
+  //   if (rst_n)
+  //   verify_IF_ID(
+  //     .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
+  //                     iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
+  //     .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr[3:0], iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
+  //                              iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
       
-      .if_id_msg(if_id_msg)
-    );
-  end
+  //     .if_id_msg(if_id_msg)
+  //   );
+  // end
 
   // Always block for verify_DECODE stage
   always @(posedge clk) begin

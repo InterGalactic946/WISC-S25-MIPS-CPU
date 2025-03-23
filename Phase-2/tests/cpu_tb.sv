@@ -113,6 +113,7 @@ module cpu_tb();
 
   // Always block for verify_FETCH stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_FETCH(
       .PC_next(iDUT.PC_next),
       .expected_PC_next(iMODEL.PC_next),
@@ -132,6 +133,7 @@ module cpu_tb();
 
   // Always block for verify_IF_ID stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_IF_ID(
       .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
                       iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
@@ -144,6 +146,7 @@ module cpu_tb();
 
   // Always block for verify_DECODE stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_DECODE(
       .EX_signals(iDUT.EX_signals),
       .expected_EX_signals(iMODEL.EX_signals),
@@ -175,6 +178,7 @@ module cpu_tb();
 
   // Always block for verify_ID_EX stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_ID_EX(
       .ID_EX_signals({iDUT.ID_EX_PC_next, iDUT.ID_EX_SrcReg1, iDUT.ID_EX_SrcReg2, 
                       iDUT.ID_EX_ALU_In1, iDUT.ID_EX_ALU_imm, iDUT.ID_EX_ALU_In2, 
@@ -191,6 +195,7 @@ module cpu_tb();
 
   // Always block for verify_EXECUTE stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_EXECUTE(
       .Input_A(iDUT.iEXECUTE.iALU.Input_A),
       .Input_B(iDUT.iEXECUTE.iALU.Input_B),
@@ -212,6 +217,7 @@ module cpu_tb();
 
   // Always block for verify_EX_MEM stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_EX_MEM(
       .EX_MEM_signals({iDUT.EX_MEM_PC_next, iDUT.EX_MEM_ALU_out, iDUT.EX_MEM_SrcReg2, 
                        iDUT.EX_MEM_MemWriteData, iDUT.EX_MEM_MemEnable, iDUT.EX_MEM_MemWrite, 
@@ -226,6 +232,7 @@ module cpu_tb();
 
   // Always block for verify_MEMORY stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_MEMORY(
       .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),
       .MemData(iDUT.MemData),
@@ -241,6 +248,7 @@ module cpu_tb();
 
   // Always block for verify_MEM_WB stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_MEM_WB(
       .MEM_WB_signals({iDUT.MEM_WB_PC_next, iDUT.MEM_WB_ALU_out, iDUT.MEM_WB_MemData, 
                        iDUT.MEM_WB_reg_rd, iDUT.MEM_WB_RegWrite, iDUT.MEM_WB_MemToReg, 
@@ -255,6 +263,7 @@ module cpu_tb();
 
   // Always block for verify_WRITEBACK stage
   always @(posedge clk) begin
+    if (rst_n)
     verify_WRITEBACK(
       .MEM_WB_DstReg(iDUT.MEM_WB_reg_rd),
       .MEM_WB_RegWrite(iDUT.MEM_WB_RegWrite),

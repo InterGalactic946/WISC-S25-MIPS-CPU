@@ -4,7 +4,7 @@
 // This module model the dynamic branch predictor of the CPU.   //
 //////////////////////////////////////////////////////////////////
 
-import Model_tasks::*;
+import Monitor_tasks::*;
 
 module DynamicBranchPredictor_model (
     input logic clk,                      // System clock

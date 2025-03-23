@@ -132,10 +132,10 @@ module cpu_tb();
           );
         end
         
-        // // Log the regfile contents.
-        // if (iDUT.MEM_WB_RegWrite) begin
-        //   log_regfile_dump(.regfile(iMODEL.iDECODE.iRF.regfile));
-        // end
+        // Log the regfile contents.
+        if (iDUT.MEM_WB_RegWrite) begin
+          log_regfile_dump(.regfile(iMODEL.iDECODE.iRF.regfile));
+        end
       end
   end
 
@@ -229,9 +229,9 @@ module cpu_tb();
   always @(negedge clk) begin
     if (rst_n) begin
       verify_EXECUTE(
-        .Input_A(iMODEL.iEXECUTE.iALU_model.Input_A),
-        .Input_B(iMODEL.iEXECUTE.iALU_model.Input_B),
-        .ALU_out(iMODEL.ALU_out),
+        .Input_A(iDUT.iEXECUTE.iALU.Input_A),
+        .Input_B(iDUT.iEXECUTE.iALU.Input_B),
+        .ALU_out(iDUT.ALU_out),
         .Z_set(iDUT.iEXECUTE.iALU.Z_set),
         .V_set(iDUT.iEXECUTE.iALU.V_set),
         .N_set(iDUT.iEXECUTE.iALU.N_set),

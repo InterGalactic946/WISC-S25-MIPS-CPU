@@ -35,7 +35,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
 
   assign SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);
 
-  assign SUM_Out = (Opcode === 4'h0 || Opcode === 4'h1) ? ((pos_ov) ? 16'h7FFF) : (neg_ov ? 16'h8000 : SUM_step);
+  assign SUM_Out = (Opcode === 4'h0 || Opcode === 4'h1) ? ((pos_ov) ? 16'h7FFF : (neg_ov ? 16'h8000 : SUM_step));
 
   always_comb begin
       error = 1'b0;  

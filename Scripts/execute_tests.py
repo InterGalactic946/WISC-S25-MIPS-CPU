@@ -628,18 +628,30 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
         module_def_pattern = re.compile(r'^\s*module\s+(\w+)', re.MULTILINE)
         package_def_pattern = re.compile(r'^\s*package\s+(\w+)', re.MULTILINE)
 
-        # Scan all .v files in the DESIGN_DIR (for modules) and .sv files in the TESTS_DIR (for packages).
-        for directory in [DESIGNS_DIR, TESTS_DIR]:
-            for root, _, files in os.walk(directory): # Scan for design files
-                for file in files:
-                    if file.endswith('.v') or file.endswith('.sv'):  # Design files can be .v or .sv
-                        file_path = os.path.join(root, file)
-                        with open(file_path, 'r') as f:
-                            content = f.read()
-                            # Find module definitions and add to the map.
-                            for match in module_def_pattern.finditer(content):
-                                module_name = match.group(1)
-                                module_definitions.setdefault(module_name, file_path)
+    # Scan .v files in DESIGNS_DIR and .sv files in TESTS_DIR separately
+    # First, scan for .v files in the DESIGN_DIR (for modules)
+    for root, _, files in os.walk(DESIGNS_DIR):  # Scan for design files
+        for file in files:
+            if file.endswith('.v'):  # Only scan .v files in DESIGN_DIR
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r') as f:
+                    content = f.read()
+                    # Find module definitions and add to the map.
+                    for match in module_def_pattern.finditer(content):
+                        module_name = match.group(1)
+                        module_definitions.setdefault(module_name, file_path)
+
+    # Then, scan for .sv files (modules) in TESTS_DIR
+    for root, _, files in os.walk(TESTS_DIR):  # Scan for package files
+        for file in files:
+            if file.endswith('.sv'):  # Only scan .sv files in TESTS_DIR
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r') as f:
+                    content = f.read()
+                    # Find module definitions and add to the map.
+                    for match in module_def_pattern.finditer(content):
+                        module_name = match.group(1)
+                        module_definitions.setdefault(module_name, file_path)
 
         for root, _, files in os.walk(TESTS_DIR):  # Scan for package files
             for file in files:
@@ -678,7 +690,6 @@ def find_dependencies(dep_file, resolved_files=None, module_definitions=None, pa
                 resolved_files.insert(0, dep_file)
                 find_dependencies(dep_file, resolved_files, module_definitions, package_definitions)
     
-    print(resolved_files)
     return resolved_files
 
 

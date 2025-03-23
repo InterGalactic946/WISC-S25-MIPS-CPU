@@ -165,7 +165,7 @@ module cpu_tb();
         .expected_WB_signals(iMODEL.WB_signals),
         .cc(iDUT.iDECODE.c_codes),
         .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
-        .is_branch(iDUT.BR),
+        .is_branch(iDUT.Branch),
         .expected_is_branch(iMODEL.Branch),
         .is_BR(iDUT.BR),
         .expected_is_BR(iMODEL.BR),

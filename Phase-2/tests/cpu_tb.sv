@@ -20,6 +20,7 @@ module cpu_tb();
   /////////////////////////
   logic clk, rst_n;           // Clock and reset signals
   logic hlt, expected_hlt;    // Halt signals for execution stop for each DUT and model
+  logic verify;               // Indicates when high to verify a stage's output.
   logic [15:0] expected_pc;   // Expected program counter value for verification
   logic [15:0] pc;            // Current program counter value
   logic stall, flush;         // Indicates a stall and/or a flush in the pipeline.
@@ -85,6 +86,13 @@ module cpu_tb();
     $stop();
   end
 
+  // Output the verifaction signal.
+  always @(negedge clk, posedge rst)
+    if (rst)
+      verify <= 1'b0;
+    else
+      verify <= verify + 1'b1;
+
   // We stall on PC or IF.
   assign stall = iDUT.PC_stall || iDUT.IF_ID_stall;
 
@@ -92,7 +100,7 @@ module cpu_tb();
   assign flush = iDUT.IF_flush || iDUT.ID_flush;
 
   // Get the hazard messages.
-  always @(negedge clk) begin
+  always @(posedge verify) begin
       if (rst_n) begin
           get_hazard_messages(
               .pc_stall(iDUT.PC_stall), 
@@ -112,7 +120,7 @@ module cpu_tb();
 
 
   // Dump contents of BHT, BTB, Data memory, and Regfile contents.
-  always @(negedge clk) begin
+  always @(posedge verify) begin
       if (rst_n) begin
         // Dump the contents of memory whenever we write to the BTB or BHT.
         if (iDUT.wen_BHT || iDUT.wen_BTB) begin
@@ -140,7 +148,7 @@ module cpu_tb();
   end
 
   // Always block for verify_FETCH stage
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
       verify_FETCH(
         .PC_next(iDUT.PC_next),
@@ -161,7 +169,7 @@ module cpu_tb();
   end
 
   // Always block for verify_IF_ID stage
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
       verify_IF_ID(
         .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
@@ -175,7 +183,7 @@ module cpu_tb();
   end
 
   // Always block for verify_DECODE stage
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
       verify_DECODE(
         .EX_signals(iDUT.EX_signals),
@@ -208,7 +216,7 @@ module cpu_tb();
   end
 
   // Always block for verify_ID_EX stage
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
       verify_ID_EX(
         .ID_EX_signals({iDUT.ID_EX_PC_next, iDUT.ID_EX_SrcReg1, iDUT.ID_EX_SrcReg2, 
@@ -226,7 +234,7 @@ module cpu_tb();
   end
 
   // Always block for verify_EXECUTE stage
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
       verify_EXECUTE(
         .Input_A(iDUT.iEXECUTE.iALU.Input_A),
@@ -249,7 +257,7 @@ module cpu_tb();
   end
 
   // Always block for verify_EX_MEM stage.
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
         verify_EX_MEM(
           .EX_MEM_signals({iDUT.EX_MEM_PC_next, iDUT.EX_MEM_ALU_out, iDUT.EX_MEM_SrcReg2, 
@@ -265,7 +273,7 @@ module cpu_tb();
   end
 
   // Always block for verify_MEMORY stage
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
       verify_MEMORY(
         .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),
@@ -282,7 +290,7 @@ module cpu_tb();
   end
 
   // Always block for verify_MEM_WB stage
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
       verify_MEM_WB(
         .MEM_WB_signals({iDUT.MEM_WB_PC_next, iDUT.MEM_WB_ALU_out, iDUT.MEM_WB_MemData, 
@@ -298,7 +306,7 @@ module cpu_tb();
   end
 
   // Always block for verify_WRITEBACK stage
-  always @(negedge clk) begin
+  always @(posedge verify) begin
     if (rst_n) begin
       verify_WRITEBACK(
         .MEM_WB_DstReg(iDUT.MEM_WB_reg_rd),

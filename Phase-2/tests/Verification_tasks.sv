@@ -47,7 +47,7 @@ package Verification_tasks;
       input logic [1:0]  prediction, expected_prediction,
       input logic [15:0] predicted_target, expected_predicted_target,
       input string stage,
-      ref string stage_msg 
+      output string stage_msg 
   );
     begin
         // Initialize message.

@@ -28,6 +28,12 @@ module cpu_tb();
   string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_message, 
          execute_msg, ex_mem_message, mem_verify_msg, mem_wb_message, wb_verify_msg, pc_message, if_id_hz_message, id_ex_hz_message, flush_message;
 
+  
+  /////////////////////////////////////////
+  // Make reset active high for modules //
+  ///////////////////////////////////////
+  assign rst = ~rst_n;
+
   //////////////////////
   // Instantiate DUT //
   ////////////////////
@@ -53,7 +59,7 @@ module cpu_tb();
   //////////////////////////////////
   Verification_Unit iVERIFY (
     .clk(clk),
-    .rst(~rst_n),
+    .rst(rst),
     .fetch_msg(fetch_msg),
     .if_id_msg(if_id_msg),
     .decode_msg(decode_msg),

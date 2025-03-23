@@ -11,21 +11,6 @@ package Model_tasks;
 
   import ALU_tasks::*;
 
-  // Struct Definitions for BTB, BHT, and data memory models.
-  typedef struct {
-    logic [15:0] PC_addr;
-    logic [1:0] prediction;
-  } model_BHT_t;
-  
-  typedef struct {
-    logic [15:0] PC_addr; 
-    logic [15:0] target;
-  } model_BTB_t;
-
-  typedef struct {
-    logic [15:0] mem_addr [0:65535]; 
-    logic [15:0] data_mem [0:65535];
-  } model_data_mem_t;
   
   // Task to initialize testbench signals.
   task automatic Initialize(ref logic clk, ref logic rst_n);

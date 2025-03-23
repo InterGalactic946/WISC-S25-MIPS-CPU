@@ -5,7 +5,21 @@
 ///////////////////////////////////////////////////////////////
 package Monitor_tasks;
 
-  import Model_tasks::*;
+  // Struct Definitions for BTB, BHT, and data memory models.
+  typedef struct {
+    logic [15:0] PC_addr;
+    logic [1:0] prediction;
+  } model_BHT_t;
+  
+  typedef struct {
+    logic [15:0] PC_addr; 
+    logic [15:0] target;
+  } model_BTB_t;
+
+  typedef struct {
+    logic [15:0] mem_addr [0:65535]; 
+    logic [15:0] data_mem [0:65535];
+  } model_data_mem_t;
 
   // Task: Dumps contents of DUT and model BHT and BTB memory.
   task automatic log_BTB_BHT_dump(

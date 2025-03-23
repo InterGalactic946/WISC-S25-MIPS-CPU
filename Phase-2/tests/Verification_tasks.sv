@@ -50,9 +50,6 @@ package Verification_tasks;
       output string stage_msg 
   );
     begin
-          // Initialize stage message.
-          stage_msg = ""; 
-
           // Verify the PC next.
           if (PC_next !== expected_PC_next) begin
               stage_msg = $sformatf("[%s] ERROR: PC_next: 0x%h, expected_PC_next: 0x%h.", stage, PC_next, expected_PC_next);

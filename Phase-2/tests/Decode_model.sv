@@ -162,7 +162,7 @@ module Decode_model (
   assign MemWriteData = SrcReg2_data;
   
   // Instantiate the register file.
-  RegisterFile iRF (
+  RegisterFile_model iRF (
       .clk(clk),
       .rst(rst),
       .SrcReg1(SrcReg1),

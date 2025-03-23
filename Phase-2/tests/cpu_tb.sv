@@ -219,20 +219,21 @@ module cpu_tb();
   //   );
   // end
 
-  // // Always block for verify_EX_MEM stage
-  // always @(posedge clk) begin
-  //   if (rst_n)
-  //   verify_EX_MEM(
-  //     .EX_MEM_signals({iDUT.EX_MEM_PC_next, iDUT.EX_MEM_ALU_out, iDUT.EX_MEM_SrcReg2, 
-  //                      iDUT.EX_MEM_MemWriteData, iDUT.EX_MEM_MemEnable, iDUT.EX_MEM_MemWrite, 
-  //                      iDUT.EX_MEM_WB_signals}),
-  //     .expected_EX_MEM_signals({iMODEL.EX_MEM_PC_next, iMODEL.EX_MEM_ALU_out, iMODEL.EX_MEM_SrcReg2, 
-  //                               iMODEL.EX_MEM_MemWriteData, iMODEL.EX_MEM_MemEnable, 
-  //                               iMODEL.EX_MEM_MemWrite, iMODEL.EX_MEM_WB_signals}),
-      
-  //     .ex_mem_message(ex_mem_message)
-  //   );
-  // end
+  // Always block for verify_EX_MEM stage
+  always @(posedge clk) begin
+    if (rst_n) begin
+      verify_EX_MEM(
+        .EX_MEM_signals({iDUT.EX_MEM_PC_next, iDUT.EX_MEM_ALU_out, iDUT.EX_MEM_SrcReg2, 
+                        iDUT.EX_MEM_MemWriteData, iDUT.EX_MEM_MemEnable, iDUT.EX_MEM_MemWrite, 
+                        iDUT.EX_MEM_WB_signals}),
+        .expected_EX_MEM_signals({iMODEL.EX_MEM_PC_next, iMODEL.EX_MEM_ALU_out, iMODEL.EX_MEM_SrcReg2, 
+                                  iMODEL.EX_MEM_MemWriteData, iMODEL.EX_MEM_MemEnable, 
+                                  iMODEL.EX_MEM_MemWrite, iMODEL.EX_MEM_WB_signals}),
+        
+        .ex_mem_message(ex_mem_message)
+      );
+    end
+  end
 
   // Always block for verify_MEMORY stage
   always @(posedge clk) begin

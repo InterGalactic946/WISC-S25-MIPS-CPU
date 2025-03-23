@@ -39,10 +39,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
 
   always_comb begin
       error = 1'b0;  
-      ALU_Out = 16'h0000;  
-      pos_ov = 1'b0;
-      neg_ov = 1'b0;
-
+      ALU_Out = 16'h0000;
       case (Opcode)
           4'h0, 4'h1, 4'h8, 4'h9: begin
               get_overflow(.A(Input_A), .B(Input_B), .opcode(Opcode), 

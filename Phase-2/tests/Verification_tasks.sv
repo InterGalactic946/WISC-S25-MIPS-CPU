@@ -102,6 +102,7 @@ package Verification_tasks;
       input logic [53:0] IF_ID_signals, input logic [53:0] expected_IF_ID_signals,
       output string if_id_msg
   );
+    begin
     verify_FETCH(
         .PC_next(IF_ID_signals[49:34]), 
         .expected_PC_next(expected_IF_ID_signals[49:34]), 
@@ -116,6 +117,7 @@ package Verification_tasks;
         .stage("IF_ID"),
         .stage_msg(if_id_msg)
     );
+    end
   endtask
 
 

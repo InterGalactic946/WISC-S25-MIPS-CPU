@@ -350,7 +350,7 @@ package Verification_tasks;
       verify_WB(.WB_signals(ID_EX_signals[7:0]), .expected_WB_signals(expected_ID_EX_signals[7:0]), .stage("ID_EX"), .stage_msg(id_ex_message));
 
       // Print the success message.
-      id_ex_message = "[ID_EX] SUCCESS: All signals valid."
+      id_ex_message = "[ID_EX] SUCCESS: All signals valid.";
   endtask
 
 

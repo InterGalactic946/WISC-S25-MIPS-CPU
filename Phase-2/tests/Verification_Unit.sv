@@ -128,7 +128,7 @@ always @(negedge clk) begin
 end
 
 
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (!rst && wb_id >= 0) begin
         // Print messages for instruction reaching WB stage
         $display("=====================================================");

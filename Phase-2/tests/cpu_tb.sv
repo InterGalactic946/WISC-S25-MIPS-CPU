@@ -92,7 +92,7 @@ module cpu_tb();
         // Dump the contents of memory whenever we write to the BTB or BHT.
         if (iDUT.wen_BHT || iDUT.wen_BTB)
           log_BTB_BHT_dump (
-            .model_BHT(iDUT.iFETCH.iDBP_model.BHT),
+            .model_BHT(iMODEL.iFETCH.iDBP_model.BHT),
             .model_BTB(iMODEL.iFETCH.iDBP_model.BTB),
             .dut_BHT(iDUT.iFETCH.iDBP.iBHT.iMEM_BHT.mem),
             .dut_BTB(iDUT.iFETCH.iDBP.iBTB.iMEM_BTB.mem)
@@ -101,7 +101,7 @@ module cpu_tb();
         // Log data memory contents.
         if (iDUT.EX_MEM_MemEnable)
           log_data_dump(
-              .model_data_mem(iMODEL.model_data_mem),     
+              .model_data_mem(iMODEL.iDATA_MEM.data_memory),     
               .dut_data_mem(iDUT.iDATA_MEM.mem)          
           );
         
@@ -118,8 +118,8 @@ module cpu_tb();
       .expected_PC_next(iMODEL.PC_next),
       .PC_inst(iDUT.PC_inst),
       .expected_PC_inst(iMODEL.PC_inst),
-      .PC_curr(iDUT.PC_curr),
-      .expected_PC_curr(iMODEL.PC_curr),
+      .PC_curr(pc),
+      .expected_PC_curr(expected_pc),
       .prediction(iDUT.prediction),
       .expected_prediction(iMODEL.prediction),
       .predicted_target(iDUT.predicted_target),
@@ -256,7 +256,7 @@ module cpu_tb();
   // Always block for verify_WRITEBACK stage
   always @(posedge clk) begin
     verify_WRITEBACK(
-      .MEM_WB_DstReg(iDUT.MEM_WB_DstReg),
+      .MEM_WB_DstReg(iDUT.MEM_WB_reg_rd),
       .MEM_WB_RegWrite(iDUT.MEM_WB_RegWrite),
       .RegWriteData(iDUT.RegWriteData),
       .expected_RegWriteData(iMODEL.RegWriteData),

@@ -60,7 +60,6 @@ module cpu_tb();
    Verification_Unit iVERIFY (
     .clk(clk),
     .rst(rst),
-    //.fetch_msg(fetch_msg),
     .if_id_msg(if_id_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),
@@ -84,9 +83,7 @@ module cpu_tb();
     Initialize(.clk(clk), .rst_n(rst_n));
 
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
-    // TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
-
-    repeat (40) @(posedge clk);
+    TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
     // If we reached here, that means all test cases were successful
     $display("YAHOO!! All tests passed.");

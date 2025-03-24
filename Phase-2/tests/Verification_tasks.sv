@@ -100,8 +100,8 @@ package Verification_tasks;
   // Task: Verifies IF/ID Pipeline Register.
   task automatic verify_IF_ID(
       input logic [65:0] IF_ID_signals, input logic [65:0] expected_IF_ID_signals, 
-      ref logic PC_stall, IF_ID_stall, IF_flush,
-      ref logic br_hazard, b_hazard, load_use_hazard, hlt,
+      input logic PC_stall, IF_ID_stall, IF_flush,
+      input logic br_hazard, b_hazard, load_use_hazard, hlt,
       output string if_id_msg
   );
     begin
@@ -119,7 +119,7 @@ package Verification_tasks;
     end
 
     // Handle PC/IF_ID_stall messages.
-    if (PC_stall || IF_ID_stall) begin
+    if (PC_stall && IF_ID_stall) begin
         if_id_msg = $sformatf("[STALL]: PC stalled due to %s.\n[STALL]: IF_ID stalled due to %s.", hazard_type, hazard_type);
         return;
     end else if (IF_flush)

@@ -23,17 +23,17 @@ module Verification_Unit (
     /////////////////////////////////////////
     typedef struct {
         string instr_msg;   // Full instruction message
-        string fetch;
-        string if_id;
-        string decode;
-        string id_ex;
-        string execute;
-        string ex_mem;
-        string mem;
-        string mem_wb;
-        string wb;
-        string stall[5];    // Allow up to 5 stall messages
-        string flush;
+        string fetch;        // Fetch message
+        string if_id;        // IF/ID message
+        string decode[2];    // Array to store Decode stage messages
+        string id_ex;        // ID/EX message
+        string execute;      // Execute message
+        string ex_mem;       // EX/MEM message
+        string mem;          // Memory stage message
+        string mem_wb;       // MEM/WB message
+        string wb;           // WB message
+        string stall[5];     // Allow up to 5 stall messages
+        string flush;        // Flush message
         integer fetch_cycle;
         integer if_id_cycle;
         integer decode_cycle;
@@ -60,70 +60,51 @@ module Verification_Unit (
             tail <= 0;
             wb_valid_counter <= 0;  // Reset the counter on reset
         end else begin
-            // Store fetch stage message
             if (fetch_msg != "") begin
                 instr_queue[tail].fetch = fetch_msg;
                 instr_queue[tail].fetch_cycle = $time / 10;
             end
-            // Store IF/ID stage message
             if (if_id_msg != "") begin
                 instr_queue[tail].if_id = if_id_msg;
                 instr_queue[tail].if_id_cycle = $time / 10;
             end
-            // Store decode stage message
             if (decode_msg != "") begin
                 instr_queue[tail].decode[0] = decode_msg;
                 instr_queue[tail].decode[1] = instruction_full_msg;
                 instr_queue[tail].decode_cycle = $time / 10;
             end
-            // Store ID/EX stage message
             if (id_ex_msg != "") begin
                 instr_queue[tail].id_ex = id_ex_msg;
                 instr_queue[tail].id_ex_cycle = $time / 10;
             end
-            // Store execute stage message
             if (execute_msg != "") begin
                 instr_queue[tail].execute = execute_msg;
                 instr_queue[tail].execute_cycle = $time / 10;
             end
-            // Store EX/MEM stage message
             if (ex_mem_msg != "") begin
                 instr_queue[tail].ex_mem = ex_mem_msg;
                 instr_queue[tail].ex_mem_cycle = $time / 10;
             end
-            // Store memory stage message
             if (mem_msg != "") begin
                 instr_queue[tail].mem = mem_msg;
                 instr_queue[tail].mem_cycle = $time / 10;
             end
-            // Store MEM/WB stage message
             if (mem_wb_msg != "") begin
                 instr_queue[tail].mem_wb = mem_wb_msg;
                 instr_queue[tail].mem_wb_cycle = $time / 10;
             end
-            // Store WB stage message
             if (wb_msg != "") begin
                 instr_queue[tail].wb = wb_msg;
                 instr_queue[tail].wb_cycle = $time / 10;
             end
-            // Store stall messages
-            if (if_id_hz_message != "") begin
+            if (stall_msg != "") begin
                 for (i = 0; i < 5; i++) begin
                     if (instr_queue[tail].stall[i] == "") begin
-                        instr_queue[tail].stall[i] = if_id_hz_message;
+                        instr_queue[tail].stall[i] = stall_msg;
                         break;
                     end
                 end
             end
-            if (id_ex_hz_message != "") begin
-                for (i = 0; i < 5; i++) begin
-                    if (instr_queue[tail].stall[i] == "") begin
-                        instr_queue[tail].stall[i] = id_ex_hz_message;
-                        break;
-                    end
-                end
-            end
-            // Store flush message
             if (flush_msg != "") begin
                 instr_queue[tail].flush = flush_msg;
             end
@@ -135,19 +116,17 @@ module Verification_Unit (
         end
     end
 
-    assign wb_valid = !(wb_valid_counter % 5); // Calculate if WB is valid
+    assign wb_valid = !(wb_valid_counter % 5);
 
     /////////////////////////////////////////
     // Print Pipeline Messages at WB Stage //
     /////////////////////////////////////////
     always_ff @(posedge clk) begin
         if (!rst && wb_valid && wb_valid_counter > 0) begin
-            // Display pipeline messages for the instruction at WB stage
             $display("=====================================================");
-            $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode[1], $time / 10);
+            $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode[1], $time/10);
             $display("=====================================================");
             
-            // Display messages for each stage of the pipeline
             if (instr_queue[head].fetch != "")
                 $display("|%s @ Cycle: %0t", instr_queue[head].fetch, instr_queue[head].fetch_cycle);
             if (instr_queue[head].if_id != "")
@@ -167,19 +146,17 @@ module Verification_Unit (
             if (instr_queue[head].wb != "")
                 $display("|[WRITE-BACK] %s @ Cycle: %0t", instr_queue[head].wb, instr_queue[head].wb_cycle);
 
-            // Display stall messages
             for (i = 0; i < 5; i++) begin
                 if (instr_queue[head].stall[i] != "")
                     $display("|[STALL] %s", instr_queue[head].stall[i]);
             end
 
-            // Display flush message
             if (instr_queue[head].flush != "")
                 $display("|[FLUSH] %s", instr_queue[head].flush);
             
             $display("=====================================================");
             
-            head <= head + 1;  // Move queue forward to the next instruction
+            head <= head + 1;  // Move queue forward
         end
     end
 

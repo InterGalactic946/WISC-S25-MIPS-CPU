@@ -32,12 +32,12 @@ module RegisterFile_model (clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData
   always_ff @(posedge clk) begin
     if (rst) begin
       // Reset all registers to zero
-      ReadData1 <= 16'h0000;
-      ReadData2 <= 16'h0000;
+      SrcData1 <= 16'h0000;
+      SrcData2 <= 16'h0000;
     end else begin
       // Read values on clock edge
-      ReadData1 <= regfile[SrcReg1];
-      ReadData2 <= regfile[SrcReg2];
+      SrcData1 <= (WriteReg && (DstReg === SrcReg1)) ? DstData_operand : regfile[SrcReg1];
+      SrcData2 <= (WriteReg && (DstReg === SrcReg2)) ? DstData_operand : regfile[SrcReg2];
     end
   end
 
@@ -51,18 +51,4 @@ module RegisterFile_model (clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData
       regfile[DstReg] <= DstData_operand;
     end
   end
-
-  // **Full RF Bypassing Implementation**
-  always_comb begin
-    if (WriteReg && (DstReg == SrcReg1) && (DstReg !== 4'h0)) 
-      SrcData1 = DstData_operand;  // Bypass new data to SrcReg1
-    else 
-      SrcData1 = ReadData1;        // Read normally
-    
-    if (WriteReg && (DstReg == SrcReg2) && (DstReg !== 4'h0)) 
-      SrcData2 = DstData_operand;  // Bypass new data to SrcReg2
-    else 
-      SrcData2 = ReadData2;        // Read normally
-  end
-
 endmodule

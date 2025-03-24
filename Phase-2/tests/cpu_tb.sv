@@ -202,8 +202,8 @@ module cpu_tb();
     end
   end
 
-  always @(posedge clk)
-    $display("Src_data1: %04x, Expected_Src_Data1: %04x", iDUT.iDECODE.SrcReg1_data, iMODEL.iDECODE.SrcReg1_data);
+  // always @(posedge clk)
+  //   $display("Src_data1: %04x, Expected_Src_Data1: %04x", iDUT.iDECODE.SrcReg1_data, iMODEL.iDECODE.SrcReg1_data);
 
   // Always block for verify_ID_EX stage
   always @(negedge clk) begin

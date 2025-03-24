@@ -53,6 +53,9 @@ always @(posedge clk) begin
         if (!stall) begin
             // Increment fetch_id only when there's no stall
             fetch_id <= fetch_id + 1;
+
+            // Valid signals propagate
+            valid_fetch <= 1;
         end
         
         // Update the other stages as usual
@@ -61,8 +64,6 @@ always @(posedge clk) begin
         memory_id <= execute_id; // Directly assign from execute_id
         wb_id <= memory_id;      // Directly assign from memory_id
 
-        // Valid signals propagate
-        valid_fetch <= 1;
         valid_decode <= valid_fetch;
         valid_execute <= valid_decode;
         valid_memory <= valid_execute;
@@ -73,20 +74,20 @@ end
     // Adds the messages, with stall and flush checks.
     always @(posedge clk) begin
         if (!rst) begin
-            if (valid_decode && !stall && !flush) begin
+            if (valid_decode) begin
                 pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
                 pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
                 pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
                 pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
                 pipeline_msgs[decode_id].decode_cycle <= $time / 10;
             end
-            if (valid_execute && !stall && !flush) begin
+            if (valid_execute) begin
                 pipeline_msgs[execute_id].id_ex_msg <= id_ex_msg;
                 pipeline_msgs[execute_id].execute_msg <= execute_msg;
                 pipeline_msgs[execute_id].id_ex_cycle <= $time / 10;
                 pipeline_msgs[execute_id].execute_cycle <= $time / 10;
             end
-            if (valid_memory && !stall && !flush) begin
+            if (valid_memory) begin
                 pipeline_msgs[memory_id].ex_mem_msg <= ex_mem_msg;
                 pipeline_msgs[memory_id].ex_mem_cycle <= $time / 10;
                 pipeline_msgs[memory_id].memory_msg <= mem_msg;

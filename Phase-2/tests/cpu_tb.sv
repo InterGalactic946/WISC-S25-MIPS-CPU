@@ -199,7 +199,7 @@ module cpu_tb();
       // $display(instruction_full_msg);
       // $display(decode_msg);
 
-      $display("Src_Data1: %04x", iMODEL.iDECODE.SrcReg1_data)
+      $display("Src_Data1: %04x", iMODEL.iDECODE.SrcReg1_data);
     end
   end
 

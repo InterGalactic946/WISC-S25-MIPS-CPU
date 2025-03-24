@@ -16,6 +16,7 @@ import Monitor_tasks::*;
 
 module Verification_Unit (
     input logic clk, rst,                  // Clock and rst 
+    input string fetch_msg,                // Fetch stage message
     input string if_id_msg,                // IF/ID Register message
     input string decode_msg,               // Decode stage messages
     input string instruction_full_msg,     // Full instruction message
@@ -79,6 +80,10 @@ end
 
 always @(posedge clk) begin
     if (!rst) begin
+        if (fetch_id >= 0) begin
+            pipeline_msgs[decode_id].fetch_msg   <= fetch_msg;
+            pipeline_msgs[decode_id].fetch_cycle <= $time / 10;
+        end
         // Decode Stage (IF/ID pipeline register & decode)
         if (decode_id >= 0) begin
             pipeline_msgs[decode_id].if_id_hz_message[if_id_idx] <= if_id_hz_message;
@@ -126,6 +131,7 @@ always @(posedge clk) begin
         $display("=======================================================");
         $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time/10);
         $display("=======================================================");
+        $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
         
         if (stall)
             print_stall_messages(.inst_id(wb_id), .size(if_id_idx), .msg_type("if_id"), .cycle(pipeline_msgs[wb_id].if_id_cycle));

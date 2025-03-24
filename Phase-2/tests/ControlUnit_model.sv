@@ -100,7 +100,7 @@ module ControlUnit_model (
             end
             4'b1100, 4'b1101: begin  // Branch (B, BR)
                 Branch = 1'b1;   // Indicate a branch instruction
-                branch_taken = actual_taken;  // Set branch_taken signal based on actual branch outcome
+                branch_taken = actual_taken && Branch;  // Set branch_taken signal based on actual branch outcome
 
                 // Check if there was a branch misprediction
                 mispredicted = (IF_ID_predicted_taken !== actual_taken);

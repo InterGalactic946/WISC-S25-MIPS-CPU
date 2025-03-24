@@ -25,8 +25,8 @@ module cpu_tb();
   logic stall, flush;         // Indicates a stall and/or a flush in the pipeline.
 
   // Messages from each stage.
-  string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_message, 
-         execute_msg, ex_mem_message, mem_verify_msg, mem_wb_message, wb_verify_msg, pc_message, if_id_hz_message, id_ex_hz_message, flush_message;
+  string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_msg, 
+         execute_msg, ex_mem_msg, mem_msg, mem_wb_msg, wb_msg, pc_stall_msg, if_id_stall_msg, if_flush_msg, id_flush_msg;
 
   
   /////////////////////////////////////////
@@ -60,20 +60,19 @@ module cpu_tb();
    Verification_Unit iVERIFY (
     .clk(clk),
     .rst(rst),
-    //.fetch_msg(fetch_msg),
     .if_id_msg(if_id_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),
-    .id_ex_message(id_ex_message),
+    .id_ex_msg(id_ex_message),
     .execute_msg(execute_msg),
-    .ex_mem_message(ex_mem_message),
-    .mem_verify_msg(mem_verify_msg),
-    .mem_wb_message(mem_wb_message),
-    .wb_verify_msg(wb_verify_msg),
-    .pc_message(pc_message),
-    .if_id_hz_message(if_id_hz_message),
-    .id_ex_hz_message(id_ex_hz_message),
-    .flush_message(flush_message),
+    .ex_mem_msg(ex_mem_message),
+    .mem_msg(mem_verify_msg),
+    .mem_wb_msg(mem_wb_message),
+    .wb_msg(wb_verify_msg),
+    .pc_stall_msg(pc_stall_msg),
+    .if_id_stall_msg(if_id_stall_msg),
+    .if_flush_msg(if_flush_msg),
+    .id_flush_msg(id_flush_msg),
     .stall(stall),
     .flush(flush)
   );
@@ -102,19 +101,19 @@ module cpu_tb();
   // Get the hazard messages.
   always @(negedge clk) begin
       if (rst_n) begin
-          get_hazard_messages(
-              .pc_stall(iDUT.PC_stall), 
-              .if_id_stall(iDUT.IF_ID_stall), 
-              .if_flush(iDUT.IF_flush), 
-              .id_ex_flush(iDUT.ID_flush),
-              .br_hazard(iDUT.iHDU.BR_hazard), 
-              .b_hazard(iDUT.iHDU.B_hazard), 
-              .load_use_hazard(iDUT.iHDU.load_to_use_hazard),
-              .pc_message(pc_message),
-              .if_id_message(if_id_hz_message),
-              .id_ex_message(id_ex_hz_message),
-              .flush_message(flush_message)
-          );
+        get_hazard_messages(
+            .pc_stall(iDUT.PC_stall),
+            .if_id_stall(iDUT.IF_ID_stall),
+            .if_flush(iDUT.IF_flush),
+            .id_flush(iDUT.ID_flush),
+            .br_hazard(iDUT.iHDU.BR_hazard),
+            .b_hazard(iDUT.iHDU.B_hazard),
+            .load_use_hazard(iDUT.iHDU.load_to_use_hazard),
+            .pc_stall_msg(pc_stall_msg),
+            .if_id_stall_msg(if_id_stall_msg),
+            .if_flush_msg(if_flush_msg),
+            .id_flush_msg(id_flush_msg)
+        );
 
           // $display(pc_message);
           // $display(if_id_hz_message);
@@ -241,7 +240,7 @@ module cpu_tb();
                                 iMODEL.ID_EX_ALUOp, iMODEL.ID_EX_ALUSrc, iMODEL.ID_EX_Z_en, 
                                 iMODEL.ID_EX_NV_en, iMODEL.ID_EX_MEM_signals, iMODEL.ID_EX_WB_signals}),
         
-        .id_ex_message(id_ex_message)
+        .id_ex_message(id_ex_msg)
       );
 
       // $display(id_ex_message);
@@ -286,7 +285,7 @@ module cpu_tb();
                                     iMODEL.EX_MEM_MemWriteData, iMODEL.EX_MEM_MemEnable, 
                                     iMODEL.EX_MEM_MemWrite, iMODEL.EX_MEM_WB_signals}),
           
-          .ex_mem_message(ex_mem_message)
+          .ex_mem_message(ex_mem_msg)
         );
 
         // $display(ex_mem_message);
@@ -305,7 +304,7 @@ module cpu_tb();
         .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
         .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
         
-        .mem_verify_msg(mem_verify_msg)
+        .mem_verify_msg(mem_msg)
       );
 
       // $display(mem_verify_msg);
@@ -323,7 +322,7 @@ module cpu_tb();
                                   iMODEL.MEM_WB_reg_rd, iMODEL.MEM_WB_RegWrite, iMODEL.MEM_WB_MemToReg, 
                                   iMODEL.MEM_WB_HLT, iMODEL.MEM_WB_PCS}),
         
-        .mem_wb_message(mem_wb_message)
+        .mem_wb_message(mem_wb_msg)
       );
 
       // $display(mem_wb_message);
@@ -339,7 +338,7 @@ module cpu_tb();
         .RegWriteData(iDUT.RegWriteData),
         .expected_RegWriteData(iMODEL.RegWriteData),
         
-        .wb_verify_msg(wb_verify_msg)
+        .wb_verify_msg(wb_msg)
       );
 
 

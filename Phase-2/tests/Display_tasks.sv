@@ -108,52 +108,57 @@ package Display_tasks;
 
   // Task: Outputs strings for stalls and flushes.
   task automatic get_hazard_messages(
-    input logic pc_stall, if_id_stall, if_flush, id_ex_flush,  // Stall and flush signals
-    input logic br_hazard, b_hazard, load_use_hazard,          // Hazard type signals
-    output string pc_message,                                  // Output message for PC stage
-    output string if_id_message,                               // Output message for IF_ID stage
-    output string id_ex_message,                               // Output message for ID_EX stage
-    output string flush_message                                // Output message for flush stage
+    input logic pc_stall, if_id_stall, if_flush, id_flush,  // Stall and flush signals
+    input logic br_hazard, b_hazard, load_use_hazard,       // Hazard type signals
+    output string pc_stall_msg,                             // Output message for PC stage
+    output string if_id_stall_msg,                          // Output message for IF_ID stage
+    output string if_flush_msg,                             // Output message for IF flush stage
+    output string id_flush_msg                              // Output message for ID flush stage
 );
 
-    // Variables for hazard type message
+    // Variables for hazard type message.
     string hazard_type = "";
+    string flush_type = "";
 
-    // Determine the type of hazard and generate the appropriate message
+    // Determine the type of hazard and generate the appropriate message.
     if (load_use_hazard) begin
-        hazard_type = "load-to-use";
+        hazard_type = "load-to-use hazard";
     end else if (br_hazard) begin
-        hazard_type = "Branch (BR)";
+        hazard_type = "Branch (BR) hazard";
     end else if (b_hazard) begin
-        hazard_type = "Branch (B)";
-    end else begin
-        hazard_type = "unknown"; // Fallback case
+        hazard_type = "Branch (B) hazard";
     end
+
+    // Get the flush message.
+    if (update_PC) begin
+        flush_type = "mispredicted branch";
+    end else
+        flush_type = hazard_type;
 
     // Initialize message strings
-    pc_message = "";
-    if_id_message = "";
-    id_ex_message = "";
-    flush_message = "";
+    pc_stall_msg = "";
+    if_id_stall_msg = "";
+    if_flush_msg = "";
+    id_flush_msg = "";
 
-    // Handle PC Stall Message
+    // Handle PC Stall Message.
     if (pc_stall) begin
-        pc_message = $sformatf("[FETCH] STALL: PC stalled due to %s hazard.", hazard_type);
+        pc_stall_msg = $sformatf("[STALL]: PC stalled due to %s.", hazard_type);
     end
 
-    // Handle IF_ID Stall Message
+    // Handle IF_ID Stall Message.
     if (if_id_stall) begin
-        if_id_message = $sformatf("[IF_ID] STALL: IF_ID stalled due to %s hazard.", hazard_type);
+        if_id_stall_msg = $sformatf("[STALL]: IF_ID stalled due to %s.", hazard_type);
     end
 
-    // Handle IF Flush Message
+    // Handle IF Flush Message.
     if (if_flush) begin
-        flush_message = $sformatf("[IF] FLUSH: IF flushed due to %s hazard.", hazard_type);
+        if_flush_msg = $sformatf("[FLUSH]: IF flushed due to %s.", flush_type);
     end
 
-    // Handle ID_EX Flush Message
-    if (id_ex_flush) begin
-        flush_message = $sformatf("[ID_EX] FLUSH: ID_EX flushed due to %s hazard.", hazard_type);
+    // Handle ID_EX Flush Message.
+    if (id_flush) begin
+        id_flush_msg = $sformatf("[FLUSH]: ID flushed due to %s.", flush_type);
     end
 endtask
 

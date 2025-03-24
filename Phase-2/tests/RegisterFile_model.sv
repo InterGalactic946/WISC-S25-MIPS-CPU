@@ -54,12 +54,12 @@ module RegisterFile_model (clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData
 
   // **Full RF Bypassing Implementation**
   always_comb begin
-    if (WriteReg && (DstReg == SrcReg1) && (DstReg != 4'h0)) 
+    if (WriteReg && (DstReg == SrcReg1) && (DstReg !== 4'h0)) 
       SrcData1 = DstData_operand;  // Bypass new data to SrcReg1
     else 
       SrcData1 = ReadData1;        // Read normally
     
-    if (WriteReg && (DstReg == SrcReg2) && (DstReg != 4'h0)) 
+    if (WriteReg && (DstReg == SrcReg2) && (DstReg !== 4'h0)) 
       SrcData2 = DstData_operand;  // Bypass new data to SrcReg2
     else 
       SrcData2 = ReadData2;        // Read normally

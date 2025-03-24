@@ -109,8 +109,8 @@ module ControlUnit_model (
                 // Update BTB if branch was actually taken or if target was miscomputed
                 wen_BTB = actual_taken || target_miscomputed;
 
-                // Update BHT if branch was mispredicted
-                wen_BHT = mispredicted;
+                // Update BHT on every branch.
+                wen_BHT = Branch;
 
                 // Update PC if misprediction or miscomputed target occurs
                 update_PC = (mispredicted || target_miscomputed) && branch_taken;

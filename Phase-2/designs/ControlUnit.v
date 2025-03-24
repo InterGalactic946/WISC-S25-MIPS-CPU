@@ -66,8 +66,8 @@ module ControlUnit (
     // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
     assign wen_BTB = (Branch) & ((actual_taken) | (target_miscomputed));
 
-    // Update BHT on a mispredicted branch instruction.
-    assign wen_BHT = (Branch & mispredicted);
+    // Update BHT on every branch.
+    assign wen_BHT = Branch;
 
     // We update the PC to fetch the actual target when the predictor either predicted incorrectly
     // or when the target was miscomputed and the branch was actually taken.

@@ -57,20 +57,23 @@ module cpu_tb();
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-  Verification_Unit iVERIFY (
+   Verification_Unit iVERIFY (
     .clk(clk),
     .rst(rst),
     .fetch_msg(fetch_msg),
     .if_id_msg(if_id_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),
-    .id_ex_msg(id_ex_message),
+    .id_ex_message(id_ex_message),
     .execute_msg(execute_msg),
-    .ex_mem_msg(ex_mem_message),
-    .mem_msg(mem_verify_msg),
-    .mem_wb_msg(mem_wb_message),
-    .wb_msg(wb_verify_msg),
-    .flush_msg(flush_message),
+    .ex_mem_message(ex_mem_message),
+    .mem_verify_msg(mem_verify_msg),
+    .mem_wb_message(mem_wb_message),
+    .wb_verify_msg(wb_verify_msg),
+    .pc_message(pc_message),
+    .if_id_hz_message(if_id_hz_message),
+    .id_ex_hz_message(id_ex_hz_message),
+    .flush_message(flush_message),
     .stall(stall),
     .flush(flush)
   );

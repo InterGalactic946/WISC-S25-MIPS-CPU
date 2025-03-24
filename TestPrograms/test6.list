@@ -2,8 +2,8 @@ LLB R1, 0X02      // Load value into R1 from memory address 0x02
 LLB R2, 0X01      // Load value into R2 from memory address 0x01
 LLB R6, 0x04      // Load value into R6 from memory address 0x04
 
-SUB R1, R1, R2    // Subtract R2 from R1, store result in R1
-ADD R4, R6, R2    // Add R6 and R2, store result in R4
-SUB R4, R6, R2    // Subtract R2 from R6, store result in R4
+SUB R1, R0, R3    // Subtract R2 from R1, store result in R1
+ADD R4, R5, R4    // Add R6 and R2, store result in R4
+SUB R4, R1, R8    // Subtract R2 from R6, store result in R4
 
 HLT                // Halt the program

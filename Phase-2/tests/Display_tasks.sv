@@ -130,7 +130,7 @@ package Display_tasks;
     end
 
     // Get the flush message.
-    if (update_PC) begin
+    if (if_flush) begin
         flush_type = "mispredicted branch";
     end else
         flush_type = hazard_type;

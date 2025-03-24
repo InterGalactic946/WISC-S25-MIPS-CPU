@@ -102,13 +102,13 @@ module cpu_tb();
   always @(negedge clk) begin
       if (rst_n) begin
         get_hazard_messages(
-            .pc_stall(iDUT.PC_stall), 
-            .if_id_stall(iDUT.IF_ID_stall),
-            .if_flush(iDUT.IF_flush),
-            .id_flush(iDUT.ID_flush),
-            .br_hazard(iDUT.iHDU.BR_hazard),
-            .b_hazard(iDUT.iHDU.B_hazard),
-            .load_use_hazard(iDUT.iHDU.load_to_use_hazard),
+            .pc_stall(iMODEL.PC_stall), 
+            .if_id_stall(iMODEL.IF_ID_stall),
+            .if_flush(iMODEL.IF_flush),
+            .id_flush(iMODEL.ID_flush),
+            .br_hazard(iMODEL.iHDU.BR_hazard),
+            .b_hazard(iMODEL.iHDU.B_hazard),
+            .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
             .pc_stall_msg(pc_stall_msg),
             .if_id_stall_msg(if_id_stall_msg),
             .if_flush_msg(if_flush_msg),

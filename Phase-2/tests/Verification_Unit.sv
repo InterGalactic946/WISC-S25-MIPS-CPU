@@ -106,7 +106,7 @@ module Verification_Unit (
         end
     end
 
-    assign wb_valid = !(wb_valid_counter % 5);
+    assign wb_valid = (wb_valid_counter % 5 == 0);
 
     /////////////////////////////////////////
     // Print Pipeline Messages at WB Stage //

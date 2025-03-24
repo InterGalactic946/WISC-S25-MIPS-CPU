@@ -56,8 +56,6 @@ module Verification_Unit (
     //////////////////////////////////////////////
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
-            head <= 0;
-            tail <= 0;
             wb_valid_counter <= 0;  // Reset the counter on reset
         end else begin
             if (fetch_msg != "") begin
@@ -114,6 +112,10 @@ module Verification_Unit (
     // Print Pipeline Messages at WB Stage //
     /////////////////////////////////////////
     always_ff @(posedge clk) begin
+        if (rst) begin
+            head <= 0;
+            tail <= 0;
+        end
         if (!rst && wb_valid && wb_valid_counter > 0) begin
             $display("=====================================================");
             $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode[1], $time/10);

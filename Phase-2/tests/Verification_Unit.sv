@@ -44,25 +44,25 @@ module Verification_Unit (
             execute_id <= 0;
             memory_id <= 0;
             wb_id <= 0;
-            valid_fetch <= 1; // Ensure first instruction is captured
+            valid_fetch <= 1; // Ensure first instruction is captured immediately after reset
             valid_decode <= 0;
             valid_execute <= 0;
             valid_memory <= 0;
             valid_wb <= 0;
         end else if (!(stall || flush)) begin
             fetch_id <= fetch_id + 1;
-            decode_id <= fetch_id;   // Assign directly to fetch_id
-            execute_id <= decode_id; // Assign directly to decode_id
-            memory_id <= execute_id; // Assign directly to execute_id
-            wb_id <= memory_id;      // Assign directly to memory_id
+            decode_id <= fetch_id;   // Directly assign from fetch_id
+            execute_id <= decode_id; // Directly assign from decode_id
+            memory_id <= execute_id; // Directly assign from execute_id
+            wb_id <= memory_id;      // Directly assign from memory_id
 
+            valid_fetch <= 1;
             valid_decode <= valid_fetch;
             valid_execute <= valid_decode;
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
         end
     end
-
 
     always @(posedge clk) begin
         if (!rst) begin
@@ -97,7 +97,7 @@ module Verification_Unit (
     always @(posedge clk) begin
         if (!rst && valid_wb) begin
             $display("==========================================================");
-            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time/10);
+            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].if_id_msg, pipeline_msgs[wb_id].if_id_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);

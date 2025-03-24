@@ -60,7 +60,6 @@ module cpu_tb();
    Verification_Unit iVERIFY (
     .clk(clk),
     .rst(rst),
-    .fetch_msg(fetch_msg),
     .if_id_msg(if_id_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),
@@ -145,26 +144,6 @@ module cpu_tb();
       end
   end
 
-  // Always block for verify_FETCH stage
-  always @(negedge clk) begin
-    if (rst_n) begin
-      verify_FETCH(
-        .PC_next(iDUT.PC_next),
-        .expected_PC_next(iMODEL.PC_next),
-        .PC_inst(iDUT.PC_inst),
-        .expected_PC_inst(iMODEL.PC_inst),
-        .PC_curr(pc),
-        .expected_PC_curr(expected_pc),
-        .prediction(iDUT.prediction),
-        .expected_prediction(iMODEL.prediction),
-        .predicted_target(iDUT.predicted_target),
-        .expected_predicted_target(iMODEL.predicted_target),
-        
-        .stage("FETCH"),
-        .stage_msg(fetch_msg)
-      );
-    end
-  end
 
   // Always block for verify_IF_ID stage
   always @(negedge clk) begin

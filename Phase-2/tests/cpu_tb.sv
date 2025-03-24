@@ -199,9 +199,11 @@ module cpu_tb();
       // $display(instruction_full_msg);
       // $display(decode_msg);
 
-      $display("Src_data1: %04x, Expected_Src_Data1: %04x", iDUT.iDECODE.SrcReg1_data, iMODEL.iDECODE.SrcReg1_data);
     end
   end
+
+  always @(posedge clk)
+    $display("Src_data1: %04x, Expected_Src_Data1: %04x", iDUT.iDECODE.SrcReg1_data, iMODEL.iDECODE.SrcReg1_data);
 
   // Always block for verify_ID_EX stage
   always @(negedge clk) begin

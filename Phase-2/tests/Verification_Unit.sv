@@ -80,10 +80,10 @@ end
 
 always @(posedge clk) begin
     if (!rst) begin
-        if (fetch_id >= 0) begin
-            pipeline_msgs[decode_id].fetch_msg   <= fetch_msg;
-            pipeline_msgs[decode_id].fetch_cycle <= $time / 10;
-        end
+        // if (fetch_id >= 0) begin
+        //     pipeline_msgs[decode_id].fetch_msg   <= fetch_msg;
+        //     pipeline_msgs[decode_id].fetch_cycle <= $time / 10;
+        // end
         // Decode Stage (IF/ID pipeline register & decode)
         if (decode_id >= 0) begin
             pipeline_msgs[decode_id].if_id_hz_message[if_id_idx] <= if_id_hz_message;

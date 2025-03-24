@@ -123,8 +123,8 @@ module Verification_Unit (
                 $display("|%s @ Cycle: %0t", instr_queue[head].fetch, instr_queue[head].fetch_cycle);
             if (instr_queue[head].if_id != "")
                 $display("|%s @ Cycle: %0t", instr_queue[head].if_id, instr_queue[head].if_id_cycle);
-            if (instr_queue[head].decode != "")
-                $display("|%s @ Cycle: %0t", instr_queue[head].decode, instr_queue[head].decode_cycle);
+            if (instr_queue[head].decode[0] != "")
+                $display("|%s @ Cycle: %0t", instr_queue[head].decode[0], instr_queue[head].decode_cycle);
             if (instr_queue[head].id_ex != "")
                 $display("|%s @ Cycle: %0t", instr_queue[head].id_ex, instr_queue[head].id_ex_cycle);
             if (instr_queue[head].execute != "")

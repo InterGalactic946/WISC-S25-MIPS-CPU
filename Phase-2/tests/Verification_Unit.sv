@@ -10,12 +10,9 @@ module Verification_Unit (
     input  string       mem_msg,                 // Memory stage message
     input  string       mem_wb_msg,              // MEM/WB stage message
     input  string       wb_msg,                  // WB stage message
-    input  string       pc_message,              // PC message
-    input  string       if_id_hz_message,        // IF/ID hazard message
-    input  string       id_ex_hz_message,        // ID/EX hazard message
     input  string       flush_msg,               // Flush message
     input  logic        stall,                   // Stall signal
-    input  logic        flush                   // Flush signal
+    input  logic        flush                    // Flush signal
 );
 
     /////////////////////////////////////////
@@ -46,10 +43,10 @@ module Verification_Unit (
     } pipeline_t;
 
     pipeline_t instr_queue[0:31];  // FIFO queue for 32 in-flight instructions
-    integer head = 0, tail = 0;    // Head and tail pointers for queue
+    integer head, tail;    // Head and tail pointers for queue
     integer i;                     // Loop variable
-    integer wb_valid_counter = 0;  // Counter for WB valid
-    integer wb_valid;
+    integer wb_valid_counter;  // Counter for WB valid
+    logic wb_valid;
     
     //////////////////////////////////////////////
     // Sequential Block: Store Messages Per Stage //
@@ -57,7 +54,11 @@ module Verification_Unit (
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             wb_valid_counter <= 0;  // Reset the counter on reset
-        end else begin
+            head <= 0;
+            tail <= 0;
+        end else if (wb_valid)          
+            head <= head + 1;  // Move queue forward
+        else begin
             if (fetch_msg != "") begin
                 instr_queue[tail].fetch = fetch_msg;
                 instr_queue[tail].fetch_cycle = $time / 10;
@@ -98,9 +99,8 @@ module Verification_Unit (
             if (flush_msg != "") begin
                 instr_queue[tail].flush = flush_msg;
             end
-            
-            // Increment wb_valid_counter only when not stalled or flushed
             if (!stall && !flush) begin
+                tail <= tail + 1;
                 wb_valid_counter <= wb_valid_counter + 1;
             end
         end
@@ -112,10 +112,6 @@ module Verification_Unit (
     // Print Pipeline Messages at WB Stage //
     /////////////////////////////////////////
     always_ff @(posedge clk) begin
-        if (rst) begin
-            head <= 0;
-            tail <= 0;
-        end
         if (!rst && wb_valid && wb_valid_counter > 0) begin
             $display("=====================================================");
             $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode[1], $time/10);
@@ -135,22 +131,8 @@ module Verification_Unit (
                 $display("|%s @ Cycle: %0t", instr_queue[head].ex_mem, instr_queue[head].ex_mem_cycle);
             if (instr_queue[head].mem != "")
                 $display("|[MEMORY] %s @ Cycle: %0t", instr_queue[head].mem, instr_queue[head].mem_cycle);
-            if (instr_queue[head].mem_wb != "")
-                $display("|[MEM_WB] %s @ Cycle: %0t", instr_queue[head].mem_wb, instr_queue[head].mem_wb_cycle);
             if (instr_queue[head].wb != "")
                 $display("|[WRITE-BACK] %s @ Cycle: %0t", instr_queue[head].wb, instr_queue[head].wb_cycle);
-
-            for (i = 0; i < 5; i++) begin
-                if (instr_queue[head].stall[i] != "")
-                    $display("|[STALL] %s", instr_queue[head].stall[i]);
-            end
-
-            if (instr_queue[head].flush != "")
-                $display("|[FLUSH] %s", instr_queue[head].flush);
-            
-            $display("=====================================================");
-            
-            head <= head + 1;  // Move queue forward
         end
     end
 

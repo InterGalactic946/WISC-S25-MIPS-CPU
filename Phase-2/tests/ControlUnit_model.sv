@@ -107,7 +107,7 @@ module ControlUnit_model (
                 target_miscomputed = (IF_ID_predicted_target !== actual_target);
 
                 // Update BTB if branch was actually taken or if target was miscomputed
-                wen_BTB = actual_taken || target_miscomputed;
+                wen_BTB = (actual_taken || target_miscomputed) && Branch;
 
                 // Update BHT on every branch.
                 wen_BHT = Branch;

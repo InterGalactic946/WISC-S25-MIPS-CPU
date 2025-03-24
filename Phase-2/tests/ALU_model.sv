@@ -17,7 +17,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   // Declare any internal signals as type wire //
   //////////////////////////////////////////////
   // ADD/SUB signals
-  logic ov, pos_ov, neg_ov;       // Overflow indicators for addition/subtraction
+  logic pos_ov, neg_ov;           // Overflow indicators for addition/subtraction
   logic [15:0] Input_A, Input_B;  // 16-bit inputs modified to the ALU
   logic [15:0] SUM_Out, SUM_step; // Sum result with saturation handling
 
@@ -30,13 +30,13 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   assign Input_B = (Opcode[3:1] == 3'h4) ? {ALU_In2[14:0], 1'b0} : ALU_In2;
 
   // Form the step sum.
-  assign SUM_step = (Opcode == 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);  
+  assign SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);  
 
-  assign pos_ov = (~Input_A[15] & ~Input_B[15] & SUM_step[15]) |  // Positive Overflow (ADD)
+  assign pos_ov = (~Input_A[15] & ~Input_B[15] & SUM_step[15]) | // Positive Overflow (ADD)
                   (~Input_A[15] &  Input_B[15] & SUM_step[15]);  // Negative Overflow (SUB)
 
   assign neg_ov = (Input_A[15] & Input_B[15] & ~SUM_step[15]) |  // Negative Overflow (ADD)
-                  (Input_A[15] & ~Input_B[15] & ~SUM_step[15]);    // Positive Overflow (SUB)
+                  (Input_A[15] & ~Input_B[15] & ~SUM_step[15]);  // Positive Overflow (SUB)
 
   // Saturate result based on overflow condition for ADD/SUB but wrap around if LW/SW.
   assign SUM_Out = (Opcode[3:1] === 3'h0) ? 

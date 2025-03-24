@@ -88,10 +88,10 @@ module Verification_Unit (
                 pipeline_msgs[memory_id].memory_cycle <= $time / 10;
             end
             if (valid_wb) begin
-                pipeline_msgs[wb_id].mem_wb_msg = mem_wb_msg;
-                pipeline_msgs[wb_id].mem_wb_cycle = $time / 10;
-                pipeline_msgs[wb_id].wb_msg = wb_msg;
-                pipeline_msgs[wb_id].wb_cycle = $time / 10;
+                pipeline_msgs[wb_id].mem_wb_msg <= mem_wb_msg;
+                pipeline_msgs[wb_id].mem_wb_cycle <= $time / 10;
+                pipeline_msgs[wb_id].wb_msg <= wb_msg;
+                pipeline_msgs[wb_id].wb_cycle <= $time / 10;
             end
         end
     end
@@ -132,7 +132,7 @@ module Verification_Unit (
 
     // Print the message for each instruction.
     always @(posedge clk) begin
-        if (!rst && valid_wb) begin
+        if (!rst && valid_wb && !stall && !flush) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");

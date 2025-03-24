@@ -96,30 +96,30 @@ module cpu_tb();
   // We flush IF, or ID stage.
   assign flush = iDUT.IF_flush || iDUT.ID_flush;
 
-  // Get the hazard messages.
-  always @(posedge clk) begin
-      if (rst_n) begin
-        get_hazard_messages(
-            .pc_stall(iMODEL.PC_stall), 
-            .if_id_stall(iMODEL.IF_ID_stall),
-            .if_flush(iMODEL.IF_flush),
-            .id_flush(iMODEL.ID_flush),
-            .br_hazard(iMODEL.iHDU.BR_hazard),
-            .b_hazard(iMODEL.iHDU.B_hazard),
-            .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
-            .hlt(expected_hlt),
-            .pc_stall_msg(pc_stall_msg),
-            .if_id_stall_msg(if_id_stall_msg),
-            .if_flush_msg(if_flush_msg),
-            .id_flush_msg(id_flush_msg)
-        );
+  // // Get the hazard messages.
+  // always @(posedge clk) begin
+  //     if (rst_n) begin
+  //       get_hazard_messages(
+  //           .pc_stall(iMODEL.PC_stall), 
+  //           .if_id_stall(iMODEL.IF_ID_stall),
+  //           .if_flush(iMODEL.IF_flush),
+  //           .id_flush(iMODEL.ID_flush),
+  //           .br_hazard(iMODEL.iHDU.BR_hazard),
+  //           .b_hazard(iMODEL.iHDU.B_hazard),
+  //           .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
+  //           .hlt(expected_hlt),
+  //           .pc_stall_msg(pc_stall_msg),
+  //           .if_id_stall_msg(if_id_stall_msg),
+  //           .if_flush_msg(if_flush_msg),
+  //           .id_flush_msg(id_flush_msg)
+  //       );
 
-          // $display(pc_message);
-          // $display(if_id_hz_message);
-          // $display(id_ex_hz_message);
-          // $display(flush_message);
-      end
-  end
+  //         // $display(pc_message);
+  //         // $display(if_id_hz_message);
+  //         // $display(id_ex_hz_message);
+  //         // $display(flush_message);
+  //     end
+  // end
 
 
   // Dump contents of BHT, BTB, Data memory, and Regfile contents.

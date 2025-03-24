@@ -15,7 +15,7 @@ module Verification_Unit (
     input  string       id_ex_hz_message,        // ID/EX hazard message
     input  string       flush_msg,               // Flush message
     input  logic        stall,                   // Stall signal
-    input  logic        flush,                   // Flush signal
+    input  logic        flush                   // Flush signal
 );
 
     /////////////////////////////////////////

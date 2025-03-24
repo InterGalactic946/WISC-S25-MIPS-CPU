@@ -231,7 +231,7 @@ package Verification_tasks;
           return;
       end
 
-      $display(expected_SrcReg2);
+      $display(expected_SrcReg1);
 
       if (SrcReg2 !== expected_SrcReg2) begin
           stage_msg = $sformatf("[%s] ERROR: SrcReg2 mismatch: 0x%h (expected 0x%h).", stage, SrcReg2, expected_SrcReg2);

@@ -411,8 +411,6 @@ package Verification_tasks;
           return;
       end
 
-      $display("expected_Input_A = 0x%h, expected_Input_B = 0x%h.", expected_Input_A, expected_Input_B);
-
       /* Verify flag register outputs. */
       if (ZF !== expected_ZF) begin
           execute_msg = $sformatf("[EXECUTE] ERROR: ZF: 0x%h, expected_ZF: 0x%h.", ZF, expected_ZF);

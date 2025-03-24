@@ -65,36 +65,37 @@ module Verification_Unit (
     end
 
 
-    // Adds the messages.
+    // Adds the messages, with stall and flush checks.
     always @(posedge clk) begin
         if (!rst) begin
-            if (valid_decode) begin
+            if (valid_decode && !stall && !flush) begin
                 pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
                 pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
                 pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
                 pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
                 pipeline_msgs[decode_id].decode_cycle <= $time / 10;
             end
-            if (valid_execute) begin
+            if (valid_execute && !stall && !flush) begin
                 pipeline_msgs[execute_id].id_ex_msg <= id_ex_msg;
                 pipeline_msgs[execute_id].execute_msg <= execute_msg;
                 pipeline_msgs[execute_id].id_ex_cycle <= $time / 10;
                 pipeline_msgs[execute_id].execute_cycle <= $time / 10;
             end
-            if (valid_memory) begin
+            if (valid_memory && !stall && !flush) begin
                 pipeline_msgs[memory_id].ex_mem_msg <= ex_mem_msg;
                 pipeline_msgs[memory_id].ex_mem_cycle <= $time / 10;
                 pipeline_msgs[memory_id].memory_msg <= mem_msg;
                 pipeline_msgs[memory_id].memory_cycle <= $time / 10;
             end
-            if (valid_wb) begin
-                pipeline_msgs[wb_id].mem_wb_msg = mem_wb_msg;
-                pipeline_msgs[wb_id].mem_wb_cycle = $time / 10;
-                pipeline_msgs[wb_id].wb_msg = wb_msg;
-                pipeline_msgs[wb_id].wb_cycle = $time / 10;
+            if (valid_wb && !stall && !flush) begin
+                pipeline_msgs[wb_id].mem_wb_msg <= mem_wb_msg;
+                pipeline_msgs[wb_id].mem_wb_cycle <= $time / 10;
+                pipeline_msgs[wb_id].wb_msg <= wb_msg;
+                pipeline_msgs[wb_id].wb_cycle <= $time / 10;
             end
         end
     end
+
 
     
     // Stall/Flush Message Display based on Hazard Conditions.

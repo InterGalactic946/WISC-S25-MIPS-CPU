@@ -47,7 +47,7 @@ module HazardDetectionUnit_model (
   assign PC_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
 
   // We don't stall the decode stage for HLT instructions to let it propogate through to WB.
-  assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
+  assign IF_ID_stall = PC_stall;
   /////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////

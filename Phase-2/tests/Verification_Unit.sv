@@ -1,3 +1,41 @@
+///////////////////////////////////////////////////////////
+// Verification_Unit.sv: Verification Unit Module        //  
+//                                                       //
+// This module is responsible for verifying and          //
+// displaying debug messages for each instruction in     //
+// the CPU pipeline stages. It tracks the instruction's  //
+// journey through the fetch, decode, execute, memory,   //
+// and write-back stages. The module also stores debug   //
+// messages at each stage and prints the full pipeline   //
+// information when the instruction reaches the          //
+// write-back stage. This helps in debugging and         //
+// ensuring correct operation of the CPU's pipeline.     //
+///////////////////////////////////////////////////////////
+
+import Monitor_tasks::*;
+
+module Verification_Unit (
+    input logic clk, rst,
+    input string if_id_msg,
+    input string decode_msg,
+    input string instruction_full_msg,
+    input string id_ex_msg,
+    input string execute_msg,
+    input string ex_mem_msg,
+    input string mem_msg,
+    input string mem_wb_msg,
+    input string wb_msg,
+    input string pc_stall_msg,
+    input string if_id_stall_msg,
+    input string if_flush_msg,
+    input string id_flush_msg,
+    input logic stall, flush
+    );
+
+    integer fetch_id, decode_id, execute_id, memory_id, wb_id;
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
+    debug_info_t pipeline_msgs[0:71];
+
 always @(posedge clk) begin
     if (rst) begin
         fetch_id <= 0;
@@ -110,3 +148,5 @@ always @(posedge clk) begin
         $display("==========================================================\n");
     end
 end
+
+endmodule

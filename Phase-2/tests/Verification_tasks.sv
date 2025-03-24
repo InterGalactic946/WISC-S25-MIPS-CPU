@@ -389,17 +389,17 @@ package Verification_tasks;
   task automatic verify_EXECUTE(
       input logic [15:0] Input_A,      
       input logic [15:0] Input_B, 
-      ref logic [15:0] expected_Input_A,      
-      ref logic [15:0] expected_Input_B, 
+      input logic [15:0] expected_Input_A,      
+      input logic [15:0] expected_Input_B, 
       input logic [15:0] ALU_out,
       input logic Z_set, V_set, N_set,
-      ref logic [15:0] expected_ALU_out,          
+      input logic [15:0] expected_ALU_out,          
       input logic ZF,                 
       input  logic NF,               
       input  logic VF,               
-      ref  logic expected_ZF,                
-      ref  logic expected_VF,               
-      ref  logic expected_NF,
+      input  logic expected_ZF,                
+      input  logic expected_VF,               
+      input  logic expected_NF,
       output string execute_msg 
   );
      // Initialize message.
@@ -410,6 +410,8 @@ package Verification_tasks;
           execute_msg = $sformatf("[EXECUTE] ERROR: Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, expected_Input_A = 0x%h, expected_Input_B = 0x%h, expected_ALU_out = 0x%h.", Input_A, Input_B, ALU_out, expected_Input_A, expected_Input_B, expected_ALU_out);
           return;
       end
+
+      $display("expected_Input_A = 0x%h, expected_Input_B = 0x%h.", expected_Input_A, expected_Input_B);
 
       /* Verify flag register outputs. */
       if (ZF !== expected_ZF) begin

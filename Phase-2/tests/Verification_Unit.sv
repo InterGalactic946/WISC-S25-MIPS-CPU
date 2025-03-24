@@ -44,24 +44,25 @@ module Verification_Unit (
             execute_id <= 0;
             memory_id <= 0;
             wb_id <= 0;
-            valid_fetch <= 0;
+            valid_fetch <= 1; // Ensure first instruction is captured
             valid_decode <= 0;
             valid_execute <= 0;
             valid_memory <= 0;
             valid_wb <= 0;
         end else if (!(stall || flush)) begin
-            valid_fetch <= 1;
             fetch_id <= fetch_id + 1;
+            decode_id <= fetch_id;   // Assign directly to fetch_id
+            execute_id <= decode_id; // Assign directly to decode_id
+            memory_id <= execute_id; // Assign directly to execute_id
+            wb_id <= memory_id;      // Assign directly to memory_id
+
             valid_decode <= valid_fetch;
-            decode_id <= decode_id + valid_fetch;
             valid_execute <= valid_decode;
-            execute_id <= execute_id + valid_decode;
             valid_memory <= valid_execute;
-            memory_id <= memory_id + valid_execute;
             valid_wb <= valid_memory;
-            wb_id <= wb_id + valid_memory;
         end
     end
+
 
     always @(posedge clk) begin
         if (!rst) begin

@@ -106,8 +106,7 @@ package Display_tasks;
   endtask
 
 
-  // Task: Outputs strings for stalls and flushes.
-  task automatic get_hazard_messages(
+task automatic get_hazard_messages(
     input logic pc_stall, if_id_stall, if_flush, id_flush,  // Stall and flush signals
     input logic br_hazard, b_hazard, load_use_hazard,       // Hazard type signals
     output string pc_stall_msg,                             // Output message for PC stage
@@ -116,7 +115,7 @@ package Display_tasks;
     output string id_flush_msg                              // Output message for ID flush stage
 );
 
-    // Variables for hazard type message.
+    // Variables for hazard type message and flush type.
     string hazard_type = "";
     string flush_type = "";
 
@@ -129,17 +128,20 @@ package Display_tasks;
         hazard_type = "Branch (B) hazard";
     end
 
-    // Get the flush message.
-    if (if_flush) begin
-        flush_type = "mispredicted branch";
-    end else
-        flush_type = hazard_type;
-
     // Initialize message strings
     pc_stall_msg = "";
     if_id_stall_msg = "";
     if_flush_msg = "";
     id_flush_msg = "";
+
+    // Handle Flush Type Messages
+    if (if_flush) begin
+        flush_type = "mispredicted branch";
+    end else if (id_flush) begin
+        flush_type = hazard_type; // Use hazard type for ID flush if no mispredicted branch
+    end else begin
+        flush_type = ""; // No flush message
+    end
 
     // Handle PC Stall Message.
     if (pc_stall) begin

@@ -102,7 +102,7 @@ module cpu_tb();
   always @(negedge clk) begin
       if (rst_n) begin
         get_hazard_messages(
-            .pc_stall(iDUT.PC_stall),
+            .pc_stall(iDUT.PC_stall), 
             .if_id_stall(iDUT.IF_ID_stall),
             .if_flush(iDUT.IF_flush),
             .id_flush(iDUT.ID_flush),

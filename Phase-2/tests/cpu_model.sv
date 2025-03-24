@@ -192,7 +192,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   // MEM_signals[1] == MemEnable.
   // WB_signals[1] == HLT.
   // EX_signals[62:59] == SrcReg1, EX_signals[58:55] == SrcReg2. 
-  HazardDetectionUnit iHDU (
+  HazardDetectionUnit_model iHDU (
       .SrcReg1(EX_signals[62:59]),
       .SrcReg2(EX_signals[58:55]),
       .ID_EX_RegWrite(ID_EX_WB_signals[3]),
@@ -265,7 +265,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   // Instantiate the Forwarding Unit  //
   //////////////////////////////////////
   // EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
-  ForwardingUnit iFWD (
+  ForwardingUnit_model iFWD (
     .ID_EX_SrcReg1(ID_EX_SrcReg1),
     .ID_EX_SrcReg2(ID_EX_SrcReg2),
     .EX_MEM_SrcReg2(EX_MEM_SrcReg2),

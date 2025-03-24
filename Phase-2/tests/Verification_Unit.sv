@@ -7,19 +7,24 @@
 ///////////////////////////////////////////////////////////
 
 module Verification_Unit (
-    input  logic        clk, rst,         // Clock and reset signals
-    input  logic        wb_done,          // Signal indicating WB stage completion
-    input  string       fetch_msg,        // Fetch stage message
-    input  string       if_id_msg,        // IF/ID stage message
-    input  string       decode_msg,       // Decode stage message
-    input  string       id_ex_msg,        // ID/EX stage message
-    input  string       execute_msg,      // Execute stage message
-    input  string       ex_mem_msg,       // EX/MEM stage message
-    input  string       mem_msg,          // Memory stage message
-    input  string       mem_wb_msg,       // MEM/WB stage message
-    input  string       wb_msg,           // WB stage message
-    input  string       stall_msg,        // Stall message (if any)
-    input  string       flush_msg         // Flush message (if any)
+    input  logic        clk, rst,                // Clock and reset signals
+    input  string       fetch_msg,               // Fetch stage message
+    input  string       if_id_msg,               // IF/ID stage message
+    input  string       decode_msg,              // Decode stage message
+    input  string       instruction_full_msg,    // Full instruction message
+    input  string       id_ex_message,           // ID/EX stage message
+    input  string       execute_msg,             // Execute stage message
+    input  string       ex_mem_message,          // EX/MEM stage message
+    input  string       mem_verify_msg,          // Memory stage message
+    input  string       mem_wb_message,          // MEM/WB stage message
+    input  string       wb_verify_msg,           // WB stage message
+    input  string       pc_message,              // PC message
+    input  string       if_id_hz_message,        // IF/ID hazard message
+    input  string       id_ex_hz_message,        // ID/EX hazard message
+    input  string       flush_message,           // Flush message
+    input  logic        stall,                   // Stall signal
+    input  logic        flush,                   // Flush signal
+    input  logic        wb_valid                 // WB valid signal
 );
 
     /////////////////////////////////////////
@@ -70,7 +75,8 @@ module Verification_Unit (
                 instr_queue[tail].if_id_cycle = $time / 10;
             end
             if (decode_msg != "") begin
-                instr_queue[tail].decode = decode_msg;
+                instr_queue[tail].decode[0] = decode_msg;
+                instr_queue[tail].decode[1] = instruction_full_msg;
                 instr_queue[tail].decode_cycle = $time / 10;
             end
             if (id_ex_msg != "") begin
@@ -117,21 +123,21 @@ module Verification_Unit (
     always_ff @(posedge clk) begin
         if (!rst && wb_done) begin
             $display("=====================================================");
-            $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode, $time/10);
+            $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode[1], $time/10);
             $display("=====================================================");
             
             if (instr_queue[head].fetch != "")
-                $display("|[FETCH] %s @ Cycle: %0t", instr_queue[head].fetch, instr_queue[head].fetch_cycle);
+                $display("|%s @ Cycle: %0t", instr_queue[head].fetch, instr_queue[head].fetch_cycle);
             if (instr_queue[head].if_id != "")
-                $display("|[IF_ID] %s @ Cycle: %0t", instr_queue[head].if_id, instr_queue[head].if_id_cycle);
+                $display("|%s @ Cycle: %0t", instr_queue[head].if_id, instr_queue[head].if_id_cycle);
             if (instr_queue[head].decode != "")
-                $display("|[DECODE] %s @ Cycle: %0t", instr_queue[head].decode, instr_queue[head].decode_cycle);
+                $display("|%s @ Cycle: %0t", instr_queue[head].decode, instr_queue[head].decode_cycle);
             if (instr_queue[head].id_ex != "")
-                $display("|[ID_EX] %s @ Cycle: %0t", instr_queue[head].id_ex, instr_queue[head].id_ex_cycle);
+                $display("|%s @ Cycle: %0t", instr_queue[head].id_ex, instr_queue[head].id_ex_cycle);
             if (instr_queue[head].execute != "")
-                $display("|[EXECUTE] %s @ Cycle: %0t", instr_queue[head].execute, instr_queue[head].execute_cycle);
+                $display("|%s @ Cycle: %0t", instr_queue[head].execute, instr_queue[head].execute_cycle);
             if (instr_queue[head].ex_mem != "")
-                $display("|[EX_MEM] %s @ Cycle: %0t", instr_queue[head].ex_mem, instr_queue[head].ex_mem_cycle);
+                $display("|%s @ Cycle: %0t", instr_queue[head].ex_mem, instr_queue[head].ex_mem_cycle);
             if (instr_queue[head].mem != "")
                 $display("|[MEMORY] %s @ Cycle: %0t", instr_queue[head].mem, instr_queue[head].mem_cycle);
             if (instr_queue[head].mem_wb != "")

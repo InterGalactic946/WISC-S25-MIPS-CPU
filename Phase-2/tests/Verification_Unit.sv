@@ -36,34 +36,39 @@ module Verification_Unit (
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
     debug_info_t pipeline_msgs[0:71];
 
-    // Tracks the pipeline.
-    always @(posedge clk) begin
-        if (rst) begin
-            fetch_id <= 0;
-            decode_id <= 0;
-            execute_id <= 0;
-            memory_id <= 0;
-            wb_id <= 0;
-            valid_fetch <= 1; // Ensure first instruction is captured immediately after reset
-            valid_decode <= 0;
-            valid_execute <= 0;
-            valid_memory <= 0;
-            valid_wb <= 0;
-        end else if (!(stall || flush)) begin
+// Tracks the pipeline.
+always @(posedge clk) begin
+    if (rst) begin
+        fetch_id <= 0;
+        decode_id <= 0;
+        execute_id <= 0;
+        memory_id <= 0;
+        wb_id <= 0;
+        valid_fetch <= 1; // Ensure first instruction is captured immediately after reset
+        valid_decode <= 0;
+        valid_execute <= 0;
+        valid_memory <= 0;
+        valid_wb <= 0;
+    end else begin
+        if (!stall) begin
+            // Increment fetch_id only when there's no stall
             fetch_id <= fetch_id + 1;
-            decode_id <= fetch_id;   // Directly assign from fetch_id
-            execute_id <= decode_id; // Directly assign from decode_id
-            memory_id <= execute_id; // Directly assign from execute_id
-            wb_id <= memory_id;      // Directly assign from memory_id
-
-            valid_fetch <= 1;
-            valid_decode <= valid_fetch;
-            valid_execute <= valid_decode;
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
         end
-    end
+        
+        // Update the other stages as usual
+        decode_id <= fetch_id;   // Directly assign from fetch_id
+        execute_id <= decode_id; // Directly assign from decode_id
+        memory_id <= execute_id; // Directly assign from execute_id
+        wb_id <= memory_id;      // Directly assign from memory_id
 
+        // Valid signals propagate
+        valid_fetch <= 1;
+        valid_decode <= valid_fetch;
+        valid_execute <= valid_decode;
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
+    end
+end
 
     // Adds the messages, with stall and flush checks.
     always @(posedge clk) begin
@@ -88,10 +93,10 @@ module Verification_Unit (
                 pipeline_msgs[memory_id].memory_cycle <= $time / 10;
             end
             if (valid_wb && !stall && !flush) begin
-                pipeline_msgs[wb_id].mem_wb_msg <= mem_wb_msg;
-                pipeline_msgs[wb_id].mem_wb_cycle <= $time / 10;
-                pipeline_msgs[wb_id].wb_msg <= wb_msg;
-                pipeline_msgs[wb_id].wb_cycle <= $time / 10;
+                pipeline_msgs[wb_id].mem_wb_msg = mem_wb_msg;
+                pipeline_msgs[wb_id].mem_wb_cycle = $time / 10;
+                pipeline_msgs[wb_id].wb_msg = wb_msg;
+                pipeline_msgs[wb_id].wb_cycle = $time / 10;
             end
         end
     end

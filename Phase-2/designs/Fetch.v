@@ -44,7 +44,7 @@ module Fetch (
 
   // Update the PC with correct target on misprediction or miscomputation on a taken branch, or the predicted target address 
   // if predicted to be taken, otherwise assume not taken.
-  assign PC_next = (update_PC) ?  actual_target : ((prediction[1]) ? predicted_target : PC_new);
+  assign PC_new = (update_PC) ?  actual_target : ((prediction[1]) ? predicted_target : PC_new);
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
   DynamicBranchPredictor iDBP (
@@ -64,7 +64,7 @@ module Fetch (
   );
 
   // Infer the PC Register.
-  CPU_Register iPC (.clk(clk), .rst(rst), .wen(enable), .data_in(PC_next), .data_out(PC_curr));
+  CPU_Register iPC (.clk(clk), .rst(rst), .wen(enable), .data_in(PC_new), .data_out(PC_curr));
 
   // Infer the instruction memory, it is read enabled when not stalling and never write enabled.
   memory1c iINSTR_MEM (.data_out(PC_inst),
@@ -78,7 +78,7 @@ module Fetch (
                       );
 
   // Instantiate the PC+2 adder.
-  CLA_16bit iCLA_next (.A(PC_curr), .B(16'h0002), .sub(1'b0), .Sum(PC_new), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
+  CLA_16bit iCLA_next (.A(PC_curr), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
 
 endmodule
 

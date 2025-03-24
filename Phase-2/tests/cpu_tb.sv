@@ -99,7 +99,7 @@ module cpu_tb();
   assign flush = iDUT.IF_flush || iDUT.ID_flush;
 
   // Get the hazard messages.
-  always @(negedge clk) begin
+  always @(posedge clk) begin
       if (rst_n) begin
         get_hazard_messages(
             .pc_stall(iMODEL.PC_stall), 

@@ -4,19 +4,18 @@ module Verification_Unit (
     input  string       if_id_msg,               // IF/ID stage message
     input  string       decode_msg,              // Decode stage message
     input  string       instruction_full_msg,    // Full instruction message
-    input  string       id_ex_message,           // ID/EX stage message
+    input  string       id_ex_msg,               // ID/EX stage message
     input  string       execute_msg,             // Execute stage message
-    input  string       ex_mem_message,          // EX/MEM stage message
-    input  string       mem_verify_msg,          // Memory stage message
-    input  string       mem_wb_message,          // MEM/WB stage message
-    input  string       wb_verify_msg,           // WB stage message
+    input  string       ex_mem_msg,              // EX/MEM stage message
+    input  string       mem_msg,                 // Memory stage message
+    input  string       mem_wb_msg,              // MEM/WB stage message
+    input  string       wb_msg,                  // WB stage message
     input  string       pc_message,              // PC message
     input  string       if_id_hz_message,        // IF/ID hazard message
     input  string       id_ex_hz_message,        // ID/EX hazard message
-    input  string       flush_message,           // Flush message
+    input  string       flush_msg,               // Flush message
     input  logic        stall,                   // Stall signal
     input  logic        flush,                   // Flush signal
-    input  logic        wb_valid                 // WB valid signal
 );
 
     /////////////////////////////////////////
@@ -50,7 +49,7 @@ module Verification_Unit (
     integer head = 0, tail = 0;    // Head and tail pointers for queue
     integer i;                     // Loop variable
     integer wb_valid_counter = 0;  // Counter for WB valid
-
+    
     //////////////////////////////////////////////
     // Sequential Block: Store Messages Per Stage //
     //////////////////////////////////////////////
@@ -110,7 +109,7 @@ module Verification_Unit (
             end
             
             // Increment wb_valid_counter only when not stalled or flushed
-            if (!stall && !flush) begin
+            if (!stall && !flush && wb_valid) begin
                 wb_valid_counter <= wb_valid_counter + 1;
             end
         end
@@ -120,7 +119,7 @@ module Verification_Unit (
     // Print Pipeline Messages at WB Stage //
     /////////////////////////////////////////
     always_ff @(posedge clk) begin
-        if (!rst && wb_done) begin
+        if (!rst && wb_valid && wb_valid_counter > 0) begin
             $display("=====================================================");
             $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode[1], $time/10);
             $display("=====================================================");

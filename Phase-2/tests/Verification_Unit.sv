@@ -98,7 +98,7 @@ module Verification_Unit (
 
     
     // Stall/Flush Message Display based on Hazard Conditions.
-    always @(negedge clk) begin
+    always @(posedge clk) begin
         if (!rst) begin
             if (stall) begin
                 // Stall based on hazard conditions

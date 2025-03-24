@@ -162,7 +162,7 @@ package Monitor_tasks;
 
       // Write the footer and close the file
       $fwrite(file, "=======================================\n");
-      $fdisplay(file, "\n");
+      $fwrite(file, "\n");
       $fclose(file);
   endtask
 
@@ -202,7 +202,7 @@ package Monitor_tasks;
 
       // Write the footer and close the file
       $fwrite(file, "%s\n", separator);
-      $fdisplay(file, "\n");
+      $fwrite(file, "\n");
       $fclose(file);
   endtask
 

@@ -109,7 +109,7 @@ module cpu_tb();
             .br_hazard(iMODEL.iHDU.BR_hazard),
             .b_hazard(iMODEL.iHDU.B_hazard),
             .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
-            .hlt(iMODEL.iHDU.HLT),
+            .hlt(expected_hlt),
             .pc_stall_msg(pc_stall_msg),
             .if_id_stall_msg(if_id_stall_msg),
             .if_flush_msg(if_flush_msg),

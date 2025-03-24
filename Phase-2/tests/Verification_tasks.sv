@@ -126,7 +126,7 @@ package Verification_tasks;
       input logic [62:0] EX_signals, expected_EX_signals,
       input logic [17:0] MEM_signals, expected_MEM_signals,
       input logic [7:0] WB_signals, expected_WB_signals,
-      input logic [2:0] cc, flag_reg,
+      input logic [2:0] cc,
       input logic is_branch, expected_is_branch,
       input logic is_BR, expected_is_BR,
       input logic [15:0] branch_target, expected_branch_target,
@@ -389,7 +389,6 @@ package Verification_tasks;
   task automatic verify_EXECUTE(
       input logic [15:0] Input_A,      
       input logic [15:0] Input_B, 
-      input logic [3:0] ALUOp,
       input logic [15:0] expected_Input_A,      
       input logic [15:0] expected_Input_B, 
       input logic [15:0] ALU_out,
@@ -408,13 +407,7 @@ package Verification_tasks;
       
       // Verify ALU result.
       if (ALU_out !== expected_ALU_out) begin
-          execute_msg = $sformatf("[EXECUTE] ERROR: ALUOp: 0x%h, Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, expected_Input_A = 0x%h, expected_Input_B = 0x%h, expected_ALU_out = 0x%h.", ALUOp, Input_A, Input_B, ALU_out, expected_Input_A, expected_Input_B, expected_ALU_out);
-          return;
-      end
-
-       // Verify ALU result.
-      if (ALU_out !== expected_ALU_out) begin
-          execute_msg = $sformatf("[EXECUTE] ERROR: Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, expected_ALU_out = 0x%h.", Input_A, Input_B, ALU_out, expected_ALU_out);
+          execute_msg = $sformatf("[EXECUTE] ERROR: Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, expected_Input_A = 0x%h, expected_Input_B = 0x%h, expected_ALU_out = 0x%h.", Input_A, Input_B, ALU_out, expected_Input_A, expected_Input_B, expected_ALU_out);
           return;
       end
 

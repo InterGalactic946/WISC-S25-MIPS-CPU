@@ -191,7 +191,6 @@ module cpu_tb();
         .WB_signals(iDUT.WB_signals),
         .expected_WB_signals(iMODEL.WB_signals),
         .cc(iDUT.iDECODE.c_codes),
-        .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
         .is_branch(iDUT.Branch),
         .expected_is_branch(iMODEL.Branch),
         .is_BR(iDUT.BR),
@@ -237,7 +236,6 @@ module cpu_tb();
       verify_EXECUTE(
         .Input_A(iDUT.iEXECUTE.iALU.Input_A),
         .Input_B(iDUT.iEXECUTE.iALU.Input_B),
-        .ALUOp(iMODEL.iEXECUTE.ALUOp),
         .expected_Input_A(iMODEL.iEXECUTE.iALU_model.Input_B),
         .expected_Input_B(iMODEL.iEXECUTE.iALU_model.Input_B),
         .ALU_out(iDUT.ALU_out),

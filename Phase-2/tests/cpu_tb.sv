@@ -57,25 +57,25 @@ module cpu_tb();
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-   Verification_Unit iVERIFY (
-    .clk(clk),
-    .rst(rst),
-    .if_id_msg(if_id_msg),
-    .decode_msg(decode_msg),
-    .instruction_full_msg(instruction_full_msg),
-    .id_ex_message(id_ex_message),
-    .execute_msg(execute_msg),
-    .ex_mem_message(ex_mem_message),
-    .mem_verify_msg(mem_verify_msg),
-    .mem_wb_message(mem_wb_message),
-    .wb_verify_msg(wb_verify_msg),
-    .pc_message(pc_message),
-    .if_id_hz_message(if_id_hz_message),
-    .id_ex_hz_message(id_ex_hz_message),
-    .flush_message(flush_message),
-    .stall(stall),
-    .flush(flush)
-  );
+  //  Verification_Unit iVERIFY (
+  //   .clk(clk),
+  //   .rst(rst),
+  //   .if_id_msg(if_id_msg),
+  //   .decode_msg(decode_msg),
+  //   .instruction_full_msg(instruction_full_msg),
+  //   .id_ex_message(id_ex_message),
+  //   .execute_msg(execute_msg),
+  //   .ex_mem_message(ex_mem_message),
+  //   .mem_verify_msg(mem_verify_msg),
+  //   .mem_wb_message(mem_wb_message),
+  //   .wb_verify_msg(wb_verify_msg),
+  //   .pc_message(pc_message),
+  //   .if_id_hz_message(if_id_hz_message),
+  //   .id_ex_hz_message(id_ex_hz_message),
+  //   .flush_message(flush_message),
+  //   .stall(stall),
+  //   .flush(flush)
+  // );
 
   // Test procedure to apply stimulus and check responses.
   initial begin
@@ -161,6 +161,8 @@ module cpu_tb();
         
         .if_id_msg(if_id_msg)
       );
+
+      $display(if_id_msg);
     end
   end
 
@@ -193,6 +195,9 @@ module cpu_tb();
         .decode_msg(decode_msg),
         .instruction_full(instruction_full_msg)
       );
+
+      $display(instruction_full_msg);
+      $display(decode_msg);
     end
   end
 
@@ -211,6 +216,8 @@ module cpu_tb();
         
         .id_ex_message(id_ex_message)
       );
+
+      $display(id_ex_message);
     end
   end
 
@@ -236,6 +243,8 @@ module cpu_tb();
         
         .execute_msg(execute_msg)
       );
+
+      $display(execute_msg);
     end
   end
 
@@ -252,6 +261,8 @@ module cpu_tb();
           
           .ex_mem_message(ex_mem_message)
         );
+
+        $display(ex_mem_message);
     end
   end
 
@@ -269,6 +280,8 @@ module cpu_tb();
         
         .mem_verify_msg(mem_verify_msg)
       );
+
+      $display(mem_verify_msg);
     end
   end
 
@@ -285,6 +298,8 @@ module cpu_tb();
         
         .mem_wb_message(mem_wb_message)
       );
+
+      $display(mem_wb_message);
     end
   end
 
@@ -299,6 +314,9 @@ module cpu_tb();
         
         .wb_verify_msg(wb_verify_msg)
       );
+
+
+      $display(wb_verify_msg);
     end
   end
 

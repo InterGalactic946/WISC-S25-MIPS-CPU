@@ -120,11 +120,11 @@ package Verification_tasks;
 
     // Handle PC/IF_ID_stall messages.
     if (PC_stall && IF_ID_stall) begin
-        if_id_msg = $sformatf("[STALL]: PC stalled due to %s.\n[STALL]: IF_ID stalled due to %s.", hazard_type, hazard_type);
+        if_id_msg = $sformatf("[FETCH]: PC stalled due to %s.\n|[IF_ID]: IF_ID stalled due to %s.", hazard_type, hazard_type);
         return;
-    end else if (IF_flush) begin
-        if_id_msg = $sformatf("[FLUSH]: IF flushed due to mispredicted branch.");
-        return;
+    // end else if (IF_flush) begin
+    //     if_id_msg = $sformatf("[FLUSH]: IF flushed due to mispredicted branch.");
+    //     return;
     end else begin
 
         // Verify fetch otheriwse.

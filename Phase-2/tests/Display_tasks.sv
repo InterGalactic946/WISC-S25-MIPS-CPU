@@ -108,7 +108,7 @@ package Display_tasks;
 
 task automatic get_hazard_messages(
     ref logic pc_stall, if_id_stall, if_flush, id_flush,    // Stall and flush signals
-    ref logic br_hazard, b_hazard, load_use_hazard, hlt     // Hazard type signals
+    ref logic br_hazard, b_hazard, load_use_hazard, hlt,    // Hazard type signals
     output string pc_stall_msg,                             // Output message for PC stage
     output string if_id_stall_msg,                          // Output message for IF_ID stage
     output string if_flush_msg,                             // Output message for IF flush stage

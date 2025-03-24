@@ -33,16 +33,14 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   assign SUM_step = (Opcode == 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);  
 
   // Overflow detection logic (only for ADD and SUB).
-  assign pos_ov = (Opcode[3:1] == 3'h0) && 
-                  ((Opcode == 4'h0 && ~Input_A[15] && ~Input_B[15] && SUM_step[15]) || // ADD Overflow
+  assign pos_ov =  ((Opcode == 4'h0 && ~Input_A[15] && ~Input_B[15] && SUM_step[15]) || // ADD Overflow
                    (Opcode == 4'h1 && ~Input_A[15] && Input_B[15] && SUM_step[15]));  // SUB Overflow
 
-  assign neg_ov = (Opcode[3:1] == 3'h0) && 
-                  ((Opcode == 4'h0 && Input_A[15] && Input_B[15] && ~SUM_step[15]) || // ADD Negative Overflow
+  assign neg_ov =  ((Opcode == 4'h0 && Input_A[15] && Input_B[15] && ~SUM_step[15]) || // ADD Negative Overflow
                    (Opcode == 4'h1 && Input_A[15] && ~Input_B[15] && ~SUM_step[15])); // SUB Negative Overflow
 
   // Saturate result based on overflow condition for ADD/SUB but wrap around if LW/SW.
-  assign SUM_Out = (Opcode[3:1] == 3'h0) ? 
+  assign SUM_Out = (Opcode[3:1] === 3'h0) ? 
                    ((pos_ov) ? 16'h7FFF : 
                     (neg_ov) ? 16'h8000 : SUM_step) 
                   : SUM_step;

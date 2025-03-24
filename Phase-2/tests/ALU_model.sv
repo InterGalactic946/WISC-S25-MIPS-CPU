@@ -72,7 +72,7 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   // Set flag signals based on ALU output  //
   //////////////////////////////////////////
   // Z_flag is set when ALU_Out is zero.
-  assign Z_set = (ALU_Out == 16'h0000);
+  assign Z_set = (ALU_Out === 16'h0000);
 
   // V_flag is set for overflow conditions in ADD/SUB operations.
   assign V_set = pos_ov || neg_ov;

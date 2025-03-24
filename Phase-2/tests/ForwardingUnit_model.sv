@@ -8,7 +8,7 @@
 // prevents hazards by ensuring the correct values are used  //
 // in the EX stage.                                          //
 ///////////////////////////////////////////////////////////////
-module ForwardingUnit (
+module ForwardingUnit_model (
     input logic [3:0] ID_EX_SrcReg1, // Pipelined first source register ID from the decode stage
     input logic [3:0] ID_EX_SrcReg2, // Pipelined second source register ID from the decode stage
     input logic [3:0] EX_MEM_SrcReg2,// Pipelined register ID second source register from the memory stage

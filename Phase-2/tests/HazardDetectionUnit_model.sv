@@ -5,7 +5,7 @@
 // This module detects hazards in the pipeline and applies   //
 // necessary stalls for both branch and load instructions.   //
 ///////////////////////////////////////////////////////////////
-module HazardDetectionUnit (
+module HazardDetectionUnit_model (
     input logic [3:0] SrcReg1,          // First source register ID (Rs) in ID stage
     input logic [3:0] SrcReg2,          // Second source register ID (Rt) in ID stage
     input logic ID_EX_RegWrite,         // Register write signal from ID/EX stage

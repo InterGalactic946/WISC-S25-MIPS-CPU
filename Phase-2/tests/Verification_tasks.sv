@@ -232,8 +232,6 @@ package Verification_tasks;
           return;
       end
 
-      $display("SrcReg1: %04x, expected_SrcReg1: %04x", SrcReg1, expected_SrcReg1);
-
       if (SrcReg2 !== expected_SrcReg2) begin
           stage_msg = $sformatf("[%s] ERROR: SrcReg2 mismatch: 0x%h (expected 0x%h).", stage, SrcReg2, expected_SrcReg2);
           return;
@@ -243,8 +241,6 @@ package Verification_tasks;
           stage_msg = $sformatf("[%s] ERROR: ALU_In1 mismatch: 0x%h (expected 0x%h).", stage, ALU_In1, expected_ALU_In1);
           return;
       end
-
-        $display("ALU_In1: %04x, expected_ALU_In1: %04x", ALU_In1, expected_ALU_In1);
 
       if (ALU_imm !== expected_ALU_imm) begin
           stage_msg = $sformatf("[%s] ERROR: ALU_imm mismatch: 0x%h (expected 0x%h).", stage, ALU_imm, expected_ALU_imm);

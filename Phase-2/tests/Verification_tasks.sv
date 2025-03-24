@@ -389,17 +389,17 @@ package Verification_tasks;
   task automatic verify_EXECUTE(
       input logic [15:0] Input_A,      
       input logic [15:0] Input_B, 
-      input logic [15:0] expected_Input_A,      
-      input logic [15:0] expected_Input_B, 
+      ref logic [15:0] expected_Input_A,      
+      ref logic [15:0] expected_Input_B, 
       input logic [15:0] ALU_out,
       input logic Z_set, V_set, N_set,
-      input logic [15:0] expected_ALU_out,          
+      ref logic [15:0] expected_ALU_out,          
       input logic ZF,                 
       input  logic NF,               
       input  logic VF,               
-      input  logic expected_ZF,                
-      input  logic expected_VF,               
-      input  logic expected_NF,
+      ref  logic expected_ZF,                
+      ref  logic expected_VF,               
+      ref  logic expected_NF,
       output string execute_msg 
   );
      // Initialize message.

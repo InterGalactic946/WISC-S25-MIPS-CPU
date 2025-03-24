@@ -564,7 +564,7 @@ package Verification_tasks;
 
       // If all checks pass, output success message.
       if (MEM_WB_RegWrite) begin
-        wb_verify_msg = $sformatf("[WRITE-BACK] SUCCESS: Register R[%0d] written with data: 0x%h.", MEM_WB_DstReg, RegWriteData);
+        wb_verify_msg = $sformatf("[WRITE-BACK] SUCCESS: Register R%0d written with data: 0x%h.", MEM_WB_DstReg, RegWriteData);
       end else begin
         wb_verify_msg = "[WRITE-BACK] SUCCESS: No register write in this cycle.";
       end

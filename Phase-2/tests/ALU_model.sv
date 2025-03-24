@@ -17,6 +17,8 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   // Declare any internal signals as type wire //
   //////////////////////////////////////////////
   // ADD/SUB signals
+  logic pos_ov_add, neg_ov_add;   // Overflow indicators for addition/subtraction
+  logic pos_ov_sub, neg_ov_sub;   // Overflow indicators for addition/subtraction
   logic pos_ov, neg_ov;           // Overflow indicators for addition/subtraction
   logic [15:0] Input_A, Input_B;  // 16-bit inputs modified to the ALU
   logic [15:0] SUM_Out, SUM_step; // Sum result with saturation handling
@@ -26,17 +28,23 @@ module ALU_model (ALU_Out, Z_set, V_set, N_set, ALU_In1, ALU_In2, Opcode);
   /////////////////////////////////////////////////////////////////////////////////////////
 
   // Modify inputs for LW/SW instructions vs. normal ADD.
-  assign Input_A = (Opcode[3:1] == 3'h4) ? ALU_In1 & 16'hFFFE : ALU_In1;
-  assign Input_B = (Opcode[3:1] == 3'h4) ? {ALU_In2[14:0], 1'b0} : ALU_In2;
+  assign Input_A = (Opcode[3:1] === 3'h4) ? ALU_In1 & 16'hFFFE : ALU_In1;
+  assign Input_B = (Opcode[3:1] === 3'h4) ? {ALU_In2[14:0], 1'b0} : ALU_In2;
 
   // Form the step sum.
   assign SUM_step = (Opcode === 4'h1) ? (Input_A - Input_B) : (Input_A + Input_B);  
 
-  assign pos_ov = (~Input_A[15] & ~Input_B[15] & SUM_step[15]) |  // Positive Overflow (ADD)
-                  ( Input_A[15] &  Input_B[15] & ~SUM_step[15]);  // Negative Overflow (SUB)
+  // Overflow detection for ADD
+  assign pos_ov_add = (~Input_A[15] & ~Input_B[15] & SUM_step[15]); // Both positive → Negative result
+  assign neg_ov_add = ( Input_A[15] &  Input_B[15] & ~SUM_step[15]); // Both negative → Positive result
 
-  assign neg_ov = ( Input_A[15] &  Input_B[15] & ~SUM_step[15]) |  // Negative Overflow (ADD)
-                  (~Input_A[15] & ~Input_B[15] & SUM_step[15]);    // Positive Overflow (SUB)
+  // Overflow detection for SUB (A - B) is actually A + (~B + 1)
+  assign pos_ov_sub = (~Input_A[15] &  Input_B[15] & SUM_step[15]); // A positive, B negative → Negative result
+  assign neg_ov_sub = ( Input_A[15] & ~Input_B[15] & ~SUM_step[15]); // A negative, B positive → Positive result
+
+  // Final overflow signals: Apply conditions based on ADD (Opcode = 4'h0) or SUB (Opcode = 4'h1)
+  assign pos_ov = ((Opcode === 4'h0) & pos_ov_add) | ((Opcode === 4'h1) & pos_ov_sub);
+  assign neg_ov = ((Opcode === 4'h0) & neg_ov_add) | ((Opcode === 4'h1) & neg_ov_sub);
 
   // Saturate result based on overflow condition for ADD/SUB but wrap around if LW/SW.
   assign SUM_Out = (Opcode[3:1] === 3'h0) ? 

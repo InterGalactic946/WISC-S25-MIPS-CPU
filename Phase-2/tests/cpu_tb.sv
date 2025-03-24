@@ -163,8 +163,6 @@ module cpu_tb();
         .stage("FETCH"),
         .stage_msg(fetch_msg)
       );
-
-      $display(fetch_msg);
     end
   end
 

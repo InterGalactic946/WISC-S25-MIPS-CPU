@@ -131,9 +131,9 @@ end
 always @(posedge clk) begin
     if (!rst && wb_id >= 0) begin
         // Print messages for instruction reaching WB stage
-        $display("=====================================================");
+        $display("=========================================================");
         $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time/10);
-        $display("=====================================================");
+        $display("=========================================================");
 
         if (stall)
             print_stall_messages(.inst_id(wb_id), .size(pc_idx), .msg_type("pc"), .cycle(pipeline_msgs[wb_id].fetch_cycle));

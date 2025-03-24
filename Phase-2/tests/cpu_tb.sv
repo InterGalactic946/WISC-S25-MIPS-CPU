@@ -113,10 +113,10 @@ module cpu_tb();
               .flush_message(flush_message)
           );
 
-          $display(pc_message);
-          $display(if_id_hz_message);
-          $display(id_ex_hz_message);
-          $display(flush_message);
+          // $display(pc_message);
+          // $display(if_id_hz_message);
+          // $display(id_ex_hz_message);
+          // $display(flush_message);
       end
   end
 

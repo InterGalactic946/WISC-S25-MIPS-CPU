@@ -198,7 +198,6 @@ package Monitor_tasks;
       // Iterate through the 16 registers and write formatted values
       for (int addr = 0; addr < 16; addr++) begin
           $fwrite(file, "|      0x%04X    |     0x%04X     |\n", addr, regfile[addr]);
-          $display("ADDR: %04x, VALUE: %04x", addr, regfile[addr]);
       end
 
       // Write the footer and close the file

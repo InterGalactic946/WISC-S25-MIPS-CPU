@@ -65,20 +65,23 @@ module Execute_model (
   ////////////////////////////////////////////////////
   // Set FLAGS based on the output of the execution //
   ////////////////////////////////////////////////////
-  always @(posedge clk) begin
-    if (rst) begin
+  always @(posedge clk)
+    if (rst)
       ZF <= 1'b0;
-      VF <= 1'b0;
-      NF <= 1'b0;
-    end else begin
-      if (Z_en)
+    else if (Z_en)
         ZF <= Z_set;
-      if (NV_en) begin
-        VF <= V_set;
-        NF <= N_set;
-      end
-    end
-  end
+  
+  always @(posedge clk)
+    if (rst)
+      VF <= 1'b0;
+    else if (NV_en)
+      VF <= V_set;
+
+  always @(posedge clk)
+    if (rst)
+      NF <= 1'b0;
+    else if (NV_en)
+      NF <= N_set;
   ////////////////////////////////////////////////////
 
 endmodule

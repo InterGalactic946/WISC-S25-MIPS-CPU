@@ -123,7 +123,7 @@ package Verification_tasks;
         if_id_msg = $sformatf("[STALL]: PC stalled due to %s.\n[STALL]: IF_ID stalled due to %s.", hazard_type, hazard_type);
         return;
     end else if (IF_flush)
-        if_id_msg = $sformatf("[FLUSH]: IF flushed due to mispredicted branch.", flush_type);
+        if_id_msg = $sformatf("[FLUSH]: IF flushed due to mispredicted branch.");
         return;
 
     // Verify fetch otheriwse.

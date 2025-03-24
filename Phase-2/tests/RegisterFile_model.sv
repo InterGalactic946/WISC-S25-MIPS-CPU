@@ -66,5 +66,3 @@ module RegisterFile_model (clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData
   end
 
 endmodule
-
-`default_nettype wire // Reset default behavior at the end

@@ -86,7 +86,7 @@ package Monitor_tasks;
 
           // Write Header to File
           $fdisplay(file, "===============================================================================");
-          $fdisplay(file, "|        DYNAMIC BRANCH PREDICTOR MEMORY DUMP - CLOCK CYCLE %0d              |", clock_cycle);
+          $fdisplay(file, "|        DYNAMIC BRANCH PREDICTOR MEMORY DUMP - CLOCK CYCLE %0d               |", clock_cycle);
           $fdisplay(file, "===============================================================================");
           $fdisplay(file, "-------------------------------------|----------------------------------------");
           $fdisplay(file, "                 BHT                 |                   BTB                  ");
@@ -138,7 +138,7 @@ package Monitor_tasks;
       end
 
       // Format the title with the current clock cycle
-      title = $sformatf("| DATA MEMORY DUMP - CLOCK CYCLE %0d |", clock_cycle);
+      title = $sformatf("| DATA MEMORY DUMP - CLOCK CYCLE %0d  |", clock_cycle);
 
       // Write the centered header to the file
       $fwrite(file, "=======================================\n");
@@ -154,7 +154,7 @@ package Monitor_tasks;
 
           // Only write values where model memory was accessed (not 'x')
           if (model_addr !== 16'hxxxx) begin
-              $fwrite(file, "| 0x%04X  | 0x%04X | 0x%04X |  %s  |\n",
+              $fwrite(file, "| 0x%04X  | 0x%04X | 0x%04X |  %s   |\n",
                       model_addr, model_val, dut_val, 
                       (model_val === dut_val) ? "YES" : "NO");
           end
@@ -162,6 +162,7 @@ package Monitor_tasks;
 
       // Write the footer and close the file
       $fwrite(file, "=======================================\n");
+      $fdisplay(file, "\n");
       $fclose(file);
   endtask
 
@@ -201,6 +202,7 @@ package Monitor_tasks;
 
       // Write the footer and close the file
       $fwrite(file, "%s\n", separator);
+      $fdisplay(file, "\n");
       $fclose(file);
   endtask
 

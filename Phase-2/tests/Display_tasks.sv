@@ -89,9 +89,9 @@ package Display_tasks;
           4'h1: instr_name = $sformatf("SUB R%0d, R%0d, R%0d", rd, rs, rt);        // 0001: Subtraction
           4'h2: instr_name = $sformatf("XOR R%0d, R%0d, R%0d", rd, rs, rt);        // 0010: Bitwise XOR
           4'h3: instr_name = $sformatf("RED R%0d, R%0d, R%0d", rd, rs, rt);        // 0011: Reduction Addition
-          4'h4: instr_name = $sformatf("SLL R%0d, R%0d, R%0d", rd, rs, rt);        // 0100: Shift Left Logical
-          4'h5: instr_name = $sformatf("SRA R%0d, R%0d, R%0d", rd, rs, rt);        // 0101: Shift Right Arithmetic
-          4'h6: instr_name = $sformatf("ROR R%0d, R%0d, R%0d", rd, rs, rt);        // 0110: Rotate Right
+          4'h4: instr_name = $sformatf("SLL R%0d, R%0d, 0x%h", rd, rs, ALU_imm);   // 0100: Shift Left Logical
+          4'h5: instr_name = $sformatf("SRA R%0d, R%0d, 0x%h", rd, rs, ALU_imm);   // 0101: Shift Right Arithmetic
+          4'h6: instr_name = $sformatf("ROR R%0d, R%0d, 0x%h", rd, rs, ALU_imm);   // 0110: Rotate Right
           4'h7: instr_name = $sformatf("PADDSB R%0d, R%0d, R%0d", rd, rs, rt);     // 0111: Parallel Sub-word Addition
           4'h8: instr_name = $sformatf("LW R%0d, R%0d, 0x%h", rd, rs, ALU_imm);    // 1000: Load Word
           4'h9: instr_name = $sformatf("SW R%0d, R%0d, 0x%h", rd, rs, ALU_imm);    // 1001: Store Word

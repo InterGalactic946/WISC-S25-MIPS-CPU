@@ -1,11 +1,3 @@
-///////////////////////////////////////////////////////////
-// Verification_Unit.sv: Verification Unit Module        //  
-//                                                       //
-// This module tracks and verifies debug messages for    //
-// each instruction as it moves through the pipeline.    //
-// Messages are stored and printed at the WB stage.      //
-///////////////////////////////////////////////////////////
-
 module Verification_Unit (
     input  logic        clk, rst,                // Clock and reset signals
     input  string       fetch_msg,               // Fetch stage message
@@ -57,6 +49,7 @@ module Verification_Unit (
     pipeline_t instr_queue[0:31];  // FIFO queue for 32 in-flight instructions
     integer head = 0, tail = 0;    // Head and tail pointers for queue
     integer i;                     // Loop variable
+    integer wb_valid_counter = 0;  // Counter for WB valid
 
     //////////////////////////////////////////////
     // Sequential Block: Store Messages Per Stage //
@@ -65,6 +58,7 @@ module Verification_Unit (
         if (rst) begin
             head <= 0;
             tail <= 0;
+            wb_valid_counter <= 0;  // Reset the counter on reset
         end else begin
             if (fetch_msg != "") begin
                 instr_queue[tail].fetch = fetch_msg;
@@ -113,6 +107,11 @@ module Verification_Unit (
             end
             if (flush_msg != "") begin
                 instr_queue[tail].flush = flush_msg;
+            end
+            
+            // Increment wb_valid_counter only when not stalled or flushed
+            if (!stall && !flush) begin
+                wb_valid_counter <= wb_valid_counter + 1;
             end
         end
     end

@@ -62,12 +62,12 @@ module ControlUnit_model (
         wen_BTB = 1'b0;
         wen_BHT = 1'b0;
         update_PC = 1'b0;
-
         // Decode the control signals based on the opcode.
         case (Opcode)
             4'b0000, 4'b0001: begin  // ADD, SUB
                 Z_en = 1'b1;     // Zero flag enable
                 NV_en = 1'b1;    // Negative/Overflow flag enable
+                RegSrc = 1'b0;  
             end
             4'b0010: begin  // XOR
                 Z_en = 1'b1;    // Zero flag enable

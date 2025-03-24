@@ -60,6 +60,7 @@ module cpu_tb();
    Verification_Unit iVERIFY (
     .clk(clk),
     .rst(rst),
+    //.fetch_msg(fetch_msg),
     .if_id_msg(if_id_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),

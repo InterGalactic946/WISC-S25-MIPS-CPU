@@ -154,9 +154,9 @@ module cpu_tb();
   always @(negedge clk) begin
     if (rst_n) begin
       verify_IF_ID(
-        .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
+        .IF_ID_signals({pc, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
                         iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
-        .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr[3:0], iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
+        .expected_IF_ID_signals({expected_pc, iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
                                 iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
         
         .if_id_msg(if_id_msg)

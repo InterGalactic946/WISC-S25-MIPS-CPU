@@ -38,7 +38,7 @@ module Fetch_model (
 
   // Update the PC with correct target on misprediction or miscomputation on a taken branch, or the predicted target address 
   // if predicted to be taken, otherwise assume not taken.
-  assign PC_new = (update_PC) ?  actual_target : ((prediction[1]) ? predicted_target : PC_next);
+  assign PC_next = (update_PC) ?  actual_target : ((prediction[1]) ? predicted_target : PC_new);
 
   // Instantiate the Dynamic Branch Predictor model.
   DynamicBranchPredictor_model iDBP_model (
@@ -62,7 +62,7 @@ module Fetch_model (
     if (rst)
       PC_curr <= 16'h0000;
     else if (enable)
-      PC_curr <= PC_new;
+      PC_curr <= PC_next;
 
   // Model the instruction memory (read only).
   always @(posedge clk) begin
@@ -75,8 +75,8 @@ module Fetch_model (
   // Asynchronously read out the instruction when read enabled.
   assign PC_inst = (enable) ? inst_mem[PC_curr[15:1]] : 16'h0000;
 
-  // Compute PC_next as the next instruction address.
-  assign PC_next = PC_curr + 16'h0002;
+  // Compute PC_new as the next instruction address.
+  assign PC_new = PC_curr + 16'h0002;
   //////////////////////////////////////
 
 endmodule

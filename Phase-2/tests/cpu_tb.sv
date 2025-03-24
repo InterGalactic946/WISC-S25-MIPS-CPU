@@ -179,6 +179,13 @@ module cpu_tb();
                         iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
         .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr, iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
                                 iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
+        .PC_stall(iMODEL.PC_stall),
+        .IF_ID_stall(iMODEL.IF_ID_stall),
+        .IF_flush(iMODEL.IF_flush),
+        .br_hazard(iMODEL.iHDU.BR_hazard),
+        .b_hazard(iMODEL.iHDU.B_hazard),
+        .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
+        .hlt(expected_hlt),
         
         .if_id_msg(if_id_msg)
       );

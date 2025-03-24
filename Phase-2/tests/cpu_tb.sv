@@ -70,9 +70,6 @@ module cpu_tb();
     .mem_msg(mem_verify_msg),
     .mem_wb_msg(mem_wb_message),
     .wb_msg(wb_verify_msg),
-    .pc_message(pc_message),
-    .if_id_hz_message(if_id_hz_message),
-    .id_ex_hz_message(id_ex_hz_message),
     .flush_msg(flush_message),
     .stall(stall),
     .flush(flush)

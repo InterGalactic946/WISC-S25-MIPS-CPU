@@ -97,14 +97,6 @@ module Verification_Unit (
                 instr_queue[tail].wb = wb_msg;
                 instr_queue[tail].wb_cycle = $time / 10;
             end
-            if (stall_msg != "") begin
-                for (i = 0; i < 5; i++) begin
-                    if (instr_queue[tail].stall[i] == "") begin
-                        instr_queue[tail].stall[i] = stall_msg;
-                        break;
-                    end
-                end
-            end
             if (flush_msg != "") begin
                 instr_queue[tail].flush = flush_msg;
             end

@@ -219,6 +219,7 @@ package Verification_tasks;
 
       // Unpack EX signals
       {SrcReg1, SrcReg2, ALU_In1, ALU_imm, ALU_In2, ALUOp, ALUSrc, Z_en, NV_en} = EX_signals;
+      
       {expected_SrcReg1, expected_SrcReg2, expected_ALU_In1, expected_ALU_imm, expected_ALU_In2,
       expected_ALUOp, expected_ALUSrc, expected_Z_en, expected_NV_en} = expected_EX_signals;
 
@@ -231,7 +232,7 @@ package Verification_tasks;
           return;
       end
 
-      $display(expected_SrcReg1);
+      $display("SrcReg1: %04x, expected_SrcReg1: %04x", SrcReg1, expected_SrcReg1);
 
       if (SrcReg2 !== expected_SrcReg2) begin
           stage_msg = $sformatf("[%s] ERROR: SrcReg2 mismatch: 0x%h (expected 0x%h).", stage, SrcReg2, expected_SrcReg2);
@@ -242,6 +243,8 @@ package Verification_tasks;
           stage_msg = $sformatf("[%s] ERROR: ALU_In1 mismatch: 0x%h (expected 0x%h).", stage, ALU_In1, expected_ALU_In1);
           return;
       end
+
+        $display("ALU_In1: %04x, expected_ALU_In1: %04x", ALU_In1, expected_ALU_In1);
 
       if (ALU_imm !== expected_ALU_imm) begin
           stage_msg = $sformatf("[%s] ERROR: ALU_imm mismatch: 0x%h (expected 0x%h).", stage, ALU_imm, expected_ALU_imm);

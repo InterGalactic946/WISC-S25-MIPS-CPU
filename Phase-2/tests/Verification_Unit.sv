@@ -60,44 +60,44 @@ module Verification_Unit (
             head <= head + 1;  // Move queue forward
         else begin
             if (fetch_msg != "") begin
-                instr_queue[tail].fetch = fetch_msg;
-                instr_queue[tail].fetch_cycle = $time / 10;
+                instr_queue[tail].fetch <= fetch_msg;
+                instr_queue[tail].fetch_cycle <= $time / 10;
             end
             if (if_id_msg != "") begin
-                instr_queue[tail].if_id = if_id_msg;
-                instr_queue[tail].if_id_cycle = $time / 10;
+                instr_queue[tail].if_id <= if_id_msg;
+                instr_queue[tail].if_id_cycle <= $time / 10;
             end
             if (decode_msg != "") begin
-                instr_queue[tail].decode[0] = decode_msg;
-                instr_queue[tail].decode[1] = instruction_full_msg;
-                instr_queue[tail].decode_cycle = $time / 10;
+                instr_queue[tail].decode[0] <= decode_msg;
+                instr_queue[tail].decode[1] <= instruction_full_msg;
+                instr_queue[tail].decode_cycle <= $time / 10;
             end
             if (id_ex_msg != "") begin
-                instr_queue[tail].id_ex = id_ex_msg;
-                instr_queue[tail].id_ex_cycle = $time / 10;
+                instr_queue[tail].id_ex <= id_ex_msg;
+                instr_queue[tail].id_ex_cycle <= $time / 10;
             end
             if (execute_msg != "") begin
-                instr_queue[tail].execute = execute_msg;
-                instr_queue[tail].execute_cycle = $time / 10;
+                instr_queue[tail].execute <= execute_msg;
+                instr_queue[tail].execute_cycle <= $time / 10;
             end
             if (ex_mem_msg != "") begin
-                instr_queue[tail].ex_mem = ex_mem_msg;
-                instr_queue[tail].ex_mem_cycle = $time / 10;
+                instr_queue[tail].ex_mem <= ex_mem_msg;
+                instr_queue[tail].ex_mem_cycle <= $time / 10;
             end
             if (mem_msg != "") begin
-                instr_queue[tail].mem = mem_msg;
-                instr_queue[tail].mem_cycle = $time / 10;
+                instr_queue[tail].mem <= mem_msg;
+                instr_queue[tail].mem_cycle <= $time / 10;
             end
             if (mem_wb_msg != "") begin
-                instr_queue[tail].mem_wb = mem_wb_msg;
-                instr_queue[tail].mem_wb_cycle = $time / 10;
+                instr_queue[tail].mem_wb <= mem_wb_msg;
+                instr_queue[tail].mem_wb_cycle <= $time / 10;
             end
             if (wb_msg != "") begin
-                instr_queue[tail].wb = wb_msg;
-                instr_queue[tail].wb_cycle = $time / 10;
+                instr_queue[tail].wb <= wb_msg;
+                instr_queue[tail].wb_cycle <= $time / 10;
             end
             if (flush_msg != "") begin
-                instr_queue[tail].flush = flush_msg;
+                instr_queue[tail].flush <= flush_msg;
             end
             if (!stall && !flush) begin
                 tail <= tail + 1;

@@ -49,6 +49,7 @@ module Verification_Unit (
     integer head = 0, tail = 0;    // Head and tail pointers for queue
     integer i;                     // Loop variable
     integer wb_valid_counter = 0;  // Counter for WB valid
+    integer wb_valid;
     
     //////////////////////////////////////////////
     // Sequential Block: Store Messages Per Stage //
@@ -59,71 +60,94 @@ module Verification_Unit (
             tail <= 0;
             wb_valid_counter <= 0;  // Reset the counter on reset
         end else begin
+            // Store fetch stage message
             if (fetch_msg != "") begin
                 instr_queue[tail].fetch = fetch_msg;
                 instr_queue[tail].fetch_cycle = $time / 10;
             end
+            // Store IF/ID stage message
             if (if_id_msg != "") begin
                 instr_queue[tail].if_id = if_id_msg;
                 instr_queue[tail].if_id_cycle = $time / 10;
             end
+            // Store decode stage message
             if (decode_msg != "") begin
                 instr_queue[tail].decode[0] = decode_msg;
                 instr_queue[tail].decode[1] = instruction_full_msg;
                 instr_queue[tail].decode_cycle = $time / 10;
             end
+            // Store ID/EX stage message
             if (id_ex_msg != "") begin
                 instr_queue[tail].id_ex = id_ex_msg;
                 instr_queue[tail].id_ex_cycle = $time / 10;
             end
+            // Store execute stage message
             if (execute_msg != "") begin
                 instr_queue[tail].execute = execute_msg;
                 instr_queue[tail].execute_cycle = $time / 10;
             end
+            // Store EX/MEM stage message
             if (ex_mem_msg != "") begin
                 instr_queue[tail].ex_mem = ex_mem_msg;
                 instr_queue[tail].ex_mem_cycle = $time / 10;
             end
+            // Store memory stage message
             if (mem_msg != "") begin
                 instr_queue[tail].mem = mem_msg;
                 instr_queue[tail].mem_cycle = $time / 10;
             end
+            // Store MEM/WB stage message
             if (mem_wb_msg != "") begin
                 instr_queue[tail].mem_wb = mem_wb_msg;
                 instr_queue[tail].mem_wb_cycle = $time / 10;
             end
+            // Store WB stage message
             if (wb_msg != "") begin
                 instr_queue[tail].wb = wb_msg;
                 instr_queue[tail].wb_cycle = $time / 10;
             end
-            if (stall_msg != "") begin
+            // Store stall messages
+            if (if_id_hz_message != "") begin
                 for (i = 0; i < 5; i++) begin
                     if (instr_queue[tail].stall[i] == "") begin
-                        instr_queue[tail].stall[i] = stall_msg;
+                        instr_queue[tail].stall[i] = if_id_hz_message;
                         break;
                     end
                 end
             end
+            if (id_ex_hz_message != "") begin
+                for (i = 0; i < 5; i++) begin
+                    if (instr_queue[tail].stall[i] == "") begin
+                        instr_queue[tail].stall[i] = id_ex_hz_message;
+                        break;
+                    end
+                end
+            end
+            // Store flush message
             if (flush_msg != "") begin
                 instr_queue[tail].flush = flush_msg;
             end
             
             // Increment wb_valid_counter only when not stalled or flushed
-            if (!stall && !flush && wb_valid) begin
+            if (!stall && !flush) begin
                 wb_valid_counter <= wb_valid_counter + 1;
             end
         end
     end
+
+    assign wb_valid = !(wb_valid_counter % 5); // Calculate if WB is valid
 
     /////////////////////////////////////////
     // Print Pipeline Messages at WB Stage //
     /////////////////////////////////////////
     always_ff @(posedge clk) begin
         if (!rst && wb_valid && wb_valid_counter > 0) begin
+            // Display pipeline messages for the instruction at WB stage
             $display("=====================================================");
-            $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode[1], $time/10);
+            $display("| Instruction: %s | Clock Cycle: %0t |", instr_queue[head].decode[1], $time / 10);
             $display("=====================================================");
             
+            // Display messages for each stage of the pipeline
             if (instr_queue[head].fetch != "")
                 $display("|%s @ Cycle: %0t", instr_queue[head].fetch, instr_queue[head].fetch_cycle);
             if (instr_queue[head].if_id != "")
@@ -143,17 +167,19 @@ module Verification_Unit (
             if (instr_queue[head].wb != "")
                 $display("|[WRITE-BACK] %s @ Cycle: %0t", instr_queue[head].wb, instr_queue[head].wb_cycle);
 
+            // Display stall messages
             for (i = 0; i < 5; i++) begin
                 if (instr_queue[head].stall[i] != "")
                     $display("|[STALL] %s", instr_queue[head].stall[i]);
             end
 
+            // Display flush message
             if (instr_queue[head].flush != "")
                 $display("|[FLUSH] %s", instr_queue[head].flush);
             
             $display("=====================================================");
             
-            head <= head + 1;  // Move queue forward
+            head <= head + 1;  // Move queue forward to the next instruction
         end
     end
 

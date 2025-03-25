@@ -238,17 +238,16 @@ end
 
 // Always block to print fetch messages (after storing them)
 always @(posedge clk) begin
-    if (rst_n) begin
-      if (valid_decode) begin
+if (valid_decode) begin
         // Print all stored fetch messages
         for (int i = 0; i < 5; i = i + 1) begin
             for (int j = 0; j < fetch_msg_indices[i]; j = j + 1) begin
-                $display("%s", i, j, fetch_msgs[i][j]);
+                $display("%s", fetch_msgs[i][j]);
             end
         end
       end
-    end
-end
+  end
+
 
 
   // // Always block to print fetch messages when both fetch and decode are valid

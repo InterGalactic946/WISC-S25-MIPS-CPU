@@ -26,7 +26,7 @@ module Verification_Unit (
     );
 
     integer fetch_id, decode_id, execute_id, memory_id, wb_id;
-    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_enable;
     debug_info_t pipeline_msgs[0:71];
 
 // First Always Block: Tracks the pipeline and increments IDs
@@ -98,6 +98,21 @@ end
     end
 
 
+   // Flip-flop to hold enable signal for printing
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            print_enable <= 0;  // Reset the enable signal
+        end else begin
+            if (valid_wb) begin
+                print_enable <= 1;  // Enable printing when write-back stage is valid
+            end else begin
+                print_enable <= 0;  // Disable printing otherwise
+            end
+        end
+    end
+
+
+
     
     // // Stall/Flush Message Display based on Hazard Conditions.
     // always @(posedge clk) begin
@@ -133,8 +148,8 @@ end
 
 
     // Print the message for each instruction.
-    always @(posedge valid_wb) begin
-        if (!rst) begin
+    always @(posedge clk) begin
+        if (!rst && print_enable) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");

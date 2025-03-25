@@ -206,7 +206,7 @@ module cpu_tb();
         .IF_ID_stall(iDUT.IF_ID_stall),
         .expected_IF_ID_stall(iMODEL.IF_ID_stall),
         .IF_Flush(iDUT.IF_Flush),
-        .expected_IF_flsuh(iMODEL.IF_flush),
+        .expected_IF_flush(iMODEL.IF_flush),
         .br_hazard(iMODEL.iHDU.BR_hazard),
         .b_hazard(iMODEL.iHDU.B_hazard),
         .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),

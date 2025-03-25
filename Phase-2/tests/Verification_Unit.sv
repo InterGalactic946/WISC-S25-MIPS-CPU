@@ -36,7 +36,7 @@ module Verification_Unit (
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
     debug_info_t pipeline_msgs[0:71];
 
-// Tracks the pipeline.
+// First Always Block: Tracks the pipeline and increments IDs
 always @(posedge clk) begin
     if (rst) begin
         fetch_id <= 0;
@@ -44,29 +44,29 @@ always @(posedge clk) begin
         execute_id <= 0;
         memory_id <= 0;
         wb_id <= 0;
-        valid_fetch <= 1; // Ensure first instruction is captured immediately after reset
+    end else if (valid_fetch) begin
+        // Only increment fetch_id when there's a valid fetch.
+        fetch_id <= fetch_id + 1;
+    end
+
+    // Update pipeline stages.
+    decode_id <= fetch_id;   // Pass the fetch_id to decode_id
+    execute_id <= decode_id; // Pass the decode_id to execute_id
+    memory_id <= execute_id; // Pass the execute_id to memory_id
+    wb_id <= memory_id;      // Pass the memory_id to wb_id
+end
+
+// Second Always Block: Propagate the valid signals across stages
+always @(posedge clk) begin
+    if (rst) begin
         valid_decode <= 0;
         valid_execute <= 0;
         valid_memory <= 0;
+        valid_fetch <= 1;
         valid_wb <= 0;
-    end else begin
-       // Handle stall condition
-        if (!stall) begin
-            // Only increment fetch_id when there's no stall
-            fetch_id <= fetch_id + 1;
-            valid_fetch <= 1;  // Mark fetch as valid
-        end else if (flush) begin
-            // Invalidate pipeline stages on flush
-            valid_fetch <= 0;
-        end
-
-        // Update pipeline stages based on flush/stall
-        decode_id <= fetch_id;   // Pass the fetch_id to decode_id
-        execute_id <= decode_id; // Pass the decode_id to execute_id
-        memory_id <= execute_id; // Pass the execute_id to memory_id
-        wb_id <= memory_id;      // Pass the memory_id to wb_id
-        
-        // Propogate the valid signal to future stages.
+    end else if (!stall) begin
+        // Propagate the valid signal to future stages.
+        valid_fetch <= 1;
         valid_decode <= valid_fetch;
         valid_execute <= valid_decode;
         valid_memory <= valid_execute;

@@ -59,9 +59,9 @@ always @(posedge clk) begin
         valid_wb <= 0;
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
-        valid_fetch = 1;
+        valid_fetch <= 1;
     end else if (stall)
-        valid_fetch = 0;
+        valid_fetch <= 0;
 
     // Propogate the signals correctly.
     valid_decode <= valid_fetch;
@@ -133,8 +133,8 @@ end
 
 
     // Print the message for each instruction.
-    always @(posedge clk) begin
-        if (!rst && valid_wb) begin
+    always @(posedge valid_wb) begin
+        if (!rst) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");

@@ -132,7 +132,7 @@ end
 
 
     // Print the message for each instruction.
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (!rst && valid_wb) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);

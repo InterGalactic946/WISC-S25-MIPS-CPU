@@ -86,13 +86,14 @@ end
                     pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
                     pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
                     pipeline_msgs[decode_id].decode_cycle <= $time / 10;
-                else if (stall || flush) begin
+                end else if (stall || flush) begin
                     pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
                     pipeline_msgs[decode_id].decode_msg[1] <=  "(NOP)";
                     pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
                     pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
                     pipeline_msgs[decode_id].decode_cycle <= $time / 10;
                 end
+            end
             end
             if (valid_execute) begin
                 pipeline_msgs[execute_id].id_ex_msg <= id_ex_msg;

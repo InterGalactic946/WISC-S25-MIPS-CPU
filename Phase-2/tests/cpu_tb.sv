@@ -75,18 +75,18 @@ logic valid_fetch, valid_decode;
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-   Verification_Unit iVERIFY (
-    .clk(clk),
-    .rst(rst),
-    .fetch_msg(fetch_msg),
-    .decode_msg(decode_msg),
-    .instruction_full_msg(instruction_full_msg),
-    .execute_msg(execute_msg),
-    .mem_msg(mem_msg),
-    .wb_msg(wb_msg),
-    .stall(stall),
-    .flush(flush)
-  );
+  //  Verification_Unit iVERIFY (
+  //   .clk(clk),
+  //   .rst(rst),
+  //   .fetch_msg(fetch_msg),
+  //   .decode_msg(decode_msg),
+  //   .instruction_full_msg(instruction_full_msg),
+  //   .execute_msg(execute_msg),
+  //   .mem_msg(mem_msg),
+  //   .wb_msg(wb_msg),
+  //   .stall(stall),
+  //   .flush(flush)
+  // );
 
   // Test procedure to apply stimulus and check responses.
   initial begin
@@ -187,6 +187,8 @@ always @(posedge clk) begin
         );
 
         fetch_msg <= ftch_msg;
+
+        $display(ftch_msg);
     end
 end
 
@@ -235,6 +237,9 @@ always @(posedge clk) begin
         // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
         decode_msg <= dcode_msg;
         instruction_full_msg <= instr_full_msg;
+
+        $display(dcode_msg);
+        $display(instr_full_msg);
     end
 end
 
@@ -266,7 +271,7 @@ end
 
       execute_msg <= ex_msg;
 
-      // $display(execute_msg);
+      $display(ex_msg);
     end
   end
 
@@ -289,7 +294,7 @@ end
       );
 
       mem_msg <= mem_verify_msg;
-      // $display(mem_verify_msg);
+      $display(mem_verify_msg);
     end
   end
 
@@ -308,6 +313,8 @@ end
       );
 
       wb_msg <= wbb_msg;
+
+      $display(wbb_msg);
     end
   end
 

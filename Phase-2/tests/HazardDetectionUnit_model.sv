@@ -47,14 +47,14 @@ module HazardDetectionUnit_model (
   assign PC_stall = HLT | IF_ID_stall;
 
   // We stall anytime there is a branch or load to use hazard in the decode stage.
-  assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
+  assign IF_ID_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
   /////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////
   // Flush the pipeline on load to use or branch misprediction //
   ///////////////////////////////////////////////////////////////
   // We flush the ID_EX pipeline register whenever we stall on IF_ID, i.e. send nops to execute onward.
-  assign ID_flush = IF_ID_stall;
+  assign ID_flush = load_to_use_hazard | B_hazard | BR_hazard;
 
   // We flush the IF_ID pipeline instruction word whenever we need to update the PC, i.e. on an incorrect branch fetch.
   assign IF_flush = update_PC;

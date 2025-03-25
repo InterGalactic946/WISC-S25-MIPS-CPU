@@ -94,7 +94,7 @@ package Verification_tasks;
           if (PC_stall && !HLT) // If the stall is not due to HLT.
             stage_msg = $sformatf("[%s] SUCCESS: PC stalled due to propagated stall.", stage);
           else if (PC_stall && HLT)
-            stage_msg = $sformatf("[%s] SUCCESS: CPU halted due to HLT instruction.", stage);
+            stage_msg = $sformatf("[%s] SUCCESS: PC stalled due to HLT instruction.", stage);
           else if (prediction[1])
               // Branch is predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",

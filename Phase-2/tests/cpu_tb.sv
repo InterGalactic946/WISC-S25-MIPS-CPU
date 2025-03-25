@@ -26,7 +26,7 @@ module cpu_tb();
 
   // Messages from each stage.
   string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_msg, 
-         execute_msg, ex_mem_msg, mem_msg, mem_wb_msg, wb_msg, pc_stall_msg, if_id_stall_msg, if_flush_msg, id_flush_msg. instruction_header;
+         execute_msg, ex_mem_msg, mem_msg, mem_wb_msg, wb_msg, pc_stall_msg, if_id_stall_msg, if_flush_msg, id_flush_msg, instruction_header;
 
   reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
 

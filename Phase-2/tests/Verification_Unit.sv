@@ -80,11 +80,19 @@ end
     always @(posedge clk) begin
         if (!rst) begin
             if (valid_decode) begin
-                pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
-                pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
-                pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
-                pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
-                pipeline_msgs[decode_id].decode_cycle <= $time / 10;
+                if (stall) begin
+                    pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
+                    pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
+                    pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
+                    pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
+                    pipeline_msgs[decode_id].decode_cycle <= $time / 10;
+                else if (stall || flush) begin
+                    pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
+                    pipeline_msgs[decode_id].decode_msg[1] <=  "(NOP)";
+                    pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
+                    pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
+                    pipeline_msgs[decode_id].decode_cycle <= $time / 10;
+                end
             end
             if (valid_execute) begin
                 pipeline_msgs[execute_id].id_ex_msg <= id_ex_msg;
@@ -146,12 +154,7 @@ end
     always @(posedge clk) begin
         if (!rst && valid_wb) begin
             $display("==========================================================");
-            if (stall)
-                $display("| Instruction: NOP | Completed At Cycle: %0t |", $time / 10);
-            else if (flush)
-                $display("| Instruction: %s (NOP) | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
-            else
-                $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
+            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].if_id_msg, pipeline_msgs[wb_id].if_id_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);

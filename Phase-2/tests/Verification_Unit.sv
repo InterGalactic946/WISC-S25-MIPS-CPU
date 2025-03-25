@@ -60,7 +60,8 @@ always @(posedge clk) begin
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
         valid_fetch <= 1;
-    end
+    end else if (stall)
+        valid_fetch <= 0;
 
     // Propogate the signals correctly.
     valid_decode <= valid_fetch;
@@ -70,7 +71,7 @@ always @(posedge clk) begin
 end
 
     // Adds the messages, with stall and flush checks.
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (!rst) begin
             if (valid_fetch) begin
                 pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;

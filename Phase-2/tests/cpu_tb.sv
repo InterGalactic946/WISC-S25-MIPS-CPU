@@ -271,17 +271,17 @@ always @(posedge clk) begin
         if (inst_id > 0) begin
             int i = inst_id - 1; // Last completed instruction
             $display("========================================================");
-            $display("| Instruction: %s |", instruction_text[i]);
+            $display("| Instruction: %s |", instruction_text[inst_id-1]);
             $display("========================================================");
 
             // Print FETCH messages
-            for (int j = 0; j <= msg_index[i]; j++) begin
-                $display("| %s", fetch_msgs[i][j]);
+            for (int j = 0; j <= msg_index[inst_id - 1]; j++) begin
+                $display("| %s", fetch_msgs[inst_id - 1][j]);
             end
 
             // Print DECODE messages
-            for (int j = 0; j <= msg_index[i]; j++) begin
-                $display("| %s", decode_msgs[i][j]);
+            for (int j = 0; j <= msg_index[inst_id - 1]; j++) begin
+                $display("| %s", decode_msgs[inst_id - 1][j]);
             end
 
             $display("========================================================");

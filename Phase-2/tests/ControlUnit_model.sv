@@ -92,6 +92,7 @@ module ControlUnit_model (
                 ALUSrc = 1'b1;    // Use immediate offset for address calculation
                 RegWrite = 1'b0;  // No register write for store instruction
                 MemEnable = 1'b1; // Enable memory access
+                MemtoReg = 1'b1;  // Dont care about the output
                 MemWrite = 1'b1;  // Perform memory write
             end
             4'b1010, 4'b1011: begin  // LLB, LHB (Load Lower Byte, Load Higher Byte)

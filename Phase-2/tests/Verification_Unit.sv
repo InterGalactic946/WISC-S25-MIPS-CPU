@@ -146,12 +146,12 @@ end
     always @(posedge clk) begin
         if (!rst && valid_wb) begin
             $display("==========================================================");
-            if (!stall && !flush)
-                $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
-            else if (stall)
+            if (stall)
                 $display("| Instruction: NOP | Completed At Cycle: %0t |", $time / 10);
             else if (flush)
                 $display("| Instruction: %s (NOP) | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
+            else
+                $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].if_id_msg, pipeline_msgs[wb_id].if_id_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);

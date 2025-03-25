@@ -67,11 +67,13 @@ always @(posedge clk) begin
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
         valid_fetch <= 1;
-        valid_decode <= valid_fetch;
-        valid_execute <= valid_decode;
-        valid_memory <= valid_execute;
-        valid_wb <= valid_memory;
     end
+
+    // Propogate the signals correctly.
+    valid_decode <= valid_fetch;
+    valid_execute <= valid_decode;
+    valid_memory <= valid_execute;
+    valid_wb <= valid_memory;
 end
 
     // Adds the messages, with stall and flush checks.

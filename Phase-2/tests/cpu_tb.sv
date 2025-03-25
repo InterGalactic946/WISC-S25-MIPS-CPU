@@ -280,11 +280,13 @@ always @(posedge clk) begin
     end else if (stall) begin
         // Increment fetch message index on PC stall
         fetch_msg_indices[fetch_id] <= fetch_msg_indices[fetch_id] + 1;
-        // Increment decode message index on IF/ID stall
-        decode_msg_indices[decode_id] <= decode_msg_indices[decode_id] + 1;
+    end else begin
+        fetch_msg_indices[fetch_id] <= 0;
     end
-end
-
+        
+      // Increment decode message index on IF/ID stall
+      decode_msg_indices[decode_id] <= fetch_msg_indices[fetch_id];
+  end
 
 // Always block to print fetch messages (after storing them)
 always @(negedge clk) begin
@@ -294,7 +296,6 @@ always @(negedge clk) begin
     end else if (valid_decode) begin
       decode_msgs[decode_id][decode_msg_indices[decode_id]][0] = decode_msg;
       decode_msgs[decode_id][decode_msg_indices[decode_id]][1] = instruction_full_msg;
-    end
 
      $display("==========================================================");
      $display("| Instruction: %s | Completed At Cycle: %0t |", decode_msgs[decode_id][decode_msg_indices[decode_id]][1], $time / 10);
@@ -308,6 +309,7 @@ always @(negedge clk) begin
       for (int i = 0; i <= decode_msg_indices[decode_id]; i = i + 1) begin
            $display("|%s", decode_msgs[decode_id][i][0]);
       end
+    end
 end
 
 

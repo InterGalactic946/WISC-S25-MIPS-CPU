@@ -237,8 +237,8 @@ module cpu_tb();
         .instruction_full(instruction_full_msg)
       );
 
-      // $display(instruction_full_msg);
-      // $display(decode_msg);
+      $display(instruction_full_msg);
+      $display(decode_msg);
 
     end
   end

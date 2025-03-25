@@ -287,9 +287,10 @@ end
 
 
 // Always block to print fetch messages (after storing them)
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (valid_fetch) begin // Print during the fetch stage if valid_fetch is active
       fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] <= fetch_msg;
+      $display(fetch_msg);
     end else if (valid_decode) begin
       decode_msgs[decode_id][decode_msg_indices[decode_id]][0] = decode_msg;
       decode_msgs[decode_id][decode_msg_indices[decode_id]][1] = instruction_full_msg;

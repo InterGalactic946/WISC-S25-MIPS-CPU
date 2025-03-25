@@ -238,7 +238,7 @@ module cpu_tb();
       );
 
       //$display(instruction_full_msg);
-      $display(decode_msg);
+      $display("|%s @ Cycle: %0t", decode_msg, $time/10);
 
     end
   end

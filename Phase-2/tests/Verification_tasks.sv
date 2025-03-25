@@ -41,7 +41,7 @@ package Verification_tasks;
 
   // Task: A task to verify the FETCH stage.
   task automatic verify_FETCH(
-      input logic PC_stall, expected_PC_stall, HLT
+      input logic PC_stall, expected_PC_stall, HLT,
       input logic [15:0] PC_next, expected_PC_next,
       input logic [15:0] PC_inst, expected_PC_inst,
       input logic [15:0] PC_curr, expected_PC_curr,

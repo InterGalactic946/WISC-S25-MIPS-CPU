@@ -79,18 +79,18 @@ module cpu_tb();
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-  //  Verification_Unit iVERIFY (
-  //   .clk(clk),
-  //   .rst(rst),
-  //   .fetch_msg(fetch_msg),
-  //   .decode_msg(decode_msg),
-  //   .instruction_full_msg(instruction_full_msg),
-  //   .execute_msg(execute_msg),
-  //   .mem_msg(mem_msg),
-  //   .wb_msg(wb_msg),
-  //   .stall(stall),
-  //   .flush(flush)
-  // );
+   Verification_Unit iVERIFY (
+    .clk(clk),
+    .rst(rst),
+    .fetch_msg(fetch_msg),
+    .decode_msg(decode_msg),
+    .instruction_full_msg(instruction_full_msg),
+    .execute_msg(execute_msg),
+    .mem_msg(mem_msg),
+    .wb_msg(wb_msg),
+    .stall(stall),
+    .flush(flush)
+  );
 
   // Test procedure to apply stimulus and check responses.
   initial begin
@@ -167,89 +167,89 @@ module cpu_tb();
 
 
 
-// First Always Block: Tracks the pipeline and increments IDs
-always @(negedge clk) begin
-    if (rst) begin
-        fetch_id   <= 0;
-        decode_id  <= 0;
-        execute_id <= 0;
-        memory_id  <= 0;
-        wb_id      <= 0;
-    end else if (valid_fetch) begin
-        // Only increment fetch_id when there's a valid fetch.
-        fetch_id <= fetch_id + 1;
-    end
+// // First Always Block: Tracks the pipeline and increments IDs
+// always @(negedge clk) begin
+//     if (rst) begin
+//         fetch_id   <= 0;
+//         decode_id  <= 0;
+//         execute_id <= 0;
+//         memory_id  <= 0;
+//         wb_id      <= 0;
+//     end else if (valid_fetch) begin
+//         // Only increment fetch_id when there's a valid fetch.
+//         fetch_id <= fetch_id + 1;
+//     end
 
-    // Update pipeline stages.
-    decode_id  <= fetch_id;   // Pass the fetch_id to decode_id
-    execute_id <= decode_id;  // Pass the decode_id to execute_id
-    memory_id  <= execute_id; // Pass the execute_id to memory_id
-    wb_id      <= memory_id;  // Pass the memory_id to wb_id
-end
+//     // Update pipeline stages.
+//     decode_id  <= fetch_id;   // Pass the fetch_id to decode_id
+//     execute_id <= decode_id;  // Pass the decode_id to execute_id
+//     memory_id  <= execute_id; // Pass the execute_id to memory_id
+//     wb_id      <= memory_id;  // Pass the memory_id to wb_id
+// end
 
-// Second Always Block: Propagate the valid signals across stages
-always @(posedge clk) begin
-    if (rst) begin
-        valid_decode  <= 0;
-        valid_execute <= 0;
-        valid_memory  <= 0;
-        valid_fetch   <= 1;
-        valid_wb      <= 0;
-    end else if (!stall) begin
-        valid_fetch <= 1;  // Continue fetching if not stalled
-    end else begin
-        valid_fetch <= 0;
-    end
+// // Second Always Block: Propagate the valid signals across stages
+// always @(posedge clk) begin
+//     if (rst) begin
+//         valid_decode  <= 0;
+//         valid_execute <= 0;
+//         valid_memory  <= 0;
+//         valid_fetch   <= 1;
+//         valid_wb      <= 0;
+//     end else if (!stall) begin
+//         valid_fetch <= 1;  // Continue fetching if not stalled
+//     end else begin
+//         valid_fetch <= 0;
+//     end
 
-    // Propagate the valid signals correctly.
-    valid_decode  <= valid_fetch;
-    valid_execute <= valid_decode;
-    valid_memory  <= valid_execute;
-    valid_wb      <= valid_memory;
-end
+//     // Propagate the valid signals correctly.
+//     valid_decode  <= valid_fetch;
+//     valid_execute <= valid_decode;
+//     valid_memory  <= valid_execute;
+//     valid_wb      <= valid_memory;
+// end
 
-// Third Always Block: Stores pipeline messages, with stall and flush checks
-always @(negedge clk) begin
-    if (valid_fetch) begin
-        pipeline_msgs[fetch_id].fetch_msg   = fetch_msg;
-        pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
-    end
-    if (valid_decode) begin
-        pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
-        pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
-        pipeline_msgs[decode_id].decode_cycle  = $time / 10;
-    end
-    if (valid_execute) begin
-        pipeline_msgs[execute_id].execute_msg   = execute_msg;
-        pipeline_msgs[execute_id].execute_cycle = $time / 10;
-    end
-    if (valid_memory) begin
-        pipeline_msgs[memory_id].memory_msg   = mem_msg;
-        pipeline_msgs[memory_id].memory_cycle = $time / 10;
-    end
-    if (valid_wb) begin
-        pipeline_msgs[wb_id].wb_msg   = wb_msg;
-        pipeline_msgs[wb_id].wb_cycle = $time / 10;
-    end
-end
+// // Third Always Block: Stores pipeline messages, with stall and flush checks
+// always @(negedge clk) begin
+//     if (valid_fetch) begin
+//         pipeline_msgs[fetch_id].fetch_msg   = fetch_msg;
+//         pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
+//     end
+//     if (valid_decode) begin
+//         pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
+//         pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
+//         pipeline_msgs[decode_id].decode_cycle  = $time / 10;
+//     end
+//     if (valid_execute) begin
+//         pipeline_msgs[execute_id].execute_msg   = execute_msg;
+//         pipeline_msgs[execute_id].execute_cycle = $time / 10;
+//     end
+//     if (valid_memory) begin
+//         pipeline_msgs[memory_id].memory_msg   = mem_msg;
+//         pipeline_msgs[memory_id].memory_cycle = $time / 10;
+//     end
+//     if (valid_wb) begin
+//         pipeline_msgs[wb_id].wb_msg   = wb_msg;
+//         pipeline_msgs[wb_id].wb_cycle = $time / 10;
+//     end
+// end
 
-// Fourth Always Block: Print the pipeline messages at negedge clk
-always @(negedge clk) begin
-    if (!rst && valid_wb) begin
-        $display("==========================================================");
-        $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
-        $display("==========================================================");
-        $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
-        $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
-        $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
-        $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
-        $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);
-        $display("==========================================================\n");
-    end
-end
+// // Fourth Always Block: Print the pipeline messages at negedge clk
+// always @(negedge clk) begin
+//     if (!rst && valid_wb) begin
+//         $display("==========================================================");
+//         $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
+//         $display("==========================================================");
+//         $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
+//         $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
+//         $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
+//         $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
+//         $display("| %s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);
+//         $display("==========================================================\n");
+//     end
+// end
 
 // Always block for verify_FETCH stage
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (rst_n) begin
       string ftch_msg;
 
@@ -280,7 +280,7 @@ end
 
 
 // Always block for verify_DECODE stage
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (rst_n) begin
       string dcode_msg, instr_full_msg;
 
@@ -331,7 +331,7 @@ end
 
 
   // Always block for verify_EXECUTE stage
-  always @(posedge clk) begin
+  always @(negedge clk) begin
     if (rst_n) begin
       string ex_msg;
 
@@ -363,7 +363,7 @@ end
 
 
   // Always block for verify_MEMORY stage
-  always @(posedge clk) begin
+  always @(negedge clk) begin
     if (rst_n) begin
       string mem_verify_msg;
 
@@ -386,7 +386,7 @@ end
 
 
   // Always block for verify_WRITEBACK stage
-  always @(posedge clk) begin
+  always @(negedge clk) begin
     if (rst_n) begin
       string wbb_msg;
       verify_WRITEBACK(

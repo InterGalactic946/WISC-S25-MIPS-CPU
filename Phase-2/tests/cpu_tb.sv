@@ -274,7 +274,7 @@ always @(posedge clk) begin
 
         // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         fetch_msg = ftch_msg;
-        $display(ftch_msg);
+        // $display(ftch_msg);
     end
 end
 
@@ -326,8 +326,9 @@ always @(posedge clk) begin
 
         decode_msg = dcode_msg;
         instruction_full_msg = instr_full_msg;
-        $display(decode_msg);
-        $display(instruction_full_msg);
+        
+        // $display(decode_msg);
+        // $display(instruction_full_msg);
     end
 end
 
@@ -360,7 +361,7 @@ end
       // execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
 
       execute_msg = ex_msg;
-      $display(execute_msg);
+      // $display(execute_msg);
     end
   end
 
@@ -385,7 +386,7 @@ end
       // mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
 
       mem_msg = mem_verify_msg;
-      $display(mem_msg);
+      // $display(mem_msg);
     end
   end
 
@@ -407,7 +408,7 @@ end
 
       wb_msg = wbb_msg;
 
-      $display(wb_msg);
+      // $display(wb_msg);
     end
   end
 

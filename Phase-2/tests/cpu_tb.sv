@@ -167,6 +167,8 @@ module cpu_tb();
           .stage("FETCH"),
           .stage_msg(fetch_msg)
       );
+
+      $display("|%s @ Cycle: %0t", fetch_msg, $time/10);
     end
   end
 

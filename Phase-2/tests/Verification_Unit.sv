@@ -39,14 +39,14 @@ always @(posedge clk) begin
         wb_id <= 0;
     end else if (valid_fetch) begin
         // Only increment fetch_id when there's a valid fetch.
-        fetch_id = fetch_id + 1;
+        fetch_id <= fetch_id + 1;
     end
 
     // Update pipeline stages.
-    decode_id = fetch_id;   // Pass the fetch_id to decode_id
-    execute_id = decode_id; // Pass the decode_id to execute_id
-    memory_id = execute_id; // Pass the execute_id to memory_id
-    wb_id = memory_id;      // Pass the memory_id to wb_id
+    decode_id <= fetch_id;   // Pass the fetch_id to decode_id
+    execute_id <= decode_id; // Pass the decode_id to execute_id
+    memory_id <= execute_id; // Pass the execute_id to memory_id
+    wb_id <= memory_id;      // Pass the memory_id to wb_id
 end
 
 // Second Always Block: Propagate the valid signals across stages
@@ -74,21 +74,21 @@ end
     always @(negedge clk) begin
         if (!rst) begin
             if (valid_fetch) begin
-                pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
-                pipeline_msgs[fetch_id].fetch_cycle <= $time / 10;
+                pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
+                pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
             end
             if (valid_decode) begin
-                pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
-                pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
-                pipeline_msgs[decode_id].decode_cycle <= $time / 10;
+                pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
+                pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
+                pipeline_msgs[decode_id].decode_cycle = $time / 10;
             end
             if (valid_execute) begin
-                pipeline_msgs[execute_id].execute_msg <= execute_msg;
-                pipeline_msgs[execute_id].execute_cycle <= $time / 10;
+                pipeline_msgs[execute_id].execute_msg = execute_msg;
+                pipeline_msgs[execute_id].execute_cycle = $time / 10;
             end
             if (valid_memory) begin
-                pipeline_msgs[memory_id].memory_msg <= mem_msg;
-                pipeline_msgs[memory_id].memory_cycle <= $time / 10;
+                pipeline_msgs[memory_id].memory_msg = mem_msg;
+                pipeline_msgs[memory_id].memory_cycle = $time / 10;
             end
             if (valid_wb) begin
                 pipeline_msgs[wb_id].wb_msg = wb_msg;

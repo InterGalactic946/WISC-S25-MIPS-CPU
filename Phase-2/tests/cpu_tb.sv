@@ -237,7 +237,7 @@ always @(posedge clk) begin
 end
 
 // Always block to print fetch messages (after storing them)
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (valid_fetch) begin // Print during the fetch stage if valid_fetch is active
         // Print all stored fetch messages for each instruction
         for (int i = 0; i < 5; i = i + 1) begin // Assuming a limit of 5 instructions

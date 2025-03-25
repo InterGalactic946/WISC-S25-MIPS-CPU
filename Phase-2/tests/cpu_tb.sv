@@ -224,7 +224,7 @@ end
 // Always block to print fetch messages (after storing them)
 always @(negedge clk) begin
     if (valid_decode) // Print during the fetch stage if valid_fetch is active
-    $display("|%s @ Cycle: %s", fetch_msg, $sformatf("%0d", $time/10));
+    $display("%s @ Cycle: %s", fetch_msg, $sformatf("%0d", $time/10));
 end
 
 

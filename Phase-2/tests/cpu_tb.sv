@@ -230,16 +230,16 @@ module cpu_tb();
     end
 
     // Print the message for each instruction.
-    always @(negedge clk) begin
+    always @(posedge clk) begin
         if (!rst && valid_wb) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
-            $display("|%s", pipeline_msgs[wb_id].fetch_msg);
-            $display("|%s", pipeline_msgs[wb_id].decode_msg[0]);
-            $display("|%s", pipeline_msgs[wb_id].execute_msg);
-            $display("|%s", pipeline_msgs[wb_id].memory_msg);
-            $display("|%s", pipeline_msgs[wb_id].wb_msg);
+            $display("%s", pipeline_msgs[wb_id].fetch_msg);
+            $display("%s", pipeline_msgs[wb_id].decode_msg[0]);
+            $display("%s", pipeline_msgs[wb_id].execute_msg);
+            $display("%s", pipeline_msgs[wb_id].memory_msg);
+            $display("%s", pipeline_msgs[wb_id].wb_msg);
             $display("==========================================================\n");
         end
     end
@@ -319,7 +319,7 @@ always @(posedge clk) begin
 
         // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
         decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
-        instruction_full_msg = {"|",  instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
+        instruction_full_msg = {instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
 
         // $display(decode_msg);
         // $display(instruction_full_msg);

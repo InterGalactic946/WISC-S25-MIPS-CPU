@@ -30,7 +30,7 @@ module Verification_Unit (
     debug_info_t pipeline_msgs[0:71];
 
 // First Always Block: Tracks the pipeline and increments IDs
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (rst) begin
         fetch_id <= 0;
         decode_id <= 0;
@@ -50,7 +50,7 @@ always @(posedge clk) begin
 end
 
 // Second Always Block: Propagate the valid signals across stages
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (rst) begin
         valid_decode <= 0;
         valid_execute <= 0;

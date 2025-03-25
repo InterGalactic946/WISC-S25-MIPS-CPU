@@ -118,7 +118,7 @@ end
                 pipeline_msgs[memory_id].memory_msg <= mem_msg;
                 pipeline_msgs[memory_id].memory_cycle <= $time / 10;
             end
-            if (valid_wb && !stall && !flush) begin
+            if (valid_wb) begin
                 pipeline_msgs[wb_id].mem_wb_msg = mem_wb_msg;
                 pipeline_msgs[wb_id].mem_wb_cycle = $time / 10;
                 pipeline_msgs[wb_id].wb_msg = wb_msg;

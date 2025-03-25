@@ -34,6 +34,7 @@ package Verification_tasks;
       end : timeout
       begin
         @(posedge sig) disable timeout; // Disable timeout if sig is asserted.
+        $display("CPU halted due to HLT instruction.");
       end
     join
   endtask
@@ -92,9 +93,9 @@ package Verification_tasks;
           
           // If all checks pass, store success message.
           if (PC_stall && !HLT) // If the stall is not due to HLT.
-            stage_msg = $sformatf("[%s] SUCCESS: PC stalled due to propagated stall.", stage);
+            stage_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall.", stage);
           else if (PC_stall && HLT)
-            stage_msg = $sformatf("[%s] SUCCESS: PC stalled due to HLT instruction.", stage);
+            stage_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction.", stage);
           else if (prediction[1])
               // Branch is predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
@@ -159,6 +160,9 @@ package Verification_tasks;
 
   // Task: Verify the DECODE stage.
   task automatic verify_DECODE(
+      input logic IF_ID_stall, expected_IF_ID_stall,
+      input logic IF_flush, expected_IF_flsuh,
+      input logic br_hazard, b_hazard, load_use_hazard,
       input logic [62:0] EX_signals, expected_EX_signals,
       input logic [17:0] MEM_signals, expected_MEM_signals,
       input logic [7:0] WB_signals, expected_WB_signals,
@@ -176,11 +180,22 @@ package Verification_tasks;
       begin
           // Stores the state of the decoded instruction.
           string instr_state;
+          string hazard_type;
 
           // Initialize messages.
           decode_msg = "";
           instr_state = "";
           instruction_full = "";
+          hazard_type = "";
+
+          // Determine the type of hazard and generate the appropriate message.
+          if (load_use_hazard) begin
+            hazard_type = "load-to-use hazard";
+          end else if (br_hazard) begin
+            hazard_type = "Branch (BR) hazard";
+          end else if (b_hazard) begin
+            hazard_type = "Branch (B) hazard";
+          end
 
           // Get the full instruction.
           get_full_instruction(.opcode(expected_EX_signals[6:3]), .rs(expected_EX_signals[62:59]), .rt(expected_EX_signals[58:55]), .rd(expected_WB_signals[7:4]), .actual_target(expected_branch_target), .ALU_imm(expected_EX_signals[38:23]), .cc(cc), .instr_name(instruction_full));
@@ -230,11 +245,30 @@ package Verification_tasks;
               return;
           end
 
-          // Get the decoded instruction.
-          display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
-          
-          // Print success message.
-          decode_msg = $sformatf("[DECODE] SUCCESS: %s.", instr_state);
+          // Verify the flush state.
+          if (IF_flush !== expected_IF_flush) begin
+              decode_msg = $sformatf("[DECODE] ERROR: IF_flush: %b, expected_IF_flush: %b.", IF_flush, expected_IF_flush);
+              return;  // Exit task on error
+          end
+
+          // Verify the stall state.
+          if (IF_ID_stall !== expected_IF_ID_stall) begin
+              decode_msg = $sformatf("[DECODE] ERROR: IF_ID_stall: %b, expected_update_PC: %b.", IF_ID_stall, expected_IF_ID_stall);
+              return;  // Exit task on error
+          end
+
+          // If there is a stall at the decode stage, print out the stall along with reason.
+          if (IF_ID_stall)
+            decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
+          else if (IF_flush) // If the instruction is flushed.
+            decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");
+          else begin // Decode the instruction.
+            // Get the decoded instruction.
+            display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
+
+            // Print success message.
+            decode_msg = $sformatf("[DECODE] SUCCESS: %s", instr_state);
+          end
       end
   endtask
 

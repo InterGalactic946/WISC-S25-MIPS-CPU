@@ -199,42 +199,49 @@ module cpu_tb();
   //   end
   // end
 
-  // // Always block for verify_DECODE stage
-  // always @(negedge clk) begin
-  //   if (rst_n) begin
-  //     verify_DECODE(
-  //       .EX_signals(iDUT.EX_signals),
-  //       .expected_EX_signals(iMODEL.EX_signals),
-  //       .MEM_signals(iDUT.MEM_signals),
-  //       .expected_MEM_signals(iMODEL.MEM_signals),
-  //       .WB_signals(iDUT.WB_signals),
-  //       .expected_WB_signals(iMODEL.WB_signals),
-  //       .cc(iDUT.iDECODE.c_codes),
-  //       .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
-  //       .is_branch(iDUT.Branch),
-  //       .expected_is_branch(iMODEL.Branch),
-  //       .is_BR(iDUT.BR),
-  //       .expected_is_BR(iMODEL.BR),
-  //       .branch_target(iDUT.branch_target),
-  //       .expected_branch_target(iMODEL.branch_target),
-  //       .actual_taken(iDUT.actual_taken),
-  //       .expected_actual_taken(iMODEL.actual_taken),
-  //       .wen_BTB(iDUT.wen_BTB),
-  //       .expected_wen_BTB(iMODEL.wen_BTB),
-  //       .wen_BHT(iDUT.wen_BHT),
-  //       .expected_wen_BHT(iMODEL.wen_BHT),
-  //       .update_PC(iDUT.update_PC),
-  //       .expected_update_PC(iMODEL.update_PC),
+  // Always block for verify_DECODE stage
+  always @(posedge clk) begin
+    if (rst_n) begin
+      verify_DECODE(
+        .IF_ID_stall(iDUT.IF_ID_stall),
+        .expected_IF_ID_stall(iMODEL.IF_ID_stall),
+        .IF_Flush(iDUT.IF_Flush),
+        .expected_IF_flsuh(iMODEL.IF_flush),
+        .br_hazard(iMODEL.iHDU.BR_hazard),
+        .b_hazard(iMODEL.iHDU.B_hazard),
+        .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
+        .EX_signals(iDUT.EX_signals),
+        .expected_EX_signals(iMODEL.EX_signals),
+        .MEM_signals(iDUT.MEM_signals),
+        .expected_MEM_signals(iMODEL.MEM_signals),
+        .WB_signals(iDUT.WB_signals),
+        .expected_WB_signals(iMODEL.WB_signals),
+        .cc(iDUT.iDECODE.c_codes),
+        .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
+        .is_branch(iDUT.Branch),
+        .expected_is_branch(iMODEL.Branch),
+        .is_BR(iDUT.BR),
+        .expected_is_BR(iMODEL.BR),
+        .branch_target(iDUT.branch_target),
+        .expected_branch_target(iMODEL.branch_target),
+        .actual_taken(iDUT.actual_taken),
+        .expected_actual_taken(iMODEL.actual_taken),
+        .wen_BTB(iDUT.wen_BTB),
+        .expected_wen_BTB(iMODEL.wen_BTB),
+        .wen_BHT(iDUT.wen_BHT),
+        .expected_wen_BHT(iMODEL.wen_BHT),
+        .update_PC(iDUT.update_PC),
+        .expected_update_PC(iMODEL.update_PC),
         
-  //       .decode_msg(decode_msg),
-  //       .instruction_full(instruction_full_msg)
-  //     );
+        .decode_msg(decode_msg),
+        .instruction_full(instruction_full_msg)
+      );
 
-  //     // $display(instruction_full_msg);
-  //     // $display(decode_msg);
+      // $display(instruction_full_msg);
+      // $display(decode_msg);
 
-  //   end
-  // end
+    end
+  end
 
   // // always @(posedge clk)
   // //   $display("Src_data1: %04x, Expected_Src_Data1: %04x", iDUT.iDECODE.SrcReg1_data, iMODEL.iDECODE.SrcReg1_data);

@@ -154,6 +154,9 @@ module cpu_tb();
   always @(posedge clk) begin
     if (rst_n) begin
     verify_FETCH(
+          .PC_stall(iDUT.PC_stall),
+          .expected_PC_stall(iMODEL.PC_stall),
+          .HLT(iDUT.HLT),
           .PC_next(iDUT.PC_next), 
           .expected_PC_next(iMODEL.PC_next), 
           .PC_inst(iDUT.PC_inst), 

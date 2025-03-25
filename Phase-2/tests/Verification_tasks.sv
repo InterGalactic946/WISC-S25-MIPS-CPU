@@ -41,6 +41,7 @@ package Verification_tasks;
 
   // Task: A task to verify the FETCH stage.
   task automatic verify_FETCH(
+      input logic PC_stall, expected_PC_stall, HLT
       input logic [15:0] PC_next, expected_PC_next,
       input logic [15:0] PC_inst, expected_PC_inst,
       input logic [15:0] PC_curr, expected_PC_curr,
@@ -82,17 +83,26 @@ package Verification_tasks;
               stage_msg = $sformatf("[%s] ERROR: predicted_target: 0x%h, expected_pred_target: 0x%h.", stage, predicted_target, expected_predicted_target);
               return;  // Exit task on error
           end
+
+          // Verify the stall state.
+          if (stall !== expected_stall) begin
+              stage_msg = $sformatf("[%s] ERROR: PC_stall: %b, expected_PC_stall: %b.", stage, PC_stall, expected_PC_stall);
+              return;  // Exit task on error
+          end
           
           // If all checks pass, store success message.
-          if (prediction[1]) begin
+          if (PC_stall && !HLT) // If the stall is not due to HLT.
+            stage_msg = $sformatf("[%s] SUCCESS: PC stalled due to propagated stall.", stage);
+          else if (PC_stall && HLT)
+            stage_msg = $sformatf("[%s] SUCCESS: CPU halted due to HLT instruction.", stage);
+          else if (prediction[1])
               // Branch is predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
                                                 stage, PC_curr, PC_next, PC_inst, predicted_target);
-          end else begin
+           else if (!prediction[1])
               // Branch is not predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
                                                 stage, PC_curr, PC_next, PC_inst);
-          end
     end
   endtask
 

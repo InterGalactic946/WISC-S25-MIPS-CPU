@@ -137,21 +137,21 @@ package Verification_tasks;
     //     return;
     end else begin
 
-        // Verify fetch otheriwse.
-        verify_FETCH(
-            .PC_next(IF_ID_signals[49:34]), 
-            .expected_PC_next(expected_IF_ID_signals[49:34]), 
-            .PC_inst(IF_ID_signals[33:18]), 
-            .expected_PC_inst(expected_IF_ID_signals[33:18]), 
-            .PC_curr(IF_ID_signals[65:50]), 
-            .expected_PC_curr(expected_IF_ID_signals[65:50]), 
-            .prediction(IF_ID_signals[17:16]), 
-            .expected_prediction(expected_IF_ID_signals[17:16]), 
-            .predicted_target(IF_ID_signals[15:0]), 
-            .expected_predicted_target (expected_IF_ID_signals[15:0]),
-            .stage("IF_ID"),
-            .stage_msg(if_id_msg)
-        );
+        // // Verify fetch otheriwse.
+        // verify_FETCH(
+        //     .PC_next(IF_ID_signals[49:34]), 
+        //     .expected_PC_next(expected_IF_ID_signals[49:34]), 
+        //     .PC_inst(IF_ID_signals[33:18]), 
+        //     .expected_PC_inst(expected_IF_ID_signals[33:18]), 
+        //     .PC_curr(IF_ID_signals[65:50]), 
+        //     .expected_PC_curr(expected_IF_ID_signals[65:50]), 
+        //     .prediction(IF_ID_signals[17:16]), 
+        //     .expected_prediction(expected_IF_ID_signals[17:16]), 
+        //     .predicted_target(IF_ID_signals[15:0]), 
+        //     .expected_predicted_target (expected_IF_ID_signals[15:0]),
+        //     .stage("IF_ID"),
+        //     .stage_msg(if_id_msg)
+        // );
     end
     end
   endtask

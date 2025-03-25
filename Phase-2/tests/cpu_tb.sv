@@ -168,7 +168,7 @@ module cpu_tb();
 
 
   // First Always Block: Tracks the pipeline and increments IDs
-  always @(negedge clk) begin
+  always @(posedge clk) begin
       if (rst) begin
           fetch_id <= 0;
           decode_id <= 0;

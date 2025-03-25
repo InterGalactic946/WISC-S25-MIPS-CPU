@@ -205,7 +205,7 @@ module cpu_tb();
       verify_DECODE(
         .IF_ID_stall(iDUT.IF_ID_stall),
         .expected_IF_ID_stall(iMODEL.IF_ID_stall),
-        .IF_Flush(iDUT.IF_Flush),
+        .IF_flush(iDUT.IF_flush),
         .expected_IF_flush(iMODEL.IF_flush),
         .br_hazard(iMODEL.iHDU.BR_hazard),
         .b_hazard(iMODEL.iHDU.B_hazard),

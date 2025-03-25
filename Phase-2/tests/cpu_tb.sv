@@ -46,7 +46,7 @@ module cpu_tb();
 //   // Store the messages for FETCH and DECODE stages
 // reg [31:0] instruction_cycle; // Store the cycle when the instruction is completed
 
-logic valid_fetch, valid_decode;
+// logic valid_fetch, valid_decode;
 
 
 

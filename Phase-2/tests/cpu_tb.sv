@@ -238,7 +238,7 @@ end
 
 // Always block to print fetch messages (after storing them)
 always @(negedge clk) begin
-    if (valid_fetch) begin // Print during the fetch stage if valid_fetch is active
+    if (valid_decode) begin // Print during the fetch stage if valid_fetch is active
         // Print all stored fetch messages for each instruction
         for (int i = 0; i < 5; i = i + 1) begin // Assuming a limit of 5 instructions
             for (int j = 0; j < fetch_msg_indices[i]; j = j + 1) begin

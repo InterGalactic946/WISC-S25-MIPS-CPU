@@ -161,7 +161,7 @@ package Verification_tasks;
   // Task: Verify the DECODE stage.
   task automatic verify_DECODE(
       input logic IF_ID_stall, expected_IF_ID_stall,
-      input logic IF_flush, expected_IF_flsuh,
+      input logic IF_flush, expected_IF_flush,
       input logic br_hazard, b_hazard, load_use_hazard,
       input logic [62:0] EX_signals, expected_EX_signals,
       input logic [17:0] MEM_signals, expected_MEM_signals,

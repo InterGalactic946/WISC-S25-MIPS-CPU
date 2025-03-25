@@ -292,13 +292,14 @@ always @(posedge clk) begin
 always @(negedge clk) begin
     if (valid_fetch) begin // Print during the fetch stage if valid_fetch is active
       fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] <= fetch_msg;
-      $display(fetch_msg);
     end else if (valid_decode) begin
-      decode_msgs[decode_id][decode_msg_indices[decode_id]][0] = decode_msg;
-      decode_msgs[decode_id][decode_msg_indices[decode_id]][1] = instruction_full_msg;
+      decode_msgs[decode_id][decode_msg_indices[decode_id]][0] <= decode_msg;
+      decode_msgs[decode_id][decode_msg_indices[decode_id]][1] <= instruction_full_msg;
+
+      $display(decode_msg);
 
      $display("==========================================================");
-     $display("| Instruction: %s | Completed At Cycle: %0t |", decode_msgs[decode_id][decode_msg_indices[decode_id]][1], $time / 10);
+     $display("| Instruction: %s | Completed At Cycle: %0t |", instruction_full_msg, $time / 10);
       $display("==========================================================");
       // Print all stored fetch messages for the current fetch_id
       for (int i = 0; i <= fetch_msg_indices[decode_id]; i = i + 1) begin

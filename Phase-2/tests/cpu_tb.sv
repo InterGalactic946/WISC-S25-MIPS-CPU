@@ -199,7 +199,7 @@ end
 // Get the valid signal
 always @(posedge clk) begin
     if (!rst_n) begin
-        valid_fetch  <= 1'b0;
+        valid_fetch  <= 1'b1;
         valid_decode <= 1'b0;
     end else begin
         valid_fetch  <= ~stall; // Fetch is valid when no stall

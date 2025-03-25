@@ -262,7 +262,6 @@ int cycle_queue[$];        // Queue to track cycle number for WB
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
-        
         // Call the verify_FETCH task and get the fetch message
         verify_FETCH(
             .PC_stall(iDUT.PC_stall),
@@ -283,7 +282,7 @@ always @(posedge clk) begin
         );
 
         // Append the FETCH message to the queue with the cycle info
-        fetch_queue.push_back({fetch_msg, " @ Cycle: ",  $sformatf("%0d", $time/10)});
+        fetch_queue.push_back({fetch_msg, " @ Cycle: ", $sformatf("%0d", $time/10)});
     end
 end
 
@@ -302,11 +301,9 @@ always @(posedge clk) begin
     end
 end
 
-
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
     if (rst_n) begin
-
         // Call the verify_DECODE task and get the decode message
         verify_DECODE(
             .IF_ID_stall(iDUT.IF_ID_stall),
@@ -343,9 +340,10 @@ always @(posedge clk) begin
         );
 
         if (valid_decode) begin
-          // Append the DECODE message and instruction header to the queue
-          decode_queue.push_back({decode_msg, " @ Cycle: ",  $sformatf("%0d", $time/10)});
-          instruction_queue.push_back(instruction_full_msg);
+            // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
+            int decode_cycle = ($time/10) - 1;
+            decode_queue.push_back({decode_msg, " @ Cycle: ", $sformatf("%0d", decode_cycle)});
+            instruction_queue.push_back(instruction_full_msg);
         end
     end
 end

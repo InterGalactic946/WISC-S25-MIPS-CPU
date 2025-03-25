@@ -50,49 +50,27 @@ always @(posedge clk) begin
         valid_memory <= 0;
         valid_wb <= 0;
     end else begin
-                // Handle stall condition
+       // Handle stall condition
         if (!stall) begin
             // Only increment fetch_id when there's no stall
             fetch_id <= fetch_id + 1;
             valid_fetch <= 1;  // Mark fetch as valid
-        end
-
-        // Handle flush condition
-        if (flush) begin
+        end else if (flush) begin
             // Invalidate pipeline stages on flush
             valid_fetch <= 0;
-            valid_decode <= 0;
-            valid_execute <= 0;
-            valid_memory <= 0;
-            valid_wb <= 0;
         end
 
         // Update pipeline stages based on flush/stall
-        if (!stall && !flush) begin
-            decode_id <= fetch_id;   // Pass the fetch_id to decode_id
-            execute_id <= decode_id; // Pass the decode_id to execute_id
-            memory_id <= execute_id; // Pass the execute_id to memory_id
-            wb_id <= memory_id;      // Pass the memory_id to wb_id
-
-            valid_decode <= valid_fetch;
-            valid_execute <= valid_decode;
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
-        end
-
-        // In case of stall, retain current instruction in the pipeline stages
-        if (stall) begin
-            decode_id <= decode_id;   // Retain the current decode_id
-            execute_id <= execute_id; // Retain the current execute_id
-            memory_id <= memory_id;   // Retain the current memory_id
-            wb_id <= wb_id;           // Retain the current wb_id
-
-            // Keep the validity of the previous stages
-            valid_decode <= valid_decode;
-            valid_execute <= valid_execute;
-            valid_memory <= valid_memory;
-            valid_wb <= valid_wb;
-        end
+        decode_id <= fetch_id;   // Pass the fetch_id to decode_id
+        execute_id <= decode_id; // Pass the decode_id to execute_id
+        memory_id <= execute_id; // Pass the execute_id to memory_id
+        wb_id <= memory_id;      // Pass the memory_id to wb_id
+        
+        // Propogate the valid signal to future stages.
+        valid_decode <= valid_fetch;
+        valid_execute <= valid_decode;
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
     end
 end
 

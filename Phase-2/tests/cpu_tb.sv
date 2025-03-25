@@ -30,6 +30,11 @@ module cpu_tb();
 
   reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
 
+  
+  // Store the messages for FETCH and DECODE stages
+reg [31:0] instruction_cycle; // Store the cycle when the instruction is completed
+
+
 
   
   /////////////////////////////////////////

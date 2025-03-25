@@ -59,9 +59,9 @@ always @(posedge clk) begin
         valid_wb <= 0;
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
-        valid_fetch <= 1;
+        valid_fetch = 1;
     end else if (stall)
-        valid_fetch <= 0;
+        valid_fetch = 0;
 
     // Propogate the signals correctly.
     valid_decode <= valid_fetch;

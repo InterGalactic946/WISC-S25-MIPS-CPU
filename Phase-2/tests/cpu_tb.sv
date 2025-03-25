@@ -273,7 +273,7 @@ always @(negedge clk) begin
         );
 
         // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        ftch_msg <= fetch_msg;
+        fetch_msg <= ftch_msg;
         // $display(fetch_msg);
     end
 end

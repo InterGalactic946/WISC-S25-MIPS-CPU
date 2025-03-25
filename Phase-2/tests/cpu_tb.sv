@@ -260,7 +260,6 @@ int cycle_queue[$];        // Queue to track cycle number for WB
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
-        string fetch_msg;
         
         // Call the verify_FETCH task and get the fetch message
         verify_FETCH(
@@ -289,7 +288,6 @@ end
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
     if (rst_n) begin
-        string decode_msg, instruction_full_msg;
 
         // Call the verify_DECODE task and get the decode message
         verify_DECODE(

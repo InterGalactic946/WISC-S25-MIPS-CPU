@@ -266,7 +266,7 @@ always @(posedge clk) begin
         fetch_id  <= 0;
         decode_id <= 0;
     end else begin
-        if (valid_fetch) fetch_id  <= fetch_id + 1; 
+        if (valid_fetch) fetch_id <= fetch_id + 1; 
         decode_id <= fetch_id;
     end
 end
@@ -299,12 +299,12 @@ always @(negedge clk) begin
       $display("| Instruction: %s | Completed At Cycle: %0t |", decode_msgs[decode_id][decode_msg_indices[decode_id]][1], $time / 10);
       $display("==========================================================");
       // Print all stored fetch messages for the current fetch_id
-      for (int i = 0; i <= fetch_msg_indices[decode_id]; i = i + 1) begin
+      for (int i = 0; i < fetch_msg_indices[decode_id]; i = i + 1) begin
             $display("|%s", fetch_msgs[decode_id][i]);
       end
 
       // Print all stored decode messages for the current decode_id
-      for (int i = 0; i <= decode_msg_indices[decode_id]; i = i + 1) begin
+      for (int i = 0; i < decode_msg_indices[decode_id]; i = i + 1) begin
            $display("|%s", decode_msgs[decode_id][i][0]);
       end
     end

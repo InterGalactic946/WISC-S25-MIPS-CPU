@@ -258,11 +258,12 @@ package Verification_tasks;
           end
 
           // If there is a stall at the decode stage, print out the stall along with reason.
-          if (IF_ID_stall)
+          if (IF_ID_stall) begin
             decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
-          else if (IF_flush) // If the instruction is flushed.
+          end else if (IF_flush) begin // If the instruction is flushed.
             decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");
-          else begin // Decode the instruction.
+            instruction_full = $sformatf("FLUSHED");
+          end else begin // Decode the instruction.
             // Get the decoded instruction.
             display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
 

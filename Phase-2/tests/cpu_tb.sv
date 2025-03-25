@@ -32,7 +32,7 @@ module cpu_tb();
 
   // Assume tracking of 71 instructions, with a capacity of storing 5 messages per stage (fetch, deocde).
   string fetch_msgs[0:71][0:4];
-  string decode_msgs[0:71][0:4];
+  string decode_msgs[0:71][0:4][0:1];
   
   // Indices into the arrays.
   integer fetch_id, decode_id;
@@ -199,6 +199,56 @@ always @(posedge clk) begin
     end
 end
 
+
+
+// Always block for verify_DECODE stage
+always @(posedge clk) begin
+    if (rst_n) begin
+      string dcode_msg, instr_full_msg;
+
+        // Call the verify_DECODE task and get the decode message
+        verify_DECODE(
+            .IF_ID_stall(iDUT.IF_ID_stall),
+            .expected_IF_ID_stall(iMODEL.IF_ID_stall),
+            .IF_flush(iDUT.IF_flush),
+            .expected_IF_flush(iMODEL.IF_flush),
+            .br_hazard(iMODEL.iHDU.BR_hazard),
+            .b_hazard(iMODEL.iHDU.B_hazard),
+            .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
+            .EX_signals(iDUT.EX_signals),
+            .expected_EX_signals(iMODEL.EX_signals),
+            .MEM_signals(iDUT.MEM_signals),
+            .expected_MEM_signals(iMODEL.MEM_signals),
+            .WB_signals(iDUT.WB_signals),
+            .expected_WB_signals(iMODEL.WB_signals),
+            .cc(iDUT.iDECODE.c_codes),
+            .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
+            .is_branch(iDUT.Branch),
+            .expected_is_branch(iMODEL.Branch),
+            .is_BR(iDUT.BR),
+            .expected_is_BR(iMODEL.BR),
+            .branch_target(iDUT.branch_target),
+            .expected_branch_target(iMODEL.branch_target),
+            .actual_taken(iDUT.actual_taken),
+            .expected_actual_taken(iMODEL.actual_taken),
+            .wen_BTB(iDUT.wen_BTB),
+            .expected_wen_BTB(iMODEL.wen_BTB),
+            .wen_BHT(iDUT.wen_BHT),
+            .expected_wen_BHT(iMODEL.wen_BHT),
+            .update_PC(iDUT.update_PC),
+            .expected_update_PC(iMODEL.update_PC),
+            
+            .decode_msg(dcode_msg),
+            .instruction_full(instr_full_msg)
+        );
+
+        // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
+        decode_msg <= $sformatf("%s @ Cycle: %s", dcode_msg, $sformatf("%0d", ($time/10) - 1));
+        instruction_full_msg <= $sformatf("%s", instr_full_msg);
+    end
+end
+
+
 // Get the valid signal
 always @(posedge clk) begin
     if (!rst_n) begin
@@ -217,54 +267,47 @@ always @(posedge clk) begin
         decode_id <= 0;
     end else begin
         if (valid_fetch) fetch_id  <= fetch_id + 1; 
-        if (valid_decode) decode_id <= decode_id + 1;
+        decode_id <= fetch_id;
     end
 end
 
-// Always block to print fetch messages (after storing them)
-always @(negedge clk) begin
-    if (valid_decode) // Print during the fetch stage if valid_fetch is active
-    $display("|%s", fetch_msg);
+
+// Get the message index counter, incremented only on stall
+always @(posedge clk) begin
+    if (!rst_n) begin
+        fetch_msg_indices <= '{default: 0};
+        decode_msg_indices <= '{default: 0};
+    end else if (stall) begin
+        // Increment fetch message index on PC stall
+        fetch_msg_indices[fetch_id] <= fetch_msg_indices[fetch_id] + 1;
+        // Increment decode message index on IF/ID stall
+        decode_msg_indices[decode_id] <= decode_msg_indices[decode_id] + 1;
+    end
 end
 
 
+// Always block to print fetch messages (after storing them)
+always @(negedge clk) begin
+    if (valid_fetch) begin // Print during the fetch stage if valid_fetch is active
+      fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] = fetch_msg;
+    end else if (valid_decode) begin
+      decode_msgs[decode_id][decode_msg_indices[decode_id]][0] = decode_msg;
+      decode_msgs[decode_id][decode_msg_indices[decode_id]][1] = instruction_full_msg;
 
+      $display("==========================================================");
+      $display("| Instruction: %s | Completed At Cycle: %0t |", decode_msgs[decode_id][decode_msg_indices[decode_id]][1], $time / 10);
+      $display("==========================================================");
+      // Print all stored fetch messages for the current fetch_id
+      for (int i = 0; i <= fetch_msg_indices[fetch_id]; i = i + 1) begin
+            $display("|%s", fetch_msgs[fetch_id][i]);
+      end
 
-  // // Always block to print fetch messages when both fetch and decode are valid
-  // always @(posedge clk) begin
-  //     if (rst_n) begin
-  //         // Ensure that the queues have valid fetch and decode messages before printing
-  //         if (fetch_id > 0 && decode_id > 0 && valid_decode) begin
-  //             integer i, j;
-  //             string fetch_msg_out, decode_msg_out, instr_out;
-              
-  //             // Print the instruction details for each instruction
-  //             for (i = 0; i < fetch_id; i = i + 1) begin
-  //                 // Print all fetch messages for the current instruction
-  //                 for (j = 0; j < MAX_MSGS; j = j + 1) begin
-  //                     if (fetch_msgs[i][j] != "") begin  // Only print non-empty messages
-  //                         $display("========================================================");
-  //                         $display("| Instruction: %s | Fetch Message @ Cycle: %0t |", instr_out, $time/10);
-  //                         $display("========================================================");
-  //                         $display("| %s", fetch_msgs[i][j]);
-  //                     end
-  //                 end
-  //             end
-
-  //             // Similarly, you can print decode messages if needed
-  //             for (i = 0; i < decode_id; i = i + 1) begin
-  //                 for (j = 0; j < MAX_MSGS; j = j + 1) begin
-  //                     if (decode_msgs[i][j] != "") begin
-  //                         $display("========================================================");
-  //                         $display("| Instruction: %s | Decode Message @ Cycle: %0t |", instr_out, $time/10);
-  //                         $display("========================================================");
-  //                         $display("| %s", decode_msgs[i][j]);
-  //                     end
-  //                 end
-  //             end
-  //         end
-  //     end
-  // end
+      // Print all stored decode messages for the current decode_id
+      for (int i = 0; i <= decode_msg_indices[decode_id]; i = i + 1) begin
+           $display("|%s", decode_msgs[decode_id][i][0]);
+      end
+    end
+end
 
 
 

@@ -26,7 +26,10 @@ module cpu_tb();
 
   // Messages from each stage.
   string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_msg, 
-         execute_msg, ex_mem_msg, mem_msg, mem_wb_msg, wb_msg, pc_stall_msg, if_id_stall_msg, if_flush_msg, id_flush_msg;
+         execute_msg, ex_mem_msg, mem_msg, mem_wb_msg, wb_msg, pc_stall_msg, if_id_stall_msg, if_flush_msg, id_flush_msg. instruction_header;
+
+  reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
+
 
   
   /////////////////////////////////////////
@@ -150,98 +153,199 @@ module cpu_tb();
       end
   end
 
-  // Always block for verify_FETCH stage
-  always @(posedge clk) begin
-    if (rst_n) begin
-    verify_FETCH(
-          .PC_stall(iDUT.PC_stall),
-          .expected_PC_stall(iMODEL.PC_stall),
-          .HLT(iDUT.iDECODE.HLT),
-          .PC_next(iDUT.PC_next), 
-          .expected_PC_next(iMODEL.PC_next), 
-          .PC_inst(iDUT.PC_inst), 
-          .expected_PC_inst(iMODEL.PC_inst), 
-          .PC_curr(pc), 
-          .expected_PC_curr(expected_pc), 
-          .prediction(iDUT.prediction), 
-          .expected_prediction(iMODEL.prediction), 
-          .predicted_target(iDUT.predicted_target), 
-          .expected_predicted_target (iMODEL.predicted_target),
-          .stage("FETCH"),
-          .stage_msg(fetch_msg)
-      );
-
-      $display("|%s @ Cycle: %0t", fetch_msg, $time/10);
-    end
-  end
-
-
-  // // Always block for verify_IF_ID stage
-  // always @(negedge clk) begin
+  // // Always block for verify_FETCH stage
+  // always @(posedge clk) begin
   //   if (rst_n) begin
-  //     verify_IF_ID(
-  //       .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
-  //                       iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
-  //       .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr, iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
-  //                               iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
-  //       .PC_stall(iMODEL.PC_stall),
-  //       .IF_ID_stall(iMODEL.IF_ID_stall),
-  //       .IF_flush(iMODEL.IF_flush),
-  //       .br_hazard(iMODEL.iHDU.BR_hazard),
-  //       .b_hazard(iMODEL.iHDU.B_hazard),
-  //       .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
-  //       .hlt(expected_hlt),
-        
-  //       .if_id_msg(if_id_msg)
+  //   verify_FETCH(
+  //         .PC_stall(iDUT.PC_stall),
+  //         .expected_PC_stall(iMODEL.PC_stall),
+  //         .HLT(iDUT.iDECODE.HLT),
+  //         .PC_next(iDUT.PC_next), 
+  //         .expected_PC_next(iMODEL.PC_next), 
+  //         .PC_inst(iDUT.PC_inst), 
+  //         .expected_PC_inst(iMODEL.PC_inst), 
+  //         .PC_curr(pc), 
+  //         .expected_PC_curr(expected_pc), 
+  //         .prediction(iDUT.prediction), 
+  //         .expected_prediction(iMODEL.prediction), 
+  //         .predicted_target(iDUT.predicted_target), 
+  //         .expected_predicted_target (iMODEL.predicted_target),
+  //         .stage("FETCH"),
+  //         .stage_msg(fetch_msg)
   //     );
 
-  //     // $display(if_id_msg);
+  //     $display("|%s @ Cycle: %0t", fetch_msg, $time/10);
   //   end
   // end
 
-  // Always block for verify_DECODE stage
-  always @(posedge clk) begin
-    if (rst_n) begin
-      verify_DECODE(
-        .IF_ID_stall(iDUT.IF_ID_stall),
-        .expected_IF_ID_stall(iMODEL.IF_ID_stall),
-        .IF_flush(iDUT.IF_flush),
-        .expected_IF_flush(iMODEL.IF_flush),
-        .br_hazard(iMODEL.iHDU.BR_hazard),
-        .b_hazard(iMODEL.iHDU.B_hazard),
-        .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
-        .EX_signals(iDUT.EX_signals),
-        .expected_EX_signals(iMODEL.EX_signals),
-        .MEM_signals(iDUT.MEM_signals),
-        .expected_MEM_signals(iMODEL.MEM_signals),
-        .WB_signals(iDUT.WB_signals),
-        .expected_WB_signals(iMODEL.WB_signals),
-        .cc(iDUT.iDECODE.c_codes),
-        .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
-        .is_branch(iDUT.Branch),
-        .expected_is_branch(iMODEL.Branch),
-        .is_BR(iDUT.BR),
-        .expected_is_BR(iMODEL.BR),
-        .branch_target(iDUT.branch_target),
-        .expected_branch_target(iMODEL.branch_target),
-        .actual_taken(iDUT.actual_taken),
-        .expected_actual_taken(iMODEL.actual_taken),
-        .wen_BTB(iDUT.wen_BTB),
-        .expected_wen_BTB(iMODEL.wen_BTB),
-        .wen_BHT(iDUT.wen_BHT),
-        .expected_wen_BHT(iMODEL.wen_BHT),
-        .update_PC(iDUT.update_PC),
-        .expected_update_PC(iMODEL.update_PC),
+
+  // // // Always block for verify_IF_ID stage
+  // // always @(negedge clk) begin
+  // //   if (rst_n) begin
+  // //     verify_IF_ID(
+  // //       .IF_ID_signals({iDUT.IF_ID_PC_curr, iDUT.IF_ID_PC_next, iDUT.IF_ID_PC_inst, 
+  // //                       iDUT.IF_ID_prediction, iDUT.IF_ID_predicted_target}),
+  // //       .expected_IF_ID_signals({iMODEL.IF_ID_PC_curr, iMODEL.IF_ID_PC_next, iMODEL.IF_ID_PC_inst, 
+  // //                               iMODEL.IF_ID_prediction, iMODEL.IF_ID_predicted_target}),
+  // //       .PC_stall(iMODEL.PC_stall),
+  // //       .IF_ID_stall(iMODEL.IF_ID_stall),
+  // //       .IF_flush(iMODEL.IF_flush),
+  // //       .br_hazard(iMODEL.iHDU.BR_hazard),
+  // //       .b_hazard(iMODEL.iHDU.B_hazard),
+  // //       .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
+  // //       .hlt(expected_hlt),
         
-        .decode_msg(decode_msg),
-        .instruction_full(instruction_full_msg)
-      );
+  // //       .if_id_msg(if_id_msg)
+  // //     );
 
-      //$display(instruction_full_msg);
-      $display("|%s @ Cycle: %0t", decode_msg, $time/10);
+  // //     // $display(if_id_msg);
+  // //   end
+  // // end
 
+  // // Always block for verify_DECODE stage
+  // always @(posedge clk) begin
+  //   if (rst_n) begin
+  //     verify_DECODE(
+  //       .IF_ID_stall(iDUT.IF_ID_stall),
+  //       .expected_IF_ID_stall(iMODEL.IF_ID_stall),
+  //       .IF_flush(iDUT.IF_flush),
+  //       .expected_IF_flush(iMODEL.IF_flush),
+  //       .br_hazard(iMODEL.iHDU.BR_hazard),
+  //       .b_hazard(iMODEL.iHDU.B_hazard),
+  //       .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
+  //       .EX_signals(iDUT.EX_signals),
+  //       .expected_EX_signals(iMODEL.EX_signals),
+  //       .MEM_signals(iDUT.MEM_signals),
+  //       .expected_MEM_signals(iMODEL.MEM_signals),
+  //       .WB_signals(iDUT.WB_signals),
+  //       .expected_WB_signals(iMODEL.WB_signals),
+  //       .cc(iDUT.iDECODE.c_codes),
+  //       .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
+  //       .is_branch(iDUT.Branch),
+  //       .expected_is_branch(iMODEL.Branch),
+  //       .is_BR(iDUT.BR),
+  //       .expected_is_BR(iMODEL.BR),
+  //       .branch_target(iDUT.branch_target),
+  //       .expected_branch_target(iMODEL.branch_target),
+  //       .actual_taken(iDUT.actual_taken),
+  //       .expected_actual_taken(iMODEL.actual_taken),
+  //       .wen_BTB(iDUT.wen_BTB),
+  //       .expected_wen_BTB(iMODEL.wen_BTB),
+  //       .wen_BHT(iDUT.wen_BHT),
+  //       .expected_wen_BHT(iMODEL.wen_BHT),
+  //       .update_PC(iDUT.update_PC),
+  //       .expected_update_PC(iMODEL.update_PC),
+        
+  //       .decode_msg(decode_msg),
+  //       .instruction_full(instruction_full_msg)
+  //     );
+
+  //     //$display(instruction_full_msg);
+  //     $display("|%s @ Cycle: %0t", decode_msg, $time/10);
+
+  //   end
+  // end
+
+  // Store the messages for FETCH and DECODE stages
+reg [255:0] fetch_stage_msg, decode_stage_msg;
+reg [255:0] full_instruction_msg;
+reg [255:0] instruction_header;
+reg [31:0] instruction_cycle; // Store the cycle when the instruction is completed
+
+// Always block for verify_FETCH stage
+always @(posedge clk) begin
+    if (rst_n) begin
+        // Call the verify_FETCH task and store the fetch message
+        verify_FETCH(
+            .PC_stall(iDUT.PC_stall),
+            .expected_PC_stall(iMODEL.PC_stall),
+            .HLT(iDUT.iDECODE.HLT),
+            .PC_next(iDUT.PC_next),
+            .expected_PC_next(iMODEL.PC_next),
+            .PC_inst(iDUT.PC_inst),
+            .expected_PC_inst(iMODEL.PC_inst),
+            .PC_curr(pc),
+            .expected_PC_curr(expected_pc),
+            .prediction(iDUT.prediction),
+            .expected_prediction(iMODEL.prediction),
+            .predicted_target(iDUT.predicted_target),
+            .expected_predicted_target(iMODEL.predicted_target),
+            .stage("FETCH"),
+            .stage_msg(fetch_msg)
+        );
+        
+        // Store the fetch stage message with cycle time
+        fetch_stage_msg = {fetch_stage_msg, fetch_msg, " @ Cycle: ", $time/10};
     end
-  end
+end
+
+// Always block for verify_DECODE stage
+always @(posedge clk) begin
+    if (rst_n) begin
+        // Call the verify_DECODE task and store the decode message
+        verify_DECODE(
+            .IF_ID_stall(iDUT.IF_ID_stall),
+            .expected_IF_ID_stall(iMODEL.IF_ID_stall),
+            .IF_flush(iDUT.IF_flush),
+            .expected_IF_flush(iMODEL.IF_flush),
+            .br_hazard(iMODEL.iHDU.BR_hazard),
+            .b_hazard(iMODEL.iHDU.B_hazard),
+            .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
+            .EX_signals(iDUT.EX_signals),
+            .expected_EX_signals(iMODEL.EX_signals),
+            .MEM_signals(iDUT.MEM_signals),
+            .expected_MEM_signals(iMODEL.MEM_signals),
+            .WB_signals(iDUT.WB_signals),
+            .expected_WB_signals(iMODEL.WB_signals),
+            .cc(iDUT.iDECODE.c_codes),
+            .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
+            .is_branch(iDUT.Branch),
+            .expected_is_branch(iMODEL.Branch),
+            .is_BR(iDUT.BR),
+            .expected_is_BR(iMODEL.BR),
+            .branch_target(iDUT.branch_target),
+            .expected_branch_target(iMODEL.branch_target),
+            .actual_taken(iDUT.actual_taken),
+            .expected_actual_taken(iMODEL.actual_taken),
+            .wen_BTB(iDUT.wen_BTB),
+            .expected_wen_BTB(iMODEL.wen_BTB),
+            .wen_BHT(iDUT.wen_BHT),
+            .expected_wen_BHT(iMODEL.wen_BHT),
+            .update_PC(iDUT.update_PC),
+            .expected_update_PC(iMODEL.update_PC),
+            .decode_msg(decode_msg),
+            .instruction_full(instruction_full_msg) // Full instruction header msg
+        );
+        
+        // Store the decode stage message with cycle time
+        decode_stage_msg = {decode_stage_msg, decode_msg, " @ Cycle: ", $time/10};
+        
+        // Store the instruction full message
+        full_instruction_msg = {full_instruction_msg, instruction_full_msg};
+    end
+end
+
+// Once both FETCH and DECODE stages have completed, print the messages
+always @(posedge clk) begin
+    if (rst_n) begin
+        // Check if both FETCH and DECODE stages are done
+        if (fetch_stage_msg != "" && decode_stage_msg != "") begin
+            // Store the cycle time when instruction reaches WB
+            instruction_cycle = $time/10; // Store the current cycle
+            
+            // Combine both FETCH and DECODE stage messages
+            instruction_header = {"========================================================\n",
+                                    "| Instruction: ", full_instruction_msg, " | Completed At Cycle: ", instruction_cycle, " |\n",
+                                    "========================================================\n",
+                                    "|[FETCH] ", fetch_stage_msg, "\n",
+                                    "|[DECODE] ", decode_stage_msg};
+            
+            // Display the full instruction message after both stages are completed
+            $display(instruction_header);
+        end
+    end
+end
+
 
   // // always @(posedge clk)
   // //   $display("Src_data1: %04x, Expected_Src_Data1: %04x", iDUT.iDECODE.SrcReg1_data, iMODEL.iDECODE.SrcReg1_data);

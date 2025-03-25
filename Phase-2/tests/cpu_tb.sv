@@ -30,14 +30,18 @@ module cpu_tb();
 
   // reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
 
-  // Assume tracking of 71 instructions, with a capacity of storing 5 messages per stage (fetch, deocde).
-  string fetch_msgs[0:71][0:4];
-  string decode_msgs[0:71][0:4][0:1];
+  // // Assume tracking of 71 instructions, with a capacity of storing 5 messages per stage (fetch, deocde).
+  // string fetch_msgs[0:71][0:4];
+  // string decode_msgs[0:71][0:4][0:1];
   
-  // Indices into the arrays.
-  integer fetch_id, decode_id;
-  integer fetch_msg_indices[72]; // Tracks message indices per instruction
-  integer decode_msg_indices[72]; // Tracks message indices per instruction
+  // // Indices into the arrays.
+  // integer fetch_id, decode_id;
+  // integer fetch_msg_indices[72]; // Tracks message indices per instruction
+  // integer decode_msg_indices[72]; // Tracks message indices per instruction
+
+      integer fetch_id, decode_id, execute_id, memory_id, wb_id;
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
+    debug_info_t pipeline_msgs[0:71];
 
 //   // Store the messages for FETCH and DECODE stages
 // reg [31:0] instruction_cycle; // Store the cycle when the instruction is completed
@@ -161,9 +165,7 @@ logic valid_fetch, valid_decode;
       end
   end
 
-    integer fetch_id, decode_id, execute_id, memory_id, wb_id;
-    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
-    debug_info_t pipeline_msgs[0:71];
+
 
   // First Always Block: Tracks the pipeline and increments IDs
   always @(posedge clk) begin

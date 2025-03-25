@@ -168,7 +168,7 @@ module cpu_tb();
 
 
   // First Always Block: Tracks the pipeline and increments IDs
-  always @(posedge clk) begin
+  always @(negedge clk) begin
       if (rst) begin
           fetch_id <= 0;
           decode_id <= 0;
@@ -188,7 +188,7 @@ module cpu_tb();
   end
 
   // Second Always Block: Propagate the valid signals across stages
-  always @(negedge clk) begin
+  always @(posedge clk) begin
       if (rst) begin
           valid_decode <= 0;
           valid_execute <= 0;

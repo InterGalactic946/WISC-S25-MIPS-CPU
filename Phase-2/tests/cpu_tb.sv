@@ -195,7 +195,7 @@ always @(posedge clk) begin
 
         // Store message for FETCH stage at the appropriate index
         // fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] = $sformatf("|%s @ Cycle: %0t", fetch_msg, $time/10);
-        fetch_msg <= $sformatf("|%s @ Cycle: %0t", ftch_msg, $time/10);
+        fetch_msg <= $sformatf("%s @ Cycle: %0t", ftch_msg, $time/10);
     end
 end
 
@@ -224,7 +224,7 @@ end
 // Always block to print fetch messages (after storing them)
 always @(negedge clk) begin
     if (valid_decode) // Print during the fetch stage if valid_fetch is active
-    $display("%s @ Cycle: %s", fetch_msg, $sformatf("%0d", $time/10));
+    $display("|%s", fetch_msg);
 end
 
 

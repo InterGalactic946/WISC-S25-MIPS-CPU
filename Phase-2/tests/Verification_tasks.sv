@@ -85,7 +85,7 @@ package Verification_tasks;
           end
 
           // Verify the stall state.
-          if (stall !== expected_stall) begin
+          if (PC_stall !== expected_PC_stall) begin
               stage_msg = $sformatf("[%s] ERROR: PC_stall: %b, expected_PC_stall: %b.", stage, PC_stall, expected_PC_stall);
               return;  // Exit task on error
           end

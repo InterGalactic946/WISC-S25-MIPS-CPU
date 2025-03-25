@@ -287,7 +287,7 @@ end
 
 
 // Always block to print fetch messages (after storing them)
-always @(negedge clk) begin
+always @(posedge clk) begin
     if (valid_fetch) begin // Print during the fetch stage if valid_fetch is active
       fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] <= fetch_msg;
     end else if (valid_decode) begin

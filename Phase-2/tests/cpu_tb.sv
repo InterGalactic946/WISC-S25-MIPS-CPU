@@ -238,15 +238,18 @@ end
 
 // Always block to print fetch messages (after storing them)
 always @(posedge clk) begin
-if (valid_decode) begin
-        // Print all stored fetch messages
-        for (int i = 0; i < 5; i = i + 1) begin
+    if (valid_fetch) begin // Print during the fetch stage if valid_fetch is active
+        // Print all stored fetch messages for each instruction
+        for (int i = 0; i < 5; i = i + 1) begin // Assuming a limit of 5 instructions
             for (int j = 0; j < fetch_msg_indices[i]; j = j + 1) begin
-                $display("%s", fetch_msgs[i][j]);
+                if (fetch_msgs[i][j] != "") begin  // Check if message is non-empty
+                    $display("FETCH | Instruction %0d, Message %0d: %s", i, j, fetch_msgs[i][j]);
+                end
             end
         end
-      end
-  end
+    end
+end
+
 
 
 

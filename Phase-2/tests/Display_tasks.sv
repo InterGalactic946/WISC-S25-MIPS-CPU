@@ -36,7 +36,7 @@ package Display_tasks;
 
 
   // Task: Display the decoded information based on instruction type.
-  task automatic display_decoded_info(input logic [3:0] opcode, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] ALU_imm, input logic actual_taken, input logic [15:0] actual_target, output string instr_state);
+  task automatic display_decoded_info(input logic [3:0] opcode, input logic [3:0] rs, input logic [3:0] rt, input logic [3:0] rd, input logic [15:0] ALU_imm, input logic [2:0] flag_reg, input logic actual_taken, input logic [15:0] actual_target, output string instr_state);
       begin
           // Local var for instruction name.
           string instr_name;
@@ -54,14 +54,14 @@ package Display_tasks;
               4'hC, 4'hD: begin // B, BR instructions
                 if (opcode === 4'hC) begin
                     if (actual_taken)
-                        instr_state = $sformatf("Branch (B) is actually taken. The actual target is: 0x%h.", actual_target);
+                        instr_state = $sformatf("Flag state: ZF = %b, VF = %b, NF = %b. Branch (B) is actually taken. The actual target is: 0x%h.", flag_reg[2], flag_reg[1], flag_reg[0], actual_target);
                     else 
-                        instr_state = $sformatf("Branch (B) is actually NOT taken. The actual target is: 0x%h.", actual_target);
+                        instr_state = $sformatf("Flag state: ZF = %b, VF = %b, NF = %b. Branch (B) is actually NOT taken. The actual target is: 0x%h.", flag_reg[2], flag_reg[1], flag_reg[0], actual_target);
                 end else if (opcode === 4'hD) begin
                     if (actual_taken)
-                        instr_state = $sformatf("Branch (BR) is actually taken. The actual target is: 0x%h.", actual_target);
+                        instr_state = $sformatf("Flag state: ZF = %b, VF = %b, NF = %b. Branch (BR) is actually taken. The actual target is: 0x%h.", flag_reg[2], flag_reg[1], flag_reg[0], actual_target);
                     else 
-                        instr_state = $sformatf("Branch (BR) is actually NOT taken. The actual target is: 0x%h.", actual_target);
+                        instr_state = $sformatf("Flag state: ZF = %b, VF = %b, NF = %b. Branch (BR) is actually NOT taken. The actual target is: 0x%h.", flag_reg[2], flag_reg[1], flag_reg[0], actual_target);
                 end
               end
               4'hE: // (PCS) does not have registers like `rs`, `rt`. It only has a destination register `rd`.

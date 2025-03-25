@@ -152,7 +152,7 @@ package Verification_tasks;
       input logic [62:0] EX_signals, expected_EX_signals,
       input logic [17:0] MEM_signals, expected_MEM_signals,
       input logic [7:0] WB_signals, expected_WB_signals,
-      input logic [2:0] cc,
+      input logic [2:0] cc, flag_reg,
       input logic is_branch, expected_is_branch,
       input logic is_BR, expected_is_BR,
       input logic [15:0] branch_target, expected_branch_target,
@@ -221,7 +221,7 @@ package Verification_tasks;
           end
 
           // Get the decoded instruction.
-          display_decoded_info(.opcode(EX_signals[6:3]), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
+          display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
           
           // Print success message.
           decode_msg = $sformatf("[DECODE] SUCCESS: %s.", instr_state);

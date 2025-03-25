@@ -246,12 +246,6 @@ module cpu_tb();
   //   end
   // end
 
-  // Store the messages for FETCH and DECODE stages
-reg [255:0] fetch_stage_msg, decode_stage_msg;
-reg [255:0] full_instruction_msg;
-reg [255:0] instruction_header;
-reg [31:0] instruction_cycle; // Store the cycle when the instruction is completed
-
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin

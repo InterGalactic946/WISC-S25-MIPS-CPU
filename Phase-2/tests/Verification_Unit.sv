@@ -74,32 +74,32 @@ end
     always @(negedge clk) begin
         if (!rst) begin
             if (valid_fetch) begin
-                pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
-                pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
+                pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
+                pipeline_msgs[fetch_id].fetch_cycle <= $time / 10;
             end
             if (valid_decode) begin
-                pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
-                pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
-                pipeline_msgs[decode_id].decode_cycle = $time / 10;
+                pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
+                pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
+                pipeline_msgs[decode_id].decode_cycle <= $time / 10;
             end
             if (valid_execute) begin
-                pipeline_msgs[execute_id].execute_msg = execute_msg;
-                pipeline_msgs[execute_id].execute_cycle = $time / 10;
+                pipeline_msgs[execute_id].execute_msg <= execute_msg;
+                pipeline_msgs[execute_id].execute_cycle <= $time / 10;
             end
             if (valid_memory) begin
-                pipeline_msgs[memory_id].memory_msg = mem_msg;
-                pipeline_msgs[memory_id].memory_cycle = $time / 10;
+                pipeline_msgs[memory_id].memory_msg <= mem_msg;
+                pipeline_msgs[memory_id].memory_cycle <= $time / 10;
             end
             if (valid_wb) begin
-                pipeline_msgs[wb_id].wb_msg = wb_msg;
-                pipeline_msgs[wb_id].wb_cycle = $time / 10;
+                pipeline_msgs[wb_id].wb_msg <= wb_msg;
+                pipeline_msgs[wb_id].wb_cycle <= $time / 10;
             end
         end
     end
 
 
    // Flip-flop to hold enable signal for printing
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if (rst) begin
             print_enable <= 0;  // Reset the enable signal
         end else begin
@@ -149,7 +149,7 @@ end
 
     // Print the message for each instruction.
     always @(posedge clk) begin
-        if (!rst && print_enable) begin
+        if (print_enable) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");

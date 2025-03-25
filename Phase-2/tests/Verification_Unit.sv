@@ -80,7 +80,7 @@ end
     always @(posedge clk) begin
         if (!rst) begin
             if (valid_decode) begin
-               if (stall || flush) begin
+               if (flush) begin
                     pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
                     pipeline_msgs[decode_id].decode_msg[1] <=  "(NOP)";
                     pipeline_msgs[decode_id].if_id_msg <= if_id_msg;

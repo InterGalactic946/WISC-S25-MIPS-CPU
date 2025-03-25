@@ -34,6 +34,8 @@ module cpu_tb();
   // Store the messages for FETCH and DECODE stages
 reg [31:0] instruction_cycle; // Store the cycle when the instruction is completed
 
+logic valid_fetch, valid_decode;
+
 
 
   
@@ -285,6 +287,22 @@ always @(posedge clk) begin
     end
 end
 
+always @(posedge clk) begin
+    if (rst_n) begin
+        if (stall) begin
+            valid_fetch <= 1'b0;
+        end else begin
+            valid_fetch <= 1'b1;
+        end
+
+        valid_decode <= valid_fetch; // Decode is only valid if fetch was valid in the previous cycle
+    end else begin
+        valid_fetch <= 1'b0;
+        valid_decode <= 1'b0;
+    end
+end
+
+
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
     if (rst_n) begin
@@ -324,9 +342,11 @@ always @(posedge clk) begin
             .instruction_full(instruction_full_msg)
         );
 
-        // Append the DECODE message and instruction header to the queue
-        decode_queue.push_back({decode_msg, " @ Cycle: ", $time/10});
-        instruction_queue.push_back(instruction_full_msg);
+        if (valid_decode) begin
+          // Append the DECODE message and instruction header to the queue
+          decode_queue.push_back({decode_msg, " @ Cycle: ", $time/10});
+          instruction_queue.push_back(instruction_full_msg);
+        end
     end
 end
 
@@ -334,7 +354,7 @@ end
 always @(posedge clk) begin
     if (rst_n) begin
         // Ensure both queues have entries before printing
-        if (fetch_queue.size() > 0 && decode_queue.size() > 0) begin
+        if (fetch_queue.size() > 0 && decode_queue.size() > 0 && valid_decode) begin
             string fetch_msg_out, decode_msg_out, instr_out;
             int completed_cycle;
 

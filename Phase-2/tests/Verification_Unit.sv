@@ -16,19 +16,12 @@ import Monitor_tasks::*;
 
 module Verification_Unit (
     input logic clk, rst,
-    input string if_id_msg,
+    input string fetch_msg,
     input string decode_msg,
     input string instruction_full_msg,
-    input string id_ex_msg,
     input string execute_msg,
-    input string ex_mem_msg,
     input string mem_msg,
-    input string mem_wb_msg,
     input string wb_msg,
-    input string pc_stall_msg,
-    input string if_id_stall_msg,
-    input string if_flush_msg,
-    input string id_flush_msg,
     input logic stall, flush
     );
 
@@ -77,38 +70,26 @@ always @(posedge clk) begin
 end
 
     // Adds the messages, with stall and flush checks.
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (!rst) begin
+            if (valid_fetch) begin
+                pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
+                pipeline_msgs[fetch_id].fetch_cycle <= $time / 10;
+            end
             if (valid_decode) begin
-               if (flush) begin
-                    pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
-                    pipeline_msgs[decode_id].decode_msg[1] <=  "(NOP)";
-                    pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
-                    pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
-                    pipeline_msgs[decode_id].decode_cycle <= $time / 10;
-               end else begin
-                    pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
-                    pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
-                    pipeline_msgs[decode_id].if_id_msg <= if_id_msg;
-                    pipeline_msgs[decode_id].if_id_cycle <= $time / 10;
-                    pipeline_msgs[decode_id].decode_cycle <= $time / 10;
-                end 
+                pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
+                pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
+                pipeline_msgs[decode_id].decode_cycle <= $time / 10;
             end
             if (valid_execute) begin
-                pipeline_msgs[execute_id].id_ex_msg <= id_ex_msg;
                 pipeline_msgs[execute_id].execute_msg <= execute_msg;
-                pipeline_msgs[execute_id].id_ex_cycle <= $time / 10;
                 pipeline_msgs[execute_id].execute_cycle <= $time / 10;
             end
             if (valid_memory) begin
-                pipeline_msgs[memory_id].ex_mem_msg <= ex_mem_msg;
-                pipeline_msgs[memory_id].ex_mem_cycle <= $time / 10;
                 pipeline_msgs[memory_id].memory_msg <= mem_msg;
                 pipeline_msgs[memory_id].memory_cycle <= $time / 10;
             end
             if (valid_wb) begin
-                pipeline_msgs[wb_id].mem_wb_msg = mem_wb_msg;
-                pipeline_msgs[wb_id].mem_wb_cycle = $time / 10;
                 pipeline_msgs[wb_id].wb_msg = wb_msg;
                 pipeline_msgs[wb_id].wb_cycle = $time / 10;
             end
@@ -117,52 +98,49 @@ end
 
 
     
-    // Stall/Flush Message Display based on Hazard Conditions.
-    always @(posedge clk) begin
-        if (!rst) begin
-            if (stall) begin
-                // Stall based on hazard conditions
-                if (pc_stall_msg !== "") begin
-                    $display("\n=====================================================");
-                    $display(pc_stall_msg);
-                    $display("=====================================================\n");
-                end
-                if (if_id_stall_msg !== "") begin
-                    $display("\n=====================================================");
-                    $display(if_id_stall_msg);
-                    $display("=====================================================\n");
-                end
-            end
-            if (flush) begin
-                // Flush based on conditions
-                if (if_flush_msg !== "") begin
-                    $display("\n=====================================================");
-                    $display(if_flush_msg);
-                    $display("=====================================================\n");
-                end
-                if (id_flush_msg !== "") begin
-                    $display("\n=====================================================");
-                    $display(id_flush_msg);
-                    $display("=====================================================\n");
-                end
-            end
-        end
-    end
+    // // Stall/Flush Message Display based on Hazard Conditions.
+    // always @(posedge clk) begin
+    //     if (!rst) begin
+    //         if (stall) begin
+    //             // Stall based on hazard conditions
+    //             if (pc_stall_msg !== "") begin
+    //                 $display("\n=====================================================");
+    //                 $display(pc_stall_msg);
+    //                 $display("=====================================================\n");
+    //             end
+    //             if (if_id_stall_msg !== "") begin
+    //                 $display("\n=====================================================");
+    //                 $display(if_id_stall_msg);
+    //                 $display("=====================================================\n");
+    //             end
+    //         end
+    //         if (flush) begin
+    //             // Flush based on conditions
+    //             if (if_flush_msg !== "") begin
+    //                 $display("\n=====================================================");
+    //                 $display(if_flush_msg);
+    //                 $display("=====================================================\n");
+    //             end
+    //             if (id_flush_msg !== "") begin
+    //                 $display("\n=====================================================");
+    //                 $display(id_flush_msg);
+    //                 $display("=====================================================\n");
+    //             end
+    //         end
+    //     end
+    // end
 
 
     // Print the message for each instruction.
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (!rst && valid_wb) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].if_id_msg, pipeline_msgs[wb_id].if_id_cycle);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].id_ex_msg, pipeline_msgs[wb_id].id_ex_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].ex_mem_msg, pipeline_msgs[wb_id].ex_mem_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].mem_wb_msg, pipeline_msgs[wb_id].mem_wb_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);
             $display("==========================================================\n");
         end

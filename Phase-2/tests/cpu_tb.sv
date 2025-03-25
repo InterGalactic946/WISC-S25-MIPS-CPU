@@ -172,6 +172,8 @@ logic valid_fetch, valid_decode;
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
+      string ftch_msg;
+
         // Verify FETCH stage logic
         verify_FETCH(
             .PC_stall(iDUT.PC_stall),
@@ -188,11 +190,12 @@ always @(posedge clk) begin
             .predicted_target(iDUT.predicted_target), 
             .expected_predicted_target(iMODEL.predicted_target),
             .stage("FETCH"),
-            .stage_msg(fetch_msg)
+            .stage_msg(ftch_msg)
         );
 
         // Store message for FETCH stage at the appropriate index
-        fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] = $sformatf("|%s @ Cycle: %0t", fetch_msg, $time/10);
+        // fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] = $sformatf("|%s @ Cycle: %0t", fetch_msg, $time/10);
+        fetch_msg <= ftch_msg;
     end
 end
 
@@ -218,36 +221,10 @@ always @(posedge clk) begin
     end
 end
 
-// Get the message index counter, incremented only on stall
-always @(posedge clk) begin
-    if (!rst_n) begin
-        fetch_msg_indices <= '{default: 0};
-        decode_msg_indices <= '{default: 0};
-    end else if (iDUT.PC_stall) begin
-        // Increment fetch message index on PC stall
-        fetch_msg_indices[fetch_id] <= fetch_msg_indices[fetch_id] + 1;
-    end else if (iDUT.IF_ID_stall) begin
-        // Increment decode message index on IF/ID stall
-        decode_msg_indices[decode_id] <= decode_msg_indices[decode_id] + 1;
-    end else begin
-        // Reset message index to 0 when no stall
-        fetch_msg_indices[fetch_id] <= 0;
-        decode_msg_indices[decode_id] <= 0;
-    end
-end
-
 // Always block to print fetch messages (after storing them)
 always @(negedge clk) begin
-    if (valid_decode) begin // Print during the fetch stage if valid_fetch is active
-        // Print all stored fetch messages for each instruction
-        for (int i = 0; i < 5; i = i + 1) begin // Assuming a limit of 5 instructions
-            for (int j = 0; j < fetch_msg_indices[i]; j = j + 1) begin
-                if (fetch_msgs[i][j] != "") begin  // Check if message is non-empty
-                    $display("FETCH | Instruction %0d, Message %0d: %s", i, j, fetch_msgs[i][j]);
-                end
-            end
-        end
-    end
+    if (valid_decode) // Print during the fetch stage if valid_fetch is active
+      $display("%s", fetch_msg);
 end
 
 

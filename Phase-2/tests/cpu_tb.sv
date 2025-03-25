@@ -160,134 +160,31 @@ logic valid_fetch, valid_decode;
       end
   end
 
-
-parameter MAX_INSTR = 32;  // Max number of instructions in pipeline
-parameter MAX_MSGS  = 16;  // Max messages per instruction
-
-string fetch_msgs[MAX_INSTR][MAX_MSGS];   // Fetch messages per instruction
-string decode_msgs[MAX_INSTR][MAX_MSGS];  // Decode messages per instruction
-string instruction_text[MAX_INSTR];       // Stores instruction text
-
-int inst_id = 0;          // Tracks current instruction ID
-int msg_index[MAX_INSTR]; // Tracks message index per instruction
-
-// Reset logic
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
-        inst_id = 0;
-        for (int i = 0; i < MAX_INSTR; i++) msg_index[i] = 0;
-    end
-end
-
-// Fetch Tracking
-always @(posedge clk) begin
+  // Always block for verify_FETCH stage
+  always @(posedge clk) begin
     if (rst_n) begin
-        string fetch_msg;
-        verify_FETCH(
-            .PC_stall(iDUT.PC_stall),
-            .expected_PC_stall(iMODEL.PC_stall),
-            .HLT(iDUT.iDECODE.HLT),
-            .PC_next(iDUT.PC_next),
-            .expected_PC_next(iMODEL.PC_next),
-            .PC_inst(iDUT.PC_inst),
-            .expected_PC_inst(iMODEL.PC_inst),
-            .PC_curr(pc),
-            .expected_PC_curr(expected_pc),
-            .prediction(iDUT.prediction),
-            .expected_prediction(iMODEL.prediction),
-            .predicted_target(iDUT.predicted_target),
-            .expected_predicted_target(iMODEL.predicted_target),
-            .stage("FETCH"),
-            .stage_msg(fetch_msg)
-        );
+    verify_FETCH(
+          .PC_stall(iDUT.PC_stall),
+          .expected_PC_stall(iMODEL.PC_stall),
+          .HLT(iDUT.iDECODE.HLT),
+          .PC_next(iDUT.PC_next), 
+          .expected_PC_next(iMODEL.PC_next), 
+          .PC_inst(iDUT.PC_inst), 
+          .expected_PC_inst(iMODEL.PC_inst), 
+          .PC_curr(pc), 
+          .expected_PC_curr(expected_pc), 
+          .prediction(iDUT.prediction), 
+          .expected_prediction(iMODEL.prediction), 
+          .predicted_target(iDUT.predicted_target), 
+          .expected_predicted_target (iMODEL.predicted_target),
+          .stage("FETCH"),
+          .stage_msg(fetch_msg)
+      );
 
-        // Store fetch message for current instruction
-        fetch_msgs[inst_id][msg_index[inst_id]] = fetch_msg;
-
-        // If stall, increment msg_index only
-        if (iDUT.PC_stall) begin
-            msg_index[inst_id] = msg_index[inst_id] + 1;
-        end
+      $display("|%s @ Cycle: %0t", fetch_msg, $time/10);
     end
-end
+  end
 
-// Decode Tracking
-always @(posedge clk) begin
-    if (rst_n) begin
-        string decode_msg, instr_full;
-        verify_DECODE(
-            .IF_ID_stall(iDUT.IF_ID_stall),
-            .expected_IF_ID_stall(iMODEL.IF_ID_stall),
-            .IF_flush(iDUT.IF_flush),
-            .expected_IF_flush(iMODEL.IF_flush),
-            .br_hazard(iMODEL.iHDU.BR_hazard),
-            .b_hazard(iMODEL.iHDU.B_hazard),
-            .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
-            .EX_signals(iDUT.EX_signals),
-            .expected_EX_signals(iMODEL.EX_signals),
-            .MEM_signals(iDUT.MEM_signals),
-            .expected_MEM_signals(iMODEL.MEM_signals),
-            .WB_signals(iDUT.WB_signals),
-            .expected_WB_signals(iMODEL.WB_signals),
-            .cc(iDUT.iDECODE.c_codes),
-            .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
-            .is_branch(iDUT.Branch),
-            .expected_is_branch(iMODEL.Branch),
-            .is_BR(iDUT.BR),
-            .expected_is_BR(iMODEL.BR),
-            .branch_target(iDUT.branch_target),
-            .expected_branch_target(iMODEL.branch_target),
-            .actual_taken(iDUT.actual_taken),
-            .expected_actual_taken(iMODEL.actual_taken),
-            .wen_BTB(iDUT.wen_BTB),
-            .expected_wen_BTB(iMODEL.wen_BTB),
-            .wen_BHT(iDUT.wen_BHT),
-            .expected_wen_BHT(iMODEL.wen_BHT),
-            .update_PC(iDUT.update_PC),
-            .expected_update_PC(iMODEL.update_PC),
-            .decode_msg(decode_msg),
-            .instruction_full(instr_full)
-        );
-
-        // Store decode message for current instruction
-        decode_msgs[inst_id][msg_index[inst_id]] = decode_msg;
-        instruction_text[inst_id] = instr_full;
-
-        // If stall, increment msg_index only
-        if (iDUT.IF_ID_stall) begin
-            msg_index[inst_id] = msg_index[inst_id] + 1;
-        end
-        // Otherwise, move to the next instruction
-        else begin
-            inst_id = inst_id + 1;
-            msg_index[inst_id] = 0;  // Reset message index for new instruction
-        end
-    end
-end
-
-// Printing messages when an instruction completes
-always @(posedge clk) begin
-    if (rst_n) begin
-        if (inst_id > 0) begin
-            //int i = inst_id - 1; // Last completed instruction
-            $display("========================================================");
-            $display("| Instruction: %s |", instruction_text[inst_id-1]);
-            $display("========================================================");
-
-            // Print FETCH messages
-            for (int j = 0; j <= msg_index[inst_id - 1]; j++) begin
-                $display("| %s", fetch_msgs[inst_id - 1][j]);
-            end
-
-            // Print DECODE messages
-            for (int j = 0; j <= msg_index[inst_id - 1]; j++) begin
-                $display("| %s", decode_msgs[inst_id - 1][j]);
-            end
-
-            $display("========================================================");
-        end
-    end
-end
 
   // Generate clock signal with 10 ns period
   always 

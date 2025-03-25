@@ -341,8 +341,7 @@ always @(posedge clk) begin
 
         if (valid_decode) begin
             // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
-            int decode_cycle = ($time/10) - 1;
-            decode_queue.push_back({decode_msg, " @ Cycle: ", $sformatf("%0d", decode_cycle)});
+            decode_queue.push_back({decode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)});
             instruction_queue.push_back(instruction_full_msg);
         end
     end

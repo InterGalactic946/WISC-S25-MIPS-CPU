@@ -283,7 +283,7 @@ always @(posedge clk) begin
         );
 
         // Append the FETCH message to the queue with the cycle info
-        fetch_queue.push_back({fetch_msg, " @ Cycle: ", $time/10});
+        fetch_queue.push_back({fetch_msg, " @ Cycle: ",  $sformatf("%0d", $time/10)});
     end
 end
 
@@ -344,7 +344,7 @@ always @(posedge clk) begin
 
         if (valid_decode) begin
           // Append the DECODE message and instruction header to the queue
-          decode_queue.push_back({decode_msg, " @ Cycle: ", $time/10});
+          decode_queue.push_back({decode_msg, " @ Cycle: ",  $sformatf("%0d", $time/10)});
           instruction_queue.push_back(instruction_full_msg);
         end
     end

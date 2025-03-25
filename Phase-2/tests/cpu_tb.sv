@@ -290,7 +290,7 @@ end
         .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
         .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
         
-        .mem_verify_msg(mem_msg)
+        .mem_verify_msg(mem_verify_msg)
       );
 
       mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};

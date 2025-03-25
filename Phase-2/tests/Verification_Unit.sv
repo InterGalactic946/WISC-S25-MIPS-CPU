@@ -39,14 +39,14 @@ always @(posedge clk) begin
         wb_id <= 0;
     end else if (valid_fetch) begin
         // Only increment fetch_id when there's a valid fetch.
-        fetch_id <= fetch_id + 1;
+        fetch_id = fetch_id + 1;
     end
 
     // Update pipeline stages.
-    decode_id <= fetch_id;   // Pass the fetch_id to decode_id
-    execute_id <= decode_id; // Pass the decode_id to execute_id
-    memory_id <= execute_id; // Pass the execute_id to memory_id
-    wb_id <= memory_id;      // Pass the memory_id to wb_id
+    decode_id = fetch_id;   // Pass the fetch_id to decode_id
+    execute_id = decode_id; // Pass the decode_id to execute_id
+    memory_id = execute_id; // Pass the execute_id to memory_id
+    wb_id = memory_id;      // Pass the memory_id to wb_id
 end
 
 // Second Always Block: Propagate the valid signals across stages

@@ -212,20 +212,25 @@ module cpu_tb();
   // Adds the messages, with stall and flush checks.
     always @(negedge clk) begin
             if (valid_fetch) begin
-                pipeline_msgs[fetch_id].fetch_msg <= fetch_msg;
+                pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
+                pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
             end
             if (valid_decode) begin
-                pipeline_msgs[decode_id].decode_msg[0] <= decode_msg;
-                pipeline_msgs[decode_id].decode_msg[1] <= instruction_full_msg;
+                pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
+                pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
+                pipeline_msgs[decode_id].decode_cycle = $time / 10;
             end
             if (valid_execute) begin
-                pipeline_msgs[execute_id].execute_msg <= execute_msg;
+                pipeline_msgs[execute_id].execute_msg = execute_msg;
+                pipeline_msgs[execute_id].execute_cycle = $time / 10;
             end
             if (valid_memory) begin
-                pipeline_msgs[memory_id].memory_msg <= mem_msg;
+                pipeline_msgs[memory_id].memory_msg = mem_msg;
+                pipeline_msgs[memory_id].memory_cycle = $time / 10;
             end
             if (valid_wb) begin
-                pipeline_msgs[wb_id].wb_msg <= wb_msg;
+                pipeline_msgs[wb_id].wb_msg = wb_msg;
+                pipeline_msgs[wb_id].wb_cycle = $time / 10;
             end
     end
 
@@ -235,11 +240,11 @@ module cpu_tb();
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
-            $display("%s", pipeline_msgs[wb_id].fetch_msg);
-            $display("%s", pipeline_msgs[wb_id].decode_msg[0]);
-            $display("%s", pipeline_msgs[wb_id].execute_msg);
-            $display("%s", pipeline_msgs[wb_id].memory_msg);
-            $display("%s", pipeline_msgs[wb_id].wb_msg);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);
             $display("==========================================================\n");
         end
     end
@@ -266,10 +271,10 @@ always @(posedge clk) begin
             .predicted_target(iDUT.predicted_target), 
             .expected_predicted_target(iMODEL.predicted_target),
             .stage("FETCH"),
-            .stage_msg(ftch_msg)
+            .stage_msg(fetch_msg)
         );
 
-        fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
         // $display(fetch_msg);
     end
@@ -313,13 +318,13 @@ always @(posedge clk) begin
             .update_PC(iDUT.update_PC),
             .expected_update_PC(iMODEL.update_PC),
             
-            .decode_msg(dcode_msg),
-            .instruction_full(instr_full_msg)
+            .decode_msg(decode_msg),
+            .instruction_full(instruction_full_msg)
         );
 
-        // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
-        decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
-        instruction_full_msg = {instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
+        // // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
+        // decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
+        // instruction_full_msg = {instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
 
         // $display(decode_msg);
         // $display(instruction_full_msg);
@@ -349,10 +354,10 @@ end
         .expected_VF(iMODEL.VF),
         .expected_NF(iMODEL.NF),
         
-        .execute_msg(ex_msg)
+        .execute_msg(execute_msg)
       );
 
-      execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
+      // execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
 
       // $display(execute_msg);
     end
@@ -373,10 +378,10 @@ end
         .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
         .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
         
-        .mem_verify_msg(mem_verify_msg)
+        .mem_verify_msg(mem_msg)
       );
 
-      mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
+      // mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
       // $display(mem_msg);
     end
   end
@@ -392,10 +397,10 @@ end
         .RegWriteData(iDUT.RegWriteData),
         .expected_RegWriteData(iMODEL.RegWriteData),
         
-        .wb_verify_msg(wbb_msg)
+        .wb_verify_msg(wb_msg)
       );
 
-      wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 4)};
+      // wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 4)};
 
       // $display(wb_msg);
     end

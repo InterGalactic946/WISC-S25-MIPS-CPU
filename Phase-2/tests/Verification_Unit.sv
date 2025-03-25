@@ -98,18 +98,18 @@ end
     end
 
 
-   // Flip-flop to hold enable signal for printing
-    always @(posedge clk) begin
-        if (rst) begin
-            print_enable <= 0;  // Reset the enable signal
-        end else begin
-            if (valid_wb) begin
-                print_enable <= 1;  // Enable printing when write-back stage is valid
-            end else begin
-                print_enable <= 0;  // Disable printing otherwise
-            end
-        end
-    end
+//    // Flip-flop to hold enable signal for printing
+//     always @(posedge clk) begin
+//         if (rst) begin
+//             print_enable <= 0;  // Reset the enable signal
+//         end else begin
+//             if (valid_wb) begin
+//                 print_enable <= 1;  // Enable printing when write-back stage is valid
+//             end else begin
+//                 print_enable <= 0;  // Disable printing otherwise
+//             end
+//         end
+//     end
 
 
 
@@ -149,7 +149,7 @@ end
 
     // Print the message for each instruction.
     always @(posedge clk) begin
-        if (print_enable) begin
+        if (valid_wb) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");

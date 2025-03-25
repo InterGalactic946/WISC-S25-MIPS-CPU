@@ -251,10 +251,18 @@ reg [31:0] instruction_cycle; // Store the cycle when the instruction is complet
   //   end
   // end
 
+// Queues to store FETCH and DECODE messages
+string fetch_queue[$];    // Queue for FETCH messages
+string decode_queue[$];   // Queue for DECODE messages
+string instruction_queue[$]; // Queue for full instruction header
+int cycle_queue[$];        // Queue to track cycle number for WB
+
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
-        // Call the verify_FETCH task and store the fetch message
+        string fetch_msg;
+        
+        // Call the verify_FETCH task and get the fetch message
         verify_FETCH(
             .PC_stall(iDUT.PC_stall),
             .expected_PC_stall(iMODEL.PC_stall),
@@ -272,16 +280,18 @@ always @(posedge clk) begin
             .stage("FETCH"),
             .stage_msg(fetch_msg)
         );
-        
-        // Store the fetch stage message with cycle time
-        fetch_stage_msg = {fetch_stage_msg, fetch_msg, " @ Cycle: ", $time/10};
+
+        // Append the FETCH message to the queue with the cycle info
+        fetch_queue.push_back({fetch_msg, " @ Cycle: ", $time/10});
     end
 end
 
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
     if (rst_n) begin
-        // Call the verify_DECODE task and store the decode message
+        string decode_msg, instruction_full_msg;
+
+        // Call the verify_DECODE task and get the decode message
         verify_DECODE(
             .IF_ID_stall(iDUT.IF_ID_stall),
             .expected_IF_ID_stall(iMODEL.IF_ID_stall),
@@ -313,37 +323,40 @@ always @(posedge clk) begin
             .update_PC(iDUT.update_PC),
             .expected_update_PC(iMODEL.update_PC),
             .decode_msg(decode_msg),
-            .instruction_full(instruction_full_msg) // Full instruction header msg
+            .instruction_full(instruction_full_msg)
         );
-        
-        // Store the decode stage message with cycle time
-        decode_stage_msg = {decode_stage_msg, decode_msg, " @ Cycle: ", $time/10};
-        
-        // Store the instruction full message
-        full_instruction_msg = {full_instruction_msg, instruction_full_msg};
+
+        // Append the DECODE message and instruction header to the queue
+        decode_queue.push_back({decode_msg, " @ Cycle: ", $time/10});
+        instruction_queue.push_back(instruction_full_msg);
     end
 end
 
-// Once both FETCH and DECODE stages have completed, print the messages
+// Print when both FETCH and DECODE are available
 always @(posedge clk) begin
     if (rst_n) begin
-        // Check if both FETCH and DECODE stages are done
-        if (fetch_stage_msg != "" && decode_stage_msg != "") begin
-            // Store the cycle time when instruction reaches WB
-            instruction_cycle = $time/10; // Store the current cycle
-            
-            // Combine both FETCH and DECODE stage messages
-            instruction_header = {"========================================================\n",
-                                    "| Instruction: ", full_instruction_msg, " | Completed At Cycle: ", instruction_cycle, " |\n",
-                                    "========================================================\n",
-                                    "|[FETCH] ", fetch_stage_msg, "\n",
-                                    "|[DECODE] ", decode_stage_msg};
-            
-            // Display the full instruction message after both stages are completed
-            $display(instruction_header);
+        // Ensure both queues have entries before printing
+        if (fetch_queue.size() > 0 && decode_queue.size() > 0) begin
+            string fetch_msg_out, decode_msg_out, instr_out;
+            int completed_cycle;
+
+            // Pop from both queues in FIFO order
+            fetch_msg_out = fetch_queue.pop_front();
+            decode_msg_out = decode_queue.pop_front();
+            instr_out = instruction_queue.pop_front();
+            completed_cycle = $time/10;
+
+            // Print formatted instruction execution summary
+            $display("========================================================");
+            $display("| Instruction: %s | Completed At Cycle: %0d |", instr_out, completed_cycle);
+            $display("========================================================");
+            $display("|%s", fetch_msg_out);
+            $display("|%s", decode_msg_out);
+            $display("========================================================");
         end
     end
 end
+
 
 
   // // always @(posedge clk)

@@ -75,25 +75,18 @@ logic valid_fetch, valid_decode;
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-  //  Verification_Unit iVERIFY (
-  //   .clk(clk),
-  //   .rst(rst),
-  //   .if_id_msg(if_id_msg),
-  //   .decode_msg(decode_msg),
-  //   .instruction_full_msg(instruction_full_msg),
-  //   .id_ex_msg(id_ex_msg),
-  //   .execute_msg(execute_msg),
-  //   .ex_mem_msg(ex_mem_msg),
-  //   .mem_msg(mem_msg),
-  //   .mem_wb_msg(mem_wb_msg),
-  //   .wb_msg(wb_msg),
-  //   .pc_stall_msg(pc_stall_msg),
-  //   .if_id_stall_msg(if_id_stall_msg),
-  //   .if_flush_msg(if_flush_msg),
-  //   .id_flush_msg(id_flush_msg),
-  //   .stall(stall),
-  //   .flush(flush)
-  // );
+   Verification_Unit iVERIFY (
+    .clk(clk),
+    .rst(rst),
+    .fetch_msg(fetch_msg),
+    .decode_msg(decode_msg),
+    .instruction_full_msg(instruction_full_msg),
+    .execute_msg(execute_msg),
+    .mem_msg(mem_msg),
+    .wb_msg(wb_msg),
+    .stall(stall),
+    .flush(flush)
+  );
 
   // Test procedure to apply stimulus and check responses.
   initial begin
@@ -193,12 +186,9 @@ always @(posedge clk) begin
             .stage_msg(ftch_msg)
         );
 
-        // Store message for FETCH stage at the appropriate index
-        // fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] = $sformatf("|%s @ Cycle: %0t", fetch_msg, $time/10);
-        fetch_msg <= $sformatf("%s @ Cycle: %0t", ftch_msg, $time/10);
+        fetch_msg <= ftch_msg;
     end
 end
-
 
 
 // Always block for verify_DECODE stage
@@ -243,75 +233,83 @@ always @(posedge clk) begin
         );
 
         // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
-        decode_msg <= $sformatf("%s @ Cycle: %s", dcode_msg, $sformatf("%0d", ($time/10) - 1));
-        instruction_full_msg <= $sformatf("%s", instr_full_msg);
+        decode_msg <= dcode_msg;
+        instruction_full_msg <= instr_full_msg;
     end
 end
 
 
-// Get the valid signal
-always @(posedge clk) begin
-    if (!rst_n) begin
-        valid_fetch  <= 1'b1;
-        valid_decode <= 1'b0;
-    end else begin
-        valid_fetch  <= ~stall; // Fetch is valid when no stall
-        valid_decode <= valid_fetch; // Decode follows fetch
-    end
-end
+  // Always block for verify_EXECUTE stage
+  always @(posedge clk) begin
+    if (rst_n) begin
+      string ex_msg;
 
-// Increment instruction indices
-always @(posedge clk) begin
-    if (!rst_n) begin
-        fetch_id  <= 0;
-        decode_id <= 0;
-    end else begin
-        if (valid_fetch) fetch_id <= fetch_id + 1; 
-        decode_id <= fetch_id;
-    end
-end
-
-
-// Get the message index counter, incremented only on stall
-always @(posedge clk) begin
-    if (!rst_n) begin
-        fetch_msg_indices <= '{default: 0};
-        decode_msg_indices <= '{default: 0};
-    end else if (stall) begin
-        // Increment fetch message index on PC stall
-        fetch_msg_indices[fetch_id] <= fetch_msg_indices[fetch_id] + 1;
-    end else begin
-        fetch_msg_indices[fetch_id] <= 0;
-    end
+      verify_EXECUTE(
+        .Input_A(iDUT.iEXECUTE.iALU.Input_A),
+        .Input_B(iDUT.iEXECUTE.iALU.Input_B),
+        .expected_Input_A(iMODEL.iEXECUTE.iALU_model.Input_A),
+        .expected_Input_B(iMODEL.iEXECUTE.iALU_model.Input_B),
+        .ALU_out(iDUT.ALU_out),
+        .Z_set(iDUT.iEXECUTE.iALU.Z_set),
+        .V_set(iDUT.iEXECUTE.iALU.V_set),
+        .N_set(iDUT.iEXECUTE.iALU.N_set),
+        .expected_ALU_out(iMODEL.ALU_out),
+        .ZF(iDUT.ZF),
+        .NF(iDUT.NF),
+        .VF(iDUT.VF),
+        .expected_ZF(iMODEL.ZF),
+        .expected_VF(iMODEL.VF),
+        .expected_NF(iMODEL.NF),
         
-      // Increment decode message index on IF/ID stall
-      decode_msg_indices[decode_id] <= fetch_msg_indices[fetch_id];
+        .execute_msg(ex_msg)
+      );
+
+      execute_msg <= ex_msg;
+
+      // $display(execute_msg);
+    end
   end
 
-// Always block to print fetch messages (after storing them)
-always @(negedge clk) begin
-    if (valid_fetch) begin // Print during the fetch stage if valid_fetch is active
-      fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] <= fetch_msg;
-    end else if (valid_decode) begin
-      decode_msgs[decode_id][decode_msg_indices[decode_id]][0] = decode_msg;
-      decode_msgs[decode_id][decode_msg_indices[decode_id]][1] = instruction_full_msg;
 
-      $display(decode_msg);
+  // Always block for verify_MEMORY stage
+  always @(posedge clk) begin
+    if (rst_n) begin
+      string mem_verify_msg;
 
-     $display("==========================================================");
-     $display("| Instruction: %s | Completed At Cycle: %0t |", instruction_full_msg, $time / 10);
-      $display("==========================================================");
-      // Print all stored fetch messages for the current fetch_id
-      for (int i = 0; i <= fetch_msg_indices[decode_id]; i = i + 1) begin
-            $display("|%s", fetch_msgs[decode_id][i]);
-      end
+      verify_MEMORY(
+        .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),
+        .MemData(iDUT.MemData),
+        .expected_MemData(iMODEL.MemData),
+        .MemWriteData(iDUT.MemWriteData),
+        .expected_MemWriteData(iMODEL.MemWriteData),
+        .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
+        .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
+        
+        .mem_verify_msg(mem_msg)
+      );
 
-      // Print all stored decode messages for the current decode_id
-      for (int i = 0; i <= decode_msg_indices[decode_id]; i = i + 1) begin
-           $display("|%s", decode_msgs[decode_id][i][0]);
-      end
+      mem_msg <= mem_verify_msg;
+      // $display(mem_verify_msg);
     end
-end
+  end
+
+
+  // Always block for verify_WRITEBACK stage
+  always @(posedge clk) begin
+    if (rst_n) begin
+      string wbb_msg;
+      verify_WRITEBACK(
+        .MEM_WB_DstReg(iDUT.MEM_WB_reg_rd),
+        .MEM_WB_RegWrite(iDUT.MEM_WB_RegWrite),
+        .RegWriteData(iDUT.RegWriteData),
+        .expected_RegWriteData(iMODEL.RegWriteData),
+        
+        .wb_verify_msg(wbb_msg)
+      );
+
+      wb_msg <= wbb_msg;
+    end
+  end
 
 
 

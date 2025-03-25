@@ -198,6 +198,8 @@ module cpu_tb();
       end else if (!stall) begin
           // Propagate the valid signal to future stages.
           valid_fetch <= 1;
+      end else begin
+        valid_fetch <= 0;
       end
 
       // Propogate the signals correctly.
@@ -267,7 +269,7 @@ always @(posedge clk) begin
             .stage_msg(ftch_msg)
         );
 
-        fetch_msg <= {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
         // $display(fetch_msg);
     end
@@ -316,8 +318,8 @@ always @(posedge clk) begin
         );
 
         // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
-        decode_msg <= {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
-        instruction_full_msg <= {"|",  instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
+        decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
+        instruction_full_msg = {"|",  instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
 
         // $display(decode_msg);
         // $display(instruction_full_msg);
@@ -350,7 +352,7 @@ end
         .execute_msg(ex_msg)
       );
 
-      execute_msg <= {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
+      execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
 
       // $display(execute_msg);
     end
@@ -374,7 +376,7 @@ end
         .mem_verify_msg(mem_verify_msg)
       );
 
-      mem_msg <= {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
+      mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
       // $display(mem_msg);
     end
   end
@@ -393,7 +395,7 @@ end
         .wb_verify_msg(wbb_msg)
       );
 
-      wb_msg <= {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 4)};
+      wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 4)};
 
       // $display(wb_msg);
     end

@@ -192,7 +192,7 @@ always @(posedge clk) begin
         );
 
         // Store message for FETCH stage at the appropriate index
-        fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] <= $sformatf("|%s @ Cycle: %0t", fetch_msg, $time/10);
+        fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] = $sformatf("|%s @ Cycle: %0t", fetch_msg, $time/10);
     end
 end
 

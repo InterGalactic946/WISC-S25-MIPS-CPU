@@ -107,37 +107,37 @@ end
 
 
     
-    // // Stall/Flush Message Display based on Hazard Conditions.
-    // always @(posedge clk) begin
-    //     if (!rst) begin
-    //         if (stall) begin
-    //             // Stall based on hazard conditions
-    //             if (pc_stall_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(pc_stall_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //             if (if_id_stall_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(if_id_stall_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //         end
-    //         if (flush) begin
-    //             // Flush based on conditions
-    //             if (if_flush_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(if_flush_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //             if (id_flush_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(id_flush_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //         end
-    //     end
-    // end
+    // Stall/Flush Message Display based on Hazard Conditions.
+    always @(posedge clk) begin
+        if (!rst) begin
+            if (stall) begin
+                // Stall based on hazard conditions
+                if (pc_stall_msg !== "") begin
+                    $display("\n=====================================================");
+                    $display(pc_stall_msg);
+                    $display("=====================================================\n");
+                end
+                if (if_id_stall_msg !== "") begin
+                    $display("\n=====================================================");
+                    $display(if_id_stall_msg);
+                    $display("=====================================================\n");
+                end
+            end
+            if (flush) begin
+                // Flush based on conditions
+                if (if_flush_msg !== "") begin
+                    $display("\n=====================================================");
+                    $display(if_flush_msg);
+                    $display("=====================================================\n");
+                end
+                if (id_flush_msg !== "") begin
+                    $display("\n=====================================================");
+                    $display(id_flush_msg);
+                    $display("=====================================================\n");
+                end
+            end
+        end
+    end
 
 
     // Print the message for each instruction.

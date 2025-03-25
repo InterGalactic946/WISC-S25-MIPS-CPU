@@ -367,7 +367,7 @@ end
 
 
   // Always block for verify_MEMORY stage
-  always @(negedge clk) begin
+  always @(posedge clk) begin
     if (rst_n) begin
       string mem_verify_msg;
 
@@ -392,7 +392,7 @@ end
 
 
   // Always block for verify_WRITEBACK stage
-  always @(negedge clk) begin
+  always @(posedge clk) begin
     if (rst_n) begin
       string wbb_msg;
       verify_WRITEBACK(

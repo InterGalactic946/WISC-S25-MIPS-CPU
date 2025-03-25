@@ -58,7 +58,7 @@ always @(posedge clk) begin
         end else if (flush) begin
             // Invalidate pipeline stages on flush
             valid_fetch <= 0;
-        end else begin
+        end
 
         // Update pipeline stages based on flush/stall
         decode_id <= fetch_id;   // Pass the fetch_id to decode_id
@@ -71,7 +71,6 @@ always @(posedge clk) begin
         valid_execute <= valid_decode;
         valid_memory <= valid_execute;
         valid_wb <= valid_memory;
-        end
     end
 end
 

@@ -161,6 +161,85 @@ logic valid_fetch, valid_decode;
       end
   end
 
+    integer fetch_id, decode_id, execute_id, memory_id, wb_id;
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
+    debug_info_t pipeline_msgs[0:71];
+
+  // First Always Block: Tracks the pipeline and increments IDs
+  always @(posedge clk) begin
+      if (rst) begin
+          fetch_id <= 0;
+          decode_id <= 0;
+          execute_id <= 0;
+          memory_id <= 0;
+          wb_id <= 0;
+      end else if (valid_fetch) begin
+          // Only increment fetch_id when there's a valid fetch.
+          fetch_id <= fetch_id + 1;
+      end
+
+      // Update pipeline stages.
+      decode_id <= fetch_id;   // Pass the fetch_id to decode_id
+      execute_id <= decode_id; // Pass the decode_id to execute_id
+      memory_id <= execute_id; // Pass the execute_id to memory_id
+      wb_id <= memory_id;      // Pass the memory_id to wb_id
+  end
+
+  // Second Always Block: Propagate the valid signals across stages
+  always @(posedge clk) begin
+      if (rst) begin
+          valid_decode <= 0;
+          valid_execute <= 0;
+          valid_memory <= 0;
+          valid_fetch <= 1;
+          valid_wb <= 0;
+      end else if (!stall) begin
+          // Propagate the valid signal to future stages.
+          valid_fetch <= 1;
+      end
+
+      // Propogate the signals correctly.
+      valid_decode <= valid_fetch;
+      valid_execute <= valid_decode;
+      valid_memory <= valid_execute;
+      valid_wb <= valid_memory;
+  end
+
+  // Adds the messages, with stall and flush checks.
+    always @(negedge clk) begin
+            if (valid_fetch) begin
+                pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
+            end
+            if (valid_decode) begin
+                pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
+                pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
+            end
+            if (valid_execute) begin
+                pipeline_msgs[execute_id].execute_msg = execute_msg;
+            end
+            if (valid_memory) begin
+                pipeline_msgs[memory_id].memory_msg = mem_msg;
+            end
+            if (valid_wb) begin
+                pipeline_msgs[wb_id].wb_msg = wb_msg;
+            end
+    end
+
+    // Print the message for each instruction.
+    always @(posedge clk) begin
+        if (!rst && valid_wb) begin
+            $display("==========================================================");
+            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
+            $display("==========================================================");
+            $display("|%s", pipeline_msgs[wb_id].fetch_msg);
+            $display("|%s", pipeline_msgs[wb_id].decode_msg[0]);
+            $display("|%s", pipeline_msgs[wb_id].execute_msg);
+            $display("|%s", pipeline_msgs[wb_id].memory_msg);
+            $display("|%s", pipeline_msgs[wb_id].wb_msg);
+            $display("==========================================================\n");
+        end
+    end
+
 
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
@@ -188,7 +267,7 @@ always @(posedge clk) begin
 
         fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-        $display(fetch_msg);
+        // $display(fetch_msg);
     end
 end
 
@@ -238,8 +317,8 @@ always @(posedge clk) begin
         decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
         instruction_full_msg = {"|",  instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
 
-        $display(decode_msg);
-        $display(instruction_full_msg);
+        // $display(decode_msg);
+        // $display(instruction_full_msg);
     end
 end
 
@@ -271,7 +350,7 @@ end
 
       execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
 
-      $display(execute_msg);
+      // $display(execute_msg);
     end
   end
 
@@ -294,7 +373,7 @@ end
       );
 
       mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
-      $display(mem_msg);
+      // $display(mem_msg);
     end
   end
 
@@ -314,7 +393,7 @@ end
 
       wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 4)};
 
-      $display(wb_msg);
+      // $display(wb_msg);
     end
   end
 

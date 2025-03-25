@@ -36,67 +36,43 @@ module Verification_Unit (
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
     debug_info_t pipeline_msgs[0:71];
 
-// Tracks the pipeline.
-always @(posedge clk) begin
-    if (rst) begin
-        fetch_id <= 0;
-        decode_id <= 0;
-        execute_id <= 0;
-        memory_id <= 0;
-        wb_id <= 0;
-        valid_fetch <= 1; // Ensure first instruction is captured immediately after reset
-        valid_decode <= 0;
-        valid_execute <= 0;
-        valid_memory <= 0;
-        valid_wb <= 0;
-    end else begin
-                // Handle stall condition
-        if (!stall) begin
-            // Only increment fetch_id when there's no stall
-            fetch_id <= fetch_id + 1;
-            valid_fetch <= 1;  // Mark fetch as valid
-        end
-
-        // Handle flush condition
-        if (flush) begin
-            // Invalidate pipeline stages on flush
+    // Tracks the pipeline.
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            fetch_id <= 0;
+            decode_id <= 0;
+            execute_id <= 0;
+            memory_id <= 0;
+            wb_id <= 0;
             valid_fetch <= 0;
             valid_decode <= 0;
             valid_execute <= 0;
             valid_memory <= 0;
             valid_wb <= 0;
-        end
+        end else begin
+            if (!stall && !flush) begin
+                fetch_id <= fetch_id + 1;
+                decode_id <= fetch_id;
+                execute_id <= decode_id;
+                memory_id <= execute_id;
+                wb_id <= memory_id;
 
-        // Update pipeline stages based on flush/stall
-        if (!stall && !flush) begin
-            decode_id <= fetch_id;   // Pass the fetch_id to decode_id
-            execute_id <= decode_id; // Pass the decode_id to execute_id
-            memory_id <= execute_id; // Pass the execute_id to memory_id
-            wb_id <= memory_id;      // Pass the memory_id to wb_id
-
-            valid_decode <= valid_fetch;
-            valid_execute <= valid_decode;
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
-        end
-
-        // In case of stall, retain current instruction in the pipeline stages
-        if (stall) begin
-            decode_id <= decode_id;   // Retain the current decode_id
-            execute_id <= execute_id; // Retain the current execute_id
-            memory_id <= memory_id;   // Retain the current memory_id
-            wb_id <= wb_id;           // Retain the current wb_id
-
-            // Keep the validity of the previous stages
-            valid_decode <= valid_decode;
-            valid_execute <= valid_execute;
-            valid_memory <= valid_memory;
-            valid_wb <= valid_wb;
+                valid_fetch <= 1;
+                valid_decode <= valid_fetch;
+                valid_execute <= valid_decode;
+                valid_memory <= valid_execute;
+                valid_wb <= valid_memory;
+            end else if (flush) begin
+                valid_fetch <= 0;
+                valid_decode <= 0;
+                valid_execute <= 0;
+                valid_memory <= 0;
+                valid_wb <= 0;
+            end
         end
     end
-end
 
-    // Adds the messages, with stall and flush checks.
+    // Store messages when instructions progress through the pipeline.
     always @(posedge clk) begin
         if (!rst) begin
             if (valid_decode) begin
@@ -127,42 +103,7 @@ end
         end
     end
 
-
-    
-    // // Stall/Flush Message Display based on Hazard Conditions.
-    // always @(posedge clk) begin
-    //     if (!rst) begin
-    //         if (stall) begin
-    //             // Stall based on hazard conditions
-    //             if (pc_stall_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(pc_stall_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //             if (if_id_stall_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(if_id_stall_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //         end
-    //         if (flush) begin
-    //             // Flush based on conditions
-    //             if (if_flush_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(if_flush_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //             if (id_flush_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(id_flush_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //         end
-    //     end
-    // end
-
-
-    // Print the message for each instruction.
+    // Print message when an instruction reaches the write-back stage.
     always @(posedge clk) begin
         if (!rst && valid_wb) begin
             $display("==========================================================");
@@ -179,5 +120,4 @@ end
             $display("==========================================================\n");
         end
     end
-
 endmodule

@@ -269,7 +269,7 @@ end
 always @(posedge clk) begin
     if (rst_n) begin
         if (inst_id > 0) begin
-            int i = inst_id - 1; // Last completed instruction
+            //int i = inst_id - 1; // Last completed instruction
             $display("========================================================");
             $display("| Instruction: %s |", instruction_text[inst_id-1]);
             $display("========================================================");

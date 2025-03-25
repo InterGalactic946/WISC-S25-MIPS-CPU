@@ -273,14 +273,14 @@ always @(posedge clk) begin
         );
 
         // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        fetch_msg <= ftch_msg;
+        fetch_msg = ftch_msg;
         $display(ftch_msg);
     end
 end
 
 
 // Always block for verify_DECODE stage
-always @(negedge clk) begin
+always @(posedge clk) begin
     if (rst_n) begin
       string dcode_msg, instr_full_msg;
 
@@ -316,8 +316,8 @@ always @(negedge clk) begin
             .update_PC(iDUT.update_PC),
             .expected_update_PC(iMODEL.update_PC),
             
-            .decode_msg(decode_msg),
-            .instruction_full(instruction_full_msg)
+            .decode_msg(dcode_msg),
+            .instruction_full(instr_full_msg)
         );
 
         // // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
@@ -326,12 +326,15 @@ always @(negedge clk) begin
 
         // $display(decode_msg);
         // $display(instruction_full_msg);
+
+        decode_msg = dcode_msg;
+        instruction_full_msg = instr_full_msg;
     end
 end
 
 
   // Always block for verify_EXECUTE stage
-  always @(negedge clk) begin
+  always @(posedge clk) begin
     if (rst_n) begin
       string ex_msg;
 
@@ -352,12 +355,13 @@ end
         .expected_VF(iMODEL.VF),
         .expected_NF(iMODEL.NF),
         
-        .execute_msg(execute_msg)
+        .execute_msg(ex_msg)
       );
 
       // execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
 
       // $display(execute_msg);
+      execute_msg = ex_msg;
     end
   end
 
@@ -376,11 +380,13 @@ end
         .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
         .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
         
-        .mem_verify_msg(mem_msg)
+        .mem_verify_msg(mem_verify_msg)
       );
 
       // mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
       // $display(mem_msg);
+
+      mem_msg = mem_verify_msg;
     end
   end
 
@@ -395,12 +401,13 @@ end
         .RegWriteData(iDUT.RegWriteData),
         .expected_RegWriteData(iMODEL.RegWriteData),
         
-        .wb_verify_msg(wb_msg)
+        .wb_verify_msg(wbb_msg)
       );
 
       // wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 4)};
 
       // $display(wb_msg);
+      wb_msg = wbb_msg;
     end
   end
 

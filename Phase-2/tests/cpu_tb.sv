@@ -251,41 +251,41 @@ always @(posedge clk) begin
 end
 
 
-  // Always block to print fetch messages when both fetch and decode are valid
-  always @(posedge clk) begin
-      if (rst_n) begin
-          // Ensure that the queues have valid fetch and decode messages before printing
-          if (fetch_id > 0 && decode_id > 0 && valid_decode) begin
-              integer i, j;
-              string fetch_msg_out, decode_msg_out, instr_out;
+  // // Always block to print fetch messages when both fetch and decode are valid
+  // always @(posedge clk) begin
+  //     if (rst_n) begin
+  //         // Ensure that the queues have valid fetch and decode messages before printing
+  //         if (fetch_id > 0 && decode_id > 0 && valid_decode) begin
+  //             integer i, j;
+  //             string fetch_msg_out, decode_msg_out, instr_out;
               
-              // Print the instruction details for each instruction
-              for (i = 0; i < fetch_id; i = i + 1) begin
-                  // Print all fetch messages for the current instruction
-                  for (j = 0; j < MAX_MSGS; j = j + 1) begin
-                      if (fetch_msgs[i][j] != "") begin  // Only print non-empty messages
-                          $display("========================================================");
-                          $display("| Instruction: %s | Fetch Message @ Cycle: %0t |", instr_out, $time/10);
-                          $display("========================================================");
-                          $display("| %s", fetch_msgs[i][j]);
-                      end
-                  end
-              end
+  //             // Print the instruction details for each instruction
+  //             for (i = 0; i < fetch_id; i = i + 1) begin
+  //                 // Print all fetch messages for the current instruction
+  //                 for (j = 0; j < MAX_MSGS; j = j + 1) begin
+  //                     if (fetch_msgs[i][j] != "") begin  // Only print non-empty messages
+  //                         $display("========================================================");
+  //                         $display("| Instruction: %s | Fetch Message @ Cycle: %0t |", instr_out, $time/10);
+  //                         $display("========================================================");
+  //                         $display("| %s", fetch_msgs[i][j]);
+  //                     end
+  //                 end
+  //             end
 
-              // Similarly, you can print decode messages if needed
-              for (i = 0; i < decode_id; i = i + 1) begin
-                  for (j = 0; j < MAX_MSGS; j = j + 1) begin
-                      if (decode_msgs[i][j] != "") begin
-                          $display("========================================================");
-                          $display("| Instruction: %s | Decode Message @ Cycle: %0t |", instr_out, $time/10);
-                          $display("========================================================");
-                          $display("| %s", decode_msgs[i][j]);
-                      end
-                  end
-              end
-          end
-      end
-  end
+  //             // Similarly, you can print decode messages if needed
+  //             for (i = 0; i < decode_id; i = i + 1) begin
+  //                 for (j = 0; j < MAX_MSGS; j = j + 1) begin
+  //                     if (decode_msgs[i][j] != "") begin
+  //                         $display("========================================================");
+  //                         $display("| Instruction: %s | Decode Message @ Cycle: %0t |", instr_out, $time/10);
+  //                         $display("========================================================");
+  //                         $display("| %s", decode_msgs[i][j]);
+  //                     end
+  //                 end
+  //             end
+  //         end
+  //     end
+  // end
 
 
 

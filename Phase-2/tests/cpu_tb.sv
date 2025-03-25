@@ -249,7 +249,7 @@ module cpu_tb();
 // end
 
 // Always block for verify_FETCH stage
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (rst_n) begin
       string ftch_msg;
 
@@ -273,8 +273,8 @@ always @(posedge clk) begin
         );
 
         // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        fetch_msg = ftch_msg;
-        // $display(fetch_msg);
+        fetch_msg <= ftch_msg;
+        $display(ftch_msg);
     end
 end
 

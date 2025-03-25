@@ -28,11 +28,19 @@ module cpu_tb();
   string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_msg, 
          execute_msg, ex_mem_msg, mem_msg, mem_wb_msg, wb_msg, pc_stall_msg, if_id_stall_msg, if_flush_msg, id_flush_msg, instruction_header;
 
-  reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
+  // reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
 
+  // Assume tracking of 71 instructions, with a capacity of storing 5 messages per stage (fetch, deocde).
+  string fetch_msgs[0:71][0:4];
+  string decode_msgs[0:71][0:4];
   
-  // Store the messages for FETCH and DECODE stages
-reg [31:0] instruction_cycle; // Store the cycle when the instruction is completed
+  // Indices into the arrays.
+  integer fetch_id, decode_id;
+  integer fetch_msg_indices[72]; // Tracks message indices per instruction
+  integer decode_msg_indices[72]; // Tracks message indices per instruction
+
+//   // Store the messages for FETCH and DECODE stages
+// reg [31:0] instruction_cycle; // Store the cycle when the instruction is completed
 
 logic valid_fetch, valid_decode;
 
@@ -160,30 +168,125 @@ logic valid_fetch, valid_decode;
       end
   end
 
-  // Always block for verify_FETCH stage
-  always @(posedge clk) begin
-    if (rst_n) begin
-    verify_FETCH(
-          .PC_stall(iDUT.PC_stall),
-          .expected_PC_stall(iMODEL.PC_stall),
-          .HLT(iDUT.iDECODE.HLT),
-          .PC_next(iDUT.PC_next), 
-          .expected_PC_next(iMODEL.PC_next), 
-          .PC_inst(iDUT.PC_inst), 
-          .expected_PC_inst(iMODEL.PC_inst), 
-          .PC_curr(pc), 
-          .expected_PC_curr(expected_pc), 
-          .prediction(iDUT.prediction), 
-          .expected_prediction(iMODEL.prediction), 
-          .predicted_target(iDUT.predicted_target), 
-          .expected_predicted_target (iMODEL.predicted_target),
-          .stage("FETCH"),
-          .stage_msg(fetch_msg)
-      );
 
-      $display("|%s @ Cycle: %0t", fetch_msg, $time/10);
+// Always block for verify_FETCH stage
+always @(posedge clk) begin
+    if (rst_n) begin
+        // Verify FETCH stage logic
+        verify_FETCH(
+            .PC_stall(iDUT.PC_stall),
+            .expected_PC_stall(iMODEL.PC_stall),
+            .HLT(iDUT.iDECODE.HLT),
+            .PC_next(iDUT.PC_next), 
+            .expected_PC_next(iMODEL.PC_next), 
+            .PC_inst(iDUT.PC_inst), 
+            .expected_PC_inst(iMODEL.PC_inst), 
+            .PC_curr(pc), 
+            .expected_PC_curr(expected_pc), 
+            .prediction(iDUT.prediction), 
+            .expected_prediction(iMODEL.prediction), 
+            .predicted_target(iDUT.predicted_target), 
+            .expected_predicted_target(iMODEL.predicted_target),
+            .stage("FETCH"),
+            .stage_msg(fetch_msg)
+        );
+
+        // Store message for FETCH stage at the appropriate index
+        fetch_msgs[fetch_id][fetch_msg_indices[fetch_id]] <= $sformatf("|%s @ Cycle: %0t", fetch_msg, $time/10);
     end
+end
+
+// Get the valid signal
+always @(posedge clk) begin
+    if (!rst_n) begin
+        valid_fetch  <= 1'b0;
+        valid_decode <= 1'b0;
+    end else begin
+        valid_fetch  <= ~stall; // Fetch is valid when no stall
+        valid_decode <= valid_fetch; // Decode follows fetch
+    end
+end
+
+// Increment instruction indices
+always @(posedge clk) begin
+    if (!rst_n) begin
+        fetch_id  <= 0;
+        decode_id <= 0;
+    end else begin
+        if (valid_fetch) fetch_id  <= fetch_id + 1; 
+        if (valid_decode) decode_id <= decode_id + 1;
+    end
+end
+
+// Get the message index counter, incremented only on stall
+always @(posedge clk) begin
+    if (!rst_n) begin
+        fetch_msg_indices <= '{default: 0};
+        decode_msg_indices <= '{default: 0};
+    end else if (iDUT.PC_stall) begin
+        // Increment fetch message index on PC stall
+        fetch_msg_indices[fetch_id] <= fetch_msg_indices[fetch_id] + 1;
+    end else if (iDUT.IF_ID_stall) begin
+        // Increment decode message index on IF/ID stall
+        decode_msg_indices[decode_id] <= decode_msg_indices[decode_id] + 1;
+    end else begin
+        // Reset message index to 0 when no stall
+        fetch_msg_indices[fetch_id] <= 0;
+        decode_msg_indices[decode_id] <= 0;
+    end
+end
+
+// Always block to print fetch messages (after storing them)
+always @(posedge clk) begin
+    if (rst_n) begin
+      if (valid_decode) begin
+        // Print all stored fetch messages
+        for (int i = 0; i < 5; i = i + 1) begin
+            for (int j = 0; j < fetch_msg_indices[i]; j = j + 1) begin
+                $display("%s", i, j, fetch_msgs[i][j]);
+            end
+        end
+      end
+    end
+end
+
+
+  // Always block to print fetch messages when both fetch and decode are valid
+  always @(posedge clk) begin
+      if (rst_n) begin
+          // Ensure that the queues have valid fetch and decode messages before printing
+          if (fetch_id > 0 && decode_id > 0 && valid_decode) begin
+              integer i, j;
+              string fetch_msg_out, decode_msg_out, instr_out;
+              
+              // Print the instruction details for each instruction
+              for (i = 0; i < fetch_id; i = i + 1) begin
+                  // Print all fetch messages for the current instruction
+                  for (j = 0; j < MAX_MSGS; j = j + 1) begin
+                      if (fetch_msgs[i][j] != "") begin  // Only print non-empty messages
+                          $display("========================================================");
+                          $display("| Instruction: %s | Fetch Message @ Cycle: %0t |", instr_out, $time/10);
+                          $display("========================================================");
+                          $display("| %s", fetch_msgs[i][j]);
+                      end
+                  end
+              end
+
+              // Similarly, you can print decode messages if needed
+              for (i = 0; i < decode_id; i = i + 1) begin
+                  for (j = 0; j < MAX_MSGS; j = j + 1) begin
+                      if (decode_msgs[i][j] != "") begin
+                          $display("========================================================");
+                          $display("| Instruction: %s | Decode Message @ Cycle: %0t |", instr_out, $time/10);
+                          $display("========================================================");
+                          $display("| %s", decode_msgs[i][j]);
+                      end
+                  end
+              end
+          end
+      end
   end
+
 
 
   // Generate clock signal with 10 ns period

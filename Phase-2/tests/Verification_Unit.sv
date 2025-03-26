@@ -143,7 +143,7 @@ end
 
 
     // Print the message for each instruction.
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (valid_wb) begin
             for (int i = 0; i < 5; i = i + 1) begin
                 max_index = 0;

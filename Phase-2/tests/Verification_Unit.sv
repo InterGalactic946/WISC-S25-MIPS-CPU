@@ -82,7 +82,7 @@ always @(posedge clk) begin
 end
 
 // Second Always Block: Propagate the valid signals across stages
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (rst) begin
         valid_decode <= 0;
         valid_execute <= 0;
@@ -92,10 +92,10 @@ always @(posedge clk) begin
         msg_index <= 0;
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
-        valid_fetch <= 1;
+        valid_fetch = 1;
         // msg_index = 0;
     end else if (stall) begin
-        valid_fetch <= 0;
+        valid_fetch = 0;
     //     // msg_index = msg_index + 1;
     end
 
@@ -134,8 +134,8 @@ end
                 pipeline_msgs[memory_id].memory_cycle = $time / 10;
             end
             if (valid_wb) begin
-                pipeline_msgs[memory_id].wb_msg = wb_msg;
-                pipeline_msgs[memory_id].wb_cycle = $time / 10;
+                pipeline_msgs[wb_id].wb_msg = wb_msg;
+                pipeline_msgs[wb_id].wb_cycle = $time / 10;
             end
         end
     end    

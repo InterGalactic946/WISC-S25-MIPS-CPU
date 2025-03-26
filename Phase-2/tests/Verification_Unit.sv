@@ -89,7 +89,6 @@ always @(posedge clk) begin
         valid_memory <= 0;
         valid_fetch <= 0;
         valid_wb <= 0;
-        msg_index <= 0;
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
         valid_fetch <= 1;

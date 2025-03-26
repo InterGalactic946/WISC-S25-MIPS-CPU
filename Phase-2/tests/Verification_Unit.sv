@@ -139,43 +139,6 @@ always @(negedge clk) begin
     end
 end
 
-    // // Adds the messages, with stall and flush checks.
-    // always @(negedge clk) begin
-    //     if (!rst) begin
-    //         if (valid_fetch && !stall) begin
-    //             pipeline_msgs[fetch_id].fetch_msgs[0] = fetch_msg;
-    //             pipeline_msgs[fetch_id].fetch_cycles[0] = $time / 10;
-    //         end else if (stall && !valid_fetch) begin
-    //             pipeline_msgs[fetch_id].fetch_msgs[msg_index] = fetch_msg;
-    //             pipeline_msgs[fetch_id].fetch_cycles[msg_index] = $time / 10;
-    //         end
-    //         if (valid_decode && !stall) begin
-    //             pipeline_msgs[decode_id].decode_msgs[0][0] = decode_msg;
-    //             pipeline_msgs[decode_id].decode_msgs[0][1] = instruction_full_msg;
-    //             pipeline_msgs[decode_id].decode_cycles[0] = $time / 10;
-    //         end else if (!valid_decode && stall) begin
-    //             pipeline_msgs[decode_id].decode_msgs[msg_index][0] = decode_msg;
-    //             pipeline_msgs[decode_id].decode_msgs[msg_index][1] = instruction_full_msg;
-    //             pipeline_msgs[decode_id].decode_cycles[msg_index] = $time / 10;
-    //         end
-    //         if (valid_execute) begin
-    //             pipeline_msgs[execute_id].execute_msg = execute_msg;
-    //             pipeline_msgs[execute_id].execute_cycle = $time / 10;
-    //         end
-    //         if (valid_memory) begin
-    //             pipeline_msgs[memory_id].memory_msg = mem_msg;
-    //             pipeline_msgs[memory_id].memory_cycle = $time / 10;
-    //         end
-    //         if (valid_wb) begin
-    //            // $display("Storing WB_MSG: %s at wb_id = %d", wb_msg, wb_id);
-    //             pipeline_msgs[wb_id].wb_msg = wb_msg;
-    //             pipeline_msgs[wb_id].wb_cycle = $time / 10;
-    //             // $display(pipeline_msgs[wb_id].wb_msg);
-    //             // $display(pipeline_msgs[wb_id].wb_cycle);
-    //         end
-    //     end
-    // end    
-
     always @(posedge clk)
         if (rst)
             print <= 1'b0;

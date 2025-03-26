@@ -1,4 +1,4 @@
-module pipeline_tb;
+module pipeline_tb();
 
     // Declare signals
     reg clk, rst;

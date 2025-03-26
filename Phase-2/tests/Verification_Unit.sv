@@ -1,116 +1,84 @@
-module Verification_Unit (
-  input  logic       clk,
-  input  logic       rst,
-  // Pulse this high for one cycle when a new instruction is fetched.
-  input  logic       new_instr,
-  // Stall and flush signals (if needed)
-  input  logic       stall,
-  input  logic       flush,
-  // Stage messages (driven as one‑cycle pulses when valid)
-  input  string      fetch_msg,
-  input  string      decode_msg,
-  input  string      full_instr_msg, // e.g. "SUB R1, R1, R2"
-  input  string      execute_msg,
-  input  string      mem_msg,
-  input  string      wb_msg
-);
-
-  // Structure to hold debug messages for one instruction.
-  typedef struct {
-    string fetch_msgs[$];  // Dynamic array for fetch stage messages.
-    int    fetch_cycle;    // Cycle when the last fetch message was captured.
-    string decode_msgs[$]; // Dynamic array for decode stage messages.
+// Define structure for debug info with dynamic arrays
+typedef struct {
+    string fetch_msgs[$];
+    int    fetch_cycle;
+    string decode_msgs[$];
     int    decode_cycle;
-    string execute_msg;    // Single execute message.
-    int    execute_cycle;
-    string mem_msg;        // Single memory message.
+    string exec_msgs[$];
+    int    exec_cycle;
+    string mem_msgs[$];
     int    mem_cycle;
-    string wb_msg;         // Single write-back message.
+    string wb_msgs[$];
     int    wb_cycle;
-    string full_instr;     // Complete instruction text.
-    bit    printed;        // Flag to ensure one-time printing.
-  } debug_info_t;
+} debug_info_t;
 
-  // Dynamic array to hold one record per instruction.
-  debug_info_t pipeline_msgs[$];
-  int instr_index;
+debug_info_t pipeline_msgs[MAX_INSTRUCTIONS];
 
-  // On reset or when a new instruction arrives, create a new record.
-  always @(posedge clk) begin
-    if (rst) begin
-      pipeline_msgs.delete();
-      instr_index <= 0;
-    end else if (new_instr) begin
-      pipeline_msgs.push_back('{
-         fetch_msgs: {},
-         fetch_cycle: 0,
-         decode_msgs: {},
-         decode_cycle: 0,
-         execute_msg: "",
-         execute_cycle: 0,
-         mem_msg: "",
-         mem_cycle: 0,
-         wb_msg: "",
-         wb_cycle: 0,
-         full_instr: full_instr_msg,
-         printed: 0
-      });
-      instr_index++;
+// Main logic for processing fetch and decode stages
+always @(posedge clk) begin
+    if (fetch_msg != "") begin
+        // Fetch stage
+        if (pipeline_msgs[instr_index].fetch_msgs.size() == 0 || 
+            fetch_msg != pipeline_msgs[instr_index].fetch_msgs[$] ) begin
+            pipeline_msgs[instr_index].fetch_msgs.push_back(fetch_msg);
+            pipeline_msgs[instr_index].fetch_cycle = $time / 10;
+        end
     end
-  end
-
-  // Capture stage messages for the current instruction.
-  always @(posedge clk) begin
-    if (!rst && (instr_index > 0)) begin
-      // For FETCH: Only add if nonempty and different from last stored message.
-      if (fetch_msg != "") begin
-         if (pipeline_msgs[instr_index-1].fetch_msgs.size() == 0 ||
-             fetch_msg != pipeline_msgs[instr_index-1].fetch_msgs[pipeline_msgs[instr_index-1].fetch_msgs.size()-1]) begin
-            pipeline_msgs[instr_index-1].fetch_msgs.push_back(fetch_msg);
-            pipeline_msgs[instr_index-1].fetch_cycle = $time / 10;
-         end
-      end
-
-      // For DECODE: Same approach.
-      if (decode_msg != "") begin
-         if (pipeline_msgs[instr_index-1].decode_msgs.size() == 0 ||
-             decode_msg != pipeline_msgs[instr_index-1].decode_msgs[pipeline_msgs[instr_index-1].decode_msgs.size()-1]) begin
-            pipeline_msgs[instr_index-1].decode_msgs.push_back(decode_msg);
-            pipeline_msgs[instr_index-1].decode_cycle = $time / 10;
-         end
-      end
-
-      // For EXECUTE, MEMORY, and WRITE-BACK assume one pulse each.
-      if ((execute_msg != "") && (pipeline_msgs[instr_index-1].execute_msg == "")) begin
-         pipeline_msgs[instr_index-1].execute_msg = execute_msg;
-         pipeline_msgs[instr_index-1].execute_cycle = $time / 10;
-      end
-      if ((mem_msg != "") && (pipeline_msgs[instr_index-1].mem_msg == "")) begin
-         pipeline_msgs[instr_index-1].mem_msg = mem_msg;
-         pipeline_msgs[instr_index-1].mem_cycle = $time / 10;
-      end
-      if ((wb_msg != "") && (pipeline_msgs[instr_index-1].wb_msg == "")) begin
-         pipeline_msgs[instr_index-1].wb_msg = wb_msg;
-         pipeline_msgs[instr_index-1].wb_cycle = $time / 10;
-      end
-
-      // When a write-back message is present and we haven't printed the record yet, print it.
-      if ((pipeline_msgs[instr_index-1].wb_msg != "") && !pipeline_msgs[instr_index-1].printed) begin
-         pipeline_msgs[instr_index-1].printed = 1;
-         $display("==========================================================");
-         $display("| Instruction: %s | Completed At Cycle: %0d |", 
-                  pipeline_msgs[instr_index-1].full_instr, pipeline_msgs[instr_index-1].wb_cycle);
-         $display("==========================================================");
-         foreach (pipeline_msgs[instr_index-1].fetch_msgs[i])
-           $display("|%s @ Cycle: %0d", pipeline_msgs[instr_index-1].fetch_msgs[i], pipeline_msgs[instr_index-1].fetch_cycle);
-         foreach (pipeline_msgs[instr_index-1].decode_msgs[i])
-           $display("|%s @ Cycle: %0d", pipeline_msgs[instr_index-1].decode_msgs[i], pipeline_msgs[instr_index-1].decode_cycle);
-         $display("|%s @ Cycle: %0d", pipeline_msgs[instr_index-1].execute_msg, pipeline_msgs[instr_index-1].execute_cycle);
-         $display("|%s @ Cycle: %0d", pipeline_msgs[instr_index-1].mem_msg, pipeline_msgs[instr_index-1].mem_cycle);
-         $display("|%s @ Cycle: %0d", pipeline_msgs[instr_index-1].wb_msg, pipeline_msgs[instr_index-1].wb_cycle);
-         $display("==========================================================\n");
-      end
+    
+    if (decode_msg != "") begin
+        // Decode stage
+        if (pipeline_msgs[instr_index].decode_msgs.size() == 0 || 
+            decode_msg != pipeline_msgs[instr_index].decode_msgs[$] ) begin
+            pipeline_msgs[instr_index].decode_msgs.push_back(decode_msg);
+            pipeline_msgs[instr_index].decode_cycle = $time / 10;
+        end
     end
-  end
+end
 
-endmodule
+// Handle Flushed Instructions
+always @(posedge clk) begin
+    if (flush_condition) begin
+        // When flush occurs, capture the flush message once
+        pipeline_msgs[instr_index].fetch_msgs.push_back("FLUSHED due to misprediction.");
+        pipeline_msgs[instr_index].decode_msgs.push_back("FLUSHED due to misprediction.");
+        pipeline_msgs[instr_index].exec_msgs.push_back("FLUSHED.");
+        pipeline_msgs[instr_index].mem_msgs.push_back("No memory access.");
+        pipeline_msgs[instr_index].wb_msgs.push_back("No register write.");
+        pipeline_msgs[instr_index].fetch_cycle = $time / 10;
+    end
+end
+
+// Printing logic at the end of the instruction completion cycle
+always @(negedge clk) begin
+    if (instruction_completed) begin
+        // Print each stage's message at the end of the instruction
+        $display("===========================================================");
+        $display("| Instruction: %s | Completed At Cycle: %0d |", pipeline_msgs[instr_index].instruction, pipeline_msgs[instr_index].wb_cycle);
+        $display("===========================================================");
+        
+        // Print fetch messages
+        foreach (pipeline_msgs[instr_index].fetch_msgs[i]) begin
+            $display("|[FETCH] %s @ Cycle: %0d", pipeline_msgs[instr_index].fetch_msgs[i], pipeline_msgs[instr_index].fetch_cycle);
+        end
+        
+        // Print decode messages
+        foreach (pipeline_msgs[instr_index].decode_msgs[i]) begin
+            $display("|[DECODE] %s @ Cycle: %0d", pipeline_msgs[instr_index].decode_msgs[i], pipeline_msgs[instr_index].decode_cycle);
+        end
+        
+        // Print other stages (execute, memory, write-back)
+        foreach (pipeline_msgs[instr_index].exec_msgs[i]) begin
+            $display("|[EXECUTE] %s @ Cycle: %0d", pipeline_msgs[instr_index].exec_msgs[i], pipeline_msgs[instr_index].exec_cycle);
+        end
+        
+        foreach (pipeline_msgs[instr_index].mem_msgs[i]) begin
+            $display("|[MEMORY] %s @ Cycle: %0d", pipeline_msgs[instr_index].mem_msgs[i], pipeline_msgs[instr_index].mem_cycle);
+        end
+        
+        foreach (pipeline_msgs[instr_index].wb_msgs[i]) begin
+            $display("|[WRITE-BACK] %s @ Cycle: %0d", pipeline_msgs[instr_index].wb_msgs[i], pipeline_msgs[instr_index].wb_cycle);
+        end
+        
+        $display("===========================================================");
+    end
+end

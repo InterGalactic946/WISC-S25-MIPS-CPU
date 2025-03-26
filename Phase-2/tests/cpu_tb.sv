@@ -337,7 +337,7 @@ always @(posedge clk) begin
 end
 
 
-always @(negedge clk) begin
+always @(posedge clk) begin
   string instr_msg;
   // if (fetch_msg !== "")
   //   $display(fetch_msg);

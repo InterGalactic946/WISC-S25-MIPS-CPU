@@ -259,7 +259,7 @@ module cpu_tb();
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string ftch_msg, ftch_stall_msg;
+      string ftch_msg;
 
         // Verify FETCH stage logic
         verify_FETCH(
@@ -277,8 +277,7 @@ always @(posedge clk) begin
             .predicted_target(iDUT.predicted_target), 
             .expected_predicted_target(iMODEL.predicted_target),
             .stage("FETCH"),
-            .stage_msg(ftch_msg),
-            .stall_msg(ftch_stall_msg)
+            .stage_msg(ftch_msg)
         );
 
         if (!stall && valid_fetch)
@@ -321,7 +320,7 @@ always @(posedge clk) begin
     valid_memory <= 0;
     valid_wb <= 0;
   end else if (!stall)
-    valid_fetch <= 0;
+    valid_fetch <= 1;
     
     valid_decode <= valid_fetch;
     valid_execute <= valid_decode; 
@@ -338,17 +337,6 @@ end
 
 
 always @(posedge clk) begin
-  string instr_msg;
-  // if (fetch_msg !== "")
-  //   $display(fetch_msg);
-  // if(decode_msg !== "")
-  //   $display(decode_msg);
-  // if(execute_msg !== "")
-  //   $display(execute_msg);
-  // if(mem_msg !== "")
-  //   $display(mem_msg);
-  // if(wb_msg !== "")
-  //   $display(wb_msg);
   if (valid_wb) begin
 
     for (int i = 0; i < 5; i = i + 1) begin
@@ -412,7 +400,6 @@ always @(posedge clk) begin
             .expected_update_PC(iMODEL.update_PC),
             
             .decode_msg(dcode_msg),
-            .stall_msg(dcode_stall_msg),
             .instruction_full(instr_full_msg)
         );
 

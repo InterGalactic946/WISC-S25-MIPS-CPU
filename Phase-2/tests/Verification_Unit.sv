@@ -103,14 +103,14 @@ end
     // Adds the messages, with stall and flush checks.
     always @(negedge clk) begin
         if (!rst) begin
-            if (valid_fetch) begin
+            if (valid_fetch || stall) begin
                 pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
                 pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
             end // else if (stall) begin
             //     pipeline_msgs[fetch_id].fetch_stall_msgs[msg_index] = fetch_stall_msg;
             //     pipeline_msgs[fetch_id].fetch_stall_cycles[msg_index] = $time / 10;
             // end
-            if (valid_decode) begin
+            if (valid_decode || stall) begin
                 pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
                 pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
                 pipeline_msgs[decode_id].decode_cycle = $time / 10;

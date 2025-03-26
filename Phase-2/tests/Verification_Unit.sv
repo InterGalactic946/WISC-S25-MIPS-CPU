@@ -187,7 +187,7 @@ end
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
             for (int i = 0; i < 5; i = i+1)
-                if (pipeline_msgs[wb_id].fetch_stall_msg[i] !== "")
+                if (pipeline_msgs[wb_id].fetch_stall_msgs[i] !== "")
                     $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_stall_msgs[i], pipeline_msgs[wb_id].fetch_stall_cycles[i]);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);            
             // for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)

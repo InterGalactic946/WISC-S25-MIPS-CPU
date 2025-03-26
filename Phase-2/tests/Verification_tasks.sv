@@ -54,7 +54,6 @@ package Verification_tasks;
     begin
         // Initialize message.
         stage_msg = "";
-        stall_msg = "";
 
           // Verify the PC next.
           if (PC_next !== expected_PC_next) begin
@@ -185,7 +184,6 @@ package Verification_tasks;
 
           // Initialize messages.
           decode_msg = "";
-          stall_msg = "";
           instr_state = "";
           instruction_full = "";
           hazard_type = "";

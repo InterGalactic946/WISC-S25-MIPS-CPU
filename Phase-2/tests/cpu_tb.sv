@@ -42,7 +42,7 @@ module cpu_tb();
   // integer fetch_msg_indices[72]; // Tracks message indices per instruction
   // integer decode_msg_indices[72]; // Tracks message indices per instruction
 
-    integer instr_id, fetch_id, decode_id, execute_id, memory_id, wb_id, max_index;
+    integer instr_id, fetch_id, decode_id, execute_id, memory_id, wb_id, max_index, msg_index;
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
     debug_info_t pipeline_msgs[0:71];
 
@@ -318,16 +318,23 @@ always @(posedge clk) begin
     valid_fetch <= 1;
     valid_decode <= 0;
     valid_execute <= 0; 
-    valid_mem <= 0;
+    valid_memory <= 0;
     valid_wb <= 0;
   end else if (!stall)
     valid_fetch <= 0;
   else begin
     valid_decode <= valid_fetch;
     valid_execute <= valid_decode; 
-    valid_mem <= valid_execute;
-    valid_wb <= valid_mem;
+    valid_memory <= valid_execute;
+    valid_wb <= valid_memory;
   end
+end
+
+always @(posedge clk) begin
+  if (!rst_n) begin
+    msg_index <= 1;
+  end else if (stall)
+    msg_index <= msg_index + 1;
 end
 
 

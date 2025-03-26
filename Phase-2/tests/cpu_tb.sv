@@ -100,7 +100,9 @@ module cpu_tb();
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
     // TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
-    repeat(100) @(posedge clk);
+    repeat(100) @(posedge clk) begin
+      $display("ZF = %b, VF = %b, NF = %b.", iDUT.ZF, iDUT.VF, iDUT.NF);
+    end
 
     // If we reached here, that means all test cases were successful
     $display("YAHOO!! All tests passed.");

@@ -89,7 +89,7 @@ always @(posedge clk) begin
         valid_fetch = 1;
         // msg_index = 0;
     end else if (stall) begin
-        valid_fetch <= 0;
+        valid_fetch = 0;
         // msg_index = msg_index + 1;
     end
 

@@ -2,9 +2,7 @@ module dynamic_pipeline_tb();
 
   reg clk, rst;
   reg PC_stall, IF_ID_stall, IF_flush;
-  reg [31:0] fetch_msg, decode_msg, execute_msg, memory_msg, wb_msg, instruction_full_msg;
-
-  wire valid_fetch;
+  string fetch_msg, decode_msg, execute_msg, memory_msg, wb_msg, instruction_full_msg;
 
   // Instantiate the DUT
   dynamic_pipeline uut (
@@ -31,12 +29,12 @@ module dynamic_pipeline_tb();
     PC_stall = 0;
     IF_ID_stall = 0;
     IF_flush = 0;
-    fetch_msg = 32'h0;
-    decode_msg = 32'h0;
-    execute_msg = 32'h0;
-    memory_msg = 32'h0;
-    wb_msg = 32'h0;
-    instruction_full_msg = 32'h0;
+    fetch_msg = "";
+    decode_msg = "";
+    execute_msg = "";
+    memory_msg = "";
+    wb_msg = "";
+    instruction_full_msg = "";
 
     // Reset cycle
     @(posedge clk);

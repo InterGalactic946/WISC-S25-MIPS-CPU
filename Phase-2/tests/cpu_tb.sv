@@ -42,7 +42,7 @@ module cpu_tb();
   // integer fetch_msg_indices[72]; // Tracks message indices per instruction
   // integer decode_msg_indices[72]; // Tracks message indices per instruction
 
-    integer instr_id, fetch_id, decode_id, execute_id, memory_id, wb_id, max_index, msg_index;
+    integer instr_id, fetch_id, decode_id, execute_id, memory_id, wb_id, max_index, print, msg_index;
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
     debug_info_t pipeline_msgs[0:71];
 

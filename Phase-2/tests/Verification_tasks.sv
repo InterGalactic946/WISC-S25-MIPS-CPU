@@ -94,9 +94,9 @@ package Verification_tasks;
           
           // If all checks pass, store success message.
           if (PC_stall && !HLT) // If the stall is not due to HLT.
-            stall_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+            stage_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
           else if (PC_stall && HLT)
-            stall_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+            stage_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
           else if (prediction[1])
               // Branch is predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
@@ -263,9 +263,9 @@ package Verification_tasks;
 
           // If there is a stall at the decode stage, print out the stall along with reason.
           if (IF_ID_stall) begin
-            stall_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
+            decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
           end else if (IF_flush) begin // If the instruction is flushed.
-            stall_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");
+            decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");
             instruction_full = $sformatf("FLUSHED");
           end else begin // Decode the instruction.
             // Get the decoded instruction.

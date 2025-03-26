@@ -291,7 +291,7 @@ always @(negedge clk) begin
   if (fetch_msg !== "")
     $display(fetch_msg);
   if(decode_msg !== "")
-    $displa(decode_msg);
+    $display(decode_msg);
   if(execute_msg !== "")
     $display(execute_msg);
   if(mem_msg !== "")

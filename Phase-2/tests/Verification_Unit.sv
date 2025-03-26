@@ -134,6 +134,7 @@ end
                 pipeline_msgs[memory_id].memory_cycle = $time / 10;
             end
             if (valid_wb) begin
+                $display("Storing WB_MSG: %s at wb_id = %d", wb_msg, wb_id);
                 pipeline_msgs[wb_id].wb_msg = wb_msg;
                 pipeline_msgs[wb_id].wb_cycle = $time / 10;
                 // $display(pipeline_msgs[wb_id].wb_msg);

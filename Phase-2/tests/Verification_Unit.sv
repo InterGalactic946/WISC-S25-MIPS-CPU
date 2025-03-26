@@ -51,20 +51,37 @@ always @(posedge clk) begin
 end
 
 
-    // First Always Block: Tracks the pipeline and increments IDs
-    always @(posedge clk) begin
+    // Reset or increment the fetch_msg_id and decode_msg_id, based on stall condition
+    always @(posedge clk or posedge rst) begin
         if (rst) begin
-            fetch_msg_id[fetch_id] <= 0;
-            decode_msg_id[decode_id] <= 0;
-        end else if (stall) begin
-            // Only increment fetch_msg_id/decode_msg_id when there's a stall.
-            fetch_msg_id[fetch_id] <= fetch_msg_id[fetch_id] + 1;
-            decode_msg_id[decode_id] <= decode_msg_id[decode_id] + 1;
+            fetch_id <= 0;
+            decode_id <= 0;
+            // Initialize message indices to zero
+            for (int i = 0; i < 72; i++) begin
+                fetch_msg_id[i] <= 0;
+                decode_msg_id[i] <= 0;
+            end
         end else begin
-            fetch_msg_id[fetch_id] <= 0;
-            decode_msg_id[decode_id] <= 0;
+            if (stall) begin
+                // Increment the fetch and decode message IDs when stall is active
+                if (valid_fetch) begin
+                    fetch_msg_id[fetch_id] <= fetch_msg_id[fetch_id] + 1;
+                end
+                if (valid_decode) begin
+                    decode_msg_id[decode_id] <= decode_msg_id[decode_id] + 1;
+                end
+            end else begin
+                // Reset message IDs when there's no stall
+                if (valid_fetch) begin
+                    fetch_msg_id[fetch_id] <= 0;
+                end
+                if (valid_decode) begin
+                    decode_msg_id[decode_id] <= 0;
+                end
+            end
         end
     end
+
 
 // Second Always Block: Propagate the valid signals across stages
 always @(posedge clk) begin

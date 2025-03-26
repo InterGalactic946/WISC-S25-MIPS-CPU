@@ -45,7 +45,7 @@ always @(posedge clk or posedge rst) begin
             pipeline[i].stage <= EMPTY;
         end
     end else begin
-        for (int i = NUM_PIPELINE-1; i >= 0; i--) begin
+        for (int i = 0; i < NUM_PIPELINE; i++) begin
             if (pipeline[i].stage == EMPTY && i == 0 && valid_fetch) begin
                 pipeline[i].stage <= FETCH;
             end

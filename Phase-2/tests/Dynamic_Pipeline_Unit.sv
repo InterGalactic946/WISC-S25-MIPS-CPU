@@ -1,4 +1,4 @@
-module dynamic_pipeline (
+module Dynamic_Pipeline_Unit (
     input logic clk,
     input logic rst,
     input logic PC_stall,        // Stall Fetch stage

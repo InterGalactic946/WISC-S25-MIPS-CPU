@@ -14,6 +14,8 @@ module dynamic_pipeline (
 
 parameter NUM_PIPELINE = 5;
 
+logic valid_fetch;
+
 typedef enum {EMPTY, FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK} stage_t;
 
 typedef struct {

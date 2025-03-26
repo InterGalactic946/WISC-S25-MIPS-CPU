@@ -92,10 +92,10 @@ always @(negedge clk) begin
         msg_index <= 0;
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
-        valid_fetch = 1;
+        valid_fetch <= 1;
         // msg_index = 0;
     end else if (stall) begin
-        valid_fetch = 0;
+        valid_fetch <= 0;
     //     // msg_index = msg_index + 1;
     end
 

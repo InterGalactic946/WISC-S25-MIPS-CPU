@@ -282,6 +282,7 @@ always @(posedge clk) begin
         fetch_msg = ftch_msg;
         fetch_stall_msg = ftch_stall_msg;
         // $display(ftch_msg);
+        $display(fetch_stall_msg);
     end
 end
 
@@ -339,6 +340,7 @@ always @(posedge clk) begin
         
         // $display(decode_msg);
         // $display(instruction_full_msg);
+        $display(decode_stall_msg);
     end
 end
 

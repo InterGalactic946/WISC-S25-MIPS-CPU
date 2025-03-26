@@ -132,56 +132,7 @@ end
                 pipeline_msgs[wb_id].wb_cycle = $time / 10;
             end
         end
-    end
-
-
-//    // Flip-flop to hold enable signal for printing
-//     always @(posedge clk) begin
-//         if (rst) begin
-//             print_enable <= 0;  // Reset the enable signal
-//         end else begin
-//             if (valid_wb) begin
-//                 print_enable <= 1;  // Enable printing when write-back stage is valid
-//             end else begin
-//                 print_enable <= 0;  // Disable printing otherwise
-//             end
-//         end
-//     end
-
-
-
-    
-    // // Stall/Flush Message Display based on Hazard Conditions.
-    // always @(posedge clk) begin
-    //     if (!rst) begin
-    //         if (stall) begin
-    //             // Stall based on hazard conditions
-    //             if (pc_stall_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(pc_stall_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //             if (if_id_stall_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(if_id_stall_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //         end
-    //         if (flush) begin
-    //             // Flush based on conditions
-    //             if (if_flush_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(if_flush_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //             if (id_flush_msg !== "") begin
-    //                 $display("\n=====================================================");
-    //                 $display(id_flush_msg);
-    //                 $display("=====================================================\n");
-    //             end
-    //         end
-    //     end
-    // end
+    end    
 
 
     // Print the message for each instruction.

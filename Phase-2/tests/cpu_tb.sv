@@ -286,7 +286,11 @@ always @(posedge clk) begin
 
         fetch_msg = ftch_msg;
         // fetch_stall_msg <= ftch_stall_msg;
-        $display("%s, Cycle: %0t.", fetch_msg, $time / 10);
+        // $display("%s, Cycle: %0t.", fetch_msg, $time / 10);
+        // if (valid_fetch || stall) begin
+        //   pipeline_msgs[fetch_id].fetch_msgs[msg_index] = fetch_msg;
+        //   pipeline_msgs[fetch_id].fetch_cycles[msg_index] = $time / 10;
+        // end
         //$display(fetch_stall_msg);
     end
 end
@@ -414,7 +418,13 @@ always @(posedge clk) begin
         decode_msg = dcode_msg;
         // decode_stall_msg <= dcode_stall_msg;
         instruction_full_msg = instr_full_msg;
-        
+
+        // if (valid_decode || stall) begin
+        //   pipeline_msgs[decode_id].decode_msgs[msg_index][0] = decode_msg;
+        //   pipeline_msgs[decode_id].decode_msgs[msg_index][1] = instruction_full_msg;
+        //   pipeline_msgs[decode_id].decode_cycles[msg_index] = $time / 10;
+        // end
+
         // $display(decode_msg);
         // $display(instruction_full_msg);
         // $display(decode_stall_msg);
@@ -456,6 +466,11 @@ end
       //   execute_msgs[execute_id] = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
       execute_msg = ex_msg;
+
+      // if (valid_execute) begin
+      //   pipeline_msgs[execute_id].execute_msg = execute_msg;
+      //   pipeline_msgs[execute_id].execute_cycle = $time / 10;
+end
       // $display(execute_msg);
     end
   end

@@ -62,9 +62,9 @@ always @(posedge clk) begin
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
         valid_fetch <= 1;
-    end // else if (stall) begin
-        // valid_fetch <= 0;
-   // end
+    end else if (stall) begin
+        valid_fetch <= 0;
+    end
 
     // Propogate the signals correctly.
     valid_decode <= valid_fetch;
@@ -85,9 +85,10 @@ always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[fetch_id].fetch_msgs = '{default: ""};
         pipeline_msgs[fetch_id].fetch_cycles = '{default: 0};
-    end else if (valid_fetch || stall)
+    end else if (valid_fetch || stall) begin
         pipeline_msgs[fetch_id].fetch_msgs[msg_index] = fetch_msg;
         pipeline_msgs[fetch_id].fetch_cycles[msg_index] = $time / 10;
+    end
 end
 
 
@@ -96,10 +97,11 @@ always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[decode_id].decode_msgs = '{default: '{ "", "" }};
         pipeline_msgs[decode_id].decode_cycles = '{default: 0};
-    end else if (valid_decode || stall)
+    end else if (valid_decode || stall) begin
         pipeline_msgs[decode_id].decode_msgs[msg_index][0] = decode_msg;
         pipeline_msgs[decode_id].decode_msgs[msg_index][1] = instruction_full_msg;
         pipeline_msgs[decode_id].decode_cycles[msg_index] = $time / 10;
+    end
 end
 
 // Adds the messages, with stall and flush checks.
@@ -107,9 +109,10 @@ always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[execute_id].execute_msg = "";
         pipeline_msgs[execute_id].execute_cycle = 0;
-    end else if (valid_execute)
+    end else if (valid_execute) begin
         pipeline_msgs[execute_id].execute_msg = execute_msg;
         pipeline_msgs[execute_id].execute_cycle = $time / 10;
+    end
 end
 
 
@@ -118,9 +121,10 @@ always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[memory_id].memory_msg = "";
         pipeline_msgs[memory_id].memory_cycle = 0;
-    end else if (valid_memory)
+    end else if (valid_memory) begin
         pipeline_msgs[memory_id].memory_msg = mem_msg;
         pipeline_msgs[memory_id].memory_cycle = $time / 10;
+    end
 end
 
 
@@ -129,9 +133,10 @@ always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[wb_id].wb_msg = "";
         pipeline_msgs[wb_id].wb_cycle = 0;
-    end else if (valid_wb)
+    end else if (valid_wb) begin
         pipeline_msgs[wb_id].wb_msg = wb_msg;
         pipeline_msgs[wb_id].wb_cycle = $time / 10;
+    end
 end
 
     // // Adds the messages, with stall and flush checks.

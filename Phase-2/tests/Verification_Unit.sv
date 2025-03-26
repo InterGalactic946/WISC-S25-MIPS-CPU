@@ -26,6 +26,7 @@ module Verification_Unit (
     );
 
     integer fetch_id, decode_id, execute_id, memory_id, wb_id;
+    integer fetch_msg_id[0:71], decode_msg_id[0:71];
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_enable;
     debug_info_t pipeline_msgs[0:71];
 
@@ -48,6 +49,22 @@ always @(posedge clk) begin
     memory_id <= execute_id; // Pass the execute_id to memory_id
     wb_id <= memory_id;      // Pass the memory_id to wb_id
 end
+
+
+    // First Always Block: Tracks the pipeline and increments IDs
+    always @(posedge clk) begin
+        if (rst) begin
+            fetch_msg_id[fetch_id] <= 0;
+            decode_msg_id[decode_id] <= 0;
+        end else if (stall) begin
+            // Only increment fetch_msg_id/decode_msg_id when there's a stall.
+            fetch_msg_id[fetch_id] <= fetch_msg_id[fetch_id] + 1;
+            ecode_msg_id[decode_id] <= ecode_msg_id[decode_id] + 1;
+        end else begin
+            fetch_msg_id[fetch_id] <= 0;
+            decode_msg_id[decode_id] <= 0;
+        end
+    end
 
 // Second Always Block: Propagate the valid signals across stages
 always @(posedge clk) begin
@@ -74,12 +91,12 @@ end
     always @(negedge clk) begin
         if (!rst) begin
             if (valid_fetch) begin
-                pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
+                pipeline_msgs[fetch_id].fetch_msg[fetch_msg_id[fetch_id]] = fetch_msg;
                 pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
             end
             if (valid_decode) begin
-                pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
-                pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
+                pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]][0] = decode_msg;
+                pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]][1] = instruction_full_msg;
                 pipeline_msgs[decode_id].decode_cycle = $time / 10;
             end
             if (valid_execute) begin
@@ -151,10 +168,12 @@ end
     always @(posedge clk) begin
         if (valid_wb) begin
             $display("==========================================================");
-            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
+            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[decode_msg_id[wb_id]][1], $time / 10);
             $display("==========================================================");
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
+            for (int i = 0; i < wb_id; i = i+1;) begin
+                $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg[fetch_msg_id[i]], pipeline_msgs[wb_id].fetch_cycle);
+                $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[decode_msg_id[i]][0], pipeline_msgs[wb_id].decode_cycle);
+            end
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);

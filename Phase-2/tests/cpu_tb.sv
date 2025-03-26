@@ -205,7 +205,7 @@ always @(negedge clk) begin
         wb_id      <= memory_id;  // Pass the memory_id to wb_id
     end else if (iDUT.PC_stall && !iDUT.IF_ID_stall) begin
         fetch_id <= fetch_id; // Stall the instruction in fetch
-        decode_id <= fetch_id; // Pass the fetch_id to decode_id
+        decode_id <= decode_id + 1; // Fetch the next instruction
         execute_id <= decode_id;  // Pass the decode_id to execute_id
         memory_id  <= execute_id; // Pass the execute_id to memory_id
         wb_id      <= memory_id;  // Pass the memory_id to wb_id  

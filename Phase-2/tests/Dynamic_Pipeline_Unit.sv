@@ -134,7 +134,7 @@ always @(posedge clk) begin
             $display("|%s", pipeline[i].execute_msg);
             $display("|%s", pipeline[i].memory_msg);
             $display("|%s", pipeline[i].wb_msg);
-            $display("==========================================================");
+            $display("==========================================================\n");
             
             pipeline[i].stage <= EMPTY;
         end

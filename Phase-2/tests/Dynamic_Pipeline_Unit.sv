@@ -118,10 +118,10 @@ always @(posedge clk) begin
         print <= 0;
     else begin
         for (int j = 0; j < 5; j++) begin
-            if (pipeline[j].stage === WRITE_BACK)
+            if (pipeline[j].stage === WRITE_BACK) begin
                 print <= 1;
                 break;
-            else
+            end else
                 print <= 0;
         end 
     end

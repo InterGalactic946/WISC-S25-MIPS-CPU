@@ -492,7 +492,7 @@ always @(posedge clk) begin
         // decode_msg = dcode_msg;
         decode_msg = {$sformatf("ID: %0d. ", decode_id), "|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         // decode_stall_msg <= dcode_stall_msg;
-        instruction_full_msg = {$sformatf("ID: %0d. ", decode_id), "|", instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        instruction_full_msg = {$sformatf("ID: %0d. ", decode_id), instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
         // if (valid_decode || stall) begin
         //   pipeline_msgs[decode_id].decode_msgs[msg_index][0] = decode_msg;

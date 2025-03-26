@@ -17,7 +17,7 @@ import Monitor_tasks::*;
 module Verification_Unit (
     input logic clk, rst,
     input string fetch_msg, fetch_stall_msg,
-    input string decode_msg, decode_stall_msg
+    input string decode_msg, decode_stall_msg,
     input string instruction_full_msg,
     input string execute_msg,
     input string mem_msg,

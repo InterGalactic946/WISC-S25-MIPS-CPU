@@ -82,7 +82,7 @@ always @(posedge clk) begin
 end
 
 // Second Always Block: Propagate the valid signals across stages
-always @(negedge clk) begin
+always @(posedge clk) begin
     if (rst) begin
         valid_decode <= 0;
         valid_execute <= 0;

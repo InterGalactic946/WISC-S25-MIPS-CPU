@@ -59,7 +59,7 @@ end
         end else if (stall) begin
             // Only increment fetch_msg_id/decode_msg_id when there's a stall.
             fetch_msg_id[fetch_id] <= fetch_msg_id[fetch_id] + 1;
-            ecode_msg_id[decode_id] <= ecode_msg_id[decode_id] + 1;
+            decode_msg_id[decode_id] <= decode_msg_id[decode_id] + 1;
         end else begin
             fetch_msg_id[fetch_id] <= 0;
             decode_msg_id[decode_id] <= 0;

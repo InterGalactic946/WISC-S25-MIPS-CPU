@@ -101,7 +101,7 @@ module cpu_tb();
     // TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
     repeat(100) @(posedge clk) begin
-      $display("ZF = %b, VF = %b, NF = %b. Cycle: %0t", iDUT.ZF, iDUT.VF, iDUT.NF, $time / 10);
+      // $display("ZF = %b, VF = %b, NF = %b. Cycle: %0t", iDUT.ZF, iDUT.VF, iDUT.NF, $time / 10);
     end
 
     // If we reached here, that means all test cases were successful

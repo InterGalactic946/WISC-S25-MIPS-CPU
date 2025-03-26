@@ -12,7 +12,8 @@ module pipeline_tb();
     reg [31:0] write_data;
     reg [4:0] write_register;
     
-    // Cycle counters for each stage
+    // Additional signal for stall/flush simulation
+    reg branch_hazard;
     integer cycle_fetch = 0, cycle_decode = 0, cycle_execute = 0, cycle_memory = 0, cycle_wb = 0;
 
     // Initialize test signals
@@ -28,6 +29,7 @@ module pipeline_tb();
         PC_curr = 16'h0000;
         PC_next = 16'h0002;
         branch_predicted = 0;
+        branch_hazard = 0;
         opcode = 4'b0000;
         input_A = 32'h0000;
         input_B = 32'h0000;
@@ -42,22 +44,23 @@ module pipeline_tb();
         #5 rst = 0;
         #5 rst = 1;
 
-        // Simulate for 10 cycles
-        #10 valid_fetch = 1; instruction = 32'h1112; // Instruction: SUB R1, R1, R2
+        // Simulate for 10 cycles with different instructions
+        // First instruction: SUB
+        #10 valid_fetch = 1; instruction = 32'h1112; // SUB R1, R1, R2
         #10 valid_decode = 1;
         #10 valid_execute = 1; input_A = 32'h2; input_B = 32'h1; ALU_out = 32'h1;
         #10 valid_memory = 1;
         #10 valid_wb = 1; write_data = 32'h1; write_register = 5'd1;
         
-        // Second instruction (Branch)
-        #20 valid_fetch = 1; instruction = 32'hc202; // Instruction: B 001, TARGET: 0x0016
+        // Second instruction: Branch (B)
+        #20 valid_fetch = 1; instruction = 32'hc202; // B 001, TARGET: 0x0016
         #20 valid_decode = 1;
-        #20 valid_execute = 1;
+        #20 valid_execute = 1; // Here we simulate branch prediction
         #20 valid_memory = 1;
         #20 valid_wb = 1;
         
-        // Test flush
-        #30 valid_fetch = 1; instruction = 32'hc200; // Instruction: FLUSHED
+        // Third instruction: ADD (this will be flushed due to branch misprediction)
+        #30 valid_fetch = 1; instruction = 32'h2222; // ADD R2, R3, R4
         #30 valid_decode = 1;
         #30 valid_execute = 1;
         #30 valid_memory = 1;
@@ -69,7 +72,7 @@ module pipeline_tb();
     // Clock Generation
     always #5 clk = ~clk;
 
-    // Print instruction stages
+    // Print instruction stages with stall/flush handling
     always @(posedge clk) begin
         if (rst) begin
             cycle_fetch <= 0;
@@ -91,18 +94,32 @@ module pipeline_tb();
         if (valid_wb) begin
             // Instruction Header
             $display("==========================================================");
-            $display("| Instruction: %s | Completed At Cycle: %0d |", (instruction == 32'h1112) ? "SUB R1, R1, R2" : (instruction == 32'hc202) ? "B 001, TARGET: 0x0016" : "FLUSHED", cycle_wb);
+            $display("| Instruction: %s | Completed At Cycle: %0d |", 
+                     (instruction == 32'h1112) ? "SUB R1, R1, R2" : 
+                     (instruction == 32'hc202) ? "B 001, TARGET: 0x0016" : 
+                     (instruction == 32'h2222) ? "ADD R2, R3, R4" : "FLUSHED", cycle_wb);
             $display("==========================================================");
 
             // FETCH Stage Message
-            $display("|[FETCH] %s: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h", 
-                     (branch_predicted) ? "SUCCESS" : "SUCCESS", PC_curr, PC_next, instruction);
-            $display("| Branch Predicted %s. @ Cycle: %0d", branch_predicted ? "TAKEN" : "NOT Taken", cycle_fetch);
+            if (branch_hazard) begin
+                $display("|[FETCH] STALL: PC stalled due to propagated stall. @ Cycle: %0d", cycle_fetch);
+            end else begin
+                $display("|[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h", 
+                         PC_curr, PC_next, instruction);
+            end
 
             // DECODE Stage Message
             if (valid_decode) begin
-                $display("|[DECODE] SUCCESS: Opcode = 0b%0b, Instr: SUB, rs = 0x%h, rt = 0x%h, rd = 0x%h. @ Cycle: %0d", 
-                         opcode, input_A, input_B, write_register, cycle_decode);
+                if (branch_predicted && branch_hazard) begin
+                    // Branch Hazard Stall
+                    $display("|[DECODE] STALL: Instruction stalled at decode due to Branch (B) hazard. @ Cycle: %0d", cycle_decode);
+                end else begin
+                    $display("|[DECODE] SUCCESS: Opcode = 0b%0b, Instr: %s, rs = 0x%h, rt = 0x%h, rd = 0x%h. @ Cycle: %0d", 
+                             opcode, 
+                             (instruction == 32'h1112) ? "SUB" : 
+                             (instruction == 32'hc202) ? "B" : "ADD",
+                             input_A, input_B, write_register, cycle_decode);
+                end
             end
 
             // EXECUTE Stage Message
@@ -113,7 +130,11 @@ module pipeline_tb();
             $display("|[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: %0d", cycle_memory);
 
             // WRITE-BACK Stage Message
-            $display("|[WRITE-BACK] SUCCESS: Register %0d written with data: 0x%h. @ Cycle: %0d", write_register, write_data, cycle_wb);
+            if (instruction != 32'h2222) begin // ADD will be flushed, no write-back
+                $display("|[WRITE-BACK] SUCCESS: Register R%0d written with data: 0x%h. @ Cycle: %0d", write_register, write_data, cycle_wb);
+            end else begin
+                $display("|[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: %0d", cycle_wb);
+            end
             $display("==========================================================\n");
         end
     end

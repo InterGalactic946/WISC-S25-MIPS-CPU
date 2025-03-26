@@ -31,15 +31,18 @@ module cpu_tb();
   // reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
 
   // // Assume tracking of 71 instructions, with a capacity of storing 5 messages per stage (fetch, deocde).
-  // string fetch_msgs[0:71][0:4];
-  // string decode_msgs[0:71][0:4][0:1];
+  string fetch_msgs[0:71][0:4];
+  string decode_msgs[0:71][0:4][0:1];
+  string execute_msgs[0:71];
+  string mem_msgs[0:71];
+  string wb_msgs[0:71];
   
   // // Indices into the arrays.
   // integer fetch_id, decode_id;
   // integer fetch_msg_indices[72]; // Tracks message indices per instruction
   // integer decode_msg_indices[72]; // Tracks message indices per instruction
 
-      integer fetch_id, decode_id, execute_id, memory_id, wb_id;
+    integer instr_id, fetch_id, decode_id, execute_id, memory_id, wb_id, max_index;
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
     debug_info_t pipeline_msgs[0:71];
 
@@ -278,26 +281,90 @@ always @(posedge clk) begin
             .stall_msg(ftch_stall_msg)
         );
 
-        // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        fetch_msg <= ftch_msg;
-        fetch_stall_msg <= ftch_stall_msg;
+        if (!stall && valid_fetch)
+          fetch_msgs[fetch_id][0] = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        else if (stall)
+          fetch_msgs[fetch_id][msg_index] = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+
+        // fetch_msg <= ftch_msg;
+        // fetch_stall_msg <= ftch_stall_msg;
         // $display(ftch_msg);
         //$display(fetch_stall_msg);
     end
 end
 
+// First Always Block: Tracks the pipeline and increments IDs
+always @(posedge clk) begin
+    if (rst) begin
+        fetch_id <= 0;
+        decode_id <= 0;
+        execute_id <= 0;
+        memory_id <= 0;
+        wb_id <= 0;
+    end else if (valid_fetch) begin
+        // Only increment fetch_id when there's a valid fetch.
+        fetch_id <= fetch_id + 1;
+    end
+
+    // Update pipeline stages.
+    decode_id <= fetch_id;   // Pass the fetch_id to decode_id
+    execute_id <= decode_id; // Pass the decode_id to execute_id
+    memory_id <= execute_id; // Pass the execute_id to memory_id
+    wb_id <= memory_id;      // Pass the memory_id to wb_id
+end
+
+always @(posedge clk) begin
+  if (!rst_n) begin
+    valid_fetch <= 1;
+    valid_decode <= 0;
+    valid_execute <= 0; 
+    valid_mem <= 0;
+    valid_wb <= 0;
+  end else if (!stall)
+    valid_fetch <= 0;
+  else begin
+    valid_decode <= valid_fetch;
+    valid_execute <= valid_decode; 
+    valid_mem <= valid_execute;
+    valid_wb <= valid_mem;
+  end
+end
+
 
 always @(negedge clk) begin
-  if (fetch_msg !== "")
-    $display(fetch_msg);
-  if(decode_msg !== "")
-    $display(decode_msg);
-  if(execute_msg !== "")
-    $display(execute_msg);
-  if(mem_msg !== "")
-    $display(mem_msg);
-  if(wb_msg !== "")
-    $display(wb_msg);
+  string instr_msg;
+  // if (fetch_msg !== "")
+  //   $display(fetch_msg);
+  // if(decode_msg !== "")
+  //   $display(decode_msg);
+  // if(execute_msg !== "")
+  //   $display(execute_msg);
+  // if(mem_msg !== "")
+  //   $display(mem_msg);
+  // if(wb_msg !== "")
+  //   $display(wb_msg);
+  if (valid_wb) begin
+
+    for (int i = 0; i < 5; i = i + 1) begin
+        max_index = 0;
+        if (decode_msgs[wb_id][i][1] !== "")
+          max_index = max_index + 1;
+    end
+  $display("==========================================================");
+  $display("| Instruction: %s | Completed At Cycle: %0t |", decode_msgs[wb_id][max_index][1], $time / 10);
+  $display("==========================================================");
+  for (int i = 0; i < 5; i = i+1)
+    if (fetch_msgs[wb_id][i] !== "")
+      $display("%s", fetch_msgs[wb_id][i]);
+  for (int i = 0; i < 5; i = i+1)
+    if (decode_msgs[wb_id][i][0] !== "")        
+      $display("%s", decode_msgs[wb_id][i][0]);
+  $display("%s", execute_msgs[wb_id]);
+  $display("%s", mem_msgs[wb_id]);
+  $display("%s", wb_msgs[wb_id]);
+  $display("==========================================================\n");
+  end
+
 end
 
 // Always block for verify_DECODE stage
@@ -344,12 +411,17 @@ always @(posedge clk) begin
         );
 
         // // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
-        // decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
-        // instruction_full_msg = {instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
+        if (!stall && !flush) begin
+          decode_msgs[decode_id][0][0] = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+          decode_msgs[decode_id][0][1] = {instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        end else if (stall || flush) begin
+          decode_msgs[decode_id][msg_index][0] = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+          decode_msgs[decode_id][msg_index][1] = instr_full_msg;
+        end
 
-        decode_msg <= dcode_msg;
-        decode_stall_msg <= dcode_stall_msg;
-        instruction_full_msg <= instr_full_msg;
+        // decode_msg <= dcode_msg;
+        // decode_stall_msg <= dcode_stall_msg;
+        // instruction_full_msg <= instr_full_msg;
         
         // $display(decode_msg);
         // $display(instruction_full_msg);
@@ -388,9 +460,9 @@ end
         .execute_msg(ex_msg)
       );
 
-      // execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
+      execute_msgs[execute_id] = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-      execute_msg <= ex_msg;
+      // execute_msg <= ex_msg;
       // $display(execute_msg);
     end
   end
@@ -413,9 +485,9 @@ end
         .mem_verify_msg(mem_verify_msg)
       );
 
-      // mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
+      mem_msgs[memory_id] = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-      mem_msg <= mem_verify_msg;
+      // mem_msg <= mem_verify_msg;
       // $display(mem_msg);
     end
   end
@@ -434,9 +506,9 @@ end
         .wb_verify_msg(wbb_msg)
       );
 
-      // wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 4)};
+      wb_msgs[wb_id] = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-      wb_msg <= wbb_msg;
+      // wb_msg <= wbb_msg;
 
       // $display(wb_msg);
     end

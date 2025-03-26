@@ -94,10 +94,10 @@ always @(posedge clk) begin
         // Propagate the valid signal to future stages.
         valid_fetch <= 1;
         // msg_index = 0;
-    end // else if (stall) begin
-    //     valid_fetch <= 0;
+    end else if (stall) begin
+        valid_fetch <= 0;
     //     // msg_index = msg_index + 1;
-    // end
+    end
 
     // Propogate the signals correctly.
     valid_decode <= valid_fetch;
@@ -152,6 +152,11 @@ end
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msgs[max_index][1], $time / 10);
             $display("==========================================================");
+            for (int i = 0; i < 5; i = i + 1) begin
+                max_index = 0;
+                if (pipeline_msgs[wb_id].fetch_msgs[i] !== "")
+                    max_index = max_index + 1;
+            end
             for (int i = 0; i < 5; i = i+1)
                 if (pipeline_msgs[wb_id].fetch_msgs[i] !== "")
                     $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msgs[i], pipeline_msgs[wb_id].fetch_cycles[i]);

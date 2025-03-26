@@ -312,7 +312,7 @@ always @(posedge clk) begin
     wb_id <= memory_id;      // Pass the memory_id to wb_id
 end
 
-always @(posedge clk) begin
+always @(negedge clk) begin
   if (!rst_n) begin
     valid_fetch <= 1;
     valid_decode <= 0;
@@ -336,7 +336,7 @@ always @(posedge clk) begin
 end
 
 
-always @(negedge clk) begin
+always @(posedge clk) begin
   if (valid_wb) begin
 
     for (int i = 0; i < 5; i = i + 1) begin
@@ -478,8 +478,9 @@ end
         
         .mem_verify_msg(mem_verify_msg)
       );
-
-      mem_msgs[memory_id] = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      
+      if (valid_memory)
+        mem_msgs[memory_id] = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
       // mem_msg <= mem_verify_msg;
       // $display(mem_msg);

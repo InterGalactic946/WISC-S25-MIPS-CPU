@@ -86,11 +86,11 @@ always @(posedge clk) begin
         msg_index <= 0;
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
-        valid_fetch = 1;
-        msg_index = 0;
+        valid_fetch <= 1;
+        // msg_index = 0;
     end else if (stall) begin
-        valid_fetch = 0;
-        msg_index = msg_index + 1;
+        valid_fetch <= 0;
+        // msg_index = msg_index + 1;
     end
 
     // Propogate the signals correctly.
@@ -106,19 +106,19 @@ end
             if (valid_fetch) begin
                 pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
                 pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
-            end else if (stall) begin
-                pipeline_msgs[fetch_id].fetch_stall_msgs[msg_index] = fetch_stall_msg;
-                pipeline_msgs[fetch_id].fetch_stall_cycles[msg_index] = $time / 10;
-            end
+            end // else if (stall) begin
+            //     pipeline_msgs[fetch_id].fetch_stall_msgs[msg_index] = fetch_stall_msg;
+            //     pipeline_msgs[fetch_id].fetch_stall_cycles[msg_index] = $time / 10;
+            // end
             if (valid_decode) begin
                 pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
                 pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
                 pipeline_msgs[decode_id].decode_cycle = $time / 10;
-            end else if (stall) begin
-                pipeline_msgs[decode_id].decode_stall_msgs[msg_index] = decode_stall_msg;
-                pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
-                pipeline_msgs[decode_id].decode_stall_cycles[msg_index] = $time / 10;
-            end
+            end // else if (stall) begin
+            //     pipeline_msgs[decode_id].decode_stall_msgs[msg_index] = decode_stall_msg;
+            //     pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
+            //     pipeline_msgs[decode_id].decode_stall_cycles[msg_index] = $time / 10;
+            // end
             if (valid_execute) begin
                 pipeline_msgs[execute_id].execute_msg = execute_msg;
                 pipeline_msgs[execute_id].execute_cycle = $time / 10;
@@ -141,13 +141,13 @@ end
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
-            for (int i = 0; i < 5; i = i+1)
-                if (pipeline_msgs[wb_id].fetch_stall_msgs[i] !== "")
-                    $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_stall_msgs[i], pipeline_msgs[wb_id].fetch_stall_cycles[i]);
+            // for (int i = 0; i < 5; i = i+1)
+            //     if (pipeline_msgs[wb_id].fetch_stall_msgs[i] !== "")
+            //         $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_stall_msgs[i], pipeline_msgs[wb_id].fetch_stall_cycles[i]);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);            
-            for (int i = 0; i < 5; i = i+1)
-                if (pipeline_msgs[wb_id].decode_stall_msgs[i] !== "")
-                $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_stall_msgs[i], pipeline_msgs[wb_id].decode_stall_cycles[i]);
+            // for (int i = 0; i < 5; i = i+1)
+            //     if (pipeline_msgs[wb_id].decode_stall_msgs[i] !== "")
+            //     $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_stall_msgs[i], pipeline_msgs[wb_id].decode_stall_cycles[i]);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);

@@ -2,7 +2,7 @@ module dynamic_pipeline();
     typedef enum { EMPTY, FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK } stage_t;
     
     parameter int NUM_INSTR = 4;
-    parameter int MAX_CYCLES = 16;
+    parameter int MAX_CYCLES = 20;
     
     stage_t pipeline [NUM_INSTR];  // Tracks current stage of each instruction
     string instr_messages [NUM_INSTR][5];  // Stores messages for each stage
@@ -46,22 +46,25 @@ module dynamic_pipeline();
                 if (pipeline[i] == EMPTY && (i == 0 || pipeline[i-1] >= DECODE)) begin
                     // First instruction enters Fetch, others follow if Decode is available
                     pipeline[i] = FETCH;
-                end else if (pipeline[i] < WRITE_BACK) begin
-                    // Move to next stage per cycle
-                    if (i == 0 || (pipeline[i-1] > pipeline[i])) begin
+                end 
+                else if (pipeline[i] < WRITE_BACK) begin
+                    // Move only if the next stage is free
+                    if (i == 0 || pipeline[i-1] > pipeline[i]) begin
                         pipeline[i] = stage_t'(pipeline[i] + 1);
                     end
                 end
 
-                // Store messages for each stage
+                // Store messages only once per stage
                 case (pipeline[i])
-                    FETCH: instr_messages[i][0] = fetch_message(i, cycle);
-                    DECODE: instr_messages[i][1] = decode_message(i, cycle);
-                    EXECUTE: instr_messages[i][2] = execute_message(i, cycle);
-                    MEMORY: instr_messages[i][3] = memory_message(i, cycle);
+                    FETCH: if (instr_messages[i][0] == "") instr_messages[i][0] = fetch_message(i, cycle);
+                    DECODE: if (instr_messages[i][1] == "") instr_messages[i][1] = decode_message(i, cycle);
+                    EXECUTE: if (instr_messages[i][2] == "") instr_messages[i][2] = execute_message(i, cycle);
+                    MEMORY: if (instr_messages[i][3] == "") instr_messages[i][3] = memory_message(i, cycle);
                     WRITE_BACK: begin
-                        instr_messages[i][4] = writeback_message(i, cycle);
-                        cycle_completed[i] = cycle;  // Mark cycle when WB completes
+                        if (instr_messages[i][4] == "") begin
+                            instr_messages[i][4] = writeback_message(i, cycle);
+                            cycle_completed[i] = cycle;  // Mark cycle when WB completes
+                        end
                     end
                 endcase
             end

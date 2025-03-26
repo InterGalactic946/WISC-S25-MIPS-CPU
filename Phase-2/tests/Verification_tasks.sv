@@ -49,11 +49,12 @@ package Verification_tasks;
       input logic [1:0]  prediction, expected_prediction,
       input logic [15:0] predicted_target, expected_predicted_target,
       input string stage,
-      output string stage_msg 
+      output string stage_msg, stall_msg 
   );
     begin
         // Initialize message.
         stage_msg = "";
+        stall_msg = "";
 
           // Verify the PC next.
           if (PC_next !== expected_PC_next) begin
@@ -93,9 +94,9 @@ package Verification_tasks;
           
           // If all checks pass, store success message.
           if (PC_stall && !HLT) // If the stall is not due to HLT.
-            stage_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+            stall_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
           else if (PC_stall && HLT)
-            stage_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+            stall_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
           else if (prediction[1])
               // Branch is predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",

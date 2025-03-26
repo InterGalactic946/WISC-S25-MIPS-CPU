@@ -16,7 +16,7 @@ import Monitor_tasks::*;
 
 module Verification_Unit (
     input logic clk, rst,
-    input string fetch_msg,
+    input string fetch_msg, fetch_stall_msg,
     input string decode_msg,
     input string instruction_full_msg,
     input string execute_msg,
@@ -83,11 +83,15 @@ always @(posedge clk) begin
         valid_memory <= 0;
         valid_fetch <= 0;
         valid_wb <= 0;
+        msg_index <= 0;
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
         valid_fetch <= 1;
-    end else if (stall)
+        msg_index <= 0;
+    end else if (stall) begin
         valid_fetch <= 0;
+        msg_index <= msg_index + 1;
+    end
 
     // Propogate the signals correctly.
     valid_decode <= valid_fetch;
@@ -102,6 +106,9 @@ end
             if (valid_fetch) begin
                 pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
                 pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
+            end else if (stall) begin
+                pipeline_msgs[fetch_id].fetch_stall_msgs[msg_index] = fetch_stall_msg;
+                pipeline_msgs[fetch_id].fetch_stall_cycle[msg_index] = $time / 10;
             end
             if (valid_decode) begin
                 pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
@@ -179,8 +186,10 @@ end
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
-            // for (int i = 0; i < fetch_msg_id[wb_id]; i = i+1)
-                $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
+            for (int i = 0; i < 5; i = i+1)
+                if (pipeline_msgs[wb_id].fetch_stall_msg[i] !== "")
+                    $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_stall_msg[i], pipeline_msgs[wb_id].fetch_stall_cycle[i]);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);            
             // for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)
                 $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);

@@ -25,7 +25,7 @@ module cpu_tb();
   logic stall, flush;         // Indicates a stall and/or a flush in the pipeline.
 
   // Messages from each stage.
-  string fetch_msg, if_id_msg, decode_msg, instruction_full_msg, id_ex_msg, 
+  string fetch_msg, fetch_stall_msg, decode_msg, instruction_full_msg, id_ex_msg, 
          execute_msg, ex_mem_msg, mem_msg, mem_wb_msg, wb_msg, pc_stall_msg, if_id_stall_msg, if_flush_msg, id_flush_msg, instruction_header;
 
   // reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
@@ -83,6 +83,7 @@ module cpu_tb();
     .clk(clk),
     .rst(rst),
     .fetch_msg(fetch_msg),
+    .fetch_stall_msg(fetch_stage_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),
     .execute_msg(execute_msg),
@@ -255,7 +256,7 @@ module cpu_tb();
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string ftch_msg;
+      string ftch_msg, ftch_stall_msg;
 
         // Verify FETCH stage logic
         verify_FETCH(
@@ -273,11 +274,13 @@ always @(posedge clk) begin
             .predicted_target(iDUT.predicted_target), 
             .expected_predicted_target(iMODEL.predicted_target),
             .stage("FETCH"),
-            .stage_msg(ftch_msg)
+            .stage_msg(ftch_msg),
+            .fetch_stall_msg(ftch_stall_msg)
         );
 
         // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         fetch_msg = ftch_msg;
+        fetch_stall_msg = ftch_stall_msg;
         // $display(ftch_msg);
     end
 end

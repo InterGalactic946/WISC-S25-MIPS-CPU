@@ -65,7 +65,7 @@ always @(posedge clk or posedge rst) begin
     end
 end
 
-assign valid_fetch = (pipeline[0].stage == EMPTY) && !PC_stall && !IF_ID_stall;
+assign valid_fetch = (!PC_stall);
 
 always @(negedge clk or posedge rst) begin
     if (rst) begin

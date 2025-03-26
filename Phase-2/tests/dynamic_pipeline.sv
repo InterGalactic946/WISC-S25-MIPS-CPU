@@ -97,9 +97,9 @@ always @(negedge clk or posedge rst) begin
                     end
                     pipeline[i].instr_full_msg = (IF_ID_stall) ? ((IF_flush) ? "FLUSHED" : "") : instruction_full_msg;
                 end
-                EXECUTE: pipeline[i].execute_msg = execute_msg;
-                MEMORY: pipeline[i].memory_msg = memory_msg;
-                WRITE_BACK: pipeline[i].wb_msg = wb_msg;
+                EXECUTE: pipeline[i].execute_msg = {execute_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                MEMORY: pipeline[i].memory_msg = {memory_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                WRITE_BACK: pipeline[i].wb_msg = {wb_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
             endcase
         end
     end

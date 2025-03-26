@@ -19,7 +19,6 @@ module dynamic_pipeline_tb();
       .memory_msg(memory_msg),
       .wb_msg(wb_msg),
       .instruction_full_msg(instruction_full_msg),
-      .valid_fetch(valid_fetch)
   );
 
   // Clock generation

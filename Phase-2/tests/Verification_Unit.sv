@@ -136,7 +136,7 @@ end
             if (valid_wb) begin
                 pipeline_msgs[wb_id].wb_msg = wb_msg;
                 pipeline_msgs[wb_id].wb_cycle = $time / 10;
-                $display(wb_msg);
+                $display(pipeline_msgs[wb_id].wb_msg);
             end
         end
     end    

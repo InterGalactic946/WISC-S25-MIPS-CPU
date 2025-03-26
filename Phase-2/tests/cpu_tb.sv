@@ -192,31 +192,36 @@ module cpu_tb();
 // First Always Block: Tracks the pipeline and increments IDs
 always @(negedge clk) begin
     if (rst) begin
+        // Initialize pipeline registers on reset
         fetch_id   <= 0;
         decode_id  <= -1;
         execute_id <= -2;
         memory_id  <= -3;
         wb_id      <= -4;
     end else if (iDUT.PC_stall && iDUT.IF_ID_stall) begin
-        fetch_id <= fetch_id; // Stall the instruction in fetch
-        decode_id <= fetch_id; // stall the instruction in decode
-        execute_id <= decode_id;  // Pass the decode_id to execute_id
-        memory_id  <= execute_id; // Pass the execute_id to memory_id
-        wb_id      <= memory_id;  // Pass the memory_id to wb_id
+        // Both fetch and decode are stalled (hold current values)
+        fetch_id <= fetch_id;           // Stall the instruction in fetch
+        decode_id <= decode_id;         // Stall the instruction in decode
+        execute_id <= decode_id;        // Pass the decode_id to execute_id
+        memory_id  <= execute_id;       // Pass the execute_id to memory_id
+        wb_id      <= memory_id;        // Pass the memory_id to wb_id
     end else if (iDUT.PC_stall && !iDUT.IF_ID_stall) begin
-        fetch_id <= fetch_id; // Stall the instruction in fetch
-        decode_id <= fetch_id + 1; // Fetch the next instruction
-        execute_id <= decode_id;  // Pass the decode_id to execute_id
-        memory_id  <= execute_id; // Pass the execute_id to memory_id
-        wb_id      <= memory_id;  // Pass the memory_id to wb_id  
+        // Fetch is stalled, decode fetches the next instruction
+        fetch_id <= fetch_id;           // Stall the instruction in fetch
+        decode_id <= fetch_id + 1;      // Fetch the next instruction for decode
+        execute_id <= decode_id;        // Pass the decode_id to execute_id
+        memory_id  <= execute_id;       // Pass the execute_id to memory_id
+        wb_id      <= memory_id;        // Pass the memory_id to wb_id
     end else if (!iDUT.PC_stall && !iDUT.IF_ID_stall) begin
-        fetch_id <= fetch_id + 1; // Fetch the next instruction
-        decode_id <= fetch_id; // Pass the fetch_id to decode_id
-        execute_id <= decode_id;  // Pass the decode_id to execute_id
-        memory_id  <= execute_id; // Pass the execute_id to memory_id
-        wb_id      <= memory_id;  // Pass the memory_id to wb_id  
+        // No stalls, pipeline moves forward
+        fetch_id <= fetch_id + 1;       // Fetch the next instruction
+        decode_id <= fetch_id;          // Pass the fetch_id to decode_id
+        execute_id <= decode_id;        // Pass the decode_id to execute_id
+        memory_id  <= execute_id;       // Pass the execute_id to memory_id
+        wb_id      <= memory_id;        // Pass the memory_id to wb_id
     end    
 end
+
 
 // // Second Always Block: Propagate the valid signals across stages
 // always @(posedge clk) begin

@@ -43,11 +43,11 @@ module HazardDetectionUnit_model (
   /////////////////////////////////////////////////////
   // Stall conditions for LW, B, and BR instructions //
   /////////////////////////////////////////////////////
-  // We stall PC whenever we stall the IF_ID pipeline register.
-  assign PC_stall = IF_ID_stall;
+  // We stall PC whenever we stall the IF_ID pipeline register or when it is a halt instruction..
+  assign PC_stall = HLT | IF_ID_stall;
 
-  // We stall anytime there is a branch or load to use hazard in the decode stage or when it is a halt instruction.
-  assign IF_ID_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
+  // We stall anytime there is a branch or load to use hazard in the decode stage.
+  assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
   /////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////

@@ -376,13 +376,12 @@ always @(posedge clk) begin
     end else if (valid_fetch) begin
         // Only increment fetch_id when there's a valid fetch.
         fetch_id <= fetch_id + 1;
+        // Update pipeline stages.
+        decode_id <= fetch_id;   // Pass the fetch_id to decode_id
+        execute_id <= decode_id; // Pass the decode_id to execute_id
+        memory_id <= execute_id; // Pass the execute_id to memory_id
+        wb_id <= memory_id;      // Pass the memory_id to wb_id
     end
-  
-    // Update pipeline stages.
-    decode_id <= fetch_id;   // Pass the fetch_id to decode_id
-    execute_id <= decode_id; // Pass the decode_id to execute_id
-    memory_id <= execute_id; // Pass the execute_id to memory_id
-    wb_id <= memory_id;      // Pass the memory_id to wb_id
 end
 
 
@@ -397,15 +396,14 @@ always @(posedge clk) begin
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
         valid_fetch <= 1;
+        // Propogate the signals correctly.
+      valid_decode <= valid_fetch;
+      valid_execute <= valid_decode;
+      valid_memory <= valid_execute;
+      valid_wb <= valid_memory;
     end else if (stall) begin
         valid_fetch <= 0;
     end
-
-    // Propogate the signals correctly.
-    valid_decode <= valid_fetch;
-    valid_execute <= valid_decode;
-    valid_memory <= valid_execute;
-    valid_wb <= valid_memory;
 end
 
 always @(posedge clk) begin
@@ -429,7 +427,6 @@ always @(posedge clk) begin
             .br_hazard(iMODEL.iHDU.BR_hazard),
             .b_hazard(iMODEL.iHDU.B_hazard),
             .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
-            .hlt(iMODEL.iHDU.HLT),
             .EX_signals(iDUT.EX_signals),
             .expected_EX_signals(iMODEL.EX_signals),
             .MEM_signals(iDUT.MEM_signals),

@@ -275,7 +275,7 @@ always @(posedge clk) begin
             .expected_predicted_target(iMODEL.predicted_target),
             .stage("FETCH"),
             .stage_msg(ftch_msg),
-            .fetch_stall_msg(ftch_stall_msg)
+            .stall_msg(ftch_stall_msg)
         );
 
         // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};

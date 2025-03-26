@@ -100,7 +100,7 @@ always @(negedge clk or posedge rst) begin
                                 break;
                             end
                         end
-                    end else  begin
+                    end else begin
                         pipeline[i].decode_msgs[0] = {decode_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
                     end
                     pipeline[i].instr_full_msg = (IF_ID_stall) ? ((IF_flush) ? "FLUSHED" : "") : instruction_full_msg;

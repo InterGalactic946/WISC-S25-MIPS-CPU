@@ -107,7 +107,7 @@ always @(posedge clk) begin
 end
 
     // Adds the messages, with stall and flush checks.
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (!rst) begin
             if (valid_fetch && !stall) begin
                 pipeline_msgs[fetch_id].fetch_msgs[0] = fetch_msg;

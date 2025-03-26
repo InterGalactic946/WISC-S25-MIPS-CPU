@@ -505,7 +505,7 @@ end
 
       wb_msg = wbb_msg;
 
-      $display(wb_msg);
+      // $display(wb_msg);
     end
   end
 

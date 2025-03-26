@@ -81,10 +81,20 @@ always @(negedge clk or posedge rst) begin
         for (int i = 0; i < NUM_PIPELINE; i++) begin
             case (pipeline[i].stage)
                 FETCH: begin
-                    pipeline[i].fetch_msgs[$countones(pipeline[i].fetch_msgs)] = {fetch_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                    for (int j = 0; j < 5; j++) begin
+                        if (pipeline[i].fetch_msgs[j] == "") begin
+                            pipeline[i].fetch_msgs[j] = {fetch_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                            break;
+                        end
+                    end
                 end
                 DECODE: begin
-                    pipeline[i].decode_msgs[$countones(pipeline[i].decode_msgs)] = {decode_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                    for (int j = 0; j < 5; j++) begin
+                        if (pipeline[i].decode_msgs[j] == "") begin
+                            pipeline[i].decode_msgs[j] = {decode_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                            break;
+                        end
+                    end
                     pipeline[i].instr_full_msg = (IF_ID_stall) ? ((IF_flush) ? "FLUSHED" : "") : instruction_full_msg;
                 end
                 EXECUTE: pipeline[i].execute_msg = execute_msg;

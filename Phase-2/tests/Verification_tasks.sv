@@ -478,9 +478,11 @@ package Verification_tasks;
       input  logic expected_NF,
       output string execute_msg 
   );
+     string hazard_type;
+    
      // Initialize message.
      execute_msg = "";
-     string hazard_type = "";
+     hazard_type = "";
 
     // Determine the type of hazard and generate the appropriate message.
     if (load_use_hazard) begin

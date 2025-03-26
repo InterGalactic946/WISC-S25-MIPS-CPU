@@ -152,7 +152,7 @@ end
         
 
     // Print the message for each instruction.
-    always @(negedge clk) begin
+    always @(posedge clk) begin
         if (print) begin
             for (int i = 0; i < 5; i = i + 1) begin
                 max_index = 0;

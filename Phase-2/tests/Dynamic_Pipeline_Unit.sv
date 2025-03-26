@@ -14,7 +14,7 @@ module Dynamic_Pipeline_Unit (
 
 parameter NUM_PIPELINE = 5;
 
-logic valid_fetch;
+logic valid_fetch, print;
 
 typedef enum {EMPTY, FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK} stage_t;
 
@@ -114,6 +114,21 @@ always @(negedge clk or posedge rst) begin
 end
 
 always @(posedge clk) begin
+    if(rst)
+        print <= 0;
+    else begin
+        for (int j = 0; j < 5; j++) begin
+            if (pipeline[j].stage === WRITE_BACK)
+                print <= 1;
+                break;
+            else
+                print <= 0;
+        end 
+    end
+end
+
+always @(posedge clk) begin
+    if (print) begin
     for (int i = 0; i < NUM_PIPELINE; i++) begin
         if (pipeline[i].stage === WRITE_BACK) begin
             $display("==========================================================");
@@ -138,6 +153,7 @@ always @(posedge clk) begin
             
             pipeline[i].stage <= EMPTY;
         end
+    end
     end
 end
 

@@ -117,7 +117,7 @@ end
             end else if (stall) begin
                 pipeline_msgs[decode_id].decode_stall_msgs[msg_index] = decode_stall_msg;
                 pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
-                pipeline_msgs[decode_id].decode_stall_cycles = $time / 10;
+                pipeline_msgs[decode_id].decode_stall_cycles[msg_index] = $time / 10;
             end
             if (valid_execute) begin
                 pipeline_msgs[execute_id].execute_msg = execute_msg;

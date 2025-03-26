@@ -200,7 +200,7 @@ always @(negedge clk) begin
         wb_id      <= -4;
     end else if (iDUT.PC_stall && iDUT.IF_ID_stall) begin
         // Both fetch and decode are stalled (hold current values)
-        fetch_id <= fetch_id;           // Stall the instruction in fetch
+        fetch_id <= fetch_id + 1;           // Stall the instruction in fetch
         decode_id <= decode_id;         // Stall the instruction in decode
         execute_id <= decode_id;        // Pass the decode_id to execute_id
         memory_id  <= execute_id;       // Pass the execute_id to memory_id

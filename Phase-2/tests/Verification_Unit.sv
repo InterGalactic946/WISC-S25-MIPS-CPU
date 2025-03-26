@@ -25,7 +25,7 @@ module Verification_Unit (
     input logic stall, flush
     );
 
-    integer fetch_id, decode_id, execute_id, memory_id, wb_id;
+    integer fetch_id, decode_id, execute_id, memory_id, wb_id, msg_index;
     integer fetch_msg_id[0:71], decode_msg_id[0:71];
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_enable;
     debug_info_t pipeline_msgs[0:71];

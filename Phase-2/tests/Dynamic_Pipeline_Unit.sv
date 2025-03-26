@@ -81,19 +81,27 @@ always @(negedge clk or posedge rst) begin
         for (int i = 0; i < NUM_PIPELINE; i++) begin
             case (pipeline[i].stage)
                 FETCH: begin
-                    for (int j = 0; j < 5; j++) begin
-                        if (pipeline[i].fetch_msgs[j] == "") begin
-                            pipeline[i].fetch_msgs[j] = {fetch_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
-                            break;
+                    if (PC_stall) begin
+                        for (int j = 0; j < 5; j++) begin
+                            if (pipeline[i].fetch_msgs[j] == "") begin
+                                pipeline[i].fetch_msgs[j] = {fetch_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                                break;
+                            end
                         end
+                    end else begin
+                        pipeline[i].fetch_msgs[0] = {fetch_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
                     end
                 end
                 DECODE: begin
-                    for (int j = 0; j < 5; j++) begin
-                        if (pipeline[i].decode_msgs[j] == "") begin
-                            pipeline[i].decode_msgs[j] = {decode_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
-                            break;
+                    if (IF_ID_stall) begin
+                        for (int j = 0; j < 5; j++) begin
+                            if (pipeline[i].decode_msgs[j] == "") begin
+                                pipeline[i].decode_msgs[j] = {decode_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                                break;
+                            end
                         end
+                    end else  begin
+                        pipeline[i].decode_msgs[0] = {decode_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
                     end
                     pipeline[i].instr_full_msg = (IF_ID_stall) ? ((IF_flush) ? "FLUSHED" : "") : instruction_full_msg;
                 end

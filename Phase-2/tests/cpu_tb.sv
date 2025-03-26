@@ -336,7 +336,7 @@ always @(posedge clk) begin
 end
 
 
-always @(posedge clk) begin
+always @(negedge clk) begin
   if (valid_wb) begin
 
     for (int i = 0; i < 5; i = i + 1) begin
@@ -453,7 +453,8 @@ end
         .execute_msg(ex_msg)
       );
 
-      execute_msgs[execute_id] = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      if (valid_execute)
+        execute_msgs[execute_id] = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
       // execute_msg <= ex_msg;
       // $display(execute_msg);
@@ -498,8 +499,9 @@ end
         
         .wb_verify_msg(wbb_msg)
       );
-
-      wb_msgs[wb_id] = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      
+      if (valid_wb)
+        wb_msgs[wb_id] = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
       // wb_msg <= wbb_msg;
 

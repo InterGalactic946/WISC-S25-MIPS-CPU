@@ -82,18 +82,18 @@ module cpu_tb();
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-   Verification_Unit iVERIFY (
-    .clk(clk),
-    .rst(rst),
-    .fetch_msg(fetch_msg),
-    .decode_msg(decode_msg),
-    .instruction_full_msg(instruction_full_msg),
-    .execute_msg(execute_msg),
-    .mem_msg(mem_msg),
-    .wb_msg(wb_msg),
-    .stall(stall),
-    .flush(flush)
-  );
+  //  Verification_Unit iVERIFY (
+  //   .clk(clk),
+  //   .rst(rst),
+  //   .fetch_msg(fetch_msg),
+  //   .decode_msg(decode_msg),
+  //   .instruction_full_msg(instruction_full_msg),
+  //   .execute_msg(execute_msg),
+  //   .mem_msg(mem_msg),
+  //   .wb_msg(wb_msg),
+  //   .stall(stall),
+  //   .flush(flush)
+  // );
 
   // // Instantiate the DUT
   // Dynamic_Pipeline_Unit iDPT (
@@ -116,22 +116,22 @@ module cpu_tb();
     Initialize(.clk(clk), .rst_n(rst_n));
 
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
-    // TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
+    TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
-    repeat(100) @(posedge clk) begin
-      // $display("ZF = %b, VF = %b, NF = %b. Cycle: %0t", iDUT.ZF, iDUT.VF, iDUT.NF, $time / 10);
-    end
+    // repeat(100) @(posedge clk) begin
+    //   // $display("ZF = %b, VF = %b, NF = %b. Cycle: %0t", iDUT.ZF, iDUT.VF, iDUT.NF, $time / 10);
+    // end
 
     // If we reached here, that means all test cases were successful
     $display("YAHOO!! All tests passed.");
     $stop();
   end
 
-  // We stall on PC or IF.
-  assign stall = iDUT.PC_stall || iDUT.IF_ID_stall;
+  // // We stall on PC or IF.
+  // assign stall = iDUT.PC_stall || iDUT.IF_ID_stall;
 
-  // We flush IF, or ID stage.
-  assign flush = iDUT.IF_flush || iDUT.ID_flush;
+  // // We flush IF, or ID stage.
+  // assign flush = iDUT.IF_flush || iDUT.ID_flush;
 
   // // Get the hazard messages.
   // always @(posedge clk) begin
@@ -189,25 +189,34 @@ module cpu_tb();
 
 
 
-// // First Always Block: Tracks the pipeline and increments IDs
-// always @(negedge clk) begin
-//     if (rst) begin
-//         fetch_id   <= 0;
-//         decode_id  <= 0;
-//         execute_id <= 0;
-//         memory_id  <= 0;
-//         wb_id      <= 0;
-//     end else if (valid_fetch) begin
-//         // Only increment fetch_id when there's a valid fetch.
-//         fetch_id <= fetch_id + 1;
-//     end
-
-//     // Update pipeline stages.
-//     decode_id  <= fetch_id;   // Pass the fetch_id to decode_id
-//     execute_id <= decode_id;  // Pass the decode_id to execute_id
-//     memory_id  <= execute_id; // Pass the execute_id to memory_id
-//     wb_id      <= memory_id;  // Pass the memory_id to wb_id
-// end
+// First Always Block: Tracks the pipeline and increments IDs
+always @(negedge clk) begin
+    if (rst) begin
+        fetch_id   <= 0;
+        decode_id  <= -1;
+        execute_id <= -2;
+        memory_id  <= -3;
+        wb_id      <= -4;
+    end else if (iDUT.PC_stall && iDUT.IF_ID_stall) begin
+        fetch_id <= fetch_id; // Stall the instruction in fetch
+        decode_id <= decode_id; // stall the instruction in decode
+        execute_id <= decode_id;  // Pass the decode_id to execute_id
+        memory_id  <= execute_id; // Pass the execute_id to memory_id
+        wb_id      <= memory_id;  // Pass the memory_id to wb_id
+    end else if (iDUT.PC_stall && !iDUT.IF_ID_stall) begin
+        fetch_id <= fetch_id; // Stall the instruction in fetch
+        decode_id <= fetch_id; // Pass the fetch_id to decode_id
+        execute_id <= decode_id;  // Pass the decode_id to execute_id
+        memory_id  <= execute_id; // Pass the execute_id to memory_id
+        wb_id      <= memory_id;  // Pass the memory_id to wb_id  
+    end else if (!iDUT.PC_stall && !iDUT.IF_ID_stall) begin
+        fetch_id <= fetch_id + 1; // Fetch the next instruction
+        decode_id <= fetch_id; // Pass the fetch_id to decode_id
+        execute_id <= decode_id;  // Pass the decode_id to execute_id
+        memory_id  <= execute_id; // Pass the execute_id to memory_id
+        wb_id      <= memory_id;  // Pass the memory_id to wb_id  
+    end    
+end
 
 // // Second Always Block: Propagate the valid signals across stages
 // always @(posedge clk) begin
@@ -299,14 +308,14 @@ always @(posedge clk) begin
         // else if (stall)
         //   fetch_msgs[fetch_id][msg_index] = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-        fetch_msg = ftch_msg;
+        fetch_msg = {$sformatf("ID: %0d. ", fetch_id), "|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         // fetch_stall_msg <= ftch_stall_msg;
         // $display("%s, Cycle: %0t.", fetch_msg, $time / 10);
         // if (valid_fetch || stall) begin
         //   pipeline_msgs[fetch_id].fetch_msgs[msg_index] = fetch_msg;
         //   pipeline_msgs[fetch_id].fetch_cycles[msg_index] = $time / 10;
         // end
-        //$display(fetch_stall_msg);
+        $display(fetch_msg);
     end
 end
 
@@ -480,9 +489,10 @@ always @(posedge clk) begin
         //   decode_msgs[decode_id][msg_index][1] = instr_full_msg;
         // end
 
-        decode_msg = dcode_msg;
+        // decode_msg = dcode_msg;
+        decode_msg = {$sformatf("ID: %0d. ", decode_id), "|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         // decode_stall_msg <= dcode_stall_msg;
-        instruction_full_msg = instr_full_msg;
+        instruction_full_msg = $sformatf("ID: %0d. ", decode_id), "|", instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
         // if (valid_decode || stall) begin
         //   pipeline_msgs[decode_id].decode_msgs[msg_index][0] = decode_msg;
@@ -490,8 +500,8 @@ always @(posedge clk) begin
         //   pipeline_msgs[decode_id].decode_cycles[msg_index] = $time / 10;
         // end
 
-        // $display(decode_msg);
-        // $display(instruction_full_msg);
+        $display(decode_msg);
+        $display(instruction_full_msg);
         // $display(decode_stall_msg);
     end
 end
@@ -528,16 +538,17 @@ end
       );
 
       // if (valid_execute)
-      //   execute_msgs[execute_id] = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      execute_msg = {$sformatf("ID: %0d. ", execute_id), "|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-      execute_msg = ex_msg;
+      // execute_msg = ex_msg;
 
       // if (valid_execute) begin
       //   pipeline_msgs[execute_id].execute_msg = execute_msg;
       //   pipeline_msgs[execute_id].execute_cycle = $time / 10;
       // end
+
+      $display(execute_msg);
 end
-      // $display(execute_msg);
     end
   //end
 
@@ -562,13 +573,13 @@ end
       // if (valid_memory)
       //   mem_msgs[memory_id] = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-      mem_msg = mem_verify_msg;
+      mem_msg = {$sformatf("ID: %0d. ", memory_id), "|", mem_verify_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
       // if (valid_memory) begin
       //   pipeline_msgs[memory_id].memory_msg = mem_msg;
       //   pipeline_msgs[memory_id].memory_cycle = $time / 10;
       // end
-      // $display(mem_msg);
+      $display(mem_msg);
     end
   end
 
@@ -623,16 +634,16 @@ end
       );
       
       // if (valid_wb)
-      //   wb_msgs[wb_id] = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      wb_msg = {$sformatf("ID: %0d. ", wb_id), "|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-      wb_msg = wbb_msg;
+      // wb_msg = wbb_msg;
 
       // if (valid_wb) begin
       //   pipeline_msgs[wb_id].wb_msg = wb_msg;
       //   pipeline_msgs[wb_id].wb_cycle = $time / 10;
       // end
 
-      // $display(wb_msg);
+      $display(wb_msg);
     end
   end
 

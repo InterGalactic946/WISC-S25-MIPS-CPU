@@ -133,10 +133,10 @@ end
                 pipeline_msgs[memory_id].memory_msg = mem_msg;
                 pipeline_msgs[memory_id].memory_cycle = $time / 10;
             end
-            if (valid_wb) begin
+            // if (valid_wb) begin
                 pipeline_msgs[wb_id].wb_msg = wb_msg;
                 pipeline_msgs[wb_id].wb_cycle = $time / 10;
-            end
+            //end
         end
     end    
 

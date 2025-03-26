@@ -47,7 +47,7 @@ always @(posedge clk) begin
     decode_id <= fetch_id;   // Pass the fetch_id to decode_id
     execute_id <= decode_id; // Pass the decode_id to execute_id
     memory_id <= execute_id; // Pass the execute_id to memory_id
-    wb_id = memory_id;      // Pass the memory_id to wb_id
+    wb_id <= memory_id;      // Pass the memory_id to wb_id
 end
 
 
@@ -178,7 +178,7 @@ end
             // $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id+1].wb_msg, pipeline_msgs[wb_id].wb_cycle);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);
             $display("==========================================================\n");
         end
     end

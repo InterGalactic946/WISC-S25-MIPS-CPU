@@ -325,7 +325,7 @@ always @(negedge clk) begin
     valid_decode <= valid_fetch;
     valid_execute <= valid_decode; 
     valid_memory <= valid_execute;
-    valid_wb <= valid_memory;
+    valid_wb = valid_memory;
 end
 
 always @(posedge clk) begin

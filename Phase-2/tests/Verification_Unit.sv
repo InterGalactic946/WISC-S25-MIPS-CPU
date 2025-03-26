@@ -137,6 +137,7 @@ end
                 pipeline_msgs[wb_id].wb_msg = wb_msg;
                 pipeline_msgs[wb_id].wb_cycle = $time / 10;
                 $display(pipeline_msgs[wb_id].wb_msg);
+                $display(pipeline_msgs[wb_id].wb_cycle);
             end
         end
     end    

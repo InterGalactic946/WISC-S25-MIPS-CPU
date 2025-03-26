@@ -27,7 +27,7 @@ module Verification_Unit (
 
     integer fetch_id, decode_id, execute_id, memory_id, wb_id, msg_index, max_index;
     integer fetch_msg_id[0:71], decode_msg_id[0:71];
-    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_enable;
+    logic valid_fetch, valid_decode, print, valid_execute, valid_memory, valid_wb, print_enable;
     debug_info_t pipeline_msgs[0:71];
 
 // First Always Block: Tracks the pipeline and increments IDs
@@ -136,16 +136,24 @@ end
             if (valid_wb) begin
                 pipeline_msgs[wb_id].wb_msg = wb_msg;
                 pipeline_msgs[wb_id].wb_cycle = $time / 10;
-                $display(pipeline_msgs[wb_id].wb_msg);
-                $display(pipeline_msgs[wb_id].wb_cycle);
+                // $display(pipeline_msgs[wb_id].wb_msg);
+                // $display(pipeline_msgs[wb_id].wb_cycle);
             end
         end
     end    
 
+    always @(posedge clk)
+        if (rst)
+            print <= 1'b0;
+        else if (valid_wb)
+            print <= 1'b1;
+        else
+            print <= 1'b0;
+        
 
     // Print the message for each instruction.
     always @(negedge clk) begin
-        if (valid_wb) begin
+        if (print) begin
             for (int i = 0; i < 5; i = i + 1) begin
                 max_index = 0;
                 if (pipeline_msgs[wb_id].decode_msgs[i][1] !== "")

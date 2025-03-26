@@ -205,13 +205,6 @@ always @(posedge clk) begin
         execute_id <= decode_id;        // Pass the decode_id to execute_id
         memory_id  <= execute_id;       // Pass the execute_id to memory_id
         wb_id      <= memory_id;        // Pass the memory_id to wb_id
-    end else if (iDUT.PC_stall && !iDUT.IF_ID_stall) begin
-        // Fetch is stalled, decode fetches the next instruction
-        fetch_id <= fetch_id;           // Stall the instruction in fetch
-        decode_id <= fetch_id + 1;      // Fetch the next instruction for decode
-        execute_id <= decode_id;        // Pass the decode_id to execute_id
-        memory_id  <= execute_id;       // Pass the execute_id to memory_id
-        wb_id      <= memory_id;        // Pass the memory_id to wb_id
     end else if (!iDUT.PC_stall && !iDUT.IF_ID_stall) begin
         // No stalls, pipeline moves forward
         fetch_id <= fetch_id + 1;       // Fetch the next instruction

@@ -162,7 +162,7 @@ package Verification_tasks;
   task automatic verify_DECODE(
       input logic IF_ID_stall, expected_IF_ID_stall,
       input logic IF_flush, expected_IF_flush,
-      input logic br_hazard, b_hazard, load_use_hazard,
+      input logic br_hazard, b_hazard, load_use_hazard, hlt,
       input logic [62:0] EX_signals, expected_EX_signals,
       input logic [17:0] MEM_signals, expected_MEM_signals,
       input logic [7:0] WB_signals, expected_WB_signals,
@@ -195,6 +195,8 @@ package Verification_tasks;
             hazard_type = "Branch (BR) hazard";
           end else if (b_hazard) begin
             hazard_type = "Branch (B) hazard";
+          end else if (hlt) begin
+            hazard_type = "HLT instruction";
           end
 
           // Get the full instruction.
@@ -465,7 +467,9 @@ package Verification_tasks;
       input logic [15:0] expected_Input_B, 
       input logic [15:0] ALU_out,
       input logic Z_set, V_set, N_set,
-      input logic [15:0] expected_ALU_out,          
+      input logic [15:0] expected_ALU_out,
+      input logic ID_flush, expected_ID_flush,
+      input logic br_hazard, b_hazard, load_use_hazard,          
       input logic ZF,                 
       input  logic NF,               
       input  logic VF,               
@@ -476,6 +480,16 @@ package Verification_tasks;
   );
      // Initialize message.
      execute_msg = "";
+     string hazard_type = "";
+
+    // Determine the type of hazard and generate the appropriate message.
+    if (load_use_hazard) begin
+        hazard_type = "load-to-use hazard";
+    end else if (br_hazard) begin
+        hazard_type = "Branch (BR) hazard";
+    end else if (b_hazard) begin
+        hazard_type = "Branch (B) hazard";
+    end
       
       // Verify ALU result.
       if (ALU_out !== expected_ALU_out) begin
@@ -495,12 +509,24 @@ package Verification_tasks;
       end
 
       if (NF !== expected_NF) begin
-          execute_msg = $sformatf("[EXECUTE] ERROR: NF: 0x%h, expected_NF: 0x%h.", NF, expected_NF);
+        execute_msg = $sformatf("[EXECUTE] ERROR: NF: 0x%h, expected_NF: 0x%h.", NF, expected_NF);
         return;
       end
-      
-      // Display the execution result if no errors are found.
-      execute_msg = $sformatf("[EXECUTE] SUCCESS: Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
+
+      // Verify the flush state.
+      if (ID_flush !== expected_ID_flush) begin
+          execute_msg = $sformatf("[EXECUTE] ERROR: ID_flush: %b, expected_ID_flush: %b.", ID_flush, expected_ID_flush);
+          return;  // Exit task on error
+       end
+
+       // If there is a flush at the execute stage, print out the flush along with reason.
+       if (ID_flush) begin
+            execute_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
+        end else if (ID_flush) // If the instruction is flushed.
+            execute_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute (ID) due to %s. ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", hazard_type, ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
+        else 
+            // Display the execution result if no errors are found.
+            execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
   endtask
 
 

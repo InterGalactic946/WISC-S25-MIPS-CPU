@@ -385,24 +385,26 @@ always @(posedge clk) begin
 end
 
 
-// Second Always Block: Propagate the valid signals across stages
 always @(posedge clk) begin
     if (rst) begin
         valid_decode <= 0;
         valid_execute <= 0;
         valid_memory <= 0;
-        valid_fetch <= 1;
+        valid_fetch <= 1;   // Assuming fetch is always valid after reset
         valid_wb <= 0;
     end else if (!stall) begin
-        // Propagate the valid signal to future stages.
-        valid_fetch <= 1;
-        // Propogate the signals correctly.
-      valid_decode <= valid_fetch;
-      valid_execute <= valid_decode;
-      valid_memory <= valid_execute;
-      valid_wb <= valid_memory;
-    end else if (stall) begin
-        valid_fetch <= 0;
+        // Propagate the valid signal to future stages only when not stalled
+        valid_decode <= valid_fetch;
+        valid_execute <= valid_decode;
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
+    end else begin
+        // If stall is active, clear the signals and stop propagation
+        valid_fetch <= 0;  // This will prevent further instruction fetch
+        valid_decode <= 0; 
+        valid_execute <= 0;
+        valid_memory <= 0;
+        valid_wb <= 0;
     end
 end
 

@@ -121,7 +121,7 @@ always @(negedge clk) begin
         pipeline_msgs[memory_id].memory_msg = "";
         pipeline_msgs[memory_id].memory_cycle = 0;
     end else if (valid_memory)
-        pipeline_msgs[memory_id].memory_msg = memory_msg;
+        pipeline_msgs[memory_id].memory_msg = mem_msg;
         pipeline_msgs[memory_id].memory_cycle = $time / 10;
 end
 

@@ -322,12 +322,11 @@ always @(posedge clk) begin
     valid_wb <= 0;
   end else if (!stall)
     valid_fetch <= 0;
-  else begin
+    
     valid_decode <= valid_fetch;
     valid_execute <= valid_decode; 
     valid_memory <= valid_execute;
     valid_wb <= valid_memory;
-  end
 end
 
 always @(posedge clk) begin

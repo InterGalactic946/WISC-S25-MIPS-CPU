@@ -79,19 +79,19 @@ module cpu_tb();
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-   Verification_Unit iVERIFY (
-    .clk(clk),
-    .rst(rst),
-    .fetch_msg(fetch_msg),
-    .fetch_stall_msg(fetch_stall_msg),
-    .decode_msg(decode_msg), .decode_stall_msg(decode_stall_msg),
-    .instruction_full_msg(instruction_full_msg),
-    .execute_msg(execute_msg),
-    .mem_msg(mem_msg),
-    .wb_msg(wb_msg),
-    .stall(stall),
-    .flush(flush)
-  );
+  //  Verification_Unit iVERIFY (
+  //   .clk(clk),
+  //   .rst(rst),
+  //   .fetch_msg(fetch_msg),
+  //   .fetch_stall_msg(fetch_stall_msg),
+  //   .decode_msg(decode_msg), .decode_stall_msg(decode_stall_msg),
+  //   .instruction_full_msg(instruction_full_msg),
+  //   .execute_msg(execute_msg),
+  //   .mem_msg(mem_msg),
+  //   .wb_msg(wb_msg),
+  //   .stall(stall),
+  //   .flush(flush)
+  // );
 
   // Test procedure to apply stimulus and check responses.
   initial begin
@@ -279,13 +279,26 @@ always @(posedge clk) begin
         );
 
         // fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        fetch_msg = ftch_msg;
-        fetch_stall_msg = ftch_stall_msg;
+        fetch_msg <= ftch_msg;
+        fetch_stall_msg <= ftch_stall_msg;
         // $display(ftch_msg);
         //$display(fetch_stall_msg);
     end
 end
 
+
+always @(negedge clk) begin
+  if (fetch_msg !== "")
+    $display(fetch_msg);
+  if(decode_msg !== "")
+    $displa(decode_msg);
+  if(execute_msg !== "")
+    $display(execute_msg);
+  if(mem_msg !== "")
+    $display(mem_msg);
+  if(wb_msg !== "")
+    $display(wb_msg);
+end
 
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
@@ -334,9 +347,9 @@ always @(posedge clk) begin
         // decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
         // instruction_full_msg = {instr_full_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 1)};
 
-        decode_msg = dcode_msg;
-        decode_stall_msg = dcode_stall_msg;
-        instruction_full_msg = instr_full_msg;
+        decode_msg <= dcode_msg;
+        decode_stall_msg <= dcode_stall_msg;
+        instruction_full_msg <= instr_full_msg;
         
         // $display(decode_msg);
         // $display(instruction_full_msg);
@@ -377,7 +390,7 @@ end
 
       // execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 2)};
 
-      execute_msg = ex_msg;
+      execute_msg <= ex_msg;
       // $display(execute_msg);
     end
   end
@@ -402,7 +415,7 @@ end
 
       // mem_msg = {"|", mem_verify_msg , " @ Cycle: ", $sformatf("%0d", ($time/10) - 3)};
 
-      mem_msg = mem_verify_msg;
+      mem_msg <= mem_verify_msg;
       // $display(mem_msg);
     end
   end
@@ -423,7 +436,7 @@ end
 
       // wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10) - 4)};
 
-      wb_msg = wbb_msg;
+      wb_msg <= wbb_msg;
 
       // $display(wb_msg);
     end

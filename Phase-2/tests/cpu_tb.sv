@@ -83,7 +83,7 @@ module cpu_tb();
     .clk(clk),
     .rst(rst),
     .fetch_msg(fetch_msg),
-    .fetch_stall_msg(fetch_stage_msg),
+    .fetch_stall_msg(fetch_stall_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),
     .execute_msg(execute_msg),

@@ -187,10 +187,10 @@ end
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[decode_msg_id[wb_id]][1], $time / 10);
             $display("==========================================================");
-            for (int i = 0; i < fetch_msg_id[wb_id]; i = i+1) begin
+            for (int i = 0; i < fetch_msg_id[wb_id]; i = i+1)
                 $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg[i], pipeline_msgs[wb_id].fetch_cycle);
+            for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)
                 $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[i][0], pipeline_msgs[wb_id].decode_cycle);
-            end
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);

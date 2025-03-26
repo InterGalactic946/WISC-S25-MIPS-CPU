@@ -286,7 +286,7 @@ always @(posedge clk) begin
 
         fetch_msg = ftch_msg;
         // fetch_stall_msg <= ftch_stall_msg;
-        // $display(ftch_msg);
+        $display("%s, Cycle: %0t.", fetch_msg, $time / 10);
         //$display(fetch_stall_msg);
     end
 end

@@ -30,6 +30,8 @@ package Monitor_tasks;
 
     string decode_msg[0:1];
     integer decode_cycle;
+    string decode_stall_msgs[0:4];
+    integer decode_stall_cycles[0:4];
 
     string execute_msg;
     integer execute_cycle;

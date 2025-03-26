@@ -175,7 +175,7 @@ package Verification_tasks;
       input logic wen_BTB, expected_wen_BTB,
       input logic wen_BHT, expected_wen_BHT,
       input logic update_PC, expected_update_PC,
-      output string decode_msg,
+      output string decode_msg, stall_msg,
       output string instruction_full
   );
       begin
@@ -185,6 +185,7 @@ package Verification_tasks;
 
           // Initialize messages.
           decode_msg = "";
+          stall_msg = "";
           instr_state = "";
           instruction_full = "";
           hazard_type = "";
@@ -262,9 +263,9 @@ package Verification_tasks;
 
           // If there is a stall at the decode stage, print out the stall along with reason.
           if (IF_ID_stall) begin
-            decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
+            stall_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
           end else if (IF_flush) begin // If the instruction is flushed.
-            decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");
+            stall_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");
             instruction_full = $sformatf("FLUSHED");
           end else begin // Decode the instruction.
             // Get the decoded instruction.

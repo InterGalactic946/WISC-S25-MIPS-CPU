@@ -17,7 +17,7 @@ import Monitor_tasks::*;
 module Verification_Unit (
     input logic clk, rst,
     input string fetch_msg, fetch_stall_msg,
-    input string decode_msg,
+    input string decode_msg, decode_stall_msg
     input string instruction_full_msg,
     input string execute_msg,
     input string mem_msg,
@@ -114,6 +114,10 @@ end
                 pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
                 pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
                 pipeline_msgs[decode_id].decode_cycle = $time / 10;
+            end else if (stall) begin
+                pipeline_msgs[decode_id].decode_stall_msgs[msg_index] = decode_stall_msg;
+                pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
+                pipeline_msgs[decode_id].decode_stall_cycles = $time / 10;
             end
             if (valid_execute) begin
                 pipeline_msgs[execute_id].execute_msg = execute_msg;
@@ -190,8 +194,10 @@ end
                 if (pipeline_msgs[wb_id].fetch_stall_msgs[i] !== "")
                     $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_stall_msgs[i], pipeline_msgs[wb_id].fetch_stall_cycles[i]);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);            
-            // for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)
-                $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
+            for (int i = 0; i < 5; i = i+1)
+                if (pipeline_msgs[wb_id].decode_stall_msgs[i] !== "")
+                $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_stall_msgs[i], pipeline_msgs[wb_id].decode_stall_cycles[i]);
+            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);

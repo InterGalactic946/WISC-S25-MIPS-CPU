@@ -1,91 +1,124 @@
-module dynamic_pipeline();
-    typedef enum { EMPTY, FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK } stage_t;
-    
-    parameter int NUM_INSTR = 4;
-    parameter int MAX_CYCLES = 20;
-    
-    stage_t pipeline [NUM_INSTR];  // Tracks current stage of each instruction
-    string instr_messages [NUM_INSTR][5];  // Stores messages for each stage
-    int cycle_completed [NUM_INSTR];  // Stores cycle when instruction completes
+module dynamic_pipeline (
+    input logic clk,
+    input logic rst,
+    input logic PC_stall,        // Stall Fetch stage
+    input logic IF_ID_stall,     // Stall Decode stage
+    input logic IF_flush,
+    input string fetch_msg,
+    input string decode_msg,
+    input string instruction_full_msg,
+    input string execute_msg,
+    input string memory_msg,
+    input string wb_msg
+);
 
-    // Example Stage Tasks (Returning Messages)
-    function string fetch_message(int instr_num, int cycle);
-        return $sformatf("[FETCH] SUCCESS: PC_curr: 0x%0x, PC_next: 0x%0x, Instruction: 0x%0x @ Cycle: %0d",
-                         instr_num*4, instr_num*4+2, instr_num*16, cycle);
-    endfunction
-    
-    function string decode_message(int instr_num, int cycle);
-        return $sformatf("[DECODE] SUCCESS: Opcode = 0b0001, Instr: SUB, rs = 0x1, rt = 0x2, rd = 0x1. @ Cycle: %0d", cycle);
-    endfunction
-    
-    function string execute_message(int instr_num, int cycle);
-        return $sformatf("[EXECUTE] SUCCESS: Input_A = 0x0002, Input_B = 0x0001, ALU_out = 0x0001, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: %0d", cycle);
-    endfunction
+parameter NUM_PIPELINE = 5;
 
-    function string memory_message(int instr_num, int cycle);
-        return $sformatf("[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: %0d", cycle);
-    endfunction
+typedef enum {EMPTY, FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK} stage_t;
 
-    function string writeback_message(int instr_num, int cycle);
-        return $sformatf("[WRITE-BACK] SUCCESS: Register R1 written with data: 0x0001. @ Cycle: %0d", cycle);
-    endfunction
+typedef struct {
+    string fetch_msgs[0:4];
+    string decode_msgs[0:4];
+    string instr_full_msg;
+    string execute_msg;
+    string memory_msg;
+    string wb_msg;
+    stage_t stage;
+} instr_msg_t;
 
-    initial begin
-        // Initialize pipeline states
-        for (int i = 0; i < NUM_INSTR; i++) begin
-            pipeline[i] = EMPTY;
-            cycle_completed[i] = 0;
+instr_msg_t pipeline[NUM_PIPELINE];
+logic [31:0] cycle_count;
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        cycle_count <= 0;
+    end else begin
+        cycle_count <= cycle_count + 1;
+    end
+end
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        for (int i = 0; i < NUM_PIPELINE; i++) begin
+            pipeline[i].stage <= EMPTY;
         end
-
-        // Cycle-Based Execution
-        for (int cycle = 1; cycle <= MAX_CYCLES; cycle++) begin
-            #10; // Advance simulation time (10-time unit delay per cycle)
-
-            // Move instructions through the pipeline
-            for (int i = 0; i < NUM_INSTR; i++) begin
-                if (pipeline[i] == EMPTY && (i == 0 || pipeline[i-1] >= DECODE)) begin
-                    // First instruction enters Fetch, others follow if Decode is available
-                    pipeline[i] = FETCH;
-                end 
-                else if (pipeline[i] < WRITE_BACK) begin
-                    // Move only if the next stage is free
-                    if (i == 0 || pipeline[i-1] > pipeline[i]) begin
-                        pipeline[i] = stage_t'(pipeline[i] + 1);
-                    end
-                end
-
-                // Store messages only once per stage
-                case (pipeline[i])
-                    FETCH: if (instr_messages[i][0] == "") instr_messages[i][0] = fetch_message(i, cycle);
-                    DECODE: if (instr_messages[i][1] == "") instr_messages[i][1] = decode_message(i, cycle);
-                    EXECUTE: if (instr_messages[i][2] == "") instr_messages[i][2] = execute_message(i, cycle);
-                    MEMORY: if (instr_messages[i][3] == "") instr_messages[i][3] = memory_message(i, cycle);
-                    WRITE_BACK: begin
-                        if (instr_messages[i][4] == "") begin
-                            instr_messages[i][4] = writeback_message(i, cycle);
-                            cycle_completed[i] = cycle;  // Mark cycle when WB completes
-                        end
-                    end
-                endcase
+    end else begin
+        for (int i = NUM_PIPELINE-1; i >= 0; i--) begin
+            if (pipeline[i].stage == EMPTY && i == 0 && valid_fetch) begin
+                pipeline[i].stage <= FETCH;
             end
-
-            // Print instruction log when it completes Write-back
-            for (int i = 0; i < NUM_INSTR; i++) begin
-                if (pipeline[i] == WRITE_BACK) begin
-                    $display("# ========================================================");
-                    $display("# | Instruction: SUB R1, R1, R2 | Completed At Cycle: %0d |", cycle_completed[i]);
-                    $display("# ========================================================");
-                    for (int j = 0; j < 5; j++) begin
-                        if (instr_messages[i][j] != "") begin
-                            $display("# %s", instr_messages[i][j]);
-                        end
-                    end
-                    $display("# ========================================================");
-                    
-                    // Remove completed instruction
-                    pipeline[i] = EMPTY;
-                end
+            else if (pipeline[i].stage == FETCH && !PC_stall) begin
+                pipeline[i].stage <= DECODE;
+            end
+            else if (pipeline[i].stage == DECODE && !IF_ID_stall) begin
+                pipeline[i].stage <= EXECUTE;
+            end
+            else if (pipeline[i].stage == EXECUTE) begin
+                pipeline[i].stage <= MEMORY;
+            end
+            else if (pipeline[i].stage == MEMORY) begin
+                pipeline[i].stage <= WRITE_BACK;
             end
         end
     end
+end
+
+assign valid_fetch = (pipeline[0].stage == EMPTY) && !PC_stall && !IF_ID_stall;
+
+always @(negedge clk or posedge rst) begin
+    if (rst) begin
+        for (int i = 0; i < NUM_PIPELINE; i++) begin
+            pipeline[i].fetch_msgs = '{default: ""};
+            pipeline[i].decode_msgs = '{default: ""};
+            pipeline[i].instr_full_msg = "";
+            pipeline[i].execute_msg = "";
+            pipeline[i].memory_msg = "";
+            pipeline[i].wb_msg = "";
+        end
+    end else begin
+        for (int i = 0; i < NUM_PIPELINE; i++) begin
+            case (pipeline[i].stage)
+                FETCH: begin
+                    pipeline[i].fetch_msgs[$countones(pipeline[i].fetch_msgs)] = {fetch_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                end
+                DECODE: begin
+                    pipeline[i].decode_msgs[$countones(pipeline[i].decode_msgs)] = {decode_msg, " @ Cycle: ", $sformatf("%0d", cycle_count)};
+                    pipeline[i].instr_full_msg = (IF_ID_stall) ? ((IF_flush) ? "FLUSHED" : "") : instruction_full_msg;
+                end
+                EXECUTE: pipeline[i].execute_msg = execute_msg;
+                MEMORY: pipeline[i].memory_msg = memory_msg;
+                WRITE_BACK: pipeline[i].wb_msg = wb_msg;
+            endcase
+        end
+    end
+end
+
+always @(posedge clk) begin
+    for (int i = 0; i < NUM_PIPELINE; i++) begin
+        if (pipeline[i].stage === WRITE_BACK) begin
+            $display("==========================================================");
+            if (pipeline[i].instr_full_msg !== "")
+                $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline[i].instr_full_msg, cycle_count);
+            $display("==========================================================");
+            
+            for (int j = 0; j < 5; j++) begin
+                if (pipeline[i].fetch_msgs[j] !== "")
+                    $display("|%s", pipeline[i].fetch_msgs[j]);
+            end
+            
+            for (int j = 0; j < 5; j++) begin
+                if (pipeline[i].decode_msgs[j] !== "")
+                    $display("|%s", pipeline[i].decode_msgs[j]);
+            end
+
+            $display("|%s", pipeline[i].execute_msg);
+            $display("|%s", pipeline[i].memory_msg);
+            $display("|%s", pipeline[i].wb_msg);
+            $display("==========================================================");
+            
+            pipeline[i].stage <= EMPTY;
+        end
+    end
+end
+
 endmodule

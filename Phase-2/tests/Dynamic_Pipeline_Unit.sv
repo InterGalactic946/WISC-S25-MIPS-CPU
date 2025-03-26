@@ -42,24 +42,24 @@ end
 always @(posedge clk or posedge rst) begin
     if (rst) begin
         for (int i = 0; i < NUM_PIPELINE; i++) begin
-            pipeline[i].stage <= EMPTY;
+            pipeline[i].stage = EMPTY;
         end
     end else begin
         for (int i = 0; i < NUM_PIPELINE; i++) begin
             if (pipeline[i].stage == EMPTY && i == 0 && valid_fetch) begin
-                pipeline[i].stage <= FETCH;
+                pipeline[i].stage = FETCH;
             end
             else if (pipeline[i].stage == FETCH && !PC_stall) begin
-                pipeline[i].stage <= DECODE;
+                pipeline[i].stage = DECODE;
             end
             else if (pipeline[i].stage == DECODE && !IF_ID_stall) begin
-                pipeline[i].stage <= EXECUTE;
+                pipeline[i].stage = EXECUTE;
             end
             else if (pipeline[i].stage == EXECUTE) begin
-                pipeline[i].stage <= MEMORY;
+                pipeline[i].stage = MEMORY;
             end
             else if (pipeline[i].stage == MEMORY) begin
-                pipeline[i].stage <= WRITE_BACK;
+                pipeline[i].stage = WRITE_BACK;
             end
         end
     end

@@ -99,15 +99,36 @@ end
     // Adds the messages, with stall and flush checks.
     always @(negedge clk) begin
         if (!rst) begin
-            if (valid_fetch) begin
-                pipeline_msgs[fetch_id].fetch_msg[fetch_msg_id[fetch_id]] = fetch_msg;
-                pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
-            end
-            if (valid_decode) begin
-                pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]][0] = decode_msg;
-                pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]][1] = instruction_full_msg;
-                pipeline_msgs[decode_id].decode_cycle = $time / 10;
-            end
+                    // Store fetch message if valid_fetch is active, even when there's a stall
+        if (valid_fetch) begin
+            pipeline_msgs[fetch_id].fetch_msg[fetch_msg_id[fetch_id]] <= fetch_msg;
+            pipeline_msgs[fetch_id].fetch_cycle <= $time / 10;
+        end else if (stall) begin
+            // Hold the fetch message in the event of a stall
+            pipeline_msgs[fetch_id].fetch_msg[fetch_msg_id[fetch_id]] <= pipeline_msgs[fetch_id].fetch_msg[fetch_msg_id[fetch_id]];
+            pipeline_msgs[fetch_id].fetch_cycle <= pipeline_msgs[fetch_id].fetch_cycle;
+        end
+
+        // Store decode message if valid_decode is active, even when there's a stall
+        if (valid_decode) begin
+            pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]][0] <= decode_msg;
+            pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]][1] <= instruction_full_msg;
+            pipeline_msgs[decode_id].decode_cycle <= $time / 10;
+        end else if (stall) begin
+            // Hold the decode message in the event of a stall
+            pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]] <= pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]];
+            pipeline_msgs[decode_id].decode_cycle <= pipeline_msgs[decode_id].decode_cycle;
+        end
+
+            // if (valid_fetch) begin
+            //     pipeline_msgs[fetch_id].fetch_msg[fetch_msg_id[fetch_id]] = fetch_msg;
+            //     pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
+            // end
+            // if (valid_decode) begin
+            //     pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]][0] = decode_msg;
+            //     pipeline_msgs[decode_id].decode_msg[decode_msg_id[decode_id]][1] = instruction_full_msg;
+            //     pipeline_msgs[decode_id].decode_cycle = $time / 10;
+            // end
             if (valid_execute) begin
                 pipeline_msgs[execute_id].execute_msg = execute_msg;
                 pipeline_msgs[execute_id].execute_cycle = $time / 10;

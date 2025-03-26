@@ -108,7 +108,7 @@ end
                 pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
             end else if (stall) begin
                 pipeline_msgs[fetch_id].fetch_stall_msgs[msg_index] = fetch_stall_msg;
-                pipeline_msgs[fetch_id].fetch_stall_cycle[msg_index] = $time / 10;
+                pipeline_msgs[fetch_id].fetch_stall_cycles[msg_index] = $time / 10;
             end
             if (valid_decode) begin
                 pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
@@ -188,7 +188,7 @@ end
             $display("==========================================================");
             for (int i = 0; i < 5; i = i+1)
                 if (pipeline_msgs[wb_id].fetch_stall_msg[i] !== "")
-                    $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_stall_msg[i], pipeline_msgs[wb_id].fetch_stall_cycle[i]);
+                    $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_stall_msgs[i], pipeline_msgs[wb_id].fetch_stall_cycles[i]);
             $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);            
             // for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)
                 $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);

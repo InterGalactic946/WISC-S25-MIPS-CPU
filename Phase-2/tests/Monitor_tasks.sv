@@ -26,7 +26,7 @@ package Monitor_tasks;
     string fetch_msg;
     string fetch_stall_msgs[0:4];
     integer fetch_cycle;
-    integer fetch_stall_cycle[0:4];
+    integer fetch_stall_cycles[0:4];
 
     string decode_msg[0:1];
     integer decode_cycle;

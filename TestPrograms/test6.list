@@ -1,5 +1,3 @@
 LLB R1, 0X02      // Load value into R1 from memory address 0x02
-LLB R2, 0X01      // Load value into R2 from memory address 0x01
-LLB R6, 0x04      // Load value into R6 from memory address 0x04
 
 HLT                // Halt the program

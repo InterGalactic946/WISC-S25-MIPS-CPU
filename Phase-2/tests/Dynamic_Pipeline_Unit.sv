@@ -139,8 +139,8 @@ module Dynamic_Pipeline_Unit (
                     pipeline[i-1] <= pipeline[i];  // Shift each instruction forward
                 end
 
-                // // Clear the last slot after shifting
-                // pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+                // Clear the last slot after shifting
+                pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
 
                 // Insert a new instruction in FETCH stage
                 pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};

@@ -1,3 +1,35 @@
-LLB R1, 0X02      // Load value into R1 from memory address 0x02
+	// Load-use hazard: R1 used immediately after loading
+	LLB R1, 0x02      
+	LHB R1, 0x00      
+	LLB R2, 0x01      
+	LHB R2, 0x00      
 
-HLT                // Halt the program
+	LLB R6, 0x04      
+	LHB R6, 0x00      
+
+	// Load-use hazard: R3 depends on R1
+	LW R3, R1, 0       // Load from memory (R3 depends on memory read)
+	ADD R4, R3, R2     // RAW hazard: R4 depends on R3 (stall needed)
+
+	// Store-load dependency: SW followed by LW to same address
+	SW R3, R6, 4       // Store R3 into memory at R6 + 4
+	LW R5, R6, 4       // Load from same address into R5 (hazard if not handled correctly)
+
+	// RAW Hazard: R7 depends on R5
+	ADD R7, R5, R2     // Uses R5 immediately after LW
+
+	// WAW Hazard: R1 written twice before being used
+	ADD R1, R1, R2     // R1 modified
+	SUB R1, R1, R2     // Overwrites R1
+
+	// Branch hazards
+	PCS R5             // Save PC to R5
+	B 001, b1          // Conditional branch (may flush pipeline)
+	BR 111, R6         // Indirect branch (Control Hazard)
+
+	HLT                // Halt
+
+b1:	// Code executed after branch
+	ADD R4, R6, R2    // RAW Hazard with prior values
+	SUB R4, R6, R2    // Another RAW Hazard
+	HLT

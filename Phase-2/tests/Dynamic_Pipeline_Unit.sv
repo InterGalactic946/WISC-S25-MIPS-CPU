@@ -129,13 +129,13 @@ module Dynamic_Pipeline_Unit (
 
             for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
                 if (pipeline[i].print)
-                    pipeline[i].print = 0;
+                    pipeline[i].print <= 0;
             end
 
            // Shift pipeline stages only if instruction 0 has reached WRITEBACK
-            if (pipeline[4].stage === WRITEBACK) begin
+            if (pipeline[num_instr_in_pipeline].stage === WRITEBACK) begin
                 // Shift pipeline stages and move instructions up
-                for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
+                for (int i = num_instr_in_pipeline-1; i > 0; i=i-1) begin
                     pipeline[i] <= pipeline[i-1];  // Shift instructions
                 end
 

@@ -256,8 +256,12 @@ package Verification_tasks;
               return;  // Exit task on error
           end
 
+          // Verify the flush state.
+          if (IF_flush !== expected_IF_flush) begin
+              flush_msg = $sformatf("[DECODE] ERROR: IF_flush: %b, expected_IF_flush: %b.", IF_flush, expected_IF_flush);
+              return;  // Exit task on error
+          end
           
-
         // Get the decoded instruction.
         display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
 
@@ -477,7 +481,7 @@ package Verification_tasks;
       input  logic expected_ZF,                
       input  logic expected_VF,               
       input  logic expected_NF,
-      output string execute_msg, ex_flush_msg, flush_msg 
+      output string execute_msg, ex_flush_msg 
   );
      string hazard_type;
     
@@ -517,11 +521,6 @@ package Verification_tasks;
         return;
       end
 
-      // Verify the flush state.
-      if (IF_flush !== expected_IF_flush) begin
-        flush_msg = $sformatf("[DECODE] ERROR: IF_flush: %b, expected_IF_flush: %b.", IF_flush, expected_IF_flush);
-        return;  // Exit task on error
-      end
 
       // Verify the flush state.
       if (ID_flush !== expected_ID_flush) begin
@@ -532,9 +531,6 @@ package Verification_tasks;
        // If there is a flush at the execute stage, print out the flush along with reason.
        if (ID_flush) // If the instruction is flushed.
             ex_flush_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute (ID) due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
-
-       if (IF_flush) // If the instruction is flushed.
-            flush_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode due to mispredicted branch.");
 
         // Display the execution result if no errors are found.
         execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);

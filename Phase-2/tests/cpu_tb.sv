@@ -543,8 +543,6 @@ end
         .expected_Input_A(iMODEL.iEXECUTE.iALU_model.Input_A),
         .expected_Input_B(iMODEL.iEXECUTE.iALU_model.Input_B),
         .ALU_out(iDUT.ALU_out),
-        .IF_flush(iDUT.IF_flush),
-        .expected_IF_flush(iMODEL.IF_flush),
         .ID_flush(iDUT.ID_flush),
         .expected_ID_flush(iMODEL.ID_flush),
         .br_hazard(iMODEL.iHDU.BR_hazard),
@@ -561,7 +559,7 @@ end
         .expected_VF(iMODEL.VF),
         .expected_NF(iMODEL.NF),
         
-        .execute_msg(ex_msg), .ex_flush_msg(ex_flush_msg), .flush_msg(dcode_flush_msg)
+        .execute_msg(ex_msg), .ex_flush_msg(ex_flush_msg)
       );
 
       // if (valid_execute)
@@ -575,13 +573,12 @@ end
       // end
       execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       exec_flush_msg = {"|", ex_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-      decode_flush_msg = {"|", dcode_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       
       if (ex_flush_msg !== "")
         $display(exec_flush_msg);
       
-      if (dcode_flush_msg !== "")
-         $display(decode_flush_msg);
+      // if (dcode_flush_msg !== "")
+      //    $display(decode_flush_msg);
 end
     end
   //end

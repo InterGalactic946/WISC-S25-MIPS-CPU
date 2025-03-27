@@ -131,7 +131,7 @@ module Dynamic_Pipeline_Unit (
                 $display("==========================================================\n");
 
                 // Reset print flag after displaying
-                pipeline[i].print <= 0;
+                pipeline[i].print = 0;
             end
         end
     end

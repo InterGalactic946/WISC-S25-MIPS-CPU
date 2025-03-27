@@ -144,7 +144,7 @@ module cpu_tb();
     int num_instr_in_pipeline;  // Number of instructions in the pipeline
 
     // Simulate pipeline execution
-    always_ff @(posedge clk, posedge rst) begin
+    always_ff @(posedge clk) begin
         if (rst)
             num_instr_in_pipeline <= 1;
         else if (num_instr_in_pipeline < MAX_INSTR && !stall)
@@ -185,7 +185,6 @@ module cpu_tb();
                         pipeline[i].wb_msg = "";
                     end
                     DECODE: begin
-                        pipeline[i].decode_msgs[msg_index] = decode_msg;
                         verify_decode(.decode_msg(pipeline[i].decode_msgs[msg_index]), .stall_msg(decode_msg), .instr_full_msg(pipeline[i].instr_full_msg));
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].execute_msg = "";
@@ -241,7 +240,7 @@ module cpu_tb();
                             pipeline[i].stage <= DECODE;
                     end
                     EXECUTE:   pipeline[i].stage <= MEMORY;
-                    MEMORY:    pipeline[i].stage = WRITEBACK;
+                    MEMORY:    pipeline[i].stage <= WRITEBACK;
                     WRITEBACK: begin
                         pipeline[i].print <= 1;
                         pipeline[i].stage <= EMPTY;

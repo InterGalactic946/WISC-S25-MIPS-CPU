@@ -141,7 +141,7 @@ module cpu_tb();
 
     // Pipeline: 1D array to track each instruction's stage
     instr_t pipeline[MAX_INSTR];
-    int num_instr_in_pipeline, msg_index;  // Number of instructions in the pipeline
+    int num_instr_in_pipeline;  // Number of instructions in the pipeline
 
     // Simulate pipeline execution
     always_ff @(posedge clk, posedge rst) begin
@@ -389,7 +389,7 @@ end
           .instruction_full(instr_full_msg), .instr_flush_msg(inst_flush_msg)
       );
       
-      stage_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       stall_msg = {"|", dcode_stall_msg_local, " @ Cycle: ", $sformatf("%0d", ($time/10))};
   end
   endtask

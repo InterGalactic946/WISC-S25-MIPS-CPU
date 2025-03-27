@@ -101,24 +101,19 @@ end
         if (!rst) begin
             if (valid_fetch) begin
                 pipeline_msgs[fetch_id].fetch_msg = fetch_msg;
-                pipeline_msgs[fetch_id].fetch_cycle = $time / 10;
             end
             if (valid_decode) begin
                 pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
                 pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
-                pipeline_msgs[decode_id].decode_cycle = $time / 10;
             end
             if (valid_execute) begin
                 pipeline_msgs[execute_id].execute_msg = execute_msg;
-                pipeline_msgs[execute_id].execute_cycle = $time / 10;
             end
             if (valid_memory) begin
                 pipeline_msgs[memory_id].memory_msg = mem_msg;
-                pipeline_msgs[memory_id].memory_cycle = $time / 10;
             end
             if (valid_wb) begin
                 pipeline_msgs[wb_id].wb_msg = wb_msg;
-                pipeline_msgs[wb_id].wb_cycle = $time / 10;
             end
         end
     end
@@ -180,12 +175,12 @@ end
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
             // for (int i = 0; i < fetch_msg_id[wb_id]; i = i+1)
-                $display("%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msg, pipeline_msgs[wb_id].fetch_cycle);
+                $display("%s", pipeline_msgs[wb_id].fetch_msg);
             // for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)
-                $display("%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
-            $display("%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
-            $display("%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
-            $display("%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);
+                $display("%s", pipeline_msgs[wb_id].decode_msg[0]);
+            $display("%s", pipeline_msgs[wb_id].execute_msg);
+            $display("%s", pipeline_msgs[wb_id].memory_msg);
+            $display("%s", pipeline_msgs[wb_id].wb_msg);
             $display("==========================================================\n");
         end
     end

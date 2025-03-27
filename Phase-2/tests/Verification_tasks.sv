@@ -162,7 +162,7 @@ package Verification_tasks;
   task automatic verify_DECODE(
       input logic IF_ID_stall, expected_IF_ID_stall,
       input logic IF_flush, expected_IF_flush,
-      input logic br_hazard, b_hazard, load_use_hazard,
+      input logic br_hazard, b_hazard, load_use_hazard, hlt
       input logic [62:0] EX_signals, expected_EX_signals,
       input logic [17:0] MEM_signals, expected_MEM_signals,
       input logic [7:0] WB_signals, expected_WB_signals,
@@ -258,7 +258,7 @@ package Verification_tasks;
           end
 
           // If there is a stall at the decode stage, print out the stall along with reason.
-          if (IF_ID_stall) begin
+          if (IF_ID_stall && !hlt) begin
             decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
           end else if (IF_flush) begin // If the instruction is flushed.
             decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");

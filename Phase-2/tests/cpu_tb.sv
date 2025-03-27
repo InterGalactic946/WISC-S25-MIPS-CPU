@@ -487,7 +487,7 @@ always @(posedge clk) begin
             .update_PC(iDUT.update_PC),
             .expected_update_PC(iMODEL.update_PC),
             
-            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg)
+            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg),
             .instruction_full(instr_full_msg), .instr_flush_msg(inst_flush_msg)
         );
 

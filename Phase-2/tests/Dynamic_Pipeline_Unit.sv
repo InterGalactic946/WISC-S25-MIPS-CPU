@@ -114,9 +114,9 @@ module Dynamic_Pipeline_Unit (
                     end
                     DECODE: begin
                         if (!stall)
-                            pipeline[i].stage <= DECODE;
-                        else
                             pipeline[i].stage <= EXECUTE;
+                        else
+                            pipeline[i].stage <= DECODE;
                     end
                     EXECUTE:   pipeline[i].stage <= MEMORY;
                     MEMORY:    pipeline[i].stage <= WRITEBACK;

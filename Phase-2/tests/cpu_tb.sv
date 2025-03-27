@@ -511,7 +511,7 @@ always @(posedge clk) begin
         instr_flush_msg = {"|", inst_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
         if (dcode_stall_msg !== "")
-          $display(decode_stage_msg);
+          $display(decode_stall_msg);
         
         if (inst_flush_msg !== "")
           $display(instr_flush_msg);

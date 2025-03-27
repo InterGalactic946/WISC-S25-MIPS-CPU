@@ -473,7 +473,6 @@ package Verification_tasks;
       input logic Z_set, V_set, N_set,
       input logic [15:0] expected_ALU_out,
       input logic ID_flush, expected_ID_flush,
-      input logic IF_flush, expected_IF_flush,
       input logic br_hazard, b_hazard, load_use_hazard,          
       input logic ZF,                 
       input  logic NF,               
@@ -520,7 +519,6 @@ package Verification_tasks;
         execute_msg = $sformatf("[EXECUTE] ERROR: NF: 0x%h, expected_NF: 0x%h.", NF, expected_NF);
         return;
       end
-
 
       // Verify the flush state.
       if (ID_flush !== expected_ID_flush) begin

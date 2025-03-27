@@ -51,20 +51,6 @@ module Dynamic_Pipeline_Unit (
                     pipeline[i] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
         end else begin
-            // Handle stall during DECODE stage
-            for (int i = 0; i < num_instr_in_pipeline; i++) begin
-                case (pipeline[i].stage)
-                    FETCH:    pipeline[i].fetch_msgs[msg_index] = fetch_msg;
-                    DECODE:   begin
-                        pipeline[i].decode_msgs[msg_index] = decode_msg;
-                        pipeline[i].instr_full_msg = instruction_full_msg;
-                    end
-                    EXECUTE:  pipeline[i].execute_msg = execute_msg;
-                    MEMORY:   pipeline[i].memory_msg = memory_msg;
-                    WRITEBACK: pipeline[i].wb_msg = wb_msg;
-                endcase
-            end
-
             // Shift pipeline stages only if instruction 0 has reached WRITEBACK
             if (pipeline[0].stage === WRITEBACK) begin
                 // Shift pipeline stages and move instructions up
@@ -74,6 +60,47 @@ module Dynamic_Pipeline_Unit (
 
                 // Handle stage transition for the first instruction to FETCH
                 pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+            end
+
+            // Handle stall during DECODE stage
+            for (int i = 0; i < num_instr_in_pipeline; i++) begin
+                case (pipeline[i].stage)
+                    FETCH: begin
+                        pipeline[i].fetch_msgs[msg_index] = fetch_msg;
+                        pipeline[i].decode_msgs[msg_index] = "";  // Clear other stage messages
+                        pipeline[i].execute_msg = "";
+                        pipeline[i].memory_msg = "";
+                        pipeline[i].wb_msg = "";
+                    end
+                    DECODE: begin
+                        pipeline[i].decode_msgs[msg_index] = decode_msg;
+                        pipeline[i].fetch_msgs[msg_index] = pipeline[i].fetch_msgs[msg_index];   // Clear other stage messages
+                        pipeline[i].execute_msg = "";
+                        pipeline[i].memory_msg = "";
+                        pipeline[i].wb_msg = "";
+                    end
+                    EXECUTE: begin
+                        pipeline[i].execute_msg = execute_msg;
+                        pipeline[i].fetch_msgs[msg_index] = pipeline[i].fetch_msgs[msg_index]; 
+                        pipeline[i].decode_msgs[msg_index] = pipeline[i].decode_msgs[msg_index];
+                        pipeline[i].memory_msg = "";
+                        pipeline[i].wb_msg = "";
+                    end
+                    MEMORY: begin
+                        pipeline[i].memory_msg = memory_msg;
+                        pipeline[i].fetch_msgs[msg_index] = pipeline[i].fetch_msgs[msg_index]; 
+                        pipeline[i].decode_msgs[msg_index] = pipeline[i].decode_msgs[msg_index];
+                        pipeline[i].execute_msg = pipeline[i].execute_msg;
+                        pipeline[i].wb_msg = "";
+                    end
+                    WRITEBACK: begin
+                        pipeline[i].wb_msg = wb_msg;
+                        pipeline[i].fetch_msgs[msg_index] = pipeline[i].fetch_msgs[msg_index]; 
+                        pipeline[i].decode_msgs[msg_index] = pipeline[i].decode_msgs[msg_index];
+                        pipeline[i].execute_msg = pipeline[i].execute_msg;
+                        pipeline[i].memory_msg = pipeline[i].memory_msg;
+                    end
+                endcase
             end
 
             // Update stages for each instruction.

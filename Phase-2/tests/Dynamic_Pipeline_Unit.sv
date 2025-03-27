@@ -51,6 +51,9 @@ module Dynamic_Pipeline_Unit (
                     pipeline[i] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
         end else begin
+            // Insert new instruction at the first empty spot (this is where num_instr_in_pipeline is the index of the empty spot)
+            pipeline[num_instr_in_pipeline - 1] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};  // New instruction in FETCH stage
+
                // Handle stall during DECODE stage
             for (int i = 0; i < num_instr_in_pipeline; i++) begin
                 case (pipeline[i].stage)
@@ -131,9 +134,6 @@ module Dynamic_Pipeline_Unit (
                 if (pipeline[i].print)
                     pipeline[i].print <= 0;
             end
-
-            // Insert new instruction at the first empty spot (this is where num_instr_in_pipeline is the index of the empty spot)
-            pipeline[num_instr_in_pipeline] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};  // New instruction in FETCH stage
         end
     end
 

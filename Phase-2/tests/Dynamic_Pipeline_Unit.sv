@@ -42,7 +42,7 @@ module Dynamic_Pipeline_Unit (
         
 
     // Simulate pipeline execution
-    always_ff @(posedge clk) begin
+    always_ff @(negedge clk) begin
         if (rst) begin
             for (int i = 0; i < MAX_INSTR; i++) begin
                 if (i === 0)
@@ -50,20 +50,7 @@ module Dynamic_Pipeline_Unit (
                 else
                     pipeline[i] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
-        end else begin
-            // Shift pipeline if first instruction reached WRITEBACK
-            if (pipeline[0].stage === WRITEBACK) begin
-                for (int i = 0; i < MAX_INSTR-1; i++) begin
-                    pipeline[i] <= pipeline[i+1];  // Shift forward
-                end
-
-                pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};  // Clear last slot
-
-                // Add new instruction in FETCH only if there is space
-                if (num_instr_in_pipeline < MAX_INSTR)
-                    pipeline[num_instr_in_pipeline] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
-            end
-            
+        end else begin            
             // Handle stall during DECODE stage
             for (int i = 0; i < num_instr_in_pipeline; i++) begin
                 case (pipeline[i].stage)
@@ -135,9 +122,22 @@ module Dynamic_Pipeline_Unit (
                     MEMORY:    pipeline[i].stage <= WRITEBACK;
                     WRITEBACK: begin
                         pipeline[i].print <= 1;
-                        pipeline[i].stage <= EMPTY;
+                        pipeline[i].stage <= FETCH;
                     end
                 endcase
+            end
+
+            // Shift pipeline if first instruction reached WRITEBACK
+            if (pipeline[0].stage === WRITEBACK) begin
+                for (int i = 0; i < MAX_INSTR-1; i++) begin
+                    pipeline[i] <= pipeline[i+1];  // Shift forward
+                end
+
+                pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};  // Clear last slot
+
+                // Add new instruction in FETCH only if there is space
+                if (num_instr_in_pipeline < MAX_INSTR)
+                    pipeline[num_instr_in_pipeline] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
 
             for (int i = MAX_INSTR-1; i > 0; i=i-1) begin

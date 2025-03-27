@@ -112,7 +112,7 @@ package Verification_tasks;
 
   // Task: Verifies IF/ID Pipeline Register.
   task automatic verify_IF_ID(
-      input logic IF_flush, expected_IF_flush
+      input logic IF_flush, expected_IF_flush,
       output string if_id_msg
   );
     begin

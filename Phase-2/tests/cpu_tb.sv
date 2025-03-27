@@ -344,7 +344,7 @@ always @(posedge clk) begin
     B_hazard <= 1'b0;
     BR_hazard <= 1'b0;
   end else begin
-    load_to_use_hazard <= iDUT.iHDU.load_use_hazard;
+    load_to_use_hazard <= iDUT.iHDU.load_to_use_hazard;
     B_hazard <= iDUT.iHDU.B_hazard;
     BR_hazard <= iDUT.iHDU.BR_hazard;
   end

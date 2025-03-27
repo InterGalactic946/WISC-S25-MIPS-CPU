@@ -258,7 +258,7 @@ package Verification_tasks;
 
           // Verify the flush state.
           if (IF_flush !== expected_IF_flush) begin
-              flush_msg = $sformatf("[DECODE] ERROR: IF_flush: %b, expected_IF_flush: %b.", IF_flush, expected_IF_flush);
+              decode_msg = $sformatf("[DECODE] ERROR: IF_flush: %b, expected_IF_flush: %b.", IF_flush, expected_IF_flush);
               return;  // Exit task on error
           end
           

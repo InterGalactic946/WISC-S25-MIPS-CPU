@@ -561,7 +561,7 @@ end
         .expected_VF(iMODEL.VF),
         .expected_NF(iMODEL.NF),
         
-        .execute_msg(ex_msg), .ex_flush_msg(ex_flush_msg), flush_msg(dcode_flush_msg)
+        .execute_msg(ex_msg), .ex_flush_msg(ex_flush_msg), .flush_msg(dcode_flush_msg)
       );
 
       // if (valid_execute)

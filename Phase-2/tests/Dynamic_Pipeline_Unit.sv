@@ -44,10 +44,10 @@ module Dynamic_Pipeline_Unit (
     always_ff @(negedge clk) begin
         if (rst) begin
             for (int i = 0; i < MAX_INSTR; i++) begin
-                if (i === 0)
-                    pipeline[i] <= '{FETCH, '{""}, '{""}, "", "", "", "", 0};
+                if (i == 0)
+                    pipeline[i] <= '{FETCH, default: {""}, default: {""}, "", "", "", "", 0};
                 else
-                    pipeline[i] <= '{EMPTY, '{""}, '{""}, "", "", "", "", 0};
+                    pipeline[i] <= '{EMPTY, default: {""}, default: {""}, "", "", "", "", 0};
             end
         end else begin
             // Handle stall during DECODE stage
@@ -121,7 +121,4 @@ module Dynamic_Pipeline_Unit (
             end
         end
     end
-
-    // Output the current pipeline state for observation
-    assign pipeline_out = pipeline;
 endmodule

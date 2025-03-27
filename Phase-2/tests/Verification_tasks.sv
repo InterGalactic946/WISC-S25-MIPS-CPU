@@ -162,7 +162,7 @@ package Verification_tasks;
   task automatic verify_DECODE(
       input logic IF_ID_stall, expected_IF_ID_stall,
       input logic IF_flush, expected_IF_flush,
-      input logic br_hazard, b_hazard, load_use_hazard, hlt
+      input logic br_hazard, b_hazard, load_use_hazard, hlt,
       input logic [62:0] EX_signals, expected_EX_signals,
       input logic [17:0] MEM_signals, expected_MEM_signals,
       input logic [7:0] WB_signals, expected_WB_signals,

@@ -337,7 +337,7 @@ always @(posedge clk)
 always @(posedge clk) begin
   if (rst) begin
     ID_flush <= 1'b0;
-    expected_ID_flush <= 1'b0
+    expected_ID_flush <= 1'b0;
   end else begin
     IF_flush <= iDUT.ID_flush;
     expected_ID_flush <= iMODEL.ID_flush;

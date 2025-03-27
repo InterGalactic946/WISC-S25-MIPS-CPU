@@ -21,7 +21,7 @@ def process_log_line(line, pattern, stage):
         instr_id, msg, cycle = match.groups()
         instr_id = int(instr_id)
         cycle = int(cycle)
-        return f"|[{stage}] {msg} @ Cycle: {cycle} |"
+        return {msg}
 
 # Store instructions and their write-back cycle numbers for later use in formatting the header
 instruction_cycles = {}

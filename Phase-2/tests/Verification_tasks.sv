@@ -49,11 +49,12 @@ package Verification_tasks;
       input logic [1:0]  prediction, expected_prediction,
       input logic [15:0] predicted_target, expected_predicted_target,
       input string stage,
-      output string stage_msg 
+      output string stage_msg, stall_msg 
   );
     begin
         // Initialize message.
         stage_msg = "";
+        stall_msg = "";
 
           // Verify the PC next.
           if (PC_next !== expected_PC_next) begin
@@ -90,13 +91,8 @@ package Verification_tasks;
               stage_msg = $sformatf("[%s] ERROR: PC_stall: %b, expected_PC_stall: %b.", stage, PC_stall, expected_PC_stall);
               return;  // Exit task on error
           end
-          
-          // If all checks pass, store success message.
-          if (PC_stall && !HLT) // If the stall is not due to HLT.
-            stage_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
-          else if (PC_stall && HLT)
-            stage_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
-          else if (prediction[1])
+
+          if (prediction[1])
               // Branch is predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
                                                 stage, PC_curr, PC_next, PC_inst, predicted_target);
@@ -104,6 +100,12 @@ package Verification_tasks;
               // Branch is not predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
                                                 stage, PC_curr, PC_next, PC_inst);
+          
+          // If all checks pass, store success message.
+          if (PC_stall && !HLT) // If the stall is not due to HLT.
+            stall_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+          else if (PC_stall && HLT)
+            stall_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
     end
   endtask
 
@@ -174,8 +176,8 @@ package Verification_tasks;
       input logic wen_BTB, expected_wen_BTB,
       input logic wen_BHT, expected_wen_BHT,
       input logic update_PC, expected_update_PC,
-      output string decode_msg,
-      output string instruction_full
+      output string decode_msg, stall_msg
+      output string instruction_full, instr_flush_msg
   );
       begin
           // Stores the state of the decoded instruction.
@@ -187,6 +189,8 @@ package Verification_tasks;
           instr_state = "";
           instruction_full = "";
           hazard_type = "";
+          stall_msg = "";
+          instr_flush_msg = "";
 
           // Determine the type of hazard and generate the appropriate message.
           if (load_use_hazard) begin
@@ -257,18 +261,18 @@ package Verification_tasks;
               return;  // Exit task on error
           end
 
+        // Get the decoded instruction.
+        display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
+
+        // Print success message.
+        decode_msg = $sformatf("[DECODE] SUCCESS: %s", instr_state);
+
           // If there is a stall at the decode stage, print out the stall along with reason.
           if (IF_ID_stall && !hlt) begin
-            decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
+            stall_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
           end else if (IF_flush) begin // If the instruction is flushed.
             decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");
-            instruction_full = $sformatf("FLUSHED");
-          end else begin // Decode the instruction.
-            // Get the decoded instruction.
-            display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
-
-            // Print success message.
-            decode_msg = $sformatf("[DECODE] SUCCESS: %s", instr_state);
+            instr_flush_msg = $sformatf("FLUSHED");
           end
       end
   endtask
@@ -474,12 +478,13 @@ package Verification_tasks;
       input  logic expected_ZF,                
       input  logic expected_VF,               
       input  logic expected_NF,
-      output string execute_msg 
+      output string execute_msg, ex_flush_msg 
   );
      string hazard_type;
     
      // Initialize message.
      execute_msg = "";
+     ex_flush_msg = "";
      hazard_type = "";
 
     // Determine the type of hazard and generate the appropriate message.
@@ -521,10 +526,10 @@ package Verification_tasks;
 
        // If there is a flush at the execute stage, print out the flush along with reason.
        if (ID_flush) // If the instruction is flushed.
-            execute_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute (ID) due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
-        else 
-            // Display the execution result if no errors are found.
-            execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
+            ex_flush_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute (ID) due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
+ 
+        // Display the execution result if no errors are found.
+        execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
   endtask
 
 

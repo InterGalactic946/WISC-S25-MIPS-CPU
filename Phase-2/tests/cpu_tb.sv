@@ -281,7 +281,7 @@ module cpu_tb();
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string ftch_msg;
+      string ftch_msg, stall_msg;
 
         // Verify FETCH stage logic
         verify_FETCH(
@@ -299,7 +299,8 @@ always @(posedge clk) begin
             .predicted_target(iDUT.predicted_target), 
             .expected_predicted_target(iMODEL.predicted_target),
             .stage("FETCH"),
-            .stage_msg(ftch_msg)
+            .stage_msg(ftch_msg),
+            .stall_msg(stall_msg)
         );
 
         // if (!stall && valid_fetch)
@@ -315,7 +316,7 @@ always @(posedge clk) begin
         //   pipeline_msgs[fetch_id].fetch_cycles[msg_index] = $time / 10;
         // end
         fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        // $display(fetch_msg);
+        $display(stall_msg);
     end
 end
 
@@ -442,7 +443,7 @@ end
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string dcode_msg, instr_full_msg, dcode_stall_msg;
+      string dcode_msg, instr_full_msg, instr_flush_msg, dcode_stall_msg;
 
         // Call the verify_DECODE task and get the decode message
         verify_DECODE(
@@ -477,8 +478,8 @@ always @(posedge clk) begin
             .update_PC(iDUT.update_PC),
             .expected_update_PC(iMODEL.update_PC),
             
-            .decode_msg(dcode_msg),
-            .instruction_full(instr_full_msg)
+            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg),
+            .instruction_full(instr_full_msg), instr_flush_msg(instr_flush_msg)
         );
 
         // // // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
@@ -514,7 +515,7 @@ end
   // Always block for verify_EXECUTE stage
   always @(posedge clk) begin
     if (rst_n) begin
-      string ex_msg;
+      string ex_msg, ex_flush_msg;
 
       verify_EXECUTE(
         .Input_A(iDUT.iEXECUTE.iALU.Input_A),
@@ -538,7 +539,7 @@ end
         .expected_VF(iMODEL.VF),
         .expected_NF(iMODEL.NF),
         
-        .execute_msg(ex_msg)
+        .execute_msg(ex_msg), execute_flush_msg(ex_flush_msg)
       );
 
       // if (valid_execute)
@@ -551,7 +552,7 @@ end
       //   pipeline_msgs[execute_id].execute_cycle = $time / 10;
       // end
       execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-      // $display(execute_msg);
+      $display(ex_flush_msg);
 end
     end
   //end

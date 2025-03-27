@@ -105,7 +105,7 @@ module Dynamic_Pipeline_Unit (
                 end
 
                 // Handle stage transition for the first instruction to FETCH
-                pipeline[0].stage <= FETCH;
+                pipeline[0].stage = FETCH;
             end
         end
     end

@@ -61,7 +61,6 @@ module Dynamic_Pipeline_Unit (
                     EXECUTE:  pipeline[i].execute_msg = execute_msg;
                     MEMORY:   pipeline[i].memory_msg = memory_msg;
                     WRITEBACK: pipeline[i].wb_msg = wb_msg;
-                    default:  $sformatf("Instr %0d is in an EMPTY stage", i);
                 endcase
             end
 

@@ -73,7 +73,7 @@ module Dynamic_Pipeline_Unit (
                 end
 
                 // Handle stage transition for the first instruction to FETCH
-                pipeline[0] = '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+                pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
 
             // Update stages for each instruction.

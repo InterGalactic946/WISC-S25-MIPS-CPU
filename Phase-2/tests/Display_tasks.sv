@@ -85,7 +85,12 @@ package Display_tasks;
       output string instr_name
   );
       case (opcode)
-          4'h0: instr_name = $sformatf("ADD R%0d, R%0d, R%0d", rd, rs, rt);        // 0000: Addition
+          4'h0: begin 
+            if (rd === 0 && rs === 0 && rt === 0)
+                instr_name = $sformatf("NOP");                                     // 0000: NOP
+            else
+                instr_name = $sformatf("ADD R%0d, R%0d, R%0d", rd, rs, rt);        // 0000: Addition
+          end
           4'h1: instr_name = $sformatf("SUB R%0d, R%0d, R%0d", rd, rs, rt);        // 0001: Subtraction
           4'h2: instr_name = $sformatf("XOR R%0d, R%0d, R%0d", rd, rs, rt);        // 0010: Bitwise XOR
           4'h3: instr_name = $sformatf("RED R%0d, R%0d, R%0d", rd, rs, rt);        // 0011: Reduction Addition

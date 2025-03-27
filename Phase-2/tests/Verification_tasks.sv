@@ -273,9 +273,9 @@ package Verification_tasks;
             stall_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
           end 
           
-          if (IF_flush) begin // If the instruction is flushed.
-            instr_flush_msg = $sformatf("FLUSHED");
-          end
+        //   if (IF_flush) begin // If the instruction is flushed.
+        //     instr_flush_msg = $sformatf("FLUSHED");
+        //   end
       end
   endtask
 

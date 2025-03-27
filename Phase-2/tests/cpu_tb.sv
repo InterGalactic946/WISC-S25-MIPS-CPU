@@ -117,9 +117,9 @@ module cpu_tb();
     Initialize(.clk(clk), .rst_n(rst_n));
 
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
-    TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
+    // TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
-    // repeat(100) @(posedge clk);
+    repeat(100) @(posedge clk);
     //   // $display("ZF = %b, VF = %b, NF = %b. Cycle: %0t", iDUT.ZF, iDUT.VF, iDUT.NF, $time / 10);
     // end
 

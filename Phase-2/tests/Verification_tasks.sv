@@ -529,10 +529,10 @@ package Verification_tasks;
 
        // If there is a flush at the execute stage, print out the flush along with reason.
        if (ID_flush) // If the instruction is flushed.
-            ex_flush_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute (ID) due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
-
-        // Display the execution result if no errors are found.
-        execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
+            execute_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute (ID) due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
+       else
+            // Display the execution result if no errors are found.
+            execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
   endtask
 
 

@@ -332,7 +332,7 @@ end
 always @(posedge clk) begin
     if (rst_n) begin
         // Verify FETCH stage logic
-        string if_id_msg;
+        string if_id_msg, flush_msg;
         
         verify_IF_ID(
             .IF_flush(iDUT.IF_flush), 
@@ -340,8 +340,10 @@ always @(posedge clk) begin
             .if_id_msg(if_id_msg)
         );
 
+        flush_msg = {"|", if_id_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+
         if (if_id_msg !== "")
-          $display(if_id_msg);
+          $display(flush_msg);
 
     end
 end

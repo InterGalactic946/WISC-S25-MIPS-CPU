@@ -76,7 +76,7 @@ module Dynamic_Pipeline_Unit (
                     DECODE: begin
                         pipeline[i].decode_msgs[msg_index] = decode_msg;
                         pipeline[i].instr_full_msg = instruction_full_msg; // Assign once at FETCH
-                        pipeline[i].fetch_msgs[msg_index] = pipeline[i].fetch_msgs[msg_index];   // Clear other stage messages
+                        pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].execute_msg = "";
                         pipeline[i].memory_msg = "";
                         pipeline[i].wb_msg = "";
@@ -84,24 +84,24 @@ module Dynamic_Pipeline_Unit (
                     EXECUTE: begin
                         pipeline[i].execute_msg = execute_msg;
                         pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
-                        pipeline[i].fetch_msgs[msg_index] = pipeline[i].fetch_msgs[msg_index]; 
-                        pipeline[i].decode_msgs[msg_index] = pipeline[i].decode_msgs[msg_index];
+                        pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
+                        pipeline[i].decode_msgs = pipeline[i].decode_msgs;
                         pipeline[i].memory_msg = "";
                         pipeline[i].wb_msg = "";
                     end
                     MEMORY: begin
                         pipeline[i].memory_msg = memory_msg;
                         pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
-                        pipeline[i].fetch_msgs[msg_index] = pipeline[i].fetch_msgs[msg_index]; 
-                        pipeline[i].decode_msgs[msg_index] = pipeline[i].decode_msgs[msg_index];
+                        pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
+                        pipeline[i].decode_msgs = pipeline[i].decode_msgs;
                         pipeline[i].execute_msg = pipeline[i].execute_msg;
                         pipeline[i].wb_msg = "";
                     end
                     WRITEBACK: begin
                         pipeline[i].wb_msg = wb_msg;
                         pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
-                        pipeline[i].fetch_msgs[msg_index] = pipeline[i].fetch_msgs[msg_index]; 
-                        pipeline[i].decode_msgs[msg_index] = pipeline[i].decode_msgs[msg_index];
+                        pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
+                        pipeline[i].decode_msgs = pipeline[i].decode_msgs;
                         pipeline[i].execute_msg = pipeline[i].execute_msg;
                         pipeline[i].memory_msg = pipeline[i].memory_msg;
                     end

@@ -51,18 +51,17 @@ module Dynamic_Pipeline_Unit (
                     pipeline[i] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
         end else begin
-            // Shift pipeline stages only if instruction 0 has reached WRITEBACK
+            // Shift pipeline if first instruction reached WRITEBACK
             if (pipeline[0].stage === WRITEBACK) begin
-                // Move instructions forward in the pipeline
-                for (int i = 1; i < MAX_INSTR; i++) begin
-                    pipeline[i-1] <= pipeline[i];  // Shift each instruction forward
+                for (int i = 0; i < MAX_INSTR-1; i++) begin
+                    pipeline[i] <= pipeline[i+1];  // Shift forward
                 end
 
-                // Clear the last slot after shifting
-                pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+                pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};  // Clear last slot
 
-                // Insert a new instruction in FETCH stage
-                pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+                // Add new instruction in FETCH only if there is space
+                if (num_instr_in_pipeline < MAX_INSTR)
+                    pipeline[num_instr_in_pipeline] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
             
             // Handle stall during DECODE stage

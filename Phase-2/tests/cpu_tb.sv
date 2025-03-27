@@ -44,6 +44,7 @@ module cpu_tb();
 
     integer instr_id, fetch_id, decode_id, execute_id, memory_id, wb_id, max_index, print, msg_index;
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, IF_flush, expected_IF_flush, ID_flush, expected_ID_flush;
+    logic load_to_use_hazard, expected_load_to_use_hazard, B_hazard, expected_B_hazard, BR_hazard, expected_BR_hazard;
     debug_info_t pipeline_msgs[0:71];
 
 //   // Store the messages for FETCH and DECODE stages
@@ -337,6 +338,18 @@ always @(posedge clk) begin
   end
 end
 
+always @(posedge clk) begin
+  if (rst) begin
+    load_to_use_hazard <= 1'b0;
+    B_hazard <= 1'b0;
+    BR_hazard <= 1'b0;
+  end else begin
+    load_to_use_hazard <= iDUT.iHDU.load_use_hazard;
+    B_hazard <= iDUT.iHDU.B_hazard;
+    BR_hazard <= iDUT.iHDU.BR_hazard;
+  end
+end
+
 
 always @(posedge clk) begin
   if (rst) begin
@@ -587,9 +600,9 @@ end
         .ALU_out(iDUT.ALU_out),
         .ID_flush(ID_flush),
         .expected_ID_flush(expected_ID_flush),
-        .br_hazard(iMODEL.iHDU.BR_hazard),
-        .b_hazard(iMODEL.iHDU.B_hazard),
-        .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
+        .br_hazard(BR_hazard),
+        .b_hazard(B_hazard),
+        .load_use_hazard(load_to_use_hazard),
         .Z_set(iDUT.iEXECUTE.iALU.Z_set),
         .V_set(iDUT.iEXECUTE.iALU.V_set),
         .N_set(iDUT.iEXECUTE.iALU.N_set),

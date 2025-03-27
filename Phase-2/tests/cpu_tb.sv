@@ -25,7 +25,7 @@ module cpu_tb();
   logic stall, flush;         // Indicates a stall and/or a flush in the pipeline.
 
   // Messages from each stage.
-  string fetch_msg, fetch_stall_msg, decode_msg, decode_stall_msg, instruction_full_msg, id_ex_msg, 
+  string fetch_msg, fetch_stall_msg, decode_msg, decode_stall_msg, instruction_full_msg, instr_flush_msg, id_ex_msg, 
          execute_msg, ex_mem_msg, mem_msg, mem_wb_msg, wb_msg, pc_stall_msg, if_id_stall_msg, if_flush_msg, id_flush_msg, instruction_header;
 
   // reg [255:0] fetch_stage_msg, decode_stage_msg, full_instruction_msg;
@@ -87,7 +87,7 @@ module cpu_tb();
     .rst(rst),
     .fetch_msg(fetch_msg),
     .decode_msg(decode_msg),
-    .instruction_full_msg(instruction_full_msg),
+    .instruction_full_msg(instruction_full_msg), .instr_flush_msg(inst_flush_msg),
     .execute_msg(execute_msg),
     .mem_msg(mem_msg),
     .wb_msg(wb_msg),
@@ -450,7 +450,7 @@ end
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string dcode_msg, instr_full_msg, instr_flush_msg, inst_flush_msg, dcode_flush_msg, decode_flush_msg, dcode_stall_msg, decode_stall_msg;
+      string dcode_msg, instr_full_msg, inst_flush_msg, dcode_flush_msg, decode_flush_msg, dcode_stall_msg, decode_stall_msg;
 
         // Call the verify_DECODE task and get the decode message
         verify_DECODE(
@@ -522,8 +522,8 @@ always @(posedge clk) begin
         // if (dcode_flush_msg !== "")
         //   $display(decode_flush_msg);
         
-        if (inst_flush_msg !== "")
-          $display(instr_flush_msg);
+        // if (inst_flush_msg !== "")
+        //   $display(instr_flush_msg);
 
         // $display(decode_msg);
         // $display(instruction_full_msg);

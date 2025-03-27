@@ -18,7 +18,7 @@ module Verification_Unit (
     input logic clk, rst,
     input string fetch_msg,
     input string decode_msg,
-    input string instruction_full_msg,
+    input string instruction_full_msg, instr_flush_msg,
     input string execute_msg,
     input string mem_msg,
     input string wb_msg,
@@ -105,6 +105,7 @@ end
             if (valid_decode) begin
                 pipeline_msgs[decode_id].decode_msg[0] = decode_msg;
                 pipeline_msgs[decode_id].decode_msg[1] = instruction_full_msg;
+                pipeline_msgs[decode_id].instr_flush_msg = instr_flush_msg;
             end
             if (valid_execute) begin
                 pipeline_msgs[execute_id].execute_msg = execute_msg;
@@ -172,7 +173,11 @@ end
     always @(posedge clk) begin
         if (valid_wb) begin
             $display("==========================================================");
-            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
+            
+            if ($sfind(pipeline_msgs[wb_id].instr_flush_msg, "FLUSHED") != 0)
+                $display("| Instruction: FLUSHED | Completed At Cycle: %0t |", $time / 10);
+            else
+                $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
             // for (int i = 0; i < fetch_msg_id[wb_id]; i = i+1)
                 $display("%s", pipeline_msgs[wb_id].fetch_msg);

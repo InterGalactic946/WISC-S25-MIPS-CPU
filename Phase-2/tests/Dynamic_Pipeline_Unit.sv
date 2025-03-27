@@ -25,7 +25,7 @@ module Dynamic_Pipeline_Unit (
     int num_instr_in_pipeline, msg_index;  // Number of instructions in the pipeline
 
     // Simulate pipeline execution
-    always_ff @(posedge clk) begin
+    always_ff @(posedge clk, posedge rst) begin
         if (rst)
             num_instr_in_pipeline <= 1;
         else if (num_instr_in_pipeline < MAX_INSTR && !stall)

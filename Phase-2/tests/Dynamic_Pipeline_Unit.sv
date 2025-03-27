@@ -34,7 +34,7 @@ module Dynamic_Pipeline_Unit (
 
     // Simulate pipeline execution
     always_ff @(posedge clk) begin
-        if (rst)
+        if (rst || !stall)
             msg_index <= 0;
         else if (stall)
             msg_index <= msg_index + 1;

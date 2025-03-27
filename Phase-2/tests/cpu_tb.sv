@@ -83,34 +83,32 @@ module cpu_tb();
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-   Verification_Unit iVERIFY (
-    .clk(clk),
-    .rst(rst),
-    .fetch_msg(fetch_msg),
-    .decode_msg(decode_msg),
-    .instruction_full_msg(instruction_full_msg),
-    .execute_msg(execute_msg),
-    .mem_msg(mem_msg),
-    .wb_msg(wb_msg),
-    .stall(stall)
-  );
+  //  Verification_Unit iVERIFY (
+  //   .clk(clk),
+  //   .rst(rst),
+  //   .fetch_msg(fetch_msg),
+  //   .decode_msg(decode_msg),
+  //   .instruction_full_msg(instruction_full_msg),
+  //   .execute_msg(execute_msg),
+  //   .mem_msg(mem_msg),
+  //   .wb_msg(wb_msg),
+  //   .stall(stall)
+  // );
 
   assign stall = iDUT.PC_stall && iDUT.IF_ID_stall;
 
-  // // Instantiate the DUT
-  // Dynamic_Pipeline_Unit iDPT (
-  //     .clk(clk),
-  //     .rst(rst),
-  //     .PC_stall(iDUT.PC_stall),
-  //     .IF_ID_stall(iDUT.IF_ID_stall),
-  //     .IF_flush(iDUT.IF_flush),
-  //     .fetch_msg(fetch_msg),
-  //     .decode_msg(decode_msg),
-  //     .execute_msg(execute_msg),
-  //     .memory_msg(mem_msg),
-  //     .wb_msg(wb_msg),
-  //     .instruction_full_msg(instruction_full_msg)
-  // );
+  // Instantiate the DUT
+  Dynamic_Pipeline_Unit iDPT (
+      .clk(clk),
+      .rst(rst),
+      .fetch_msg(fetch_msg),
+      .decode_msg(decode_msg),
+      .execute_msg(execute_msg),
+      .memory_msg(mem_msg),
+      .wb_msg(wb_msg),
+      .stall(stall),
+      .instruction_full_msg(instruction_full_msg)
+  );
 
   // Test procedure to apply stimulus and check responses.
   initial begin

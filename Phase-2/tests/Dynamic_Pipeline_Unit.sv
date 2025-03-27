@@ -40,6 +40,9 @@ module Dynamic_Pipeline_Unit (
             msg_index <= msg_index + 1;
     end
 
+    always_comb begin
+        
+
     // Simulate pipeline execution
     always_ff @(negedge clk) begin
         if (rst) begin
@@ -69,36 +72,36 @@ module Dynamic_Pipeline_Unit (
                 case (pipeline[i].stage)
                     EMPTY: begin
                         if (!stall)
-                            pipeline[i].stage <= FETCH;
+                            pipeline[i].stage = FETCH;
                         else
-                            pipeline[i].stage <= EMPTY;
+                            pipeline[i].stage = EMPTY;
                     end
                     FETCH: begin
                         if (!stall)
-                            pipeline[i].stage <= DECODE;
+                            pipeline[i].stage = DECODE;
                         else
-                            pipeline[i].stage <= FETCH;
+                            pipeline[i].stage = FETCH;
                     end
                     DECODE: begin
                         if (!stall)
-                            pipeline[i].stage <= DECODE;
+                            pipeline[i].stage = DECODE;
                         else
-                            pipeline[i].stage <= EXECUTE;
+                            pipeline[i].stage = EXECUTE;
                     end
-                    EXECUTE:   pipeline[i].stage <= MEMORY;
-                    MEMORY:    pipeline[i].stage <= WRITEBACK;
+                    EXECUTE:   pipeline[i].stage = MEMORY;
+                    MEMORY:    pipeline[i].stage = WRITEBACK;
                     WRITEBACK: begin
-                        pipeline[i].print <= 1;
-                        pipeline[i].stage <= EMPTY;
+                        pipeline[i].print = 1;
+                        pipeline[i].stage = EMPTY;
                     end
                 endcase
             end
 
             // Shift pipeline stages only if instruction 0 has reached WRITEBACK
-            if (pipeline[0].stage == WRITEBACK) begin
+            if (pipeline[0].stage === WRITEBACK) begin
                 // Shift pipeline stages and move instructions up
                 for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
-                    pipeline[i] <= pipeline[i-1];  // Shift instructions
+                    pipeline[i] = pipeline[i-1];  // Shift instructions
                 end
 
                 // Handle stage transition for the first instruction to FETCH

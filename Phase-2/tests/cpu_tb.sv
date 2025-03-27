@@ -43,7 +43,7 @@ module cpu_tb();
   // integer decode_msg_indices[72]; // Tracks message indices per instruction
 
     integer instr_id, fetch_id, decode_id, execute_id, memory_id, wb_id, max_index, print, msg_index;
-    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, IF_flush, ID_flush, expected_ID_flush;
     debug_info_t pipeline_msgs[0:71];
 
 //   // Store the messages for FETCH and DECODE stages
@@ -327,6 +327,23 @@ always @(posedge clk) begin
     end
 end
 
+always @(posedge clk)
+  if (rst)
+    ID_flush <= 1'b0;
+  else
+    ID_flush <= iDUT.ID_flush;
+
+
+always @(posedge clk) begin
+  if (rst) begin
+    ID_flush <= 1'b0;
+    expected_ID_flush <= 1'b0
+  end else begin
+    IF_flush <= iDUT.ID_flush;
+    expected_ID_flush <= iMODEL.ID_flush;
+  end
+end
+
 
 // // Always block for verify_FETCH stage
 // always @(posedge clk) begin
@@ -564,8 +581,8 @@ end
         .expected_Input_A(iMODEL.iEXECUTE.iALU_model.Input_A),
         .expected_Input_B(iMODEL.iEXECUTE.iALU_model.Input_B),
         .ALU_out(iDUT.ALU_out),
-        .ID_flush(iDUT.ID_flush),
-        .expected_ID_flush(iMODEL.ID_flush),
+        .ID_flush(ID_flush),
+        .expected_ID_flush(expected_ID_flush),
         .br_hazard(iMODEL.iHDU.BR_hazard),
         .b_hazard(iMODEL.iHDU.B_hazard),
         .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),

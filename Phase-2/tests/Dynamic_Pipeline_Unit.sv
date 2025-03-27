@@ -51,36 +51,6 @@ module Dynamic_Pipeline_Unit (
                     pipeline[i] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
         end else begin
-            // Update stages for each instruction.
-            for (int i = 0; i < num_instr_in_pipeline; i++) begin
-                case (pipeline[i].stage)
-                    EMPTY: begin
-                        if (!stall)
-                            pipeline[i].stage <= FETCH;
-                        else
-                            pipeline[i].stage <= EMPTY;
-                    end
-                    FETCH: begin
-                        if (!stall)
-                            pipeline[i].stage <= DECODE;
-                        else
-                            pipeline[i].stage <= FETCH;
-                    end
-                    DECODE: begin
-                        if (!stall)
-                            pipeline[i].stage <= EXECUTE;
-                        else
-                            pipeline[i].stage <= DECODE;
-                    end
-                    EXECUTE:   pipeline[i].stage <= MEMORY;
-                    MEMORY:    pipeline[i].stage = WRITEBACK;
-                    WRITEBACK: begin
-                        pipeline[i].print <= 1;
-                        // pipeline[i].stage <= EMPTY;
-                    end
-                endcase
-            end
-
                // Handle stall during DECODE stage
             for (int i = 0; i < num_instr_in_pipeline; i++) begin
                 case (pipeline[i].stage)
@@ -127,21 +97,43 @@ module Dynamic_Pipeline_Unit (
                 endcase
             end
 
+            // Update stages for each instruction.
+            for (int i = 0; i < num_instr_in_pipeline; i++) begin
+                case (pipeline[i].stage)
+                    EMPTY: begin
+                        if (!stall)
+                            pipeline[i].stage <= FETCH;
+                        else
+                            pipeline[i].stage <= EMPTY;
+                    end
+                    FETCH: begin
+                        if (!stall)
+                            pipeline[i].stage <= DECODE;
+                        else
+                            pipeline[i].stage <= FETCH;
+                    end
+                    DECODE: begin
+                        if (!stall)
+                            pipeline[i].stage <= EXECUTE;
+                        else
+                            pipeline[i].stage <= DECODE;
+                    end
+                    EXECUTE:   pipeline[i].stage <= MEMORY;
+                    MEMORY:    pipeline[i].stage = WRITEBACK;
+                    WRITEBACK: begin
+                        pipeline[i].print <= 1;
+                        // pipeline[i].stage <= EMPTY;
+                    end
+                endcase
+            end
+
             for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
                 if (pipeline[i].print)
                     pipeline[i].print <= 0;
             end
 
-           // Shift pipeline stages only if instruction 0 has reached WRITEBACK
-            if (pipeline[num_instr_in_pipeline].stage === WRITEBACK) begin
-                // Shift pipeline stages and move instructions up
-                for (int i = num_instr_in_pipeline-1; i > 0; i=i-1) begin
-                    pipeline[i] <= pipeline[i-1];  // Shift instructions
-                end
-
-                // Handle stage transition for the first instruction to FETCH
-                // pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
-            end
+            // Insert new instruction at the first empty spot (this is where num_instr_in_pipeline is the index of the empty spot)
+            pipeline[num_instr_in_pipeline] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};  // New instruction in FETCH stage
         end
     end
 

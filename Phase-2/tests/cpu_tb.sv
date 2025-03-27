@@ -485,7 +485,7 @@ always @(posedge clk) begin
             .update_PC(iDUT.update_PC),
             .expected_update_PC(iMODEL.update_PC),
             
-            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg), .flush_msg(dcode_flush_msg),
+            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg), 
             .instruction_full(instr_full_msg), .instr_flush_msg(inst_flush_msg)
         );
 
@@ -514,13 +514,13 @@ always @(posedge clk) begin
 
         decode_stall_msg = {"|", dcode_stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         instr_flush_msg = {"|", inst_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        decode_flush_msg = {"|", dcode_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        
 
         if (dcode_stall_msg !== "")
           $display(decode_stall_msg);
         
-        if (dcode_flush_msg !== "")
-          $display(decode_flush_msg);
+        // if (dcode_flush_msg !== "")
+        //   $display(decode_flush_msg);
         
         if (inst_flush_msg !== "")
           $display(instr_flush_msg);
@@ -535,7 +535,7 @@ end
   // Always block for verify_EXECUTE stage
   always @(posedge clk) begin
     if (rst_n) begin
-      string ex_msg, ex_flush_msg, exec_flush_msg;
+      string ex_msg, ex_flush_msg, exec_flush_msg, decode_flush_msg;
 
       verify_EXECUTE(
         .Input_A(iDUT.iEXECUTE.iALU.Input_A),
@@ -543,6 +543,8 @@ end
         .expected_Input_A(iMODEL.iEXECUTE.iALU_model.Input_A),
         .expected_Input_B(iMODEL.iEXECUTE.iALU_model.Input_B),
         .ALU_out(iDUT.ALU_out),
+        .IF_flush(iDUT.IF_flush),
+        .expected_IF_flush(iMODEL.IF_flush),
         .ID_flush(iDUT.ID_flush),
         .expected_ID_flush(iMODEL.ID_flush),
         .br_hazard(iMODEL.iHDU.BR_hazard),
@@ -559,7 +561,7 @@ end
         .expected_VF(iMODEL.VF),
         .expected_NF(iMODEL.NF),
         
-        .execute_msg(ex_msg), .ex_flush_msg(ex_flush_msg)
+        .execute_msg(ex_msg), .ex_flush_msg(ex_flush_msg), flush_msg(dcode_flush_msg)
       );
 
       // if (valid_execute)
@@ -573,9 +575,13 @@ end
       // end
       execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       exec_flush_msg = {"|", ex_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      decode_flush_msg = {"|", dcode_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       
       if (ex_flush_msg !== "")
         $display(exec_flush_msg);
+      
+      if (dcode_flush_msg !== "")
+         $display(decode_flush_msg);
 end
     end
   //end

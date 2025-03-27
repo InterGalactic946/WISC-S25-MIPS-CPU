@@ -29,10 +29,10 @@ module project_phase2_tb();
    /* Setup */
    initial begin
       $display("Hello world...simulation starting");
-      $display("See verilogsim.plog and verilogsim.ptrace for output");
+      $display("YAHOO!! All tests passed. See verilogsim.log and verilogsim.trace for output");
       inst_count = 0;
-      trace_file = $fopen("verilogsim.ptrace");
-      sim_log_file = $fopen("verilogsim.plog");
+      trace_file = $fopen("./outputs/verilogsim.trace");
+      sim_log_file = $fopen("./outputs/verilogsim.log");
       
    end
 

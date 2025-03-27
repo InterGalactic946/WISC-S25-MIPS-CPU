@@ -87,7 +87,7 @@ module cpu_tb();
     .rst(rst),
     .fetch_msg(fetch_msg),
     .decode_msg(decode_msg),
-    .instruction_full_msg(instruction_full_msg), .instr_flush_msg(inst_flush_msg),
+    .instruction_full_msg(instruction_full_msg), .instr_flush_msg(instr_flush_msg),
     .execute_msg(execute_msg),
     .mem_msg(mem_msg),
     .wb_msg(wb_msg),

@@ -45,7 +45,7 @@ module Dynamic_Pipeline_Unit (
     always_ff @(negedge clk) begin
         if (rst) begin
             for (int i = 0; i < MAX_INSTR; i++) begin
-                if (i == 0)
+                if (i === 0)
                     pipeline[i] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
                 else
                     pipeline[i] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};

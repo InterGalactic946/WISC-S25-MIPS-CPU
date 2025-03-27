@@ -119,7 +119,7 @@ module Dynamic_Pipeline_Unit (
                             pipeline[i].stage <= DECODE;
                     end
                     EXECUTE:   pipeline[i].stage <= MEMORY;
-                    MEMORY:    pipeline[i].stage <= WRITEBACK;
+                    MEMORY:    pipeline[i].stage = WRITEBACK;
                     WRITEBACK: begin
                         pipeline[i].print <= 1;
                         pipeline[i].stage <= FETCH;

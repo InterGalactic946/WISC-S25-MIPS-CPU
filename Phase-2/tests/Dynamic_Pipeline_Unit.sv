@@ -45,9 +45,9 @@ module Dynamic_Pipeline_Unit (
         if (rst) begin
             for (int i = 0; i < MAX_INSTR; i++) begin
                 if (i == 0)
-                    pipeline[i] <= '{FETCH, default: {""}, default: {""}, "", "", "", "", 0};
+                    pipeline[i] <= '{FETCH, 'default: {""}, 'default: {""}, "", "", "", "", 0};
                 else
-                    pipeline[i] <= '{EMPTY, default: {""}, default: {""}, "", "", "", "", 0};
+                    pipeline[i] <= '{EMPTY, 'default: {""}, 'default: {""}, "", "", "", "", 0};
             end
         end else begin
             // Handle stall during DECODE stage

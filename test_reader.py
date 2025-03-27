@@ -23,29 +23,35 @@ def process_log_line(line, pattern, stage):
         cycle = int(cycle)
         return f"|[{stage}] {msg} @ Cycle: {cycle} |"
 
-# Helper function to extract the instruction and cycle for general lines
-def process_instruction_line(line):
-    match = instruction_pattern.search(line)
-    if match:
-        instr_id, instruction, cycle = match.groups()
-        instr_id = int(instr_id)
-        cycle = int(cycle)
-        return f"========================================================\n| Instruction: {instruction} @ Cycle: {cycle} |"
+# Store instructions and their write-back cycle numbers for later use in formatting the header
+instruction_cycles = {}
 
 # Process the log file
 with open(log_file, 'r') as file:
     output = []
     for line in file:
-        # Check for instruction lines
-        instruction_line = process_instruction_line(line)
+        # Check for WRITE-BACK lines to store the cycle number for each instruction
+        writeback_line = writeback_pattern.search(line)
+        if writeback_line:
+            instr_id, msg, cycle = writeback_line.groups()
+            instr_id = int(instr_id)
+            cycle = int(cycle)
+            instruction_cycles[instr_id] = cycle
+
+        # Check for instruction lines and use the cycle from the WRITE-BACK line for the header
+        instruction_line = instruction_pattern.search(line)
         if instruction_line:
-            output.append(instruction_line)
+            instr_id, instruction, _ = instruction_line.groups()
+            instr_id = int(instr_id)
+            # Retrieve the cycle from the WRITE-BACK line for this instruction
+            cycle = instruction_cycles.get(instr_id, "N/A")  # Use "N/A" if cycle is not found
+            output.append(f"========================================================\n| Instruction: {instruction} | Completed At Cycle: {cycle} |")
 
         # Check for stages and process each stage
         fetch_line = process_log_line(line, fetch_pattern, 'FETCH')
         if fetch_line:
             output.append(fetch_line)
-        
+
         decode_line = process_log_line(line, decode_pattern, 'DECODE')
         if decode_line:
             output.append(decode_line)
@@ -57,10 +63,6 @@ with open(log_file, 'r') as file:
         memory_line = process_log_line(line, memory_pattern, 'MEMORY')
         if memory_line:
             output.append(memory_line)
-
-        writeback_line = process_log_line(line, writeback_pattern, 'WRITE-BACK')
-        if writeback_line:
-            output.append(writeback_line)
 
 # Write to output file
 with open(output_file, 'w') as out_file:

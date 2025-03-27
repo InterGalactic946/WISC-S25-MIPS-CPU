@@ -513,7 +513,7 @@ always @(posedge clk) begin
         instruction_full_msg = instr_full_msg;
 
         decode_stall_msg = {"|", dcode_stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        instr_flush_msg = {"|", inst_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        instr_flush_msg = {inst_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         
 
         if (dcode_stall_msg !== "")

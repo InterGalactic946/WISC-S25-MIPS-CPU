@@ -526,7 +526,7 @@ end
   // Always block for verify_EXECUTE stage
   always @(posedge clk) begin
     if (rst_n) begin
-      string ex_msg, ex_flush_msg;
+      string ex_msg, ex_flush_msg, exec_flush_msg;
 
       verify_EXECUTE(
         .Input_A(iDUT.iEXECUTE.iALU.Input_A),
@@ -563,10 +563,10 @@ end
       //   pipeline_msgs[execute_id].execute_cycle = $time / 10;
       // end
       execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-      ex_flush_msg = {"|", ex_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      exec_flush_msg = {"|", ex_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       
       if (ex_flush_msg !== "")
-        $display(ex_flush_msg);
+        $display(exec_flush_msg);
 end
     end
   //end

@@ -168,13 +168,22 @@ end
     //     end
     // end
 
+    function automatic bit contains(string str, string substr);
+            int len_str = str.len();
+            int len_sub = substr.len();
+            for (int i = 0; i <= len_str - len_sub; i++) begin
+                if (str.substr(i, i + len_sub - 1) == substr)
+                    return 1;
+            end
+            return 0;
+    endfunction
 
     // Print the message for each instruction.
     always @(posedge clk) begin
         if (valid_wb) begin
             $display("==========================================================");
             
-            if ($sscanf(pipeline_msgs[wb_id].instr_flush_msg, "%s" , "FLUSHED") > 0)
+            if (contains(pipeline_msgs[wb_id].instr_flush_msg, "FLUSHED"))
                 $display("| Instruction: FLUSHED | Completed At Cycle: %0t |", $time / 10);
             else
                 $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);

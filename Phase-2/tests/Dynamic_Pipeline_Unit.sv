@@ -42,7 +42,7 @@ module Dynamic_Pipeline_Unit (
         
 
     // Simulate pipeline execution
-    always_ff @(negedge clk) begin
+    always_ff @(negedge clk, posedge rst) begin
         if (rst) begin
             for (int i = 0; i < MAX_INSTR; i++) begin
                 if (i === 0)
@@ -50,8 +50,38 @@ module Dynamic_Pipeline_Unit (
                 else
                     pipeline[i] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
-        end else begin            
-            // Handle stall during DECODE stage
+        end else begin
+            // Update stages for each instruction.
+            for (int i = 0; i < num_instr_in_pipeline; i++) begin
+                case (pipeline[i].stage)
+                    EMPTY: begin
+                        if (!stall)
+                            pipeline[i].stage <= FETCH;
+                        else
+                            pipeline[i].stage <= EMPTY;
+                    end
+                    FETCH: begin
+                        if (!stall)
+                            pipeline[i].stage <= DECODE;
+                        else
+                            pipeline[i].stage <= FETCH;
+                    end
+                    DECODE: begin
+                        if (!stall)
+                            pipeline[i].stage <= EXECUTE;
+                        else
+                            pipeline[i].stage <= DECODE;
+                    end
+                    EXECUTE:   pipeline[i].stage <= MEMORY;
+                    MEMORY:    pipeline[i].stage = WRITEBACK;
+                    WRITEBACK: begin
+                        pipeline[i].print <= 1;
+                        // pipeline[i].stage <= EMPTY;
+                    end
+                endcase
+            end
+
+               // Handle stall during DECODE stage
             for (int i = 0; i < num_instr_in_pipeline; i++) begin
                 case (pipeline[i].stage)
                     FETCH: begin
@@ -97,50 +127,20 @@ module Dynamic_Pipeline_Unit (
                 endcase
             end
 
-            // Update stages for each instruction.
-            for (int i = 0; i < num_instr_in_pipeline; i++) begin
-                case (pipeline[i].stage)
-                    EMPTY: begin
-                        if (!stall)
-                            pipeline[i].stage <= FETCH;
-                        else
-                            pipeline[i].stage <= EMPTY;
-                    end
-                    FETCH: begin
-                        if (!stall)
-                            pipeline[i].stage <= DECODE;
-                        else
-                            pipeline[i].stage <= FETCH;
-                    end
-                    DECODE: begin
-                        if (!stall)
-                            pipeline[i].stage <= EXECUTE;
-                        else
-                            pipeline[i].stage <= DECODE;
-                    end
-                    EXECUTE:   pipeline[i].stage <= MEMORY;
-                    MEMORY:    pipeline[i].stage = WRITEBACK;
-                    WRITEBACK: begin
-                        pipeline[i].print <= 1;
-                        pipeline[i].stage <= FETCH;
-                    end
-                endcase
-            end
-
             for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
                 if (pipeline[i].print)
                     pipeline[i].print = 0;
             end
 
            // Shift pipeline stages only if instruction 0 has reached WRITEBACK
-            if (pipeline[0].stage === WRITEBACK) begin
+            if (pipeline[4].stage === WRITEBACK) begin
                 // Shift pipeline stages and move instructions up
                 for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
                     pipeline[i] <= pipeline[i-1];  // Shift instructions
                 end
 
                 // Handle stage transition for the first instruction to FETCH
-                pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+                // pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
         end
     end

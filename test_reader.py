@@ -39,35 +39,35 @@ with open(log_file, 'r') as file:
         if fetch_match:
             instr_id, msg, cycle = fetch_match.groups()
             instr_id, cycle = int(instr_id), int(cycle)
-            instruction_logs[instr_id]["fetch"] = f"|{msg} @ Cycle: {cycle} |"
+            instruction_logs[instr_id]["fetch"] = f"|{msg} @ Cycle: {cycle}"
 
         # Capture decode stage
         decode_match = decode_pattern.search(line)
         if decode_match:
             instr_id, msg, cycle = decode_match.groups()
             instr_id, cycle = int(instr_id), int(cycle)
-            instruction_logs[instr_id]["decode"] = f"|{msg} @ Cycle: {cycle} |"
+            instruction_logs[instr_id]["decode"] = f"|{msg} @ Cycle: {cycle}"
 
         # Capture execute stage
         execute_match = execute_pattern.search(line)
         if execute_match:
             instr_id, msg, cycle = execute_match.groups()
             instr_id, cycle = int(instr_id), int(cycle)
-            instruction_logs[instr_id]["execute"] = f"|{msg} @ Cycle: {cycle} |"
+            instruction_logs[instr_id]["execute"] = f"|{msg} @ Cycle: {cycle}"
 
         # Capture memory stage
         memory_match = memory_pattern.search(line)
         if memory_match:
             instr_id, msg, cycle = memory_match.groups()
             instr_id, cycle = int(instr_id), int(cycle)
-            instruction_logs[instr_id]["memory"] = f"|{msg} @ Cycle: {cycle} |"
+            instruction_logs[instr_id]["memory"] = f"|{msg} @ Cycle: {cycle}"
 
         # Capture write-back stage and store the final cycle number
         writeback_match = writeback_pattern.search(line)
         if writeback_match:
             instr_id, msg, cycle = writeback_match.groups()
             instr_id, cycle = int(instr_id), int(cycle)
-            instruction_logs[instr_id]["writeback"] = f"|{msg} @ Cycle: {cycle} |"
+            instruction_logs[instr_id]["writeback"] = f"|{msg} @ Cycle: {cycle}"
             instruction_logs[instr_id]["wb_cycle"] = cycle  # Store completion cycle
 
 # Format and write output

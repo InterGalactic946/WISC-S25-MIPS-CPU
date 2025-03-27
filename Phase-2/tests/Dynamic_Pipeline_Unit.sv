@@ -127,18 +127,18 @@ module Dynamic_Pipeline_Unit (
                 endcase
             end
 
-            // Shift pipeline if first instruction reached WRITEBACK
-            if (pipeline[0].stage === WRITEBACK) begin
-                for (int i = 0; i < MAX_INSTR-1; i++) begin
+           // Shift pipeline ONLY IF the first instruction is in WRITEBACK and ready to be removed
+            if (pipeline[0].stage == WRITEBACK && pipeline[0].print) begin
+                for (int i = 0; i < MAX_INSTR-1; i++)
                     pipeline[i] <= pipeline[i+1];  // Shift forward
-                end
 
                 pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};  // Clear last slot
 
-                // Add new instruction in FETCH only if there is space
+                // If space is available, introduce a new instruction in FETCH
                 if (num_instr_in_pipeline < MAX_INSTR)
                     pipeline[num_instr_in_pipeline] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
+
 
             for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
                 if (pipeline[i].print)

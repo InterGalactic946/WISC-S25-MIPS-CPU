@@ -22,56 +22,68 @@ module Verification_Unit (
     input string execute_msg,
     input string mem_msg,
     input string wb_msg,
-    input logic stall, flush
+    input logic PC_stall, IF_ID_stall
     );
 
     integer fetch_id, decode_id, execute_id, memory_id, wb_id, msg_index, max_index;
     integer fetch_msg_id[0:71], decode_msg_id[0:71];
-    logic valid_fetch, valid_decode, print, valid_execute, valid_memory, valid_wb, print_enable;
+    logic valid_fetch, valid_decode, print, valid_execute, stall, valid_memory, valid_wb, print_enable;
     debug_info_t pipeline_msgs[0:71];
 
 // First Always Block: Tracks the pipeline and increments IDs
+// First Always Block: Tracks the pipeline and increments IDs
 always @(posedge clk) begin
     if (rst) begin
-        fetch_id <= 0;
-        decode_id <= 0;
-        execute_id <= 0;
-        memory_id <= 0;
-        wb_id <= 0;
-    end else if (valid_fetch) begin
-        // Only increment fetch_id when there's a valid fetch.
-        fetch_id <= fetch_id + 1;
-    end
-
-    // Update pipeline stages.
-    decode_id <= fetch_id;   // Pass the fetch_id to decode_id
-    execute_id <= decode_id; // Pass the decode_id to execute_id
-    memory_id <= execute_id; // Pass the execute_id to memory_id
-    wb_id <= memory_id;      // Pass the memory_id to wb_id
+        // Initialize pipeline registers on reset
+        fetch_id   <= 0;
+        decode_id  <= -1;
+        execute_id <= -2;
+        memory_id  <= -3;
+        wb_id      <= -4;
+    end else if (PC_stall && IF_ID_stall) begin
+        // Both fetch and decode are stalled (hold current values)
+        fetch_id <= fetch_id;           // Stall the instruction in fetch
+        decode_id <= decode_id;         // Stall the instruction in decode
+        execute_id <= decode_id;        // Pass the decode_id to execute_id
+        memory_id  <= execute_id;       // Pass the execute_id to memory_id
+        wb_id      <= memory_id;        // Pass the memory_id to wb_id
+    end else if (!PC_stall && !IF_ID_stall) begin
+        // No stalls, pipeline moves forward
+        fetch_id <= fetch_id + 1;       // Fetch the next instruction
+        decode_id <= fetch_id;          // Pass the fetch_id to decode_id
+        execute_id <= decode_id;        // Pass the decode_id to execute_id
+        memory_id  <= execute_id;       // Pass the execute_id to memory_id
+        wb_id      <= memory_id;        // Pass the memory_id to wb_id
+    end    
 end
 
+// // Second Always Block: Propagate the valid signals across stages
+// always @(posedge clk) begin
+//     if (rst) begin
+//         valid_decode <= 0;
+//         valid_execute <= 0;
+//         valid_memory <= 0;
+//         valid_fetch <= 1;
+//         valid_wb <= 0;
+//     end else if (!stall) begin
+//         // Propagate the valid signal to future stages.
+//         valid_fetch <= 1;
+//     end else if (stall) begin
+//         valid_fetch <= 0;
+//     end
 
-// Second Always Block: Propagate the valid signals across stages
-always @(posedge clk) begin
-    if (rst) begin
-        valid_decode <= 0;
-        valid_execute <= 0;
-        valid_memory <= 0;
-        valid_fetch <= 1;
-        valid_wb <= 0;
-    end else if (!stall) begin
-        // Propagate the valid signal to future stages.
-        valid_fetch <= 1;
-    end else if (stall) begin
-        valid_fetch <= 0;
-    end
+//     // Propogate the signals correctly.
+//     valid_decode <= valid_fetch;
+//     valid_execute <= valid_decode;
+//     valid_memory <= valid_execute;
+//     valid_wb <= valid_memory;
+// end
 
-    // Propogate the signals correctly.
-    valid_decode <= valid_fetch;
-    valid_execute <= valid_decode;
-    valid_memory <= valid_execute;
-    valid_wb <= valid_memory;
-end
+ // We stall on PC or IF.
+  assign stall = PC_stall || IF_ID_stall;
+
+  // We flush IF, or ID stage.
+//   assign flush = iDUT.IF_flush || iDUT.ID_flush;
 
 always @(posedge clk) begin
   if (rst || !stall) begin
@@ -84,10 +96,8 @@ end
 always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[fetch_id].fetch_msgs = '{default: ""};
-        pipeline_msgs[fetch_id].fetch_cycles = '{default: 0};
-    end else if (valid_fetch || stall) begin
+    end else if (fetch_id >= 0) begin
         pipeline_msgs[fetch_id].fetch_msgs[msg_index] = fetch_msg;
-        pipeline_msgs[fetch_id].fetch_cycles[msg_index] = $time / 10;
     end
 end
 
@@ -96,11 +106,9 @@ end
 always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[decode_id].decode_msgs = '{default: '{ "", "" }};
-        pipeline_msgs[decode_id].decode_cycles = '{default: 0};
-    end else if (valid_decode || stall) begin
+    end else if (decode_id >= 0) begin
         pipeline_msgs[decode_id].decode_msgs[msg_index][0] = decode_msg;
         pipeline_msgs[decode_id].decode_msgs[msg_index][1] = instruction_full_msg;
-        pipeline_msgs[decode_id].decode_cycles[msg_index] = $time / 10;
     end
 end
 
@@ -108,10 +116,8 @@ end
 always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[execute_id].execute_msg = "";
-        pipeline_msgs[execute_id].execute_cycle = 0;
-    end else if (valid_execute) begin
+    end else if (execute_id >= 0) begin
         pipeline_msgs[execute_id].execute_msg = execute_msg;
-        pipeline_msgs[execute_id].execute_cycle = $time / 10;
     end
 end
 
@@ -120,10 +126,8 @@ end
 always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[memory_id].memory_msg = "";
-        pipeline_msgs[memory_id].memory_cycle = 0;
-    end else if (valid_memory) begin
+    end else if (memory_id >= 0) begin
         pipeline_msgs[memory_id].memory_msg = mem_msg;
-        pipeline_msgs[memory_id].memory_cycle = $time / 10;
     end
 end
 
@@ -132,17 +136,15 @@ end
 always @(negedge clk) begin
     if (rst) begin
         pipeline_msgs[wb_id].wb_msg = "";
-        pipeline_msgs[wb_id].wb_cycle = 0;
-    end else if (valid_wb) begin
+    end else if (wb_id >= 0) begin
         pipeline_msgs[wb_id].wb_msg = wb_msg;
-        pipeline_msgs[wb_id].wb_cycle = $time / 10;
     end
 end
 
     always @(posedge clk)
         if (rst)
             print <= 1'b0;
-        else if (valid_wb)
+        else if (wb_id >= 0)
             print <= 1'b1;
         else
             print <= 1'b0;
@@ -161,15 +163,15 @@ end
             $display("==========================================================");
             for (int i = 0; i < 5; i = i+1)
                 if (pipeline_msgs[wb_id].fetch_msgs[i] !== "")
-                    $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msgs[i], pipeline_msgs[wb_id].fetch_cycles[i]);
+                    $display("%s", pipeline_msgs[wb_id].fetch_msgs[i]);
             // $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].fetch_msgs[i], pipeline_msgs[wb_id].fetch_cycle);            
             for (int i = 0; i < 5; i = i+1)
                 if (pipeline_msgs[wb_id].decode_msgs[i][0] !== "")
-                    $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msgs[i][0], pipeline_msgs[wb_id].decode_cycles[i]);
+                    $display("%s", pipeline_msgs[wb_id].decode_msgs[i][0]);
             // $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].decode_msg[0], pipeline_msgs[wb_id].decode_cycle);
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].execute_msg, pipeline_msgs[wb_id].execute_cycle);
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].memory_msg, pipeline_msgs[wb_id].memory_cycle);
-            $display("|%s @ Cycle: %0t", pipeline_msgs[wb_id].wb_msg, pipeline_msgs[wb_id].wb_cycle);
+            $display("%s", pipeline_msgs[wb_id].execute_msg);
+            $display("%s", pipeline_msgs[wb_id].memory_msg);
+            $display("%s", pipeline_msgs[wb_id].wb_msg);
             $display("==========================================================\n");
         end
     end

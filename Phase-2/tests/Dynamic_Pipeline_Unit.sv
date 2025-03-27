@@ -134,9 +134,6 @@ module Dynamic_Pipeline_Unit (
                 $display("%s", pipeline[i].memory_msg);
                 $display("%s", pipeline[i].wb_msg);
                 $display("==========================================================\n");
-
-                // Reset print flag after displaying
-                pipeline[i].print = 0;
             end
         end
     end

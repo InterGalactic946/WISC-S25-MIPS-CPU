@@ -1,71 +1,90 @@
 import re
+from collections import defaultdict
 
 # Define the log file
 log_file = "./Phase-2/tests/output/logs/transcript/cpu_tb_transcript.log"
 output_file = "formatted_log_output.txt"
 
-# Regular expressions for parsing different stages
+# Regular expressions for different stages
+instruction_pattern = re.compile(r"ID: (\d+)\. (.*?) @ Cycle: (\d+)")
 fetch_pattern = re.compile(r"ID: (\d+). \|(\[FETCH\].*?)@ Cycle: (\d+)")
 decode_pattern = re.compile(r"ID: (\d+). \|(\[DECODE\].*?)@ Cycle: (\d+)")
 execute_pattern = re.compile(r"ID: (\d+). \|(\[EXECUTE\].*?)@ Cycle: (\d+)")
 memory_pattern = re.compile(r"ID: (\d+). \|(\[MEMORY\].*?)@ Cycle: (\d+)")
 writeback_pattern = re.compile(r"ID: (\d+). \|(\[WRITE-BACK\].*?)@ Cycle: (\d+)")
 
-# Regular expression for extracting instruction name from a line like `# ID: 0. LLB R1, 0x0002 @ Cycle: 4`
-instruction_pattern = re.compile(r"ID: (\d+)\. (.*?) @ Cycle: (\d+)")
+# Dictionary to store grouped log messages for each instruction ID
+instruction_logs = defaultdict(lambda: {
+    "instruction": None,
+    "fetch": None,
+    "decode": None,
+    "execute": None,
+    "memory": None,
+    "writeback": None,
+    "wb_cycle": None
+})
 
-# Helper function to parse each log line and group by ID and cycle
-def process_log_line(line, pattern, stage):
-    match = pattern.search(line)
-    if match:
-        instr_id, msg, cycle = match.groups()
-        instr_id = int(instr_id)
-        cycle = int(cycle)
-        return f"|{msg} @ Cycle: {cycle} "
-
-# Store instructions and their write-back cycle numbers for later use in formatting the header
-instruction_cycles = {}
-
-# Process the log file
+# Read and process the log file
 with open(log_file, 'r') as file:
-    output = []
     for line in file:
-        # Check for WRITE-BACK lines to store the cycle number for each instruction
-        writeback_line = writeback_pattern.search(line)
-        if writeback_line:
-            instr_id, msg, cycle = writeback_line.groups()
+        # Capture instruction lines
+        instruction_match = instruction_pattern.search(line)
+        if instruction_match:
+            instr_id, instruction, _ = instruction_match.groups()
             instr_id = int(instr_id)
-            cycle = int(cycle)
-            instruction_cycles[instr_id] = cycle
+            instruction_logs[instr_id]["instruction"] = instruction
 
-        # Check for instruction lines and use the cycle from the WRITE-BACK line for the header
-        instruction_line = instruction_pattern.search(line)
-        if instruction_line:
-            instr_id, instruction, _ = instruction_line.groups()
-            instr_id = int(instr_id)
-            # Retrieve the cycle from the WRITE-BACK line for this instruction
-            cycle = instruction_cycles.get(instr_id, "N/A")  # Use "N/A" if cycle is not found
-            output.append(f"========================================================\n| Instruction: {instruction} | Completed At Cycle: {cycle} |")
+        # Capture fetch stage
+        fetch_match = fetch_pattern.search(line)
+        if fetch_match:
+            instr_id, msg, cycle = fetch_match.groups()
+            instr_id, cycle = int(instr_id), int(cycle)
+            instruction_logs[instr_id]["fetch"] = f"|{msg} @ Cycle: {cycle} |"
 
-        # Check for stages and process each stage
-        fetch_line = process_log_line(line, fetch_pattern, 'FETCH')
-        if fetch_line:
-            output.append(fetch_line)
+        # Capture decode stage
+        decode_match = decode_pattern.search(line)
+        if decode_match:
+            instr_id, msg, cycle = decode_match.groups()
+            instr_id, cycle = int(instr_id), int(cycle)
+            instruction_logs[instr_id]["decode"] = f"|{msg} @ Cycle: {cycle} |"
 
-        decode_line = process_log_line(line, decode_pattern, 'DECODE')
-        if decode_line:
-            output.append(decode_line)
+        # Capture execute stage
+        execute_match = execute_pattern.search(line)
+        if execute_match:
+            instr_id, msg, cycle = execute_match.groups()
+            instr_id, cycle = int(instr_id), int(cycle)
+            instruction_logs[instr_id]["execute"] = f"|{msg} @ Cycle: {cycle} |"
 
-        execute_line = process_log_line(line, execute_pattern, 'EXECUTE')
-        if execute_line:
-            output.append(execute_line)
+        # Capture memory stage
+        memory_match = memory_pattern.search(line)
+        if memory_match:
+            instr_id, msg, cycle = memory_match.groups()
+            instr_id, cycle = int(instr_id), int(cycle)
+            instruction_logs[instr_id]["memory"] = f"|{msg} @ Cycle: {cycle} |"
 
-        memory_line = process_log_line(line, memory_pattern, 'MEMORY')
-        if memory_line:
-            output.append(memory_line)
+        # Capture write-back stage and store the final cycle number
+        writeback_match = writeback_pattern.search(line)
+        if writeback_match:
+            instr_id, msg, cycle = writeback_match.groups()
+            instr_id, cycle = int(instr_id), int(cycle)
+            instruction_logs[instr_id]["writeback"] = f"|{msg} @ Cycle: {cycle} |"
+            instruction_logs[instr_id]["wb_cycle"] = cycle  # Store completion cycle
 
-# Write to output file
+# Format and write output
 with open(output_file, 'w') as out_file:
-    out_file.write("\n".join(output))
+    for instr_id in sorted(instruction_logs.keys()):
+        entry = instruction_logs[instr_id]
+        instruction = entry["instruction"]
+        wb_cycle = entry["wb_cycle"] if entry["wb_cycle"] is not None else "N/A"
+
+        # Print instruction header with the correct cycle from the write-back stage
+        out_file.write("========================================================\n")
+        out_file.write(f"| Instruction: {instruction} | Completed At Cycle: {wb_cycle} |\n")
+        out_file.write("========================================================\n")
+
+        # Print each stage if it exists
+        for stage in ["fetch", "decode", "execute", "memory", "writeback"]:
+            if entry[stage]:
+                out_file.write(entry[stage] + "\n")
 
 print("Processing complete. Output written to 'formatted_log_output.txt'.")

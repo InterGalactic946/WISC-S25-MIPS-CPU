@@ -42,14 +42,14 @@ package Verification_tasks;
 
   // Task: A task to verify the FETCH stage.
   task automatic verify_FETCH(
-      input logic PC_stall, expected_PC_stall, HLT,
+      input logic PC_stall, expected_PC_stall, IF_flush, expected_IF_flush, HLT,
       input logic [15:0] PC_next, expected_PC_next,
       input logic [15:0] PC_inst, expected_PC_inst,
       input logic [15:0] PC_curr, expected_PC_curr,
       input logic [1:0]  prediction, expected_prediction,
       input logic [15:0] predicted_target, expected_predicted_target,
       input string stage,
-      output string stage_msg, stall_msg 
+      output string stage_msg, stall_msg, flush_msg
   );
     begin
         // Initialize message.
@@ -92,6 +92,12 @@ package Verification_tasks;
               return;  // Exit task on error
           end
 
+          // Verify the flush state.
+          if (IF_flush !== expected_IF_flush) begin
+              decode_msg = $sformatf("[%s] ERROR: IF_flush: %b, expected_IF_flush: %b.", stage, IF_flush, expected_IF_flush);
+              return;  // Exit task on error
+          end
+
           if (prediction[1])
               // Branch is predicted taken.
               stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
@@ -106,6 +112,10 @@ package Verification_tasks;
             stall_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
           else if (PC_stall && HLT)
             stall_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+
+          if (IF_flush) begin // If the instruction is flushed.
+            flush_msg = $sformatf("[IF_ID] FLUSH: Instruction flushed at [IF] due to mispredicted branch.");
+          end
     end
   endtask
 
@@ -249,12 +259,6 @@ package Verification_tasks;
               return;
           end
 
-          // Verify the flush state.
-          if (IF_flush !== expected_IF_flush) begin
-              decode_msg = $sformatf("[DECODE] ERROR: IF_flush: %b, expected_IF_flush: %b.", IF_flush, expected_IF_flush);
-              return;  // Exit task on error
-          end
-
           // Verify the stall state.
           if (IF_ID_stall !== expected_IF_ID_stall) begin
               decode_msg = $sformatf("[DECODE] ERROR: IF_ID_stall: %b, expected_update_PC: %b.", IF_ID_stall, expected_IF_ID_stall);
@@ -270,8 +274,9 @@ package Verification_tasks;
           // If there is a stall at the decode stage, print out the stall along with reason.
           if (IF_ID_stall && !hlt) begin
             stall_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
-          end else if (IF_flush) begin // If the instruction is flushed.
-            decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode (IF) due to mispredicted branch.");
+          end 
+          
+          if (IF_flush) begin // If the instruction is flushed.
             instr_flush_msg = $sformatf("FLUSHED");
           end
       end

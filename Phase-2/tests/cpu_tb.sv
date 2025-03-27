@@ -281,12 +281,14 @@ module cpu_tb();
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string ftch_msg, stall_msg, fetch_stall_msg;
+      string ftch_msg, stall_msg, fetch_stall_msg, ftch_flush_msg, fetch_flush_msg;
 
         // Verify FETCH stage logic
         verify_FETCH(
             .PC_stall(iDUT.PC_stall),
             .expected_PC_stall(iMODEL.PC_stall),
+            .IF_flush(iDUT.IF_flush),
+            .expected_IF_flush(iMODEL.IF_flush),
             .HLT(iDUT.iDECODE.HLT),
             .PC_next(iDUT.PC_next), 
             .expected_PC_next(iMODEL.PC_next), 
@@ -300,7 +302,7 @@ always @(posedge clk) begin
             .expected_predicted_target(iMODEL.predicted_target),
             .stage("FETCH"),
             .stage_msg(ftch_msg),
-            .stall_msg(stall_msg)
+            .stall_msg(stall_msg), .flush_msg(ftch_flush_msg)
         );
 
         // if (!stall && valid_fetch)
@@ -317,8 +319,13 @@ always @(posedge clk) begin
         // end
         fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         fetch_stall_msg = {"|", stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        fetch_flush_msg = {"|", ftch_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        
         if (stall_msg !== "")
           $display(fetch_stall_msg);
+        
+        if (ftch_flush_msg !== "")
+          $display(fetch_flush_msg);
     end
 end
 
@@ -480,7 +487,7 @@ always @(posedge clk) begin
             .update_PC(iDUT.update_PC),
             .expected_update_PC(iMODEL.update_PC),
             
-            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg),
+            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg)
             .instruction_full(instr_full_msg), .instr_flush_msg(inst_flush_msg)
         );
 

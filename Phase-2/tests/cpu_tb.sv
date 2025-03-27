@@ -287,8 +287,6 @@ always @(posedge clk) begin
         verify_FETCH(
             .PC_stall(iDUT.PC_stall),
             .expected_PC_stall(iMODEL.PC_stall),
-            .IF_flush(iDUT.IF_flush),
-            .expected_IF_flush(iMODEL.IF_flush),
             .HLT(iDUT.iDECODE.HLT),
             .PC_next(iDUT.PC_next), 
             .expected_PC_next(iMODEL.PC_next), 
@@ -302,7 +300,7 @@ always @(posedge clk) begin
             .expected_predicted_target(iMODEL.predicted_target),
             .stage("FETCH"),
             .stage_msg(ftch_msg),
-            .stall_msg(stall_msg), .flush_msg(ftch_flush_msg)
+            .stall_msg(stall_msg)
         );
 
         // if (!stall && valid_fetch)
@@ -319,13 +317,13 @@ always @(posedge clk) begin
         // end
         fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         fetch_stall_msg = {"|", stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        fetch_flush_msg = {"|", ftch_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        // fetch_flush_msg = {"|", ftch_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         
         if (stall_msg !== "")
           $display(fetch_stall_msg);
         
-        if (ftch_flush_msg !== "")
-          $display(fetch_flush_msg);
+        // if (ftch_flush_msg !== "")
+        //   $display(fetch_flush_msg);
     end
 end
 
@@ -452,7 +450,7 @@ end
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string dcode_msg, instr_full_msg, instr_flush_msg, inst_flush_msg, dcode_stall_msg, decode_stall_msg;
+      string dcode_msg, instr_full_msg, instr_flush_msg, inst_flush_msg, dcode_flush_msg, decode_flush_msg, dcode_stall_msg, decode_stall_msg;
 
         // Call the verify_DECODE task and get the decode message
         verify_DECODE(
@@ -487,7 +485,7 @@ always @(posedge clk) begin
             .update_PC(iDUT.update_PC),
             .expected_update_PC(iMODEL.update_PC),
             
-            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg),
+            .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg), .flush_msg(dcode_flush_message)
             .instruction_full(instr_full_msg), .instr_flush_msg(inst_flush_msg)
         );
 
@@ -516,9 +514,13 @@ always @(posedge clk) begin
 
         decode_stall_msg = {"|", dcode_stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         instr_flush_msg = {"|", inst_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        decode_flush_msg = {"|", dcode_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
         if (dcode_stall_msg !== "")
           $display(decode_stall_msg);
+        
+        if (dcode_flush_msg !== "")
+          $display(decode_flush_msg);
         
         if (inst_flush_msg !== "")
           $display(instr_flush_msg);

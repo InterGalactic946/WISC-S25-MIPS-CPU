@@ -119,7 +119,7 @@ module Dynamic_Pipeline_Unit (
                             pipeline[i].stage <= DECODE;
                     end
                     EXECUTE:   pipeline[i].stage <= MEMORY;
-                    MEMORY:    pipeline[i].stage = WRITEBACK;
+                    MEMORY:    pipeline[i].stage <= WRITEBACK;
                     WRITEBACK: begin
                         pipeline[i].print <= 1;
                         pipeline[i].stage <= EMPTY;
@@ -136,11 +136,11 @@ module Dynamic_Pipeline_Unit (
             if (pipeline[0].stage === WRITEBACK) begin
                 // Shift pipeline stages and move instructions up
                 for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
-                    pipeline[i] <= pipeline[i-1];  // Shift instructions
+                    pipeline[i] = pipeline[i-1];  // Shift instructions
                 end
 
                 // Handle stage transition for the first instruction to FETCH
-                pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+                pipeline[0] = '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
         end
     end

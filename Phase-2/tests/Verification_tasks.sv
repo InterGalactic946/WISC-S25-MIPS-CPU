@@ -176,7 +176,7 @@ package Verification_tasks;
       input logic wen_BTB, expected_wen_BTB,
       input logic wen_BHT, expected_wen_BHT,
       input logic update_PC, expected_update_PC,
-      output string decode_msg, stall_msg, flush_msg,
+      output string decode_msg, stall_msg,
       output string instruction_full, instr_flush_msg
   );
       begin
@@ -190,7 +190,7 @@ package Verification_tasks;
           instruction_full = "";
           hazard_type = "";
           stall_msg = "";
-          flush_msg = "";
+        //   flush_msg = "";
           instr_flush_msg = "";
 
           // Determine the type of hazard and generate the appropriate message.

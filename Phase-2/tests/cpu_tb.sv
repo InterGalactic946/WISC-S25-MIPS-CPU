@@ -389,7 +389,7 @@ end
           .instruction_full(instr_full_msg), .instr_flush_msg(inst_flush_msg)
       );
       
-      decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      decode_msg = {"|", dcode_msg_local, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       stall_msg = {"|", dcode_stall_msg_local, " @ Cycle: ", $sformatf("%0d", ($time/10))};
   end
   endtask

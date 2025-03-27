@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 
 # Read the log file
-log_file = "cpu_tb_transcript.log"
+log_file = "../Phase-2/output/logs/transcript/cpu_tb_transcript.log"
 stages = ['FETCH', 'DECODE', 'EXECUTE', 'MEMORY', 'WRITE-BACK']
 instructions = defaultdict(list)
 

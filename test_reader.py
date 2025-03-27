@@ -1,10 +1,8 @@
 import re
-from collections import defaultdict
 
-# Read the log file
-log_file = "./Phase-2/tests/output/logs/transcript/cpu_tb_transcript.log"
-stages = ['FETCH', 'DECODE', 'EXECUTE', 'MEMORY', 'WRITE-BACK']
-instructions = defaultdict(list)
+# Define the log file
+log_file = "../Phase-2/tests/output/logs/transcript/cpu_tb_transcript.log"
+output_file = "formatted_log_output.txt"
 
 # Regular expressions for parsing different stages
 fetch_pattern = re.compile(r"ID: (\d+). \|(\[FETCH\].*?)@ Cycle: (\d+)")
@@ -23,7 +21,7 @@ def process_log_line(line, pattern, stage):
         instr_id, msg, cycle = match.groups()
         instr_id = int(instr_id)
         cycle = int(cycle)
-        instructions[instr_id].append({'stage': stage, 'msg': msg, 'cycle': cycle})
+        return f"|[{stage}] {msg} @ Cycle: {cycle} |"
 
 # Helper function to extract the instruction and cycle for general lines
 def process_instruction_line(line):
@@ -32,49 +30,40 @@ def process_instruction_line(line):
         instr_id, instruction, cycle = match.groups()
         instr_id = int(instr_id)
         cycle = int(cycle)
-        instructions[instr_id].append({'stage': 'INSTRUCTION', 'msg': instruction, 'cycle': cycle})
+        return f"========================================================\n| Instruction: {instruction} @ Cycle: {cycle} |"
 
 # Process the log file
 with open(log_file, 'r') as file:
+    output = []
     for line in file:
-        # Check for instructions with specific stages
-        process_log_line(line, fetch_pattern, 'FETCH')
-        process_log_line(line, decode_pattern, 'DECODE')
-        process_log_line(line, execute_pattern, 'EXECUTE')
-        process_log_line(line, memory_pattern, 'MEMORY')
-        process_log_line(line, writeback_pattern, 'WRITE-BACK')
+        # Check for instruction lines
+        instruction_line = process_instruction_line(line)
+        if instruction_line:
+            output.append(instruction_line)
+
+        # Check for stages and process each stage
+        fetch_line = process_log_line(line, fetch_pattern, 'FETCH')
+        if fetch_line:
+            output.append(fetch_line)
         
-        # Check for general instruction lines and extract the instruction name
-        process_instruction_line(line)
+        decode_line = process_log_line(line, decode_pattern, 'DECODE')
+        if decode_line:
+            output.append(decode_line)
 
-# Sort instructions by cycle within each instruction ID
-output = []
+        execute_line = process_log_line(line, execute_pattern, 'EXECUTE')
+        if execute_line:
+            output.append(execute_line)
 
-# Group logs by instruction ID, and then sort by cycle
-for instr_id, stages_list in instructions.items():
-    # Sort stages by cycle number
-    stages_list.sort(key=lambda x: x['cycle'])
+        memory_line = process_log_line(line, memory_pattern, 'MEMORY')
+        if memory_line:
+            output.append(memory_line)
 
-    # Extract the instruction message (assuming the first 'INSTRUCTION' message has the full instruction)
-    instruction = next((stage['msg'] for stage in stages_list if stage['stage'] == 'INSTRUCTION'), "Unknown Instruction")
-    
-    # Get the cycle when the instruction is completed (last stage in this sorted list)
-    last_cycle = stages_list[-1]['cycle']
-
-    # Format the instruction output
-    output.append(f"========================================================")
-    output.append(f"| Instruction: {instruction} | Completed At Cycle: {last_cycle} |")
-    output.append(f"========================================================")
-    
-    # Print each stage message in the correct order
-    for stage in stages_list:
-        output.append(f"|[{stage['stage']}] {stage['msg']} @ Cycle: {stage['cycle']} |")
-    
-    # Closing line for this instruction
-    output.append(f"========================================================\n")
+        writeback_line = process_log_line(line, writeback_pattern, 'WRITE-BACK')
+        if writeback_line:
+            output.append(writeback_line)
 
 # Write to output file
-with open("formatted_log_output.txt", 'w') as output_file:
-    output_file.write("\n".join(output))
+with open(output_file, 'w') as out_file:
+    out_file.write("\n".join(output))
 
 print("Processing complete. Output written to 'formatted_log_output.txt'.")

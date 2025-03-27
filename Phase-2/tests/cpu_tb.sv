@@ -177,7 +177,7 @@ module cpu_tb();
             for (int i = 0; i < num_instr_in_pipeline; i++) begin
                 case (pipeline[i].stage)
                     FETCH: begin
-                        verify_fetch(.fetch_msg(pipeline[i].fetch_msgs[msg_index]), .stall_msg());
+                        verify_fetch(.fetch_msg(pipeline[i].fetch_msgs[msg_index]), .stall_msg(fetch_msg));
                         pipeline[i].instr_full_msg = "";
                         pipeline[i].decode_msgs[msg_index] = "";  // Clear other stage messages
                         pipeline[i].execute_msg = "";
@@ -186,14 +186,14 @@ module cpu_tb();
                     end
                     DECODE: begin
                         pipeline[i].decode_msgs[msg_index] = decode_msg;
-                        verify_decode(.decode_msg(pipeline[i].decode_msgs[msg_index]), .decode_stall_msg(), .instr_full_msg(pipeline[i].instr_full_msg));
+                        verify_decode(.decode_msg(pipeline[i].decode_msgs[msg_index]), .decode_stall_msg(decode_msg), .instr_full_msg(pipeline[i].instr_full_msg));
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].execute_msg = "";
                         pipeline[i].memory_msg = "";
                         pipeline[i].wb_msg = "";
                     end
                     EXECUTE: begin
-                        verify_execute(.execute_msg(pipeline[i].execute_msg), .ex_flush_msg());  // Only message outputs
+                        verify_execute(.execute_msg(pipeline[i].execute_msg), .ex_flush_msg(execute_msg));  // Only message outputs
                         pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].decode_msgs = pipeline[i].decode_msgs;

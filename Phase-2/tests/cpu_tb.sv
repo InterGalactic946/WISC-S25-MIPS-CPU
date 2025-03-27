@@ -281,7 +281,7 @@ module cpu_tb();
 // Always block for verify_FETCH stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string ftch_msg, stall_msg;
+      string ftch_msg, stall_msg, fetch_stall_msg;
 
         // Verify FETCH stage logic
         verify_FETCH(
@@ -316,7 +316,9 @@ always @(posedge clk) begin
         //   pipeline_msgs[fetch_id].fetch_cycles[msg_index] = $time / 10;
         // end
         fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-        $display(stall_msg);
+        fetch_stall_msg = {"|", stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        if (stall_msg !== "")
+          $display(fetch_stall_msg);
     end
 end
 
@@ -443,7 +445,7 @@ end
 // Always block for verify_DECODE stage
 always @(posedge clk) begin
     if (rst_n) begin
-      string dcode_msg, instr_full_msg, instr_flush_msg, dcode_stall_msg;
+      string dcode_msg, instr_full_msg, instr_flush_msg, inst_flush_msg, dcode_stall_msg, decode_stall_msg;
 
         // Call the verify_DECODE task and get the decode message
         verify_DECODE(
@@ -479,7 +481,7 @@ always @(posedge clk) begin
             .expected_update_PC(iMODEL.update_PC),
             
             .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg),
-            .instruction_full(instr_full_msg), .instr_flush_msg(instr_flush_msg)
+            .instruction_full(instr_full_msg), .instr_flush_msg(inst_flush_msg)
         );
 
         // // // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
@@ -504,6 +506,15 @@ always @(posedge clk) begin
         decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         // decode_stall_msg <= dcode_stall_msg;
         instruction_full_msg = instr_full_msg;
+
+        decode_stall_msg = {"|", dcode_stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        instr_flush_msg = {"|", inst_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+
+        if (dcode_stall_msg !== "")
+          $display(decode_stage_msg);
+        
+        if (inst_flush_msg !== "")
+          $display(instr_flush_msg);
 
         // $display(decode_msg);
         // $display(instruction_full_msg);
@@ -552,7 +563,10 @@ end
       //   pipeline_msgs[execute_id].execute_cycle = $time / 10;
       // end
       execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-      $display(ex_flush_msg);
+      ex_flush_msg = {"|", ex_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      
+      if (ex_flush_msg !== "")
+        $display(ex_flush_msg);
 end
     end
   //end

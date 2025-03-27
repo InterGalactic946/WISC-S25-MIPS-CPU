@@ -1,7 +1,7 @@
 import re
 
 # Define the log file
-log_file = "../Phase-2/tests/output/logs/transcript/cpu_tb_transcript.log"
+log_file = "./Phase-2/tests/output/logs/transcript/cpu_tb_transcript.log"
 output_file = "formatted_log_output.txt"
 
 # Regular expressions for parsing different stages

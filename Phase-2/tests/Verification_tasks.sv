@@ -49,7 +49,7 @@ package Verification_tasks;
       input logic [1:0]  prediction, expected_prediction,
       input logic [15:0] predicted_target, expected_predicted_target,
       input string stage,
-      output string stage_msg, stall_msg,
+      output string stage_msg, stall_msg
   );
     begin
         // Initialize message.
@@ -176,7 +176,7 @@ package Verification_tasks;
       input logic wen_BTB, expected_wen_BTB,
       input logic wen_BHT, expected_wen_BHT,
       input logic update_PC, expected_update_PC,
-      output string decode_msg, stall_msg, flush_msg
+      output string decode_msg, stall_msg, flush_msg,
       output string instruction_full, instr_flush_msg
   );
       begin

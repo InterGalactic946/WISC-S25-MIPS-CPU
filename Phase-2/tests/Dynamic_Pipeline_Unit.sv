@@ -39,8 +39,6 @@ module Dynamic_Pipeline_Unit (
         else if (stall)
             msg_index <= msg_index + 1;
     end
-
-    always_comb begin
         
 
     // Simulate pipeline execution

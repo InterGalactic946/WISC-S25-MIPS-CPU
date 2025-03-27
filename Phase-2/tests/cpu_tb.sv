@@ -92,7 +92,7 @@ module cpu_tb();
     .mem_msg(mem_msg),
     .wb_msg(wb_msg),
     .PC_stall(iDUT.PC_stall),
-    .IF_ID_stall_stall(iDUT.IF_ID_stall)
+    .IF_ID_stall(iDUT.IF_ID_stall)
   );
 
   // // Instantiate the DUT

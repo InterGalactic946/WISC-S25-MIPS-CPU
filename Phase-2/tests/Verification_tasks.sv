@@ -269,10 +269,10 @@ package Verification_tasks;
         // Print success message.
         decode_msg = $sformatf("[DECODE] SUCCESS: %s", instr_state);
 
-          // If there is a stall at the decode stage, print out the stall along with reason.
-          if (IF_ID_stall && !hlt) begin
-            stall_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
-          end 
+        // If there is a stall at the decode stage, print out the stall along with reason.
+        if (IF_ID_stall && !hlt) begin
+            decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
+        end 
           
         if (IF_flush) begin // If the instruction is flushed.
             decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode due to mispredicted branch.");

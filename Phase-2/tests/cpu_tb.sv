@@ -186,7 +186,7 @@ module cpu_tb();
                     end
                     DECODE: begin
                         pipeline[i].decode_msgs[msg_index] = decode_msg;
-                        verify_decode(.decode_msg(pipeline[i].decode_msgs[msg_index]), .decode_stall_msg(decode_msg), .instr_full_msg(pipeline[i].instr_full_msg));
+                        verify_decode(.decode_msg(pipeline[i].decode_msgs[msg_index]), .stall_msg(decode_msg), .instr_full_msg(pipeline[i].instr_full_msg));
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].execute_msg = "";
                         pipeline[i].memory_msg = "";

@@ -140,7 +140,7 @@ module cpu_tb();
     } instr_t;
 
     // Pipeline: 1D array to track each instruction's stage
-    instr_t pipeline[MAX_INSTR];
+    instr_t pipeline[5];
     int num_instr_in_pipeline;  // Number of instructions in the pipeline
 
     // Simulate pipeline execution

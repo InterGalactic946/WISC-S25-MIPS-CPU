@@ -51,6 +51,20 @@ module Dynamic_Pipeline_Unit (
                     pipeline[i] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
         end else begin
+            // Shift pipeline stages only if instruction 0 has reached WRITEBACK
+            if (pipeline[0].stage === WRITEBACK) begin
+                // Move instructions forward in the pipeline
+                for (int i = 1; i < MAX_INSTR; i++) begin
+                    pipeline[i-1] <= pipeline[i];  // Shift each instruction forward
+                end
+
+                // Clear the last slot after shifting
+                pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+
+                // Insert a new instruction in FETCH stage
+                pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+            end
+            
             // Handle stall during DECODE stage
             for (int i = 0; i < num_instr_in_pipeline; i++) begin
                 case (pipeline[i].stage)
@@ -130,20 +144,6 @@ module Dynamic_Pipeline_Unit (
             for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
                 if (pipeline[i].print)
                     pipeline[i].print <= 0;
-            end
-
-            // Shift pipeline stages only if instruction 0 has reached WRITEBACK
-            if (pipeline[0].stage === WRITEBACK) begin
-                // Move instructions forward in the pipeline
-                for (int i = 1; i < MAX_INSTR; i++) begin
-                    pipeline[i-1] <= pipeline[i];  // Shift each instruction forward
-                end
-
-                // Clear the last slot after shifting
-                pipeline[MAX_INSTR-1] <= '{EMPTY, '{default: ""}, '{default: ""}, "", "", "", "", 0};
-
-                // Insert a new instruction in FETCH stage
-                pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             end
         end
     end

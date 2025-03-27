@@ -89,10 +89,15 @@ module Dynamic_Pipeline_Unit (
                     EXECUTE:   pipeline[i].stage = MEMORY;
                     MEMORY:    pipeline[i].stage = WRITEBACK;
                     WRITEBACK: begin
-                        pipeline[i].print = 1;
+                        pipeline[i].print <= 1;
                         pipeline[i].stage = EMPTY;
                     end
                 endcase
+            end
+
+            for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
+                if (pipeline[i].print)
+                    pipeline[i].print <= 0;
             end
 
             // Shift pipeline stages only if instruction 0 has reached WRITEBACK

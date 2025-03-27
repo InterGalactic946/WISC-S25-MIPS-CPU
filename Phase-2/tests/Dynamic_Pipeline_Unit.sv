@@ -42,7 +42,7 @@ module Dynamic_Pipeline_Unit (
         
 
     // Simulate pipeline execution
-    always_ff @(negedge clk, posedge rst) begin
+    always_ff @(posedge clk) begin
         if (rst) begin
             for (int i = 0; i < MAX_INSTR; i++) begin
                 if (i === 0)

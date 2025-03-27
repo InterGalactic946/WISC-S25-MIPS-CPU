@@ -327,6 +327,25 @@ always @(posedge clk) begin
     end
 end
 
+
+// Always block for verify_FETCH stage
+always @(posedge clk) begin
+    if (rst_n) begin
+        // Verify FETCH stage logic
+        string if_id_msg;
+        
+        verify_IF_ID(
+            .IF_flush(iDUT.IF_flush), 
+            .expected_IF_flush(iMODEL.IF_flush), 
+            .if_id_msg(if_id_msg)
+        );
+
+        if (if_id_msg !== "")
+          $display(if_id_msg);
+
+    end
+end
+
 // // First Always Block: Tracks the pipeline and increments IDs
 // always @(posedge clk) begin
 //     if (rst) begin

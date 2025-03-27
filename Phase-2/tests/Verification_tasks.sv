@@ -112,32 +112,22 @@ package Verification_tasks;
 
   // Task: Verifies IF/ID Pipeline Register.
   task automatic verify_IF_ID(
-      input logic [65:0] IF_ID_signals, input logic [65:0] expected_IF_ID_signals, 
-      input logic PC_stall, IF_ID_stall, IF_flush,
-      input logic br_hazard, b_hazard, load_use_hazard, hlt,
+      input logic IF_flush, expected_IF_flush
       output string if_id_msg
   );
     begin
-    string hazard_type = "";
+    if_id_msg = "";
 
-    // Determine the type of hazard and generate the appropriate message.
-    if (load_use_hazard) begin
-        hazard_type = "load-to-use hazard";
-    end else if (br_hazard) begin
-        hazard_type = "Branch (BR) hazard";
-    end else if (b_hazard) begin
-        hazard_type = "Branch (B) hazard";
-    end else if (hlt) begin
-        hazard_type = "HLT instruction";
+    // Handle IF flush messages.
+    if (IF_flush !== expected_IF_flush) begin
+        if_id_msg = $sformatf("[IF_ID] ERROR: IF_flush: %b, expected_IF_flush: %b.", IF_flush, expected_IF_flush);
+        return;
     end
 
-    // Handle PC/IF_ID_stall messages.
-    if (PC_stall && IF_ID_stall) begin
-        if_id_msg = $sformatf("[FETCH]: PC stalled due to %s.\n|[IF_ID]: IF_ID stalled due to %s.", hazard_type, hazard_type);
+    // Print flush message.
+    if (IF_flush) begin
+        if_id_msg = $sformatf("[IF_ID]: IF flushed due to mispredicted branch.");
         return;
-    // end else if (IF_flush) begin
-    //     if_id_msg = $sformatf("[FLUSH]: IF flushed due to mispredicted branch.");
-    //     return;
     end else begin
 
         // // Verify fetch otheriwse.

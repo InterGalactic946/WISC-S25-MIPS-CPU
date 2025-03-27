@@ -451,7 +451,7 @@ always @(posedge clk) begin
             .br_hazard(iMODEL.iHDU.BR_hazard),
             .b_hazard(iMODEL.iHDU.B_hazard),
             .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
-            .hlt(iMODEL.iHDU.HLT)
+            .hlt(iMODEL.iHDU.HLT),
             .EX_signals(iDUT.EX_signals),
             .expected_EX_signals(iMODEL.EX_signals),
             .MEM_signals(iDUT.MEM_signals),

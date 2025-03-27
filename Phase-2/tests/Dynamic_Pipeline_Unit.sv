@@ -122,7 +122,7 @@ module Dynamic_Pipeline_Unit (
                     MEMORY:    pipeline[i].stage = WRITEBACK;
                     WRITEBACK: begin
                         pipeline[i].print <= 1;
-                        // pipeline[i].stage <= EMPTY;
+                        pipeline[i].stage <= EMPTY;
                     end
                 endcase
             end

@@ -479,7 +479,7 @@ always @(posedge clk) begin
             .expected_update_PC(iMODEL.update_PC),
             
             .decode_msg(dcode_msg), .stall_msg(dcode_stall_msg),
-            .instruction_full(instr_full_msg), instr_flush_msg(instr_flush_msg)
+            .instruction_full(instr_full_msg), .instr_flush_msg(instr_flush_msg)
         );
 
         // // // Correct DECODE cycle tracking (Fetch happens one cycle earlier)
@@ -539,7 +539,7 @@ end
         .expected_VF(iMODEL.VF),
         .expected_NF(iMODEL.NF),
         
-        .execute_msg(ex_msg), execute_flush_msg(ex_flush_msg)
+        .execute_msg(ex_msg), .execute_flush_msg(ex_flush_msg)
       );
 
       // if (valid_execute)

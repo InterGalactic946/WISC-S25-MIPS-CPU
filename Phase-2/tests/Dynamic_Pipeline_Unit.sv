@@ -127,6 +127,11 @@ module Dynamic_Pipeline_Unit (
                 endcase
             end
 
+            for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
+                if (pipeline[i].print)
+                    pipeline[i].print <= 0;
+            end
+
             // Shift pipeline stages only if instruction 0 has reached WRITEBACK
             if (pipeline[0].stage === WRITEBACK) begin
                 // Shift pipeline stages and move instructions up
@@ -136,11 +141,6 @@ module Dynamic_Pipeline_Unit (
 
                 // Handle stage transition for the first instruction to FETCH
                 pipeline[0] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
-            end
-
-            for (int i = MAX_INSTR-1; i > 0; i=i-1) begin
-                if (pipeline[i].print)
-                    pipeline[i].print <= 0;
             end
         end
     end

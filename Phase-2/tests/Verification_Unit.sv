@@ -174,7 +174,7 @@ end
         if (valid_wb) begin
             $display("==========================================================");
             
-            if ($sfind(pipeline_msgs[wb_id].instr_flush_msg, "FLUSHED") != 0)
+            if ($sscanf(pipeline_msgs[wb_id].instr_flush_msg, "%s" , "FLUSHED") > 0)
                 $display("| Instruction: FLUSHED | Completed At Cycle: %0t |", $time / 10);
             else
                 $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);

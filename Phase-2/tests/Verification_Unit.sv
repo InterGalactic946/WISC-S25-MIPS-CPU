@@ -26,101 +26,77 @@ module Verification_Unit (
     );
 
     integer fetch_id, decode_id, execute_id, memory_id, wb_id;
-    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
+    integer fetch_msg_id[0:71], decode_msg_id[0:71];
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_enable;
     debug_info_t pipeline_msgs[0:71];
 
-    // // First Always Block: Tracks the pipeline and increments IDs
-    // always @(posedge clk) begin
-    //     if (rst) begin
-    //         fetch_id <= 0;
-    //         decode_id <= 0;
-    //         execute_id <= 0;
-    //         memory_id <= 0;
-    //         wb_id <= 0;
-    //     end else if (valid_fetch) begin
-    //         fetch_id <= fetch_id + 1;
-
-    //         // Pass the IDs through the pipeline
-    //         decode_id <= fetch_id;
-    //         execute_id <= decode_id;
-    //         memory_id <= execute_id;
-    //         wb_id <= memory_id;
-    //     end
-    // end
-
-//     // First Always Block: Tracks the pipeline and increments IDs
-// always @(posedge clk) begin
-//     if (rst) begin
-//         // Initialize pipeline registers on reset
-//         fetch_id   <= 0;
-//         decode_id  <= 0;
-//         execute_id <= 0;
-//         memory_id  <= 0;
-//         wb_id      <= 0;
-//     end else if (stall) begin
-//         // Both fetch and decode are stalled (hold current values)
-//         fetch_id <= fetch_id;           // Stall the instruction in fetch
-//         decode_id <= decode_id;         // Stall the instruction in decode
-//         execute_id <= decode_id;        // Pass the decode_id to execute_id
-//         memory_id  <= execute_id;       // Pass the execute_id to memory_id
-//         wb_id      <= memory_id;        // Pass the memory_id to wb_id
-//     end else if (!stall) begin
-//         // No stalls, pipeline moves forward
-//         fetch_id <= fetch_id + 1;       // Fetch the next instruction
-//         decode_id <= fetch_id;          // Pass the fetch_id to decode_id
-//         execute_id <= decode_id;        // Pass the decode_id to execute_id
-//         memory_id  <= execute_id;       // Pass the execute_id to memory_id
-//         wb_id      <= memory_id;        // Pass the memory_id to wb_id
-//     end    
-// end
-
- // Tracks the pipeline.
-    always @(posedge clk) begin
-        if (rst) begin
-            fetch_id <= 0;
-            decode_id <= 0;
-            execute_id <= 0;
-            memory_id <= 0;
-            wb_id <= 0;
-            valid_fetch <= 1; // Ensure first instruction is captured immediately after reset
-            valid_decode <= 0;
-            valid_execute <= 0;
-            valid_memory <= 0;
-            valid_wb <= 0;
-        end else if (!stall) begin
-            fetch_id <= fetch_id + 1;
-            decode_id <= fetch_id;   // Directly assign from fetch_id
-            execute_id <= decode_id; // Directly assign from decode_id
-            memory_id <= execute_id; // Directly assign from execute_id
-            wb_id <= memory_id;      // Directly assign from memory_id
-
-            valid_fetch <= 1;
-            valid_decode <= valid_fetch;
-            valid_execute <= valid_decode;
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
-        end
+// First Always Block: Tracks the pipeline and increments IDs
+always @(posedge clk) begin
+    if (rst) begin
+        fetch_id <= 0;
+        decode_id <= 0;
+        execute_id <= 0;
+        memory_id <= 0;
+        wb_id <= 0;
+    end else if (valid_fetch) begin
+        // Only increment fetch_id when there's a valid fetch.
+        fetch_id <= fetch_id + 1;
     end
 
+    // Update pipeline stages.
+    decode_id <= fetch_id;   // Pass the fetch_id to decode_id
+    execute_id <= decode_id; // Pass the decode_id to execute_id
+    memory_id <= execute_id; // Pass the execute_id to memory_id
+    wb_id <= memory_id;      // Pass the memory_id to wb_id
+end
 
-    // // Second Always Block: Generate valid signals based on stall signal
+
+    // // Reset or increment the fetch_msg_id and decode_msg_id, based on stall condition
     // always @(posedge clk) begin
     //     if (rst) begin
-    //         valid_fetch <= 1;
-    //         valid_decode <= 0;
-    //         valid_execute <= 0;
-    //         valid_memory <= 0;
-    //         valid_wb <= 0;
+    //         // Initialize message indices to zero
+    //         fetch_msg_id <= '{default: 0};
+    //         decode_msg_id <= '{default: 0};
     //     end else begin
-    //         valid_fetch <= !stall;
-    //         valid_decode <= valid_fetch;
-    //         valid_execute <= valid_decode;
-    //         valid_memory <= valid_execute;
-    //         valid_wb <= valid_memory;
+    //         if (stall) begin
+    //             // Increment the fetch and decode message IDs when stall is active
+    //             fetch_msg_id[fetch_id] <= fetch_msg_id[fetch_id] + 1;
+    //             decode_msg_id[decode_id] <= decode_msg_id[decode_id] + 1;
+    //         end else begin
+    //             // Reset message IDs when there's no stall
+    //             if (valid_fetch) begin
+    //                 fetch_msg_id[fetch_id] <= 0;
+    //             end
+    //             if (valid_decode) begin
+    //                 decode_msg_id[decode_id] <= 0;
+    //             end
+    //         end
     //     end
     // end
 
-    // Capture messages during negative edge
+
+// Second Always Block: Propagate the valid signals across stages
+always @(posedge clk) begin
+    if (rst) begin
+        valid_decode <= 0;
+        valid_execute <= 0;
+        valid_memory <= 0;
+        valid_fetch <= 0;
+        valid_wb <= 0;
+    end else if (!stall) begin
+        // Propagate the valid signal to future stages.
+        valid_fetch <= 1;
+    end else if (stall)
+        valid_fetch <= 0;
+
+    // Propogate the signals correctly.
+    valid_decode <= valid_fetch;
+    valid_execute <= valid_decode;
+    valid_memory <= valid_execute;
+    valid_wb <= valid_memory;
+end
+
+    // Adds the messages, with stall and flush checks.
     always @(negedge clk) begin
         if (!rst) begin
             if (valid_fetch) begin
@@ -142,14 +118,65 @@ module Verification_Unit (
         end
     end
 
-    // Print the message for each instruction at write-back stage
+
+//    // Flip-flop to hold enable signal for printing
+//     always @(posedge clk) begin
+//         if (rst) begin
+//             print_enable <= 0;  // Reset the enable signal
+//         end else begin
+//             if (valid_wb) begin
+//                 print_enable <= 1;  // Enable printing when write-back stage is valid
+//             end else begin
+//                 print_enable <= 0;  // Disable printing otherwise
+//             end
+//         end
+//     end
+
+
+
+    
+    // // Stall/Flush Message Display based on Hazard Conditions.
+    // always @(posedge clk) begin
+    //     if (!rst) begin
+    //         if (stall) begin
+    //             // Stall based on hazard conditions
+    //             if (pc_stall_msg !== "") begin
+    //                 $display("\n=====================================================");
+    //                 $display(pc_stall_msg);
+    //                 $display("=====================================================\n");
+    //             end
+    //             if (if_id_stall_msg !== "") begin
+    //                 $display("\n=====================================================");
+    //                 $display(if_id_stall_msg);
+    //                 $display("=====================================================\n");
+    //             end
+    //         end
+    //         if (flush) begin
+    //             // Flush based on conditions
+    //             if (if_flush_msg !== "") begin
+    //                 $display("\n=====================================================");
+    //                 $display(if_flush_msg);
+    //                 $display("=====================================================\n");
+    //             end
+    //             if (id_flush_msg !== "") begin
+    //                 $display("\n=====================================================");
+    //                 $display(id_flush_msg);
+    //                 $display("=====================================================\n");
+    //             end
+    //         end
+    //     end
+    // end
+
+    // Print the message for each instruction.
     always @(posedge clk) begin
         if (valid_wb) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
             $display("==========================================================");
-            $display("%s", pipeline_msgs[wb_id].fetch_msg);
-            $display("%s", pipeline_msgs[wb_id].decode_msg[0]);
+            // for (int i = 0; i < fetch_msg_id[wb_id]; i = i+1)
+                $display("%s", pipeline_msgs[wb_id].fetch_msg);
+            // for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)
+                $display("%s", pipeline_msgs[wb_id].decode_msg[0]);
             $display("%s", pipeline_msgs[wb_id].execute_msg);
             $display("%s", pipeline_msgs[wb_id].memory_msg);
             $display("%s", pipeline_msgs[wb_id].wb_msg);

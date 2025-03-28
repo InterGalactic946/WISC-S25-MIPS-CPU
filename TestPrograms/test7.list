@@ -15,8 +15,8 @@
     LHB R7, 0x00
 
     // Memory-to-Memory Forwarding (LW followed by SW)
-    LW  R8, R1, 0x04  // Load memory at address R1 + 0x04 into R8
-    SW  R8, R1, 0x08  // Store R8 at address R1 + 0x08 (forwarding)
+    LW  R8, R1, 4  // Load memory at address R1 + 0x04 into R8
+    SW  R8, R1, 8  // Store R8 at address R1 + 0x08 (forwarding)
 
     // Arithmetic operations
     ADD R9, R1, R2    // R9 = R1 + R2

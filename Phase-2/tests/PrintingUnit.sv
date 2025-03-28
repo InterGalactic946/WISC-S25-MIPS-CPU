@@ -70,7 +70,7 @@
   // Implements State Machine Logic //
   ///////////////////////////////////
   // Implements state machine register, holding current state or next state, accordingly.
-  always_ff @(posedge clk, negedge rst_n) begin
+  always_ff @(negedge clk, negedge rst_n) begin
     if (!rst_n) begin
         // Reset all instructions to EMPTY state
         for (int i = 0; i < 5; i++) begin

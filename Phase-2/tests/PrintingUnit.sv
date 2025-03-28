@@ -174,7 +174,7 @@
                   
                   instr_full_msgs[i] = instr_full_msgs[i];
                   
-                  decode_msgs[i] = decode_msgs[i] // Preserve the decode message
+                  decode_msgs[i] = decode_msgs[i]; // Preserve the decode message
                   // Keep the fetch message from previous stage
                   fetch_msgs[i] = fetch_msgs[i];
               end

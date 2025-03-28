@@ -328,7 +328,7 @@ always @(posedge clk) begin
         //   pipeline_msgs[fetch_id].fetch_msgs[msg_index] = fetch_msg;
         //   pipeline_msgs[fetch_id].fetch_cycles[msg_index] = $time / 10;
         // end
-        fetch_msg <= {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         fetch_stall_msg = {"|", stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         // fetch_flush_msg = {"|", ftch_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         
@@ -575,9 +575,9 @@ always @(posedge clk) begin
         //   pipeline_msgs[decode_id].decode_msgs[msg_index][1] = instruction_full_msg;
         //   pipeline_msgs[decode_id].decode_cycles[msg_index] = $time / 10;
         // end
-        decode_msg <= {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+        decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         // decode_stall_msg <= dcode_stall_msg;
-        instruction_full_msg <= instr_full_msg;
+        instruction_full_msg = instr_full_msg;
 
         decode_stall_msg = {"|", dcode_stall_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
         instr_flush_msg = {inst_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
@@ -638,7 +638,7 @@ end
       //   pipeline_msgs[execute_id].execute_msg = execute_msg;
       //   pipeline_msgs[execute_id].execute_cycle = $time / 10;
       // end
-      execute_msg <= {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       exec_flush_msg = {"|", ex_flush_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       
       if (ex_flush_msg !== "")
@@ -677,7 +677,7 @@ end
       //   pipeline_msgs[memory_id].memory_msg = mem_msg;
       //   pipeline_msgs[memory_id].memory_cycle = $time / 10;
       // end
-      mem_msg <= {"|", mem_verify_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      mem_msg = {"|", mem_verify_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       // $display(mem_msg);
     end
   end
@@ -741,7 +741,7 @@ end
       //   pipeline_msgs[wb_id].wb_msg = wb_msg;
       //   pipeline_msgs[wb_id].wb_cycle = $time / 10;
       // end
-      wb_msg <= {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
+      wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
       $display(wb_msg);
     end
   end

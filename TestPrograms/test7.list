@@ -24,25 +24,30 @@
     PADDSB R11, R9, R10 // Packed add signed bytes
 
     // Bitwise and Shift operations
-    SLL R12, R9, R5   // Logical shift left
-    SRA R13, R10, R5  // Arithmetic shift right
-    ROR R14, R12, R6  // Rotate right
+    SLL R12, R9, R5   // Logical shift left by 1
+    SRA R13, R10, R5  // Arithmetic shift right by 1
+    ROR R14, R12, R6  // Rotate right by 4
 
     // Reduction Unit (RED)
-    RED R15, R14, R13, // Reduction operation (complex)
+    RED R15, R14, R13 // Complex reduction operation
 
     // Branch and Jump tests
-    PCS R16           // Save PC in R16
+    PCS R0           // Save PC in R0 (for testing)
     B 011, branch1    // Branch if Less Than (N=1)
-    BR 111, R16       // Unconditional jump to saved PC (loop)
+    BR 111, R0       // Unconditional jump to saved PC (loop)
 
     // Hazard Tests
-    ADD R17, R9, R8   // Dependent on forwarded result from LW
-    SUB R18, R17, R4  // Dependent on previous ADD
-    SLL R19, R18, R5  // Dependent on previous SUB
+    ADD R8, R9, R8   // Dependent on forwarded result from LW
+    SUB R9, R8, R4   // Dependent on previous ADD
+    SLL R10, R9, R5  // Dependent on previous SUB
+
+    // Test forwarding and hazards across instructions
+    LW  R11, R2, 0x02  // Load from memory (testing mem-to-mem hazard)
+    SW  R11, R3, 0x06  // Store to memory (forwarded result)
+    PADDSB R12, R11, R8 // Test packed add with forwarded result
 
     // Branch target
 branch1:
-    ADD R20, R7, R7   // R20 = 0 (used for verification)
-    PCS R21           // Save PC in R21 for check
+    ADD R13, R7, R7   // R13 = 0 (verification)
+    PCS R14           // Save PC in R14 for check
     HLT               // End of program

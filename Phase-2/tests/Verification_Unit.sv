@@ -22,7 +22,7 @@ module Verification_Unit (
     input string execute_msg,
     input string mem_msg,
     input string wb_msg,
-    input logic stall
+    input logic stall, flush
     );
 
     integer fetch_id, decode_id, execute_id, memory_id, wb_id;

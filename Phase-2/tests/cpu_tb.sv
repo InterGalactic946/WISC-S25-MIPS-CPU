@@ -92,7 +92,7 @@ module cpu_tb();
     .execute_msg(execute_msg),
     .mem_msg(mem_msg),
     .wb_msg(wb_msg),
-    .stall(stall)
+    .stall(stall), .flush(iDUT.IF_flush)
   );
 
   // PrintingUnit iPU (

@@ -37,7 +37,7 @@ module ALU_tb();
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  ALU_model iDUT(.ALU_In1(stim[31:16]),.ALU_In2(B_operand),.Opcode(stim_op),.ALU_Out(result),.Z_set(ZF),.N_set(NF), .V_set(VF));
+  ALU iDUT(.ALU_In1(stim[31:16]),.ALU_In2(B_operand),.Opcode(stim_op),.ALU_Out(result),.Z_set(ZF),.N_set(NF), .V_set(VF));
 
   // Decodes opcodes based on the instruction.
   task automatic decode_opcode();

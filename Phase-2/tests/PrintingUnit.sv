@@ -183,7 +183,7 @@
                   // Keep execute and decode messages from previous stages
                   memory_msgs[i] = memory_msg;
                   execute_msgs[i] = execute_msgs[i]; // Keep execute message
-                  decode_msgs[i] = decode_msgs[i] // Preserve the decode message
+                  decode_msgs[i] = decode_msgs[i]; // Preserve the decode message
                   // Keep the fetch message from previous stage
                   fetch_msgs[i] = fetch_msgs[i];
               end
@@ -195,7 +195,7 @@
                   // Keep memory, execute, decode, and fetch messages
                   memory_msgs[i] = memory_msgs[i]; // Keep memory message
                   execute_msgs[i] = execute_msgs[i]; // Keep execute message
-                  decode_msgs[i] = decode_msgs[i] // Preserve the decode message
+                  decode_msgs[i] = decode_msgs[i]; // Preserve the decode message
                   // Keep the fetch message from previous stage
                   fetch_msgs[i] = fetch_msgs[i];
 

@@ -32,9 +32,9 @@
     RED R15, R14, R13 // Complex reduction operation
 
     // Branch and Jump tests
-    PCS R0           // Save PC in R0 (for testing)
+    PCS R5           // Save PC in R5 (for testing)
     B 011, branch1    // Branch if Less Than (N=1)
-    BR 111, R0       // Unconditional jump to saved PC (loop)
+    BR 111, R5       // Unconditional jump to saved PC (loop)
 
     // Hazard Tests
     ADD R8, R9, R8   // Dependent on forwarded result from LW

@@ -81,7 +81,7 @@ always @(posedge clk) begin
         valid_decode <= 0;
         valid_execute <= 0;
         valid_memory <= 0;
-        valid_fetch <= 0;
+        valid_fetch <= 1;
         valid_wb <= 0;
     end else if (!stall) begin
         // Propagate the valid signal to future stages.

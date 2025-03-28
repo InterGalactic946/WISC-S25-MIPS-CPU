@@ -82,13 +82,13 @@
         end
     end else begin
         // Update the pipeline based on parallel arrays.
-        for (int i = 0; i < curr_num_instrns; i++) begin
+        for (int i = 0; i < curr_num_instrns + 1; i++) begin
             pipeline[i].stage <= nxt_stages[i];
             pipeline[i].print <= print_flags[i];
         end
 
       // Handle stall during DECODE stage
-            for (int i = 0; i < curr_num_instrns + 1; i++) begin
+            for (int i = 0; i < curr_num_instrns; i++) begin
                 case (pipeline[i].stage)
                     FETCH: begin
                         pipeline[i].fetch_msgs[msg_index] = fetch_msg;
@@ -145,7 +145,7 @@
           // end
 
           // Insert new instruction at the last index (curr_num_instrns points to this)
-          pipeline[curr_num_instrns+1] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+          pipeline[curr_num_instrns] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
 
         end
     end

@@ -37,30 +37,31 @@ module Verification_Unit (
             execute_id <= 0;
             memory_id <= 0;
             wb_id <= 0;
-            valid_fetch <= 0;
-            valid_decode <= 0;
-            valid_execute <= 0;
-            valid_memory <= 0;
-            valid_wb <= 0;
-        end else if (!stall) begin
-            valid_fetch <= 1;
+        end else if (valid_fetch) begin
             fetch_id <= fetch_id + 1;
-
-            // Propagate valid signals to the next stage
-            valid_decode <= valid_fetch;
-            valid_execute <= valid_decode;
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
 
             // Pass the IDs through the pipeline
             decode_id <= fetch_id;
             execute_id <= decode_id;
             memory_id <= execute_id;
             wb_id <= memory_id;
-        end else begin
-            // In case of stall, invalidate fetch
+        end
+    end
+
+    // Second Always Block: Generate valid signals based on stall signal
+    always @(posedge clk) begin
+        if (rst) begin
             valid_fetch <= 0;
-            
+            valid_decode <= 0;
+            valid_execute <= 0;
+            valid_memory <= 0;
+            valid_wb <= 0;
+        end else begin
+            valid_fetch <= !stall;
+            valid_decode <= valid_fetch;
+            valid_execute <= valid_decode;
+            valid_memory <= valid_execute;
+            valid_wb <= valid_memory;
         end
     end
 

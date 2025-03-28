@@ -253,7 +253,7 @@ package Verification_tasks;
 
           // Verify the stall state.
           if (IF_ID_stall !== expected_IF_ID_stall) begin
-              decode_msg = $sformatf("[DECODE] ERROR: IF_ID_stall: %b, expected_update_PC: %b.", IF_ID_stall, expected_IF_ID_stall);
+              decode_msg = $sformatf("[DECODE] ERROR: IF_ID_stall: %b, expected_IF_ID_stall: %b.", IF_ID_stall, expected_IF_ID_stall);
               return;  // Exit task on error
           end
 

@@ -110,7 +110,7 @@
                     end
                     EXECUTE: begin
                         pipeline[i].execute_msg = execute_msg;
-                        display(execute_msg);
+                        $display(execute_msg);
                         pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].decode_msgs = pipeline[i].decode_msgs;

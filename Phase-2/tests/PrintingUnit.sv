@@ -101,6 +101,8 @@
                     DECODE: begin
                         pipeline[i].decode_msgs[msg_index] = decode_msg;
                         pipeline[i].instr_full_msg = instruction_full_msg; // Assign once at FETCH
+                        $display(decode_msg);
+                        $display(instruction_full_msg);
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].execute_msg = "";
                         pipeline[i].memory_msg = "";
@@ -108,6 +110,7 @@
                     end
                     EXECUTE: begin
                         pipeline[i].execute_msg = execute_msg;
+                        display(execute_msg);
                         pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].decode_msgs = pipeline[i].decode_msgs;
@@ -116,6 +119,7 @@
                     end
                     MEMORY: begin
                         pipeline[i].memory_msg = mem_msg;
+                        $display(mem_msg);
                         pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].decode_msgs = pipeline[i].decode_msgs;
@@ -124,6 +128,7 @@
                     end
                     WRITEBACK: begin
                         pipeline[i].wb_msg = wb_msg;
+                        $display(wb_msg);
                         pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
                         pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
                         pipeline[i].decode_msgs = pipeline[i].decode_msgs;

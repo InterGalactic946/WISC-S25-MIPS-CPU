@@ -82,7 +82,7 @@
         end
     end else begin
         // Update the pipeline based on parallel arrays.
-        for (int i = 0; i < curr_num_instrns + 1; i++) begin
+        for (int i = 0; i < curr_num_instrns; i++) begin
             pipeline[i].stage <= nxt_stages[i];
             pipeline[i].print <= print_flags[i];
         end

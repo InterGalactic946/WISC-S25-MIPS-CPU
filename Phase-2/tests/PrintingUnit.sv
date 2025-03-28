@@ -50,7 +50,7 @@
       curr_num_instrns <= 3'h1;                      // Reset the curr_num_instrns value.
     else if (shift)
       curr_num_instrns <= curr_num_instrns - 1'b1;   // Decrement the number of instructions in the pipeline
-    else if (!stall && curr_num_instrns < MAX_INSTRS)
+    else if (!stall && curr_num_instrns < 3'h5)
       curr_num_instrns <= curr_num_instrns + 1'b1;   // Increment the curr_num_instrns.
   end
 

@@ -139,9 +139,9 @@
             end        
 
         if (shift) begin // Shift in new instructions into the pipeline.
-          for (int i = 0; i < curr_num_instrns + 1; i++) begin
-              pipeline[i] <= pipeline[i+1];
-          end
+          // for (int i = 0; i < curr_num_instrns + 1; i++) begin
+          //     pipeline[i] <= pipeline[i+1];
+          // end
 
           // Insert new instruction at the last index (curr_num_instrns points to this)
           pipeline[curr_num_instrns] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
@@ -208,7 +208,7 @@
               end
 
               WRITEBACK: begin
-                  nxt_stages[i] = FETCH;
+                  nxt_stages[i] = EMPTY;
                   print_flags[i] = 1'b1; // Indicate to print
 
                   shift = 1'b1; // Assert shift to shift in new instructions into the pipeline.

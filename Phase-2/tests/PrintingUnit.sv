@@ -182,7 +182,7 @@
               MEMORY: begin
                   nxt_stages[i] = WRITEBACK;
                   // Keep execute and decode messages from previous stages
-                  memory_msgs[i] = memory_msg;
+                  memory_msgs[i] = mem_msg;
                   execute_msgs[i] = execute_msgs[i]; // Keep execute message
                   decode_msgs[i] = decode_msgs[i]; // Preserve the decode message
                   // Keep the fetch message from previous stage

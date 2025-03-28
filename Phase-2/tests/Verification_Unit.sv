@@ -50,31 +50,6 @@ always @(posedge clk) begin
     wb_id <= memory_id;      // Pass the memory_id to wb_id
 end
 
-
-//     // // Reset or increment the fetch_msg_id and decode_msg_id, based on stall condition
-//     // always @(posedge clk) begin
-//     //     if (rst) begin
-//     //         // Initialize message indices to zero
-//     //         fetch_msg_id <= '{default: 0};
-//     //         decode_msg_id <= '{default: 0};
-//     //     end else begin
-//     //         if (stall) begin
-//     //             // Increment the fetch and decode message IDs when stall is active
-//     //             fetch_msg_id[fetch_id] <= fetch_msg_id[fetch_id] + 1;
-//     //             decode_msg_id[decode_id] <= decode_msg_id[decode_id] + 1;
-//     //         end else begin
-//     //             // Reset message IDs when there's no stall
-//     //             if (valid_fetch) begin
-//     //                 fetch_msg_id[fetch_id] <= 0;
-//     //             end
-//     //             if (valid_decode) begin
-//     //                 decode_msg_id[decode_id] <= 0;
-//     //             end
-//     //         end
-//     //     end
-//     // end
-
-
 // Second Always Block: Propagate the valid signals across stages
 always @(posedge clk) begin
     if (rst) begin
@@ -86,8 +61,9 @@ always @(posedge clk) begin
     end else if (!stall) begin
         // Propagate the valid signal to future stages.
         valid_fetch <= 1;
-    end else if (stall)
-        valid_fetch <= 0;
+    end
+    // end else if (stall)
+    //     valid_fetch <= 0;
 
     // Propogate the signals correctly.
     valid_decode <= valid_fetch;

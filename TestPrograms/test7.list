@@ -1,49 +1,48 @@
-    // Initialization
-    LLB R1, 0x01      // Load lower byte 0x01 into R1
-    LHB R1, 0x00      // Load higher byte 0x00 into R1, R1 = 0x0001
-    LLB R2, 0x02      // Load lower byte 0x02 into R2
-    LHB R2, 0x00      // Load higher byte 0x00 into R2, R2 = 0x0002
-    LLB R3, 0x03      // Load lower byte 0x03 into R3
-    LHB R3, 0x00      // Load higher byte 0x00 into R3, R3 = 0x0003
-    LLB R6, 0x04      // Load lower byte 0x04 into R6
-    LHB R6, 0x00      // Load higher byte 0x00 into R6, R6 = 0x0004
+    // Load values into registers for arithmetic operations
+    LLB R1, 0x10      // R1 = 0x0010
+    LHB R1, 0x00      
+    LLB R2, 0x20      // R2 = 0x0020
+    LHB R2, 0x00
+    LLB R3, 0x05      // R3 = 0x0005
+    LHB R3, 0x00
+    LLB R4, 0xFF      // R4 = 0x00FF
+    LHB R4, 0x00
+    LLB R5, 0x01      // R5 = 0x0001
+    LHB R5, 0x00
+    LLB R6, 0x04      // R6 = 0x0004
+    LHB R6, 0x00
+    LLB R7, 0x00      // R7 = 0x0000
+    LHB R7, 0x00
 
-    // EX-to-EX Forwarding Test
-    ADD R4, R1, R2    // R4 = R1 + R2 = 0x0003
-    SUB R5, R4, R3    // R5 = R4 - R3 = 0x0000 (uses forwarded result from R4)
+    // Memory-to-Memory Forwarding (LW followed by SW)
+    LW  R8, R1, 0x04  // Load memory at address R1 + 0x04 into R8
+    SW  R8, R1, 0x08  // Store R8 at address R1 + 0x08 (forwarding)
 
-    // MEM-to-MEM Forwarding Test
-    ADD R7, R2, R3    // R7 = R2 + R3 = 0x0005 (result goes to MEM stage)
-    SUB R8, R7, R1    // R8 = R7 - R1 = 0x0004 (forwarded from MEM stage)
+    // Arithmetic operations
+    ADD R9, R1, R2    // R9 = R1 + R2
+    SUB R10, R2, R3   // R10 = R2 - R3
+    PADDSB R11, R9, R10 // Packed add signed bytes
 
-    // MEM-to-EX Forwarding Test
-    ADD R9, R8, R6    // R9 = R8 + R6 = 0x0008 (forwarded from MEM to EX stage)
+    // Bitwise and Shift operations
+    SLL R12, R9, R5   // Logical shift left
+    SRA R13, R10, R5  // Arithmetic shift right
+    ROR R14, R12, R6  // Rotate right
 
-    // Hazard and Stalling Test
-    LLB R10, 0xFF     // Load lower byte 0xFF into R10 (testing negative numbers)
-    ADD R11, R9, R10  // R11 = R9 + R10 = 0x0007 (forwarded from EX to EX)
-    SUB R12, R11, R1  // R12 = R11 - R1 = 0x0006 (no forwarding needed)
+    // Reduction Unit (RED)
+    RED R15, R14, R13, // Reduction operation (complex)
 
-    // Branch Prediction Test - Predicted Taken
-    PCS R5            // Save PC to R5 (to test branching)
-    B 001, label1     // Conditional branch (expected to be taken)
-    HLT               // Should not be executed
+    // Branch and Jump tests
+    PCS R16           // Save PC in R16
+    B 011, branch1    // Branch if Less Than (N=1)
+    BR 111, R16       // Unconditional jump to saved PC (loop)
 
-    // Branch Prediction Test - Unconditional Jump
-    label1:
-    BR 111, R6        // Jump to address in R6
-    HLT               // Should not be executed
+    // Hazard Tests
+    ADD R17, R9, R8   // Dependent on forwarded result from LW
+    SUB R18, R17, R4  // Dependent on previous ADD
+    SLL R19, R18, R5  // Dependent on previous SUB
 
-    // Branch Taken - Jump to this location
-    ADD R13, R3, R2   // R13 = R3 + R2 = 0x0005
-    HLT               // To mark the end
-
-    // Branch Not Taken Scenario
-    PCS R7            // Save PC to R7
-    B 000, label2     // Conditional branch (expected not to be taken)
-    ADD R14, R1, R6   // R14 = R1 + R6 = 0x0005
-    HLT
-
-    label2:
-    SUB R15, R6, R3   // R15 = R6 - R3 = 0x0001
-    HLT
+    // Branch target
+branch1:
+    ADD R20, R7, R7   // R20 = 0 (used for verification)
+    PCS R21           // Save PC in R21 for check
+    HLT               // End of program

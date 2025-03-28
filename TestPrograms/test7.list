@@ -24,9 +24,9 @@
     PADDSB R11, R9, R10 // Packed add signed bytes
 
     // Bitwise and Shift operations
-    SLL R12, R9, R5   // Logical shift left by 1
-    SRA R13, R10, R5  // Arithmetic shift right by 1
-    ROR R14, R12, R6  // Rotate right by 4
+    SLL R12, R9, 1   // Logical shift left by 1
+    SRA R13, R10, 1  // Arithmetic shift right by 1
+    ROR R14, R12, 4  // Rotate right by 4
 
     // Reduction Unit (RED)
     RED R15, R14, R13 // Complex reduction operation

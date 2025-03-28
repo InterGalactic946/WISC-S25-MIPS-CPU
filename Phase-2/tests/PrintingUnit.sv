@@ -36,7 +36,7 @@
     logic print;
   } instr_t;
 
-  instr_t pipeline[0:4];    // Pipeline: 1D array to track each instruction's stage
+  instr_t pipeline[0:71];    // Pipeline: 1D array to track each instruction's stage
   logic [2:0] curr_num_instrns;    // Number of instructions currently in the pipeline
   state_t nxt_stages[0:4];   // Holds the next state
   string fetch_msgs[0:4][0:4], decode_msgs[0:4][0:4]; // Message arrays for each instruction
@@ -52,7 +52,7 @@
       curr_num_instrns <= 3'h1;                      // Reset the curr_num_instrns value.
     // else if (shift)
     //   curr_num_instrns <= curr_num_instrns - 1'b1;   // Decrement the number of instructions in the pipeline
-    else if (!stall && curr_num_instrns < 3'h5)
+    else if (!stall)
       curr_num_instrns <= curr_num_instrns + 1'b1;   // Increment the curr_num_instrns.
   end
 
@@ -74,7 +74,7 @@
   always_ff @(negedge clk, negedge rst_n) begin
     if (!rst_n) begin
         // Reset all instructions to EMPTY state
-        for (int i = 0; i < 5; i++) begin
+        for (int i = 0; i < 71; i++) begin
             if (i === 0)
               pipeline[i] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             else

@@ -60,8 +60,7 @@ module Verification_Unit (
         end else begin
             // In case of stall, invalidate fetch
             valid_fetch <= 0;
-            memory_id <= execute_id;
-            wb_id <= memory_id;
+            
         end
     end
 

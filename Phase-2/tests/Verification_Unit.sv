@@ -29,29 +29,55 @@ module Verification_Unit (
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb;
     debug_info_t pipeline_msgs[0:71];
 
-    // First Always Block: Tracks the pipeline and increments IDs
-    always @(posedge clk) begin
-        if (rst) begin
-            fetch_id <= 0;
-            decode_id <= 0;
-            execute_id <= 0;
-            memory_id <= 0;
-            wb_id <= 0;
-        end else if (valid_fetch) begin
-            fetch_id <= fetch_id + 1;
+    // // First Always Block: Tracks the pipeline and increments IDs
+    // always @(posedge clk) begin
+    //     if (rst) begin
+    //         fetch_id <= 0;
+    //         decode_id <= 0;
+    //         execute_id <= 0;
+    //         memory_id <= 0;
+    //         wb_id <= 0;
+    //     end else if (valid_fetch) begin
+    //         fetch_id <= fetch_id + 1;
 
-            // Pass the IDs through the pipeline
-            decode_id <= fetch_id;
-            execute_id <= decode_id;
-            memory_id <= execute_id;
-            wb_id <= memory_id;
-        end
-    end
+    //         // Pass the IDs through the pipeline
+    //         decode_id <= fetch_id;
+    //         execute_id <= decode_id;
+    //         memory_id <= execute_id;
+    //         wb_id <= memory_id;
+    //     end
+    // end
+
+    // First Always Block: Tracks the pipeline and increments IDs
+always @(posedge clk) begin
+    if (rst) begin
+        // Initialize pipeline registers on reset
+        fetch_id   <= 0;
+        decode_id  <= 0;
+        execute_id <= 0;
+        memory_id  <= 0;
+        wb_id      <= 0;
+    end else if (stall) begin
+        // Both fetch and decode are stalled (hold current values)
+        fetch_id <= fetch_id;           // Stall the instruction in fetch
+        decode_id <= decode_id;         // Stall the instruction in decode
+        execute_id <= decode_id;        // Pass the decode_id to execute_id
+        memory_id  <= execute_id;       // Pass the execute_id to memory_id
+        wb_id      <= memory_id;        // Pass the memory_id to wb_id
+    end else if (!stall) begin
+        // No stalls, pipeline moves forward
+        fetch_id <= fetch_id + 1;       // Fetch the next instruction
+        decode_id <= fetch_id;          // Pass the fetch_id to decode_id
+        execute_id <= decode_id;        // Pass the decode_id to execute_id
+        memory_id  <= execute_id;       // Pass the execute_id to memory_id
+        wb_id      <= memory_id;        // Pass the memory_id to wb_id
+    end    
+end
 
     // Second Always Block: Generate valid signals based on stall signal
     always @(posedge clk) begin
         if (rst) begin
-            valid_fetch <= 0;
+            valid_fetch <= 1;
             valid_decode <= 0;
             valid_execute <= 0;
             valid_memory <= 0;

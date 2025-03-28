@@ -47,11 +47,11 @@
   logic shift;
 
   // Implement counter to keep track of current number of instructions in pipeline.
-  always_ff @(negedge clk, negedge rst_n) begin
+  always_ff @(posedge clk, negedge rst_n) begin
     if(!rst_n)
       curr_num_instrns <= 3'h1;                      // Reset the curr_num_instrns value.
-    else if (shift)
-      curr_num_instrns <= curr_num_instrns - 1'b1;   // Decrement the number of instructions in the pipeline
+    // else if (shift)
+    //   curr_num_instrns <= curr_num_instrns - 1'b1;   // Decrement the number of instructions in the pipeline
     else if (!stall && curr_num_instrns < 3'h5)
       curr_num_instrns <= curr_num_instrns + 1'b1;   // Increment the curr_num_instrns.
   end

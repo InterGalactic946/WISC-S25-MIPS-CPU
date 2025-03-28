@@ -42,6 +42,7 @@
   string execute_msgs[0:4], memory_msgs[0:4], wb_msgs[0:4]; // Execution messages
   string instr_full_msgs[0:4];
   logic print_flags[0:4];    // Holds the print flags
+  logic [2:0] msg_index;
   logic shift;
 
   // Implement counter to keep track of current number of instructions in pipeline.

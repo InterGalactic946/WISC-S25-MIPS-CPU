@@ -91,6 +91,7 @@
                 case (pipeline[i].stage)
                     FETCH: begin
                         pipeline[i].fetch_msgs[msg_index] = fetch_msg;
+                        $display(fetch_msg);
                         pipeline[i].instr_full_msg = "";
                         pipeline[i].decode_msgs[msg_index] = "";  // Clear other stage messages
                         pipeline[i].execute_msg = "";

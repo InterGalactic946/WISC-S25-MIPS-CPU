@@ -119,21 +119,21 @@ end
     end
 
 
-    // // Print the message for each instruction.
-    // always @(posedge clk) begin
-    //     if (valid_wb) begin
-    //         $display("==========================================================");
-    //         $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
-    //         $display("==========================================================");
-    //         // for (int i = 0; i < fetch_msg_id[wb_id]; i = i+1)
-    //             $display("%s", pipeline_msgs[wb_id].fetch_msg);
-    //         // for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)
-    //             $display("%s", pipeline_msgs[wb_id].decode_msg[0]);
-    //         $display("%s", pipeline_msgs[wb_id].execute_msg);
-    //         $display("%s", pipeline_msgs[wb_id].memory_msg);
-    //         $display("%s", pipeline_msgs[wb_id].wb_msg);
-    //         $display("==========================================================\n");
-    //     end
-    // end
+    // Print the message for each instruction.
+    always @(posedge clk) begin
+        if (valid_wb) begin
+            $display("==========================================================");
+            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].decode_msg[1], $time / 10);
+            $display("==========================================================");
+            // for (int i = 0; i < fetch_msg_id[wb_id]; i = i+1)
+                $display("%s", pipeline_msgs[wb_id].fetch_msg);
+            // for (int i = 0; i < decode_msg_id[wb_id]; i = i+1)
+                $display("%s", pipeline_msgs[wb_id].decode_msg[0]);
+            $display("%s", pipeline_msgs[wb_id].execute_msg);
+            $display("%s", pipeline_msgs[wb_id].memory_msg);
+            $display("%s", pipeline_msgs[wb_id].wb_msg);
+            $display("==========================================================\n");
+        end
+    end
 
 endmodule

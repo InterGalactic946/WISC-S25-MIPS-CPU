@@ -44,14 +44,18 @@
   string execute_msgs[MAX_INSTRS], memory_msgs[MAX_INSTRS], wb_msgs[MAX_INSTRS]; // Execution messages
   string instr_full_msgs[MAX_INSTRS];
   logic print_flags[MAX_INSTRS];    // Holds the print flags
+  logic shift;
 
   // Implement counter to keep track of current number of instructions in pipeline.
   always_ff @(posedge clk, negedge rst_n) begin
     if(!rst_n)
-      curr_num_instrns <= 3'h0;                      // Reset the curr_num_instrns value.
+      curr_num_instrns <= 3'h1;                      // Reset the curr_num_instrns value.
+    else if (shift)
+      curr_num_instrns <= curr_num_instrns - 1'b1;   // Decrement the number of instructions in the pipeline
     else if (!stall && curr_num_instrns < MAX_INSTRS)
       curr_num_instrns <= curr_num_instrns + 1'b1;   // Increment the curr_num_instrns.
   end
+
 
   // Simulate pipeline execution
   always_ff @(posedge clk, negedge rst_n) begin
@@ -87,6 +91,16 @@
             pipeline[i].execute_msg <= execute_msgs[i];
             pipeline[i].memory_msg <= memory_msgs[i];
             pipeline[i].wb_msg <= wb_msgs[i];
+        end
+
+        if (shift) begin // Shift in new instructions into the pipeline.
+          for (int i = 0; i < curr_num_instrns + 1; i++) begin
+              pipeline[i] <= pipeline[i+1];
+          end
+
+          // Insert new instruction at the last index (curr_num_instrns points to this)
+          pipeline[curr_num_instrns] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
+
         end
     end
   end
@@ -186,6 +200,8 @@
                   decode_msgs[i] = decode_msgs[i] // Preserve the decode message
                   // Keep the fetch message from previous stage
                   fetch_msgs[i] = fetch_msgs[i];
+
+                  shift = 1'b1; // Assert shift to shift in new instructions into the pipeline.
               end
 
               default: begin

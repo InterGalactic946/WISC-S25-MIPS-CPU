@@ -742,7 +742,7 @@ end
       //   pipeline_msgs[wb_id].wb_cycle = $time / 10;
       // end
       wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-      $display(wb_msg);
+      // $display(wb_msg);
     end
   end
 

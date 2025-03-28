@@ -98,6 +98,7 @@ module cpu_tb();
   PrintingUnit iPU (
     .clk(clk),
     .rst_n(rst_n),
+    .IF_flush(iDUT.IF_flush),
     .fetch_msg(fetch_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),

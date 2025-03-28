@@ -13,6 +13,7 @@
 ///////////////////////////////////////////////////////////  
   module PrintingUnit (
       input logic clk, rst_n,
+      input logic IF_flush,
       input string fetch_msg,
       input string decode_msg,
       input string instruction_full_msg,
@@ -196,6 +197,9 @@
               DECODE: begin
                   if (!stall)
                       nxt_stages[i] = EXECUTE;
+                  
+                  if (IF_flush)
+                    nxt_stages[i] = FETCH;
               end
 
               EXECUTE: begin

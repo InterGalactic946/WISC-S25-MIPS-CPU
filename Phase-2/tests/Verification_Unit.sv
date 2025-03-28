@@ -74,22 +74,51 @@ always @(posedge clk) begin
     end    
 end
 
-    // Second Always Block: Generate valid signals based on stall signal
+ // Tracks the pipeline.
     always @(posedge clk) begin
         if (rst) begin
-            valid_fetch <= 1;
+            fetch_id <= 0;
+            decode_id <= 0;
+            execute_id <= 0;
+            memory_id <= 0;
+            wb_id <= 0;
+            valid_fetch <= 1; // Ensure first instruction is captured immediately after reset
             valid_decode <= 0;
             valid_execute <= 0;
             valid_memory <= 0;
             valid_wb <= 0;
-        end else begin
-            valid_fetch <= !stall;
+        end else if (!stall) begin
+            fetch_id <= fetch_id + 1;
+            decode_id <= fetch_id;   // Directly assign from fetch_id
+            execute_id <= decode_id; // Directly assign from decode_id
+            memory_id <= execute_id; // Directly assign from execute_id
+            wb_id <= memory_id;      // Directly assign from memory_id
+
+            valid_fetch <= 1;
             valid_decode <= valid_fetch;
             valid_execute <= valid_decode;
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
         end
     end
+
+
+    // // Second Always Block: Generate valid signals based on stall signal
+    // always @(posedge clk) begin
+    //     if (rst) begin
+    //         valid_fetch <= 1;
+    //         valid_decode <= 0;
+    //         valid_execute <= 0;
+    //         valid_memory <= 0;
+    //         valid_wb <= 0;
+    //     end else begin
+    //         valid_fetch <= !stall;
+    //         valid_decode <= valid_fetch;
+    //         valid_execute <= valid_decode;
+    //         valid_memory <= valid_execute;
+    //         valid_wb <= valid_memory;
+    //     end
+    // end
 
     // Capture messages during negative edge
     always @(negedge clk) begin

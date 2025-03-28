@@ -83,22 +83,9 @@ module cpu_tb();
   ////////////////////////////////////
   // Instantiate Verification Unit //
   //////////////////////////////////
-  //  Verification_Unit iVERIFY (
-  //   .clk(clk),
-  //   .rst(rst),
-  //   .fetch_msg(fetch_msg),
-  //   .decode_msg(decode_msg),
-  //   .instruction_full_msg(instruction_full_msg),
-  //   .execute_msg(execute_msg),
-  //   .mem_msg(mem_msg),
-  //   .wb_msg(wb_msg),
-  //   .stall(stall)
-  // );
-
-  PrintingUnit iPU (
+   Verification_Unit iVERIFY (
     .clk(clk),
-    .rst_n(rst_n),
-    .IF_flush(iDUT.IF_flush),
+    .rst(rst),
     .fetch_msg(fetch_msg),
     .decode_msg(decode_msg),
     .instruction_full_msg(instruction_full_msg),
@@ -107,6 +94,19 @@ module cpu_tb();
     .wb_msg(wb_msg),
     .stall(stall)
   );
+
+  // PrintingUnit iPU (
+  //   .clk(clk),
+  //   .rst_n(rst_n),
+  //   .IF_flush(iDUT.IF_flush),
+  //   .fetch_msg(fetch_msg),
+  //   .decode_msg(decode_msg),
+  //   .instruction_full_msg(instruction_full_msg),
+  //   .execute_msg(execute_msg),
+  //   .mem_msg(mem_msg),
+  //   .wb_msg(wb_msg),
+  //   .stall(stall)
+  // );
 
   assign stall = iDUT.PC_stall && iDUT.IF_ID_stall;
 

@@ -70,7 +70,7 @@
   // Implements State Machine Logic //
   ///////////////////////////////////
   // Implements state machine register, holding current state or next state, accordingly.
-  always_ff @(negedge clk, negedge rst_n) begin
+  always_ff @(posedge clk, negedge rst_n) begin
     if (!rst_n) begin
         // Reset all instructions to EMPTY state
         for (int i = 0; i < 5; i++) begin
@@ -84,13 +84,53 @@
         for (int i = 0; i < curr_num_instrns; i++) begin
             pipeline[i].stage <= nxt_stages[i];
             pipeline[i].print <= print_flags[i];
-            pipeline[i].fetch_msgs <= fetch_msgs[i];
-            pipeline[i].decode_msgs <= decode_msgs[i];
-            pipeline[i].instr_full_msg <= instr_full_msgs[i];
-            pipeline[i].execute_msg <= execute_msgs[i];
-            pipeline[i].memory_msg <= memory_msgs[i];
-            pipeline[i].wb_msg <= wb_msgs[i];
         end
+
+      // Handle stall during DECODE stage
+            for (int i = 0; i < curr_num_instrns; i++) begin
+                case (pipeline[i].stage)
+                    FETCH: begin
+                        pipeline[i].fetch_msgs[msg_index] = fetch_msg;
+                        pipeline[i].instr_full_msg = "";
+                        pipeline[i].decode_msgs[msg_index] = "";  // Clear other stage messages
+                        pipeline[i].execute_msg = "";
+                        pipeline[i].memory_msg = "";
+                        pipeline[i].wb_msg = "";
+                    end
+                    DECODE: begin
+                        pipeline[i].decode_msgs[msg_index] = decode_msg;
+                        pipeline[i].instr_full_msg = instruction_full_msg; // Assign once at FETCH
+                        pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
+                        pipeline[i].execute_msg = "";
+                        pipeline[i].memory_msg = "";
+                        pipeline[i].wb_msg = "";
+                    end
+                    EXECUTE: begin
+                        pipeline[i].execute_msg = execute_msg;
+                        pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
+                        pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
+                        pipeline[i].decode_msgs = pipeline[i].decode_msgs;
+                        pipeline[i].memory_msg = "";
+                        pipeline[i].wb_msg = "";
+                    end
+                    MEMORY: begin
+                        pipeline[i].memory_msg = mem_msg;
+                        pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
+                        pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
+                        pipeline[i].decode_msgs = pipeline[i].decode_msgs;
+                        pipeline[i].execute_msg = pipeline[i].execute_msg;
+                        pipeline[i].wb_msg = "";
+                    end
+                    WRITEBACK: begin
+                        pipeline[i].wb_msg = wb_msg;
+                        pipeline[i].instr_full_msg = pipeline[i].instr_full_msg;
+                        pipeline[i].fetch_msgs = pipeline[i].fetch_msgs; 
+                        pipeline[i].decode_msgs = pipeline[i].decode_msgs;
+                        pipeline[i].execute_msg = pipeline[i].execute_msg;
+                        pipeline[i].memory_msg = pipeline[i].memory_msg;
+                    end
+                endcase
+            end        
 
         if (shift) begin // Shift in new instructions into the pipeline.
           for (int i = 0; i < curr_num_instrns + 1; i++) begin
@@ -140,67 +180,30 @@
       for (int i = 0; i < curr_num_instrns; i++) begin
           nxt_stages[i] = pipeline[i].stage;   // Default to current state
           print_flags[i] = 1'b0;               // Default to no print
-          fetch_msgs[i] = '{default: ""};      // Default messages to "" for all states
-          decode_msgs[i] = '{default: ""};
-          instr_full_msgs[i] = "";
-          execute_msgs[i] = "";
-          memory_msgs[i] = "";
-          wb_msgs[i] = "";
 
           case (pipeline[i].stage)
               FETCH: begin
                   if (!stall)
                       nxt_stages[i] = DECODE;
-
-                  // Keep the fetch message and default others
-                  fetch_msgs[i][msg_index] = fetch_msg;
               end
 
               DECODE: begin
                   if (!stall)
                       nxt_stages[i] = EXECUTE;
-
-                  // Keep the previous fetch message, clear the others
-                  decode_msgs[i][msg_index] = decode_msg;
-
-                  instr_full_msgs[i] = instruction_full_msg;
-
-                  // Keep the fetch message from previous stage
-                  fetch_msgs[i] = fetch_msgs[i];
               end
 
               EXECUTE: begin
                   nxt_stages[i] = MEMORY;
-                  // Keep the decode message and default others
-                  execute_msgs[i] = execute_msg;
-                  
-                  instr_full_msgs[i] = instr_full_msgs[i];
-                  
-                  decode_msgs[i] = decode_msgs[i]; // Preserve the decode message
-                  // Keep the fetch message from previous stage
-                  fetch_msgs[i] = fetch_msgs[i];
               end
 
               MEMORY: begin
                   nxt_stages[i] = WRITEBACK;
                   // Keep execute and decode messages from previous stages
-                  memory_msgs[i] = mem_msg;
-                  execute_msgs[i] = execute_msgs[i]; // Keep execute message
-                  decode_msgs[i] = decode_msgs[i]; // Preserve the decode message
-                  // Keep the fetch message from previous stage
-                  fetch_msgs[i] = fetch_msgs[i];
               end
 
               WRITEBACK: begin
                   nxt_stages[i] = FETCH;
-                  wb_msgs[i] = wb_msg;
                   print_flags[i] = 1'b1; // Indicate to print
-                  // Keep memory, execute, decode, and fetch messages
-                  memory_msgs[i] = memory_msgs[i]; // Keep memory message
-                  execute_msgs[i] = execute_msgs[i]; // Keep execute message
-                  decode_msgs[i] = decode_msgs[i]; // Preserve the decode message
-                  // Keep the fetch message from previous stage
-                  fetch_msgs[i] = fetch_msgs[i];
 
                   shift = 1'b1; // Assert shift to shift in new instructions into the pipeline.
               end

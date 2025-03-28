@@ -119,7 +119,7 @@ module Verification_Unit (
 //     end
 
  // Keep track of all instructions in the pipeline.
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (rst) begin
             // Reset the pipeline indices
             fetch_id  <= -1;

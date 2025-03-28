@@ -70,7 +70,7 @@
   // Implements State Machine Logic //
   ///////////////////////////////////
   // Implements state machine register, holding current state or next state, accordingly.
-  always_ff @(posedge clk, negedge rst_n) begin
+  always_ff @(negedge clk, negedge rst_n) begin
     if (!rst_n) begin
         // Reset all instructions to EMPTY state
         for (int i = 0; i < 5; i++) begin
@@ -130,10 +130,12 @@
         end
   end
   
-  //////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////
   // Implements the combinational state transition and output logic of the state machine. //
-  ////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////
   always_comb begin
+      shift = 1'b0;  // No shift.
+
       // Default state transitions and messages for each instruction
       for (int i = 0; i < curr_num_instrns; i++) begin
           nxt_stages[i] = pipeline[i].stage;   // Default to current state

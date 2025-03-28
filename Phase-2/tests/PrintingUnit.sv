@@ -22,8 +22,6 @@
       input logic stall
   );
 
-  paramter MAX_INSTRS = 5;
-
   ////////////////////////////////////////
   // Declare state types as enumerated //
   //////////////////////////////////////
@@ -37,13 +35,13 @@
     logic print;
   } instr_t;
 
-  instr_t pipeline[MAX_INSTRS];    // Pipeline: 1D array to track each instruction's stage
+  instr_t pipeline[0:4];    // Pipeline: 1D array to track each instruction's stage
   logic [2:0] curr_num_instrns;    // Number of instructions currently in the pipeline
-  state_t nxt_stages[MAX_INSTRS];   // Holds the next state
-  string fetch_msgs[MAX_INSTRS][0:4], decode_msgs[MAX_INSTRS][0:4]; // Message arrays for each instruction
-  string execute_msgs[MAX_INSTRS], memory_msgs[MAX_INSTRS], wb_msgs[MAX_INSTRS]; // Execution messages
-  string instr_full_msgs[MAX_INSTRS];
-  logic print_flags[MAX_INSTRS];    // Holds the print flags
+  state_t nxt_stages[0:4];   // Holds the next state
+  string fetch_msgs[0:4][0:4], decode_msgs[0:4][0:4]; // Message arrays for each instruction
+  string execute_msgs[0:4], memory_msgs[0:4], wb_msgs[0:4]; // Execution messages
+  string instr_full_msgs[0:4];
+  logic print_flags[0:4];    // Holds the print flags
   logic shift;
 
   // Implement counter to keep track of current number of instructions in pipeline.
@@ -74,7 +72,7 @@
   always_ff @(posedge clk, negedge rst_n) begin
     if (!rst_n) begin
         // Reset all instructions to EMPTY state
-        for (int i = 0; i < MAX_INSTRS; i++) begin
+        for (int i = 0; i < 5; i++) begin
             if (i === 0)
               pipeline[i] <= '{FETCH, '{default: ""}, '{default: ""}, "", "", "", "", 0};
             else

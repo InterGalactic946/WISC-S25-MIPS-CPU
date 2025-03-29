@@ -72,9 +72,12 @@ module Execute(
   Flag_Register iFR (
     .clk(clk),
     .rst(rst),
-    .wen({Z_en, NV_en, NV_en}),
-    .flags_in({Z_set, V_set, N_set}),
-    .flags_out({ZF, VF, NF})
+    .Z_en(Z_en), .Z_set(Z_set),
+    .V_en(NV_en), .V_set(V_set),
+    .N_en(NV_en), .N_set(N_set),
+    .ZF(ZF),
+    .VF(VF),
+    .NF(NF)
   );
   ////////////////////////////////////////////////////
 

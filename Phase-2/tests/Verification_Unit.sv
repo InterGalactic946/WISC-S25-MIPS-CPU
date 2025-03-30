@@ -98,6 +98,7 @@ always @(posedge clk) begin
         valid_memory <= valid_execute;
         valid_wb <= valid_memory;
     end
+end
 
     // Adds the messages, with stall and flush checks.
     always @(negedge clk) begin

@@ -76,23 +76,31 @@ always @(posedge clk) begin
 end
 
 // Second Always Block: Propagate the valid signals across stages
-always @(posedge clk) begin
+always @(posedge clk or posedge rst) begin
     if (rst) begin
+        valid_fetch <= 0;
         valid_decode <= 0;
         valid_execute <= 0;
         valid_memory <= 0;
+        valid_wb <= 0;
+    end else if (flush) begin
+        // Clear all valid signals on a flush
         valid_fetch <= 0;
+        valid_decode <= 0;
+        valid_execute <= 0;
+        valid_memory <= 0;
         valid_wb <= 0;
     end else if (!stall) begin
         // Normal operation: propagate valid signals to the next stage
         valid_fetch <= 1;
+        valid_decode <= valid_fetch;
+        valid_execute <= valid_decode;
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
     end
-
-    valid_decode <= valid_fetch;
-    valid_execute <= valid_decode;
-    valid_memory <= valid_execute;
-    valid_wb <= valid_memory;
+    // No else case for stall: hold the previous values (signals remain unchanged)
 end
+
 
     // Adds the messages, with stall and flush checks.
     always @(negedge clk) begin

@@ -87,13 +87,15 @@ always @(posedge clk) begin
     end else if (stall) begin
         // Normal operation: propagate valid signals to the next stage
         valid_fetch <= 0;
-    end else
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
+    end else begin
         valid_fetch <= 1;
-
-    valid_decode <= valid_fetch;
-    valid_execute <= valid_decode;
-    valid_memory <= valid_execute;
-    valid_wb <= valid_memory;
+        valid_decode <= valid_fetch;
+        valid_execute <= valid_decode;
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
+    end
 
     // // Mark pipeline as filled once all stages have valid instructions
     // if (valid_wb) print_enable <= 1'b1;

@@ -92,21 +92,20 @@ package Verification_tasks;
               return;  // Exit task on error
           end
 
-          if (prediction[1])
-              // Branch is predicted taken.
-              stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
-                                                stage, PC_curr, PC_next, PC_inst, predicted_target);
-           else if (!prediction[1])
-              // Branch is not predicted taken.
-              stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
-                                                stage, PC_curr, PC_next, PC_inst);
-
           
           // If all checks pass, store success message.
           if (PC_stall && !HLT) // If the stall is not due to HLT.
             stage_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
           else if (PC_stall && HLT)
             stage_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+          else if (prediction[1])
+              // Branch is predicted taken.
+              stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
+                                                stage, PC_curr, PC_next, PC_inst, predicted_target);
+          else if (!prediction[1])
+              // Branch is not predicted taken.
+              stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
+                                                stage, PC_curr, PC_next, PC_inst);
     end
   endtask
 
@@ -266,14 +265,12 @@ package Verification_tasks;
         // Get the decoded instruction.
         display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
 
-        // Print success message.
-        decode_msg = $sformatf("[DECODE] SUCCESS: %s", instr_state);
-
         // If there is a stall at the decode stage, print out the stall along with reason.
         if (IF_ID_stall && !hlt) begin
             decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
-        end 
-          
+        end else // Print success message.
+            decode_msg = $sformatf("[DECODE] SUCCESS: %s", instr_state);
+
         if (IF_flush) begin // If the instruction is flushed.
             decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode due to mispredicted branch.");
         end

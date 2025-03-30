@@ -23,21 +23,16 @@ package Monitor_tasks;
 
   // Structure to store debug information for each pipeline stage
   typedef struct {
-    string fetch_msg;
-    integer fetch_cycle;
+    string fetch_msgs[0:4];
 
-    string decode_msg[0:1];
-    string instr_flush_msg;
-    integer decode_cycle;
+    string decode_msgs[0:4];
+    string instr_full_msg;
 
     string execute_msg;
-    integer execute_cycle;
 
     string memory_msg;
-    integer memory_cycle;
 
     string wb_msg;
-    integer wb_cycle;
   } debug_info_t;
 
 

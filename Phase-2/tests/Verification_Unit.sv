@@ -41,6 +41,7 @@ always @(posedge clk) begin
         wb_id <= 0;
     end else if (cap_stall) begin
         // Only let the execute, mem, and wb stages propogate
+        execute_id <= decode_id; // Pass the decode_id to execute_id
         memory_id <= execute_id; // Pass the execute_id to memory_id
         wb_id <= memory_id;      // Pass the memory_id to wb_id
     end else begin

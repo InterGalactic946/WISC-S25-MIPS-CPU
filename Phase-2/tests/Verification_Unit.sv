@@ -86,14 +86,18 @@ always @(posedge clk) begin
         valid_wb <= 0;
     end else if (!stall) begin
         // Normal operation: propagate valid signals to the next stage
+        valid_fetch <= 0;
+        valid_decode <= 0;
+        valid_execute <= valid_decode;
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
+    end else begin
         valid_fetch <= 1;
+        valid_decode <= valid_fetch;
+        valid_execute <= valid_decode;
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
     end
-
-    valid_decode <= valid_fetch;
-    valid_execute <= valid_decode;
-    valid_memory <= valid_execute;
-    valid_wb <= valid_memory;
-end
 
     // Adds the messages, with stall and flush checks.
     always @(negedge clk) begin

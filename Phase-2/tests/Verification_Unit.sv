@@ -94,8 +94,8 @@ always @(posedge clk) begin
     valid_memory <= valid_execute;
     valid_wb <= valid_memory;
 
-    // Mark pipeline as filled once all stages have valid instructions
-    if (valid_wb) print_enable <= 1'b1;
+    // // Mark pipeline as filled once all stages have valid instructions
+    // if (valid_wb) print_enable <= 1'b1;
 end
 
 always @(posedge clk)
@@ -131,7 +131,7 @@ always @(posedge clk)
 
     // Print the message for each instruction.
     always @(posedge clk) begin
-        if (print_enable) begin
+        if (valid_wb) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, $time / 10);
             $display("==========================================================");
@@ -149,9 +149,9 @@ always @(posedge clk)
             $display("%s", pipeline_msgs[wb_id].wb_msg);
             $display("==========================================================\n");
 
-            print_done <= 1'b1;
-        end else begin
-            print_done <= 1'b0;
+        //     print_done <= 1'b1;
+        // end else begin
+        //     print_done <= 1'b0;
         end
     end
 

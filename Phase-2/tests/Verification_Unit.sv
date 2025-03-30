@@ -150,6 +150,8 @@ always @(posedge clk)
             $display("==========================================================\n");
 
             print_done <= 1'b1;
+        end else begin
+            print_done <= 1'b0;
         end
     end
 

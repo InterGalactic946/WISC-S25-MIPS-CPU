@@ -71,7 +71,7 @@ always @(posedge clk) begin
     end else if (!stall) begin
         cap_stall <= 1'b0; // Reset when no stall
     end else if (stall) begin
-        cap_stall <= 1'b1 // Set only on stall
+        cap_stall <= 1'b1; // Set only on stall
     end
 end
 
@@ -87,7 +87,7 @@ always @(posedge clk) begin
         // Normal operation: propagate valid signals to the next stage
         valid_fetch <= 1;
     end
-    
+
     valid_decode <= valid_fetch;
     valid_execute <= valid_decode;
     valid_memory <= valid_execute;

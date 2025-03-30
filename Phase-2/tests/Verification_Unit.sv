@@ -126,7 +126,7 @@ end
             
             for (int j = 0; j < 5; j = j+1)
                     if (pipeline_msgs[wb_id].fetch_msgs[j] !== "")
-                        $display("%s", pipeline[wb_id].fetch_msgs[j]);
+                        $display("%s", pipeline_msgs[wb_id].fetch_msgs[j]);
                
             for (int j = 0; j < 5; j = j+1)
                     if (pipeline_msgs[wb_id].decode_msgs[j] !== "")

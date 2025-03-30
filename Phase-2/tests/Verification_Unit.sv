@@ -28,7 +28,7 @@ module Verification_Unit (
     integer fetch_id, decode_id, execute_id, memory_id, wb_id, msg_index;
     logic cap_stall;
     integer fetch_msg_id[0:71], decode_msg_id[0:71];
-    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_enable;
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_enable, print_done;
     debug_info_t pipeline_msgs[0:71];
 
 // First Always Block: Tracks the pipeline and increments IDs
@@ -93,7 +93,18 @@ always @(posedge clk) begin
     valid_execute <= valid_decode;
     valid_memory <= valid_execute;
     valid_wb <= valid_memory;
+
+    // Mark pipeline as filled once all stages have valid instructions
+    if (valid_wb) print_enable <= 1'b1;
 end
+
+always @(posedge clk)
+    if (rst)
+        print_enable <= 1'b0;
+    else if (print_done)
+        print_enable <= 1'b0;
+    else if (valid_wb)
+        print_enable <= 1'b1;
 
     // Adds the messages, with stall and flush checks.
     always @(negedge clk) begin
@@ -120,7 +131,7 @@ end
 
     // Print the message for each instruction.
     always @(posedge clk) begin
-        if (valid_wb) begin
+        if (print_enable) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, $time / 10);
             $display("==========================================================");
@@ -137,6 +148,8 @@ end
             $display("%s", pipeline_msgs[wb_id].memory_msg);
             $display("%s", pipeline_msgs[wb_id].wb_msg);
             $display("==========================================================\n");
+
+            print_done <= 1'b1;
         end
     end
 

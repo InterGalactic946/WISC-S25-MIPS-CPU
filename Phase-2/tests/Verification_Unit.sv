@@ -68,9 +68,9 @@
             valid_wb <= 0;
         end else if (!stall) begin
             valid_fetch <= 1;
-        else begin
+        else
             valid_fetch <= 0; // Reset fetch valid signal when not in fetch stage
-        end
+
             // Propagate valid signals across stages.
             valid_decode <= valid_fetch;
             valid_execute <= valid_decode;

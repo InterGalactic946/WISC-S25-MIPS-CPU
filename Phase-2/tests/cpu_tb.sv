@@ -76,7 +76,7 @@ module cpu_tb();
     .execute_msg(execute_msg),
     .mem_msg(mem_msg),
     .wb_msg(wb_msg),
-    .stall(stall)
+    .stall(stall), .hlt(iDUT.iDECODE.HLT)
   );
 
   assign stall = iDUT.PC_stall && iDUT.IF_ID_stall;

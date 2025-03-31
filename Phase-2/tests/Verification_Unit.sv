@@ -25,6 +25,7 @@
     input string mem_msg,              // Message from the memory stage
     input string wb_msg,               // Message from the write-back stage
     input logic stall                  // Stall signal to indicate pipeline pause
+    input logic hlt,                   // Halt signal to indicate CPU halt
 );
 
     ///////////////////////////////////
@@ -86,20 +87,37 @@
         end else if (stall) begin
             // Case 3: Stall condition (current cycle stalled).
             if (!cap_stall) begin
-                // First stall: freeze fetch and decode, propagate others.
-                valid_fetch <= 0;
-                valid_decode <= 0;
-                valid_execute <= valid_decode; // Continue valid from decode.
-                valid_memory <= valid_execute; // Continue valid from execute.
-                valid_wb <= valid_memory;      // Continue valid from memory.
+                // If hlt is fetched, we make sure execute message is covered next cycle.
+                if (hlt) begin
+                    valid_fetch <= 0;
+                    valid_decode <= 0;
+                    valid_execute <= 1;
+                    valid_memory <= valid_execute;
+                    valid_wb <= valid_memory;
+                end else begin
+                    // First stall: freeze fetch and decode, propagate others.
+                    valid_fetch <= 0;
+                    valid_decode <= 0;
+                    valid_execute <= valid_decode; // Continue valid from decode.
+                    valid_memory <= valid_execute; // Continue valid from execute.
+                    valid_wb <= valid_memory;      // Continue valid from memory.
+                end
             end else begin
-                // Continued stall (previous cycle was stalled).
-                // Freeze fetch, decode, and execute, propagate memory and wb.
-                valid_fetch <= 0;
-                valid_decode <= 0;
-                valid_execute <= 0;
-                valid_memory <= valid_execute; // Continue valid from execute.
-                valid_wb <= valid_memory;      // Continue valid from memory.
+                // If hlt is fetched make sure to get execute message on next cycle.
+                if (hlt) begin
+                    valid_fetch <= 0;
+                    valid_decode <= 0;
+                    valid_execute <= 1;
+                    valid_memory <= valid_execute;
+                    valid_wb <= valid_memory;
+                end else begin
+                    // Continued stall (previous cycle was stalled).
+                    // Freeze fetch, decode, and execute, propagate memory and wb.
+                    valid_fetch <= 0;
+                    valid_decode <= 0;
+                    valid_execute <= 0;
+                    valid_memory <= valid_execute; // Continue valid from execute.
+                    valid_wb <= valid_memory;      // Continue valid from memory.
             end
         end
     end

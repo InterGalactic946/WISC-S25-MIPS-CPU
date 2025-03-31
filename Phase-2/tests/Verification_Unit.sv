@@ -89,7 +89,7 @@
             if (!cap_stall) begin
                 // If hlt is fetched, we make sure execute message is covered next cycle.
                 if (hlt) begin
-                    valid_fetch <= 0;
+                    valid_fetch <= 1;
                     valid_decode <= 0;
                     valid_execute <= 1;
                     valid_memory <= valid_execute;

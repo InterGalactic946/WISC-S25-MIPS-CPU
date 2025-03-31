@@ -66,25 +66,30 @@
             valid_memory <= 0;
             valid_fetch <= 0;
             valid_wb <= 0;
-        end else if (!stall) begin
+        end else if (!cap_stall && !stall) begin
             valid_fetch <= 1;
             valid_decode <= valid_fetch;
             valid_execute <= valid_decode;
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
-        end else if (stall) begin
+        end else if (!cap_stall && stall) begin
             valid_fetch <= 0;
             valid_decode <= 0;
             valid_execute <= valid_decode; 
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
-            
-            // // If in the previous cycle it was not stalled, set the current stage to valid.
-            // if (!cap_stall)
-            //     valid_fetch <= 1;
-            // else begin
-            //     valid_fetch <= 0; // Reset valid_fetch when stalled
-            // end
+        end else if (cap_stall && !stall) begin
+            valid_fetch <= 1;
+            valid_decode <= 1;
+            valid_execute <= valid_decode; 
+            valid_memory <= valid_execute;
+            valid_wb <= valid_memory;
+        end else if (cap_stall && stall) begin
+            valid_fetch <= 0;
+            valid_decode <= 0;
+            valid_execute <= valid_decode; 
+            valid_memory <= valid_execute;
+            valid_wb <= valid_memory;
         end
     end
 

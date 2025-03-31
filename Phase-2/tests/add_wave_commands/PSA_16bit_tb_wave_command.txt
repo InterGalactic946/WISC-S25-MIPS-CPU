@@ -1,1 +1,0 @@
-add wave /PSA_16bit_tb/iDUT/A; add wave /PSA_16bit_tb/iDUT/B; add wave /PSA_16bit_tb/Sum; add wave /PSA_16bit_tb/expected_PSA_sum; add wave /PSA_16bit_tb/expected_sum; add wave /PSA_16bit_tb/iDUT/pos_Ovfl; add wave /PSA_16bit_tb/iDUT/neg_Ovfl; add wave /PSA_16bit_tb/iDUT/Error; add wave /PSA_16bit_tb/expected_PSA_error;

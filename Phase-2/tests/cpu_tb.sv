@@ -92,7 +92,7 @@ module cpu_tb();
     // Wait for the print_enable signal to be high before printing the messages.
     while (!iVERIFY.print_done);
     
-    $display("CPU halted due to HLT instruction.");
+    $display("CPU halted due to HLT instruction.\n");
 
     // If we reached here, that means all test cases were successful.
     $display("YAHOO!! All tests passed.");

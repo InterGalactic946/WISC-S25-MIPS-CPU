@@ -72,12 +72,9 @@
             valid_execute <= valid_decode;
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
-        end else begin
-            valid_fetch <= 1;             
-            valid_decode <= valid_fetch; 
-            valid_execute <= valid_decode; 
-            valid_memory <= 0;   // Memory stage not valid during stall
-            valid_wb <= 0;       // Write-back stage not valid during stall
+        end else if (stall) begin
+            valid_fetch <= 0; // Reset valid fetch on stall
+            valid_decode <= 0; // Reset valid decode on stall
         end
     end
 

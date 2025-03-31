@@ -66,27 +66,40 @@
             valid_memory <= 0;
             valid_wb <= 0;
         end else if (!stall) begin
-            // Normal operation: propagate valid signals through the pipeline
-            valid_fetch <= 1;
-            valid_decode <= valid_fetch;
-            valid_execute <= valid_decode;
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
-        end else if (stall) begin
+            // Case 1: No stall (normal operation).
             if (!cap_stall) begin
-                // New stall: stall fetch and decode, propagate others
-                valid_fetch <= 0;
-                valid_decode <= 0;
+                // Previous cycle was not stalled, propagate valid signals normally.
+                valid_fetch <= 1;
+                valid_decode <= valid_fetch;
                 valid_execute <= valid_decode;
                 valid_memory <= valid_execute;
                 valid_wb <= valid_memory;
             end else begin
-                // Continued stall: stall fetch, decode, and execute
+                // Case 2: No stall in current cycle, but previous cycle was stalled.
+                // Hold the valid signals for the stages that were stalled.
+                valid_fetch <= 1;  // Fetch can proceed.
+                valid_decode <= 1; // Decode can proceed, since fetch was valid last cycle.
+                valid_execute <= valid_decode;  // Execute propagates from decode.
+                valid_memory <= valid_execute;  // Memory propagates from execute.
+                valid_wb <= valid_memory;       // WB propagates from memory.
+            end
+        end else if (stall) begin
+            // Case 3: Stall condition (current cycle stalled).
+            if (!cap_stall) begin
+                // First stall: freeze fetch and decode, propagate others.
+                valid_fetch <= 0;
+                valid_decode <= 0;
+                valid_execute <= valid_decode; // Continue valid from decode.
+                valid_memory <= valid_execute; // Continue valid from execute.
+                valid_wb <= valid_memory;      // Continue valid from memory.
+            end else begin
+                // Continued stall (previous cycle was stalled).
+                // Freeze fetch, decode, and execute, propagate memory and wb.
                 valid_fetch <= 0;
                 valid_decode <= 0;
                 valid_execute <= 0;
-                valid_memory <= valid_execute;
-                valid_wb <= valid_memory;
+                valid_memory <= valid_execute; // Continue valid from execute.
+                valid_wb <= valid_memory;      // Continue valid from memory.
             end
         end
     end

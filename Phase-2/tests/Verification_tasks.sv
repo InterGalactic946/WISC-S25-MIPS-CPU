@@ -136,9 +136,7 @@ package Verification_tasks;
           instr_state = "";
           instruction_full = "";
           hazard_type = "";
-          stall_msg = "";
-          instr_flush_msg = "";
-
+          
           // Determine the type of hazard and generate the appropriate message.
           if (load_use_hazard) begin
             hazard_type = "load-to-use hazard";

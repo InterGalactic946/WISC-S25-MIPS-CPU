@@ -72,7 +72,28 @@
             valid_execute <= valid_decode;
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
+        end else if (stall) begin
+            valid_fetch <= 0;
+            valid_decode <= 0;
+            valid_execute <= valid_decode; 
+            valid_memory <= valid_execute;
+            valid_wb <= valid_memory;
+
+            if (!cap_stall) begin
+                valid_fetch <= 1; // Reset valid_fetch when not stalled
+            end
         end
+    end
+
+
+    always @(posedge clk) begin
+      if (!rst_n) begin
+          prev_ <= 0; // Reset message index on reset
+      end else if (cap_stall) begin
+          msg_index <= (msg_index + 1) % 5; // Increment message index on stall
+      end else begin
+          msg_index <= 0; // Reset message index when not stalled
+      end
     end
 
 
@@ -109,9 +130,6 @@
           if (valid_decode || cap_stall) begin
               pipeline_msgs[decode_id].decode_msgs[msg_index] = decode_msg;
               pipeline_msgs[decode_id].instr_full_msg = instruction_full_msg;
-
-              if (cap_stall)
-                pipeline_msgs[decode_id].instr_full_msg = "NOP"; // Set to NOP on stall
           end
           if (valid_execute) begin
               pipeline_msgs[execute_id].execute_msg = execute_msg;

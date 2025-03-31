@@ -71,11 +71,11 @@
         else 
             valid_fetch <= 0; // Reset fetch valid signal when not in fetch stage
 
-            // Propagate valid signals across stages.
-            valid_decode <= valid_fetch;
-            valid_execute <= valid_decode;
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
+        // Propagate valid signals across stages.
+        valid_decode <= valid_fetch;
+        valid_execute <= valid_decode;
+        valid_memory <= valid_execute;
+        valid_wb <= valid_memory;
     end
 
 

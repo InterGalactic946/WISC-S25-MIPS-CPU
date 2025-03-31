@@ -118,6 +118,7 @@
                     valid_execute <= 0;
                     valid_memory <= valid_execute; // Continue valid from execute.
                     valid_wb <= valid_memory;      // Continue valid from memory.
+                end
             end
         end
     end

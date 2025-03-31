@@ -66,9 +66,9 @@
             valid_memory <= 0;
             valid_fetch <= 0;
             valid_wb <= 0;
-        end else if (!stall) begin
+        end else if (!stall)
             valid_fetch <= 1;
-        end else 
+        else 
             valid_fetch <= 0; // Reset fetch valid signal when not in fetch stage
 
             // Propagate valid signals across stages.

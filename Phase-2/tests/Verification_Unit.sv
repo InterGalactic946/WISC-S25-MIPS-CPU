@@ -57,39 +57,37 @@
       end
     end
 
-    
     // Propagate the valid signals across stages.
     always @(posedge clk) begin
         if (!rst_n) begin
+            valid_fetch <= 0;
             valid_decode <= 0;
             valid_execute <= 0;
             valid_memory <= 0;
-            valid_fetch <= 0;
             valid_wb <= 0;
-        end else if (!cap_stall && !stall) begin
+        end else if (!stall) begin
+            // Normal operation: propagate valid signals through the pipeline
             valid_fetch <= 1;
             valid_decode <= valid_fetch;
             valid_execute <= valid_decode;
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
-        end else if (!cap_stall && stall) begin
-            valid_fetch <= 0;
-            valid_decode <= 0;
-            valid_execute <= valid_decode; 
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
-        end else if (cap_stall && !stall) begin
-            valid_fetch <= 1;
-            valid_decode <= 1;
-            valid_execute <= valid_decode; 
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
-        end else if (cap_stall && stall) begin
-            valid_fetch <= 0;
-            valid_decode <= 0;
-            valid_execute <= valid_decode; 
-            valid_memory <= valid_execute;
-            valid_wb <= valid_memory;
+        end else if (stall) begin
+            if (!cap_stall) begin
+                // New stall: stall fetch and decode, propagate others
+                valid_fetch <= 0;
+                valid_decode <= 0;
+                valid_execute <= valid_decode;
+                valid_memory <= valid_execute;
+                valid_wb <= valid_memory;
+            end else begin
+                // Continued stall: stall fetch, decode, and execute
+                valid_fetch <= 0;
+                valid_decode <= 0;
+                valid_execute <= 0;
+                valid_memory <= valid_execute;
+                valid_wb <= valid_memory;
+            end
         end
     end
 

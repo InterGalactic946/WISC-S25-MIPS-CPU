@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////
 package Verification_tasks;
 
-  import Display_tasks::*;
+  import Monitor_tasks::*;
 
   // Task to initialize testbench signals.
   task automatic Initialize(ref logic clk, ref logic rst_n);
@@ -34,7 +34,6 @@ package Verification_tasks;
       end : timeout
       begin
         @(posedge sig) disable timeout; // Disable timeout if sig is asserted.
-        $display("CPU halted due to HLT instruction.");
       end
     join
   endtask
@@ -48,114 +47,62 @@ package Verification_tasks;
       input logic [15:0] PC_curr, expected_PC_curr,
       input logic [1:0]  prediction, expected_prediction,
       input logic [15:0] predicted_target, expected_predicted_target,
-      input string stage,
-      output string stage_msg, stall_msg
+      output string fetch_msg
   );
     begin
         // Initialize message.
-        stage_msg = "";
-        stall_msg = "";
+        fetch_msg = "";
 
           // Verify the PC next.
           if (PC_next !== expected_PC_next) begin
-              stage_msg = $sformatf("[%s] ERROR: PC_next: 0x%h, expected_PC_next: 0x%h.", stage, PC_next, expected_PC_next);
+              fetch_msg = $sformatf("[FETCH] ERROR: PC_next: 0x%h, expected_PC_next: 0x%h.", PC_next, expected_PC_next);
               return;  // Exit task on error
           end
 
           // Verify the PC instruction.
           if (PC_inst !== expected_PC_inst) begin
-              stage_msg = $sformatf("[%s] ERROR: PC_inst: 0x%h, expected_PC_inst: 0x%h.", stage, PC_inst, expected_PC_inst);
+              fetch_msg = $sformatf("[FETCH] ERROR: PC_inst: 0x%h, expected_PC_inst: 0x%h.", PC_inst, expected_PC_inst);
               return;  // Exit task on error
           end
 
           // Verify the PC.
           if (PC_curr !== expected_PC_curr) begin
-              stage_msg = $sformatf("[%s] ERROR: PC_curr: 0x%h, expected_PC_curr: 0x%h.", stage, PC_curr, expected_PC_curr);
+              fetch_msg = $sformatf("[FETCH] ERROR: PC_curr: 0x%h, expected_PC_curr: 0x%h.", PC_curr, expected_PC_curr);
               return;  // Exit task on error
           end
 
           // Verify the prediction.
           if (prediction !== expected_prediction) begin
-              stage_msg = $sformatf("[%s] ERROR: predicted_taken: %b, expected_predicted_taken: %b.", stage, prediction[1], expected_prediction[1]);
+              fetch_msg = $sformatf("[FETCH] ERROR: predicted_taken: %b, expected_predicted_taken: %b.", prediction[1], expected_prediction[1]);
               return;  // Exit task on error
           end
 
           // Verify the predicted target.
           if (predicted_target !== expected_predicted_target) begin
-              stage_msg = $sformatf("[%s] ERROR: predicted_target: 0x%h, expected_pred_target: 0x%h.", stage, predicted_target, expected_predicted_target);
+              fetch_msg = $sformatf("[FETCH] ERROR: predicted_target: 0x%h, expected_pred_target: 0x%h.", predicted_target, expected_predicted_target);
               return;  // Exit task on error
           end
 
           // Verify the stall state.
           if (PC_stall !== expected_PC_stall) begin
-              stage_msg = $sformatf("[%s] ERROR: PC_stall: %b, expected_PC_stall: %b.", stage, PC_stall, expected_PC_stall);
+              fetch_msg = $sformatf("[FETCH] ERROR: PC_stall: %b, expected_PC_stall: %b.", PC_stall, expected_PC_stall);
               return;  // Exit task on error
           end
 
           
           // If all checks pass, store success message.
           if (PC_stall && !HLT) // If the stall is not due to HLT.
-            stage_msg = $sformatf("[%s] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+            fetch_msg = $sformatf("[FETCH] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.",  PC_curr, PC_next, PC_inst);
           else if (PC_stall && HLT)
-            stage_msg = $sformatf("[%s] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", stage,  PC_curr, PC_next, PC_inst);
+            fetch_msg = $sformatf("[FETCH] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", PC_curr, PC_next, PC_inst);
           else if (prediction[1])
-              // Branch is predicted taken.
-              stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
-                                                stage, PC_curr, PC_next, PC_inst, predicted_target);
+            // Branch is predicted taken.
+            fetch_msg = $sformatf("[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
+                                                PC_curr, PC_next, PC_inst, predicted_target);
           else if (!prediction[1])
               // Branch is not predicted taken.
-              stage_msg = $sformatf("[%s] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
-                                                stage, PC_curr, PC_next, PC_inst);
-    end
-  endtask
-
-
-  // Task: Verifies IF/ID Pipeline Register.
-  task automatic verify_IF_ID(
-      input logic [65:0] IF_ID_signals, input logic [65:0] expected_IF_ID_signals, 
-      input logic PC_stall, IF_ID_stall, IF_flush,
-      input logic br_hazard, b_hazard, load_use_hazard, hlt,
-      output string if_id_msg
-  );
-    begin
-    string hazard_type = "";
-
-    // Determine the type of hazard and generate the appropriate message.
-    if (load_use_hazard) begin
-        hazard_type = "load-to-use hazard";
-    end else if (br_hazard) begin
-        hazard_type = "Branch (BR) hazard";
-    end else if (b_hazard) begin
-        hazard_type = "Branch (B) hazard";
-    end else if (hlt) begin
-        hazard_type = "HLT instruction";
-    end
-
-    // Handle PC/IF_ID_stall messages.
-    if (PC_stall && IF_ID_stall) begin
-        if_id_msg = $sformatf("[FETCH]: PC stalled due to %s.\n|[IF_ID]: IF_ID stalled due to %s.", hazard_type, hazard_type);
-        return;
-    // end else if (IF_flush) begin
-    //     if_id_msg = $sformatf("[FLUSH]: IF flushed due to mispredicted branch.");
-    //     return;
-    end else begin
-
-        // // Verify fetch otheriwse.
-        // verify_FETCH(
-        //     .PC_next(IF_ID_signals[49:34]), 
-        //     .expected_PC_next(expected_IF_ID_signals[49:34]), 
-        //     .PC_inst(IF_ID_signals[33:18]), 
-        //     .expected_PC_inst(expected_IF_ID_signals[33:18]), 
-        //     .PC_curr(IF_ID_signals[65:50]), 
-        //     .expected_PC_curr(expected_IF_ID_signals[65:50]), 
-        //     .prediction(IF_ID_signals[17:16]), 
-        //     .expected_prediction(expected_IF_ID_signals[17:16]), 
-        //     .predicted_target(IF_ID_signals[15:0]), 
-        //     .expected_predicted_target (expected_IF_ID_signals[15:0]),
-        //     .stage("IF_ID"),
-        //     .stage_msg(if_id_msg)
-        // );
-    end
+            fetch_msg = $sformatf("[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
+                                                PC_curr, PC_next, PC_inst);
     end
   endtask
 
@@ -176,8 +123,8 @@ package Verification_tasks;
       input logic wen_BTB, expected_wen_BTB,
       input logic wen_BHT, expected_wen_BHT,
       input logic update_PC, expected_update_PC,
-      output string decode_msg, stall_msg,
-      output string instruction_full, instr_flush_msg
+      output string decode_msg,
+      output string instruction_full
   );
       begin
           // Stores the state of the decoded instruction.
@@ -190,7 +137,6 @@ package Verification_tasks;
           instruction_full = "";
           hazard_type = "";
           stall_msg = "";
-        //   flush_msg = "";
           instr_flush_msg = "";
 
           // Determine the type of hazard and generate the appropriate message.
@@ -200,7 +146,9 @@ package Verification_tasks;
             hazard_type = "Branch (BR) hazard";
           end else if (b_hazard) begin
             hazard_type = "Branch (B) hazard";
-          end
+          end else if (hlt) begin
+            hazard_type = "HLT instruction";
+          end 
 
           // Get the full instruction.
           get_full_instruction(.opcode(expected_EX_signals[6:3]), .rs(expected_EX_signals[62:59]), .rt(expected_EX_signals[58:55]), .rd(expected_WB_signals[7:4]), .actual_target(expected_branch_target), .ALU_imm(expected_EX_signals[38:23]), .cc(cc), .instr_name(instruction_full));
@@ -266,14 +214,13 @@ package Verification_tasks;
         display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
 
         // If there is a stall at the decode stage, print out the stall along with reason.
-        if (IF_ID_stall && !hlt) begin
+        if (IF_ID_stall) begin
             decode_msg = $sformatf("[DECODE] STALL: Instruction stalled at decode due to %s.", hazard_type);
+        end else if (IF_flush) begin // If the instruction is flushed.
+            decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode due to mispredicted branch.");
         end else // Print success message.
             decode_msg = $sformatf("[DECODE] SUCCESS: %s", instr_state);
 
-        if (IF_flush) begin // If the instruction is flushed.
-            decode_msg = $sformatf("[DECODE] FLUSH: Instruction flushed at decode due to mispredicted branch.");
-        end
       end
   endtask
 
@@ -433,34 +380,6 @@ package Verification_tasks;
   endtask
 
 
-  // Task: Verifies ID/EX Pipeline Register.
-  task automatic verify_ID_EX(
-      input logic [104:0] ID_EX_signals, input logic [104:0] expected_ID_EX_signals,
-      output string id_ex_message
-  );  
-      // Initialize message.
-      id_ex_message = "";
-
-      // Verify the PC next.
-      if (ID_EX_signals[104:89] !== expected_ID_EX_signals[104:89]) begin
-        id_ex_message = $sformatf("[ID_EX] ERROR: ID_EX_PC_next: 0x%h, expected_ID_EX_PC_next: 0x%h.", ID_EX_signals[104:89], expected_ID_EX_signals[104:89]);
-        return;  // Exit task on error
-      end
-
-      // Verify EX signals.
-      verify_EX(.EX_signals(ID_EX_signals[88:26]), .expected_EX_signals(expected_ID_EX_signals[88:26]), .stage("ID_EX"), .stage_msg(id_ex_message));
-
-      // Verify MEM signals.
-      verify_MEM(.MEM_signals(ID_EX_signals[25:8]), .expected_MEM_signals(expected_ID_EX_signals[25:8]), .stage("ID_EX"), .stage_msg(id_ex_message));
-
-      // Verify WB signals.
-      verify_WB(.WB_signals(ID_EX_signals[7:0]), .expected_WB_signals(expected_ID_EX_signals[7:0]), .stage("ID_EX"), .stage_msg(id_ex_message));
-
-      // Print the success message.
-      id_ex_message = "[ID_EX] SUCCESS: All signals valid.";
-  endtask
-
-
   // Task: Verifies the EXECUTE stage operation result and flags.
   task automatic verify_EXECUTE(
       input logic [15:0] Input_A,      
@@ -478,13 +397,12 @@ package Verification_tasks;
       input  logic expected_ZF,                
       input  logic expected_VF,               
       input  logic expected_NF,
-      output string execute_msg, ex_flush_msg 
+      output string execute_msg 
   );
      string hazard_type;
     
      // Initialize message.
      execute_msg = "";
-     ex_flush_msg = "";
      hazard_type = "";
 
     // Determine the type of hazard and generate the appropriate message.
@@ -526,47 +444,11 @@ package Verification_tasks;
 
        // If there is a flush at the execute stage, print out the flush along with reason.
        if (ID_flush) // If the instruction is flushed.
-            execute_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
+        execute_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
        else
-            // Display the execution result if no errors are found.
-            execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
-  endtask
-
-
-  // Task: Verifies the EX/MEM Pipeline Register.
-  task automatic verify_EX_MEM(
-      input logic [61:0] EX_MEM_signals, input logic [61:0] expected_EX_MEM_signals,
-      output string ex_mem_message
-  );
-    // Initialize message.
-    ex_mem_message = "";
-
-      // Verify the PC next.
-      if (EX_MEM_signals[61:46] !== expected_EX_MEM_signals[61:46]) begin
-        ex_mem_message = $sformatf("[EX_MEM] ERROR: EX_MEM_PC_next: 0x%h, expected_EX_MEM_PC_next: 0x%h.", EX_MEM_signals[61:46] , expected_EX_MEM_signals[61:46]);
-        return;  // Exit task on error
-      end
-
-      // Verify the ALU output.
-      if (EX_MEM_signals[45:30] !== expected_EX_MEM_signals[45:30]) begin
-          ex_mem_message = $sformatf("[EX_MEM] ERROR: EX_MEM_ALU_out: 0x%h, expected_EX_MEM_ALU_out: 0x%h.", EX_MEM_signals[45:30], expected_EX_MEM_signals[45:30]);
-          return;
-      end
-
-      // Verify the SrcReg2.
-      if (EX_MEM_signals[29:26] !== expected_EX_MEM_signals[29:26]) begin
-          ex_mem_message = $sformatf("[EX_MEM] ERROR: SrcReg2 mismatch: 0x%h (expected 0x%h).", EX_MEM_signals[29:26], expected_EX_MEM_signals[29:26]);
-          return;
-      end
-
-      // Verify MEM signals.
-      verify_MEM(.MEM_signals(EX_MEM_signals[25:8]), .expected_MEM_signals(expected_EX_MEM_signals[25:8]), .stage("EX_MEM"), .stage_msg(ex_mem_message));
-
-      // Verify WB signals.
-      verify_WB(.WB_signals(EX_MEM_signals[7:0]), .expected_WB_signals(expected_EX_MEM_signals[7:0]), .stage("EX_MEM"), .stage_msg(ex_mem_message));
-
-      // Print the success message.
-      ex_mem_message = "[EX_MEM] SUCCESS: All signals valid.";
+        // Display the execution result if no errors are found.
+        execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
+  
   endtask
 
 
@@ -610,40 +492,6 @@ package Verification_tasks;
           mem_verify_msg = "[MEMORY] SUCCESS: No memory access in this cycle.";
       end
 
-  endtask
-
-
-  // Task: Verifies the MEM/WB Pipeline Register.
-  task automatic verify_MEM_WB(
-    input logic [55:0] MEM_WB_signals, input logic [55:0] expected_MEM_WB_signals,
-    output string mem_wb_message
-  );  
-      // Initialize message.
-      mem_wb_message = "";
-
-      // Verify the PC next.
-      if (MEM_WB_signals[55:40] !== expected_MEM_WB_signals[55:40]) begin
-        mem_wb_message = $sformatf("[MEM_WB] ERROR: MEM_WB_PC_next: 0x%h, expected_MEM_WB_PC_next: 0x%h.", MEM_WB_signals[55:40] , expected_MEM_WB_signals[55:40]);
-        return;  // Exit task on error
-      end
-
-      // Verify the ALU output.
-      if (MEM_WB_signals[39:24] !== expected_MEM_WB_signals[39:24]) begin
-          mem_wb_message = $sformatf("[MEM_WB] ERROR: MEM_WB_ALU_out: 0x%h, expected_MEM_WB_ALU_out: 0x%h.", MEM_WB_signals[39:24], expected_MEM_WB_signals[39:24]);
-          return;
-      end
-
-      // Verify the memory data.
-      if (MEM_WB_signals[23:8] !== expected_MEM_WB_signals[23:8]) begin
-          mem_wb_message = $sformatf("[MEM_WB] ERROR: MEM_WB_MemData: 0x%h, expected_MEM_WB_MemData: 0x%h.", MEM_WB_signals[23:8], expected_MEM_WB_signals[23:8]);
-          return;
-      end
-
-      // Verify WB signals.
-      verify_WB(.WB_signals(MEM_WB_signals[7:0]), .expected_WB_signals(expected_MEM_WB_signals[7:0]), .stage("MEM_WB"), .stage_msg(mem_wb_message));
-
-      // Print the success message.
-      mem_wb_message = "[MEM_WB] SUCCESS: All signals valid.";
   endtask
 
 

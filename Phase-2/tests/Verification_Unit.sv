@@ -72,6 +72,8 @@
             valid_execute <= valid_decode;
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
+        end else begin
+            valid_fetch <= 1;
         end
     end
 

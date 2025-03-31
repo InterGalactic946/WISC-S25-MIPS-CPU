@@ -109,6 +109,9 @@
           if (valid_decode || cap_stall) begin
               pipeline_msgs[decode_id].decode_msgs[msg_index] = decode_msg;
               pipeline_msgs[decode_id].instr_full_msg = instruction_full_msg;
+
+              if (cap_stall)
+                pipeline_msgs[decode_id].instr_full_msg = "NOP"; // Set to NOP on stall
           end
           if (valid_execute) begin
               pipeline_msgs[execute_id].execute_msg = execute_msg;

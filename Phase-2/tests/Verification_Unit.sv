@@ -60,25 +60,19 @@
     
     // Propagate the valid signals across stages.
     always @(posedge clk) begin
-      if (!rst_n) begin
-          valid_decode <= 0;
-          valid_execute <= 0;
-          valid_memory <= 0;
-          valid_fetch <= 0;
-          valid_wb <= 0;
-      end else if (!stall) begin
-          valid_fetch <= 1;
-          valid_decode <= valid_fetch;
-          valid_execute <= valid_decode;
-          valid_memory <= valid_execute;
-          valid_wb <= valid_memory;
-      end else begin
-          valid_fetch <= 0; // Reset valid signals when stall is active
-          valid_decode <= valid_fetch;
-          valid_execute <= valid_decode;
-          valid_memory <= valid_execute;
-          valid_wb <= valid_memory;
-      end
+        if (!rst_n) begin
+            valid_decode <= 0;
+            valid_execute <= 0;
+            valid_memory <= 0;
+            valid_fetch <= 0;
+            valid_wb <= 0;
+        end else if (!stall) begin
+            valid_fetch <= 1;
+            valid_decode <= valid_fetch;
+            valid_execute <= valid_decode;
+            valid_memory <= valid_execute;
+            valid_wb <= valid_memory;
+        end
     end
 
 

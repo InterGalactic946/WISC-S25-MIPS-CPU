@@ -24,8 +24,8 @@
     input string execute_msg,          // Message from the execute stage
     input string mem_msg,              // Message from the memory stage
     input string wb_msg,               // Message from the write-back stage
-    input logic stall                  // Stall signal to indicate pipeline pause
-    input logic hlt,                   // Halt signal to indicate CPU halt
+    input logic stall,                 // Stall signal to indicate pipeline pause
+    input logic hlt                    // Halt signal to indicate CPU halt
 );
 
     ///////////////////////////////////

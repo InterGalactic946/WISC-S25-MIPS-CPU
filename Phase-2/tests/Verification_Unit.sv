@@ -129,7 +129,7 @@
         print_done <= 1'b0; // Reset the print_done flag on reset
       else  if (valid_wb) begin
             $display("==========================================================");
-            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, $time / 10);
+            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, ($time / 10) - 1);
             $display("==========================================================");
                 
             for (int j = 0; j < 5; j = j+1)

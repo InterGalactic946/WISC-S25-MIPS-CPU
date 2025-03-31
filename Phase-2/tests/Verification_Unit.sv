@@ -86,17 +86,6 @@
     end
 
 
-    always @(posedge clk) begin
-      if (!rst_n) begin
-          prev_ <= 0; // Reset message index on reset
-      end else if (cap_stall) begin
-          msg_index <= (msg_index + 1) % 5; // Increment message index on stall
-      end else begin
-          msg_index <= 0; // Reset message index when not stalled
-      end
-    end
-
-
     // This block is responsible for managing the message index on a stall.
     always @(posedge clk) begin
       if (!rst_n) begin

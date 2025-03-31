@@ -332,6 +332,8 @@ module cpu_tb();
       
       wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
+      $display(wb_msg);
+
     end
   end
 

@@ -16,15 +16,16 @@
   import Monitor_tasks::*;
 
   module Verification_Unit (
-      input logic clk, rst_n,
-      input string fetch_msg,
-      input string decode_msg,
-      input string instruction_full_msg,
-      input string execute_msg,
-      input string mem_msg,
-      input string wb_msg,
-      input logic stall
-  );
+    input logic clk,                   // Clock signal
+    input logic rst_n,                 // Active-low reset signal
+    input string fetch_msg,            // Message from the fetch stage
+    input string decode_msg,           // Message from the decode stage
+    input string instruction_full_msg, // Complete decoded instruction in ASM format
+    input string execute_msg,          // Message from the execute stage
+    input string mem_msg,              // Message from the memory stage
+    input string wb_msg,               // Message from the write-back stage
+    input logic stall                  // Stall signal to indicate pipeline pause
+);
 
     ///////////////////////////////////
     // Declare any internal signals //
@@ -71,6 +72,9 @@
           valid_execute <= valid_decode;
           valid_memory <= valid_execute;
           valid_wb <= valid_memory;
+      end else begin
+          valid_fetch <= 0; // Reset valid signals when stall is active
+          valid_decode <= 0;
       end
     end
 
@@ -124,28 +128,30 @@
 
     // Print the message for each instruction.
     always @(posedge clk) begin
-      if (valid_wb) begin
-          $display("==========================================================");
-          $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, $time / 10);
-          $display("==========================================================");
-            
-          for (int j = 0; j < 5; j = j+1)
-                  if (pipeline_msgs[wb_id].fetch_msgs[j] !== "")
-                      $display("%s", pipeline_msgs[wb_id].fetch_msgs[j]);
-               
-          for (int j = 0; j < 5; j = j+1)
-                  if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
-                      $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
+      if (!rst_n)
+        print_done <= 1'b0; // Reset the print_done flag on reset
+      else  if (valid_wb) begin
+            $display("==========================================================");
+            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, $time / 10);
+            $display("==========================================================");
+                
+            for (int j = 0; j < 5; j = j+1)
+                    if (pipeline_msgs[wb_id].fetch_msgs[j] !== "")
+                        $display("%s", pipeline_msgs[wb_id].fetch_msgs[j]);
+                
+            for (int j = 0; j < 5; j = j+1)
+                    if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
+                        $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
 
-          $display("%s", pipeline_msgs[wb_id].execute_msg);
-          $display("%s", pipeline_msgs[wb_id].memory_msg);
-          $display("%s", pipeline_msgs[wb_id].wb_msg);
-          $display("==========================================================\n");
+            $display("%s", pipeline_msgs[wb_id].execute_msg);
+            $display("%s", pipeline_msgs[wb_id].memory_msg);
+            $display("%s", pipeline_msgs[wb_id].wb_msg);
+            $display("==========================================================\n");
 
-          print_done <= 1'b1; // Set the print_done flag to true after printing
-      end else begin
-          print_done <= 1'b0; // Reset the print_done flag when not in write-back stage
-      end
+            print_done <= 1'b1; // Set the print_done flag to true after printing
+    end else begin
+            print_done <= 1'b0; // Reset the print_done flag when not in write-back stage
+        end
    end
 
 endmodule

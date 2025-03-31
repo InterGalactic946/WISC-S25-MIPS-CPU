@@ -66,16 +66,19 @@
             valid_memory <= 0;
             valid_fetch <= 0;
             valid_wb <= 0;
-        end else if (!stall)
+        end else if (!stall) begin
             valid_fetch <= 1;
-        else 
-            valid_fetch <= 0; // Reset fetch valid signal when not in fetch stage
-
-        // Propagate valid signals across stages.
-        valid_decode <= valid_fetch;
-        valid_execute <= valid_decode;
-        valid_memory <= valid_execute;
-        valid_wb <= valid_memory;
+            valid_decode <= valid_fetch;
+            valid_execute <= valid_decode;
+            valid_memory <= valid_execute;
+            valid_wb <= valid_memory;
+        end else begin
+            valid_fetch <= 1;             
+            valid_decode <= valid_fetch; 
+            valid_execute <= 0;  // Execute stage not valid during stall
+            valid_memory <= 0;   // Memory stage not valid during stall
+            valid_wb <= 0;       // Write-back stage not valid during stall
+        end
     end
 
 

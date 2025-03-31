@@ -79,7 +79,7 @@
                 // Hold the valid signals for the stages that were stalled.
                 valid_fetch <= 1;  // Fetch can proceed.
                 valid_decode <= 1; // Decode can proceed, since fetch was valid last cycle.
-                valid_execute <= 1;  // Execute propagates from decode.
+                valid_execute <= valid_decode;  // Execute propagates from decode.
                 valid_memory <= valid_execute;  // Memory propagates from execute.
                 valid_wb <= valid_memory;       // WB propagates from memory.
             end

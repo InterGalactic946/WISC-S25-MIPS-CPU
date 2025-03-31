@@ -72,9 +72,6 @@
             valid_execute <= valid_decode;
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
-        end else if (stall) begin
-            valid_fetch <= 0; // Reset valid fetch on stall
-            valid_decode <= 0; // Reset valid decode on stall
         end
     end
 

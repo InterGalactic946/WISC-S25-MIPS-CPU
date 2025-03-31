@@ -78,9 +78,10 @@
             valid_execute <= valid_decode; 
             valid_memory <= valid_execute;
             valid_wb <= valid_memory;
-
+            
+            // If in the previous cycle it was not stalled, set the current stage to valid.
             if (!cap_stall) begin
-                valid_fetch <= 1; // Reset valid_fetch when not stalled
+                valid_fetch <= 1; 
             end
         end
     end

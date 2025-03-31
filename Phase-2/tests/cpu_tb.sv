@@ -89,8 +89,8 @@ module cpu_tb();
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
     TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
-    // Wait for the print_enable signal to be high before printing the messages.
-    while (!iVERIFY.print_done);
+    // Wait for the print_done signal to be high before printing the messages.
+    @(posedge iVERIFY.print_done);
     
     $display("CPU halted due to HLT instruction.\n");
 

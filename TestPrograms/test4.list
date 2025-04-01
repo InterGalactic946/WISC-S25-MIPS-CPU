@@ -39,7 +39,7 @@
 
 BRANCH1:
     SUB R11, R1, R1   // R11 = R1 - R1 (0x0000)
-    B 011, END        // Branch if Less Than (N = 1) → should not branch
+    // B 011, END        // Branch if Less Than (N = 1) → should not branch
 
     ////////////////////////////////////////////////////////
     // Forwarding with Branches                             //

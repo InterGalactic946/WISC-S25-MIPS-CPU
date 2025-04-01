@@ -63,15 +63,15 @@ module ControlUnit (
     // A target is miscomputed when the predicted target differs from the actual target.
     assign target_miscomputed = (IF_ID_predicted_target != actual_target);
 
-    // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
-    assign wen_BTB = (Branch) & ((actual_taken) | (target_miscomputed));
+    // Update BTB whenever the it is a branch and when the target was miscomputed.
+    assign wen_BTB = (Branch) & (target_miscomputed);
 
     // Update BHT on every branch.
     assign wen_BHT = Branch;
 
     // We update the PC to fetch the actual target when the predictor either predicted incorrectly
-    // or when the target was miscomputed and the branch was actually taken.
-    assign update_PC = (mispredicted | target_miscomputed) & (branch_taken);
+    // or when the target was miscomputed and it is a Branch instruction.
+    assign update_PC = (mispredicted | target_miscomputed) & (Branch);
     ////////////////////////
 
     //////////////////

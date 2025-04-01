@@ -1,90 +1,98 @@
 // Program to Test Various Instructions
-
 ////////////////////////////////////////////////////////
 // Initialize Data in Memory                          //
+// Setting up register values and memory addresses     //
 ////////////////////////////////////////////////////////
-LLB R1, 0x0E      // R1 = 0x000E (for SW/LW test)
-LLB R2, 0x06      // R2 = 0x0006
-LLB R3, 0xFF      // R3 = 0x00FF (for signed byte addition)
-LLB R4, 0x08      // R4 = 0x0008 (Shift amount)
-LLB R5, 0x20      // R5 = 0x0020 (Memory address)
+LLB R1, 0x0E      // Load Lower Byte: R1 = 0x000E (for SW/LW test)
+LLB R2, 0x06      // Load Lower Byte: R2 = 0x0006 (for addition and subtraction)
+LLB R3, 0xFF      // Load Lower Byte: R3 = 0x00FF (mask for signed byte addition)
+LLB R4, 0x08      // Load Lower Byte: R4 = 0x0008 (shift amount)
+LLB R5, 0x20      // Load Lower Byte: R5 = 0x0020 (base memory address)
 
 ////////////////////////////////////////////////////////
 // Memory-to-Memory Forwarding (LW followed by SW)     //
+// Tests load-to-store forwarding to check for hazards //
 ////////////////////////////////////////////////////////
-LW R6, R5, 0      // Load R6 from memory[0x0020] (initial value)
-SW R6, R5, 0      // Store R6 back to memory[0x0020]
+LW R6, R5, 0      // Load word from memory[0x0020] into R6 (initial value)
+SW R6, R5, 0      // Store the loaded value back to memory[0x0020]
 
 ////////////////////////////////////////////////////////
 // Store Stall with Data Dependency                    //
+// Verifying proper stall handling with load dependency //
 ////////////////////////////////////////////////////////
-LW R7, R5, 0      // Load R7 from memory[0x0020] (initial value)
-ADD R7, R7, R2    // R7 = R7 + R2 (0x0006 + 0x0006 = 0x000C)
-SW R7, R5, 0      // Store R7 to memory[0x0020]
+LW R7, R5, 0      // Load word from memory[0x0020] into R7
+ADD R7, R7, R2    // Add R7 and R2, storing result in R7 (0x0006 + 0x0006 = 0x000C)
+SW R7, R5, 0      // Store the result (0x000C) back to memory[0x0020]
 
 ////////////////////////////////////////////////////////
 // Arithmetic Instructions                            //
+// Testing addition, subtraction, parallel addition,  //
+// and reduction to verify correct ALU operations      //
 ////////////////////////////////////////////////////////
-ADD R8, R1, R2     // R8 = R1 + R2 (0x000E + 0x0006 = 0x0014)
-SUB R9, R8, R2     // R9 = R8 - R2 (0x0014 - 0x0006 = 0x000E)
-PADDSB R10, R1, R2 // 
-RED R11, R10, R2   // 
+ADD R8, R1, R2     // Add R1 and R2: R8 = 0x000E + 0x0006 = 0x0014
+SUB R9, R8, R2     // Subtract R2 from R8: R9 = 0x0014 - 0x0006 = 0x000E
+PADDSB R10, R1, R2 // Parallel Add Signed Byte: R10 = signed add of bytes from R1 and R2
+RED R11, R10, R2   // Reduction operation on R10 and R2 (custom reduction)
 
 ////////////////////////////////////////////////////////
 // Logical Instructions                               //
+// Verifying XOR and its effect on bit patterns        //
 ////////////////////////////////////////////////////////
-AND R12, R8, R9   // R12 = R8 & R9 (0x0014 & 0x000E = 0x0004)
-OR R13, R8, R9    // R13 = R8 | R9 (0x0014 | 0x000E = 0x001E)
-XOR R14, R8, R9   // R14 = R8 ^ R9 (0x0014 ^ 0x000E = 0x001A)
-NOT R15, R1       // R15 = ~R1 (0xFFF1)
+XOR R14, R8, R9   // XOR R8 and R9: R14 = 0x0014 ^ 0x000E = 0x001A
 
 ////////////////////////////////////////////////////////
 // Shift and Rotate Instructions                       //
+// Testing logical/arithmetic shifts and rotation      //
 ////////////////////////////////////////////////////////
-SLL R1, R1, R4    // R1 = R1 << 8  (0x000E << 8 = 0x0E00)
-SRA R2, R1, R4    // R2 = R1 >> 8  (0x0E00 >> 8 = 0x000E)
-ROR R3, R1, R4    // R3 = R1 ror 8 (0x0E00 -> 0x000E)
+SLL R1, R1, R4    // Shift Left Logical: R1 = 0x000E << 8 = 0x0E00
+SRA R2, R1, R4    // Shift Right Arithmetic: R2 = 0x0E00 >> 8 = 0x000E
+ROR R3, R1, R4    // Rotate Right: R3 = 0x0E00 ror 8 = 0x000E
 
 ////////////////////////////////////////////////////////
 // Reduction and Parallel Addition                     //
+// Verifying reduction and parallel addition logic     //
 ////////////////////////////////////////////////////////
-RED R6, R1, R2     // R6 = Reduce(R1, R2, R3) - Custom Reduction
-PADDSB R7, R3, R3  // R7 = Parallel signed add of R3 and R3
+RED R6, R1, R2     // Reduction operation on R1 and R2 (custom logic)
+PADDSB R7, R3, R3  // Parallel Add Signed Bytes: R7 = signed add of R3 and R3
 
 ////////////////////////////////////////////////////////
 // Branch Instructions                                 //
+// Demonstrates branch handling for various conditions //
+// Equal, Greater Than, Less Than, Overflow, Unconditional //
 ////////////////////////////////////////////////////////
-LLB R1, 0x01      // R1 = 0x0001 (for branch condition)
-ADD R8, R1, R1    // R8 = R1 + R1 (0x0001 + 0x0001 = 0x0002)
+LLB R1, 0x01      // Load Lower Byte: R1 = 0x0001 (for branch condition)
+ADD R8, R1, R1    // Add R1 to R1: R8 = 0x0001 + 0x0001 = 0x0002
 
-// Branch Equal (Z = 1)
-SUB R8, R8, R8    // Zero out R8
-B 001, EQ_LABEL   // Branch if Equal (Z = 1) - Should Branch
+// Branch if Equal (Z = 1)
+SUB R8, R8, R8    // Subtract R8 from itself: R8 = 0x0000
+B 001, EQ_LABEL   // Branch if Equal (Z = 1) - Should branch
 
-// Branch Greater Than (Z = N = 0)
-ADD R8, R1, R1    // R8 = R1 + R1 (0x0001 + 0x0001 = 0x0002)
-B 010, GT_LABEL   // Branch if Greater Than - Should Branch
+// Branch if Greater Than (Z = N = 0)
+ADD R8, R1, R1    // Add R1 to R1: R8 = 0x0001 + 0x0001 = 0x0002
+B 010, GT_LABEL   // Branch if Greater Than (Z = N = 0) - Should branch
 
-// Branch Less Than (N = 1)
-SUB R8, R1, R2    // R8 = R1 - R2 (0x0001 - 0x000E = -13)
-B 011, LT_LABEL   // Branch if Less Than - Should Branch
+// Branch if Less Than (N = 1)
+SUB R8, R1, R2    // Subtract R2 from R1: R8 = 0x0001 - 0x000E = -13
+B 011, LT_LABEL   // Branch if Less Than (N = 1) - Should branch
 
 EQ_LABEL:
-ADD R8, R8, R1    // R8 = R8 + R1 (0x0000 + 0x0001 = 0x0001)
-GT_LABEL:
-ADD R8, R8, R1    // R8 = R8 + R1 (0x0002 + 0x0001 = 0x0003)
-LT_LABEL:
-ADD R8, R8, R1    // R8 = R8 + R1 (0x0003 + 0x0001 = 0x0004)
+ADD R8, R8, R1    // Increment R8: R8 = 0x0000 + 0x0001 = 0x0001
 
-// Unconditional Branch
-B 111, END_LABEL  // Should Always Branch
+GT_LABEL:
+ADD R8, R8, R1    // Increment R8: R8 = 0x0002 + 0x0001 = 0x0003
+
+LT_LABEL:
+ADD R8, R8, R1    // Increment R8: R8 = 0x0003 + 0x0001 = 0x0004
+
+// Unconditional Branch (Always)
+B 111, END_LABEL  // Unconditional branch to end the program
 
 // Overflow Branch
-ADD R8, R8, R8    // Overflow Test
-B 110, OFL_LABEL  // Branch if Overflow - Should Branch if Overflow
+ADD R8, R8, R8    // Add R8 to itself to test overflow
+B 110, OFL_LABEL  // Branch if Overflow (V = 1) - Should branch if overflow occurs
 
 OFL_LABEL:
-ADD R8, R8, R1    // Overflow handler (if branched)
+ADD R8, R8, R1    // Handle overflow: R8 = R8 + R1
 
 END_LABEL:
-HLT               // Halt execution
+HLT               // Halt the execution

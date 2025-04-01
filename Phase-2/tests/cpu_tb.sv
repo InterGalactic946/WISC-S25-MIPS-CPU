@@ -198,12 +198,12 @@ module cpu_tb();
 
         fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-        $display("PC_inst: %0h. @ Cycle: %0d", iDUT.PC_inst, ($time/10));
-        $display("PC_curr: %0h. @ Cycle: %0d", pc, ($time/10));
-        $display("PC_next: %0h. @ Cycle: %0d", iDUT.PC_next, ($time/10));
-        $display("Actual Target: %0h. @ Cycle: %0d", iDUT.iFETCH.actual_target, ($time/10));
-        $display("PC WEN: %0d. @ Cycle: %0d", iDUT.iFETCH.enable, ($time/10));
-        $display("PC New: %0h. @ Cycle: %0d", iDUT.iFETCH.PC_new, ($time/10));
+        // $display("PC_inst: %0h. @ Cycle: %0d", iDUT.PC_inst, ($time/10));
+        // $display("PC_curr: %0h. @ Cycle: %0d", pc, ($time/10));
+        // $display("PC_next: %0h. @ Cycle: %0d", iDUT.PC_next, ($time/10));
+        // $display("Actual Target: %0h. @ Cycle: %0d", iDUT.iFETCH.actual_target, ($time/10));
+        // $display("PC WEN: %0d. @ Cycle: %0d", iDUT.iFETCH.enable, ($time/10));
+        // $display("PC New: %0h. @ Cycle: %0d", iDUT.iFETCH.PC_new, ($time/10));
 
     end
   end
@@ -256,14 +256,14 @@ module cpu_tb();
 
         $display("IF_ID_stall: %0d. @ Cycle: %0d", iDUT.IF_ID_stall, ($time/10));
         $display("Instruction: %0h. @ Cycle: %0d", iDUT.iDECODE.pc_inst, ($time/10));
-        $display("Branch Taken: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.branch_taken, ($time/10));
-        $display("Branch Target: %0h. @ Cycle: %0d", iDUT.branch_target, ($time/10));        
-        $display("Update PC: %0d. @ Cycle: %0d", iDUT.update_PC, ($time/10));
-        $display("Target Miscomputed: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.target_miscomputed, ($time/10));
-        $display("Mispredicted: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.mispredicted, ($time/10));
-        $display("wen_BTB: %0d. @ Cycle: %0d", iDUT.wen_BTB, ($time/10));
-        $display("wen_BHT: %0d. @ Cycle: %0d", iDUT.wen_BHT, ($time/10));
-        $display("IF_flush: %0d. @ Cycle: %0d", IF_flush, ($time/10));
+        // $display("Branch Taken: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.branch_taken, ($time/10));
+        // $display("Branch Target: %0h. @ Cycle: %0d", iDUT.branch_target, ($time/10));        
+        // $display("Update PC: %0d. @ Cycle: %0d", iDUT.update_PC, ($time/10));
+        // $display("Target Miscomputed: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.target_miscomputed, ($time/10));
+        // $display("Mispredicted: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.mispredicted, ($time/10));
+        // $display("wen_BTB: %0d. @ Cycle: %0d", iDUT.wen_BTB, ($time/10));
+        // $display("wen_BHT: %0d. @ Cycle: %0d", iDUT.wen_BHT, ($time/10));
+        // $display("IF_flush: %0d. @ Cycle: %0d", IF_flush, ($time/10));
 
       end
   end

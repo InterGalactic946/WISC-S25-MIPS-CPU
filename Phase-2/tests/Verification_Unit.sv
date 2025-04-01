@@ -176,7 +176,7 @@
                     if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
                         $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
 
-            if (!hlt) begin
+            if (instr_full_msg !== "HLT") begin
                 $display("%s", pipeline_msgs[wb_id].execute_msg);
                 $display("%s", pipeline_msgs[wb_id].memory_msg);
                 $display("%s", pipeline_msgs[wb_id].wb_msg);

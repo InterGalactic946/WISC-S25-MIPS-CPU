@@ -105,6 +105,8 @@ module cpu_tb();
         iMODEL.iDECODE.iRF.SrcReg2, iMODEL.iDECODE.iRF.SrcData2,
         iMODEL.iDECODE.iRF.DstReg, iMODEL.iDECODE.iRF.DstData_operand, iMODEL.iDECODE.iRF.WriteReg,
         ($time/10));
+
+      $display("R[2] = 0x%h. Cycle: %0d", iMODEL.iDECODE.iRF.regfile[2], ($time/10));
     end
   end
 

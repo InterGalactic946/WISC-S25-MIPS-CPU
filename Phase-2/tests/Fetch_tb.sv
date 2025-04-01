@@ -96,18 +96,20 @@ module Fetch_tb();
     // Verify the DUT other than reset.
     if (!rst) begin
       verify_FETCH(
-          .PC_next(PC_next), 
-          .expected_PC_next(expected_PC_next), 
-          .PC_inst(PC_inst), 
-          .expected_PC_inst(expected_PC_inst), 
-          .PC_curr(PC_curr), 
-          .expected_PC_curr(expected_PC_curr), 
-          .prediction(prediction), 
-          .expected_prediction(expected_prediction), 
-          .predicted_target(predicted_target), 
-          .expected_predicted_target (expected_predicted_target),
-          .stage("FETCH"),
-          .stage_msg(fetch_msg)
+              .PC_stall(enable),
+              .expected_PC_stall(enable),
+              .PC_next(PC_next), 
+              .HLT(1'b0),
+              .expected_PC_next(expected_PC_next), 
+              .PC_inst(PC_inst), 
+              .expected_PC_inst(expected_PC_inst), 
+              .PC_curr(PC_curr), 
+              .expected_PC_curr(expected_PC_curr), 
+              .prediction(prediction), 
+              .expected_prediction(expected_prediction), 
+              .predicted_target(predicted_target), 
+              .expected_predicted_target (expected_predicted_target),
+              .fetch_msg(fetch_msg)
       );
 
       // Dump the contents of memory whenever we write to the BTB or BHT.

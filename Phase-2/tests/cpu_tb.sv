@@ -2,7 +2,7 @@
 // cpu_tb.sv: CPU Testbench Module                       //  
 //                                                       //
 // This module serves as the testbench for the CPU core. //
-// It verifies the correct functionality of instruction //
+// It verifies the correct functionality of instruction  //
 // fetching, decoding, execution, and memory operations. //
 // The testbench initializes memory, loads instructions, //
 // and monitors register updates and ALU results. It     //
@@ -22,6 +22,7 @@ module cpu_tb();
   logic [15:0] expected_pc;          // Expected program counter value for verification
   logic [15:0] pc;                   // Current program counter value
   logic stall;                       // Indicates a stall in the pipeline.
+  
   logic IF_flush;                    // Indicates a flush in the instruction fetch stage. 
   logic expected_IF_flush;           // Expected flush signal for verification.
   logic ID_flush;                    // Indicates a flush in the instruction decode stage.
@@ -32,6 +33,7 @@ module cpu_tb();
   logic expected_B_hazard;           // Expected branch hazard signal for verification.
   logic BR_hazard;                   // Indicates a branch register hazard in the pipeline.
   logic expected_BR_hazard;          // Expected branch register hazard signal for verification.
+  
   string fetch_msg;                  // Message from the fetch stage.
   string decode_msg;                 // Message from the decode stage.
   string instruction_full_msg;       // Full instruction message from the decode stage.
@@ -85,6 +87,9 @@ module cpu_tb();
   initial begin
     // Initialize the testbench
     Initialize(.clk(clk), .rst_n(rst_n));
+
+    // Setup the testbench environment.
+    $display("\n");
 
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
     TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
@@ -164,12 +169,6 @@ module cpu_tb();
       ID_flush <= iDUT.ID_flush;
       expected_ID_flush <= iMODEL.ID_flush;
     end
-  end
-
-
-  always @(posedge clk) begin
-    if (rst_n)
-      $display("Z_flag_enable: %0d, V_flag_enable: %0d, N_flag_enable: %0d. Cycle: %0d.", iMODEL.iEXECUTE.Z_en, iMODEL.iEXECUTE.NV_en, iMODEL.iEXECUTE.NV_en, ($time/10));
   end
 
 

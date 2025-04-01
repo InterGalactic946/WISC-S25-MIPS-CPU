@@ -1,6 +1,13 @@
-    // Initialize registers
+     // Initialize registers
     LLB R1, 0x05      // R1 = 0x0005
     LLB R2, 0x03      // R2 = 0x0003
+    LLB R3, 0x02      // R3 = 0x0002
+    LLB R4, 0x01      // R4 = 0x0001
+
+    // Back-to-back ADD instructions (forwarding test)
+    ADD R1, R1, R2    // R1 = R1 + R2 (0x0005 + 0x0003 = 0x0008)
+    ADD R1, R1, R3    // R1 = R1 + R3 (0x0008 + 0x0002 = 0x000A)
+    ADD R1, R1, R4    // R1 = R1 + R4 (0x000A + 0x0001 = 0x000B)
 
     // Data Hazard Test (Forwarding)
     ADD R3, R1, R2    // R3 = R1 + R2 (0x0005 + 0x0003 = 0x0008)

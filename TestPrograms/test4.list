@@ -1,46 +1,66 @@
-     // Initialize registers
-    LLB R1, 0x05      // R1 = 0x0005
-    LLB R2, 0x03      // R2 = 0x0003
-    LLB R3, 0x02      // R3 = 0x0002
-    LLB R4, 0x01      // R4 = 0x0001
+////////////////////////////////////////////////////////
+// Forwarding and Hazard Test Program                  //
+// This program tests forwarding, data hazards,        //
+// load-use hazards, and control hazards (branching).   //
+// It also verifies that forwarding works correctly     //
+// with back-to-back arithmetic instructions.           //
+////////////////////////////////////////////////////////
 
-    // Back-to-back ADD instructions (forwarding test)
+    // Initialize registers
+    LLB R1, 0x05      // Load lower byte: R1 = 0x0005
+    LLB R2, 0x03      // Load lower byte: R2 = 0x0003
+    LLB R3, 0x02      // Load lower byte: R3 = 0x0002
+    LLB R4, 0x01      // Load lower byte: R4 = 0x0001
+
+    ////////////////////////////////////////////////////////
+    // Back-to-Back ADD Instructions (Forwarding Test)      //
+    ////////////////////////////////////////////////////////
     ADD R1, R1, R2    // R1 = R1 + R2 (0x0005 + 0x0003 = 0x0008)
     ADD R1, R1, R3    // R1 = R1 + R3 (0x0008 + 0x0002 = 0x000A)
     ADD R1, R1, R4    // R1 = R1 + R4 (0x000A + 0x0001 = 0x000B)
 
-    // Data Hazard Test (Forwarding)
-    ADD R3, R1, R2    // R3 = R1 + R2 (0x0005 + 0x0003 = 0x0008)
-    SUB R4, R3, R1    // R4 = R3 - R1 (0x0008 - 0x0005 = 0x0003)
+    ////////////////////////////////////////////////////////
+    // Data Hazard Test (Forwarding)                        //
+    ////////////////////////////////////////////////////////
+    ADD R3, R1, R2    // R3 = R1 + R2 (0x000B + 0x0003 = 0x000E)
+    SUB R4, R3, R1    // R4 = R3 - R1 (0x000E - 0x000B = 0x0003)
     XOR R5, R4, R2    // R5 = R4 ^ R2 (0x0003 ^ 0x0003 = 0x0000)
 
-    // Load-Use Hazard
-    LLB R6, 0x20      // R6 = 0x0020 (Memory address)
-    SW R3, R6, 0      // Store R3 (0x0008) at memory[0x0020]
-    LW R7, R6, 0      // Load R7 from memory[0x0020]
-    ADD R8, R7, R1    // Use loaded value immediately (testing load-use hazard)
+    ////////////////////////////////////////////////////////
+    // Load-Use Hazard Test                                 //
+    ////////////////////////////////////////////////////////
+    LLB R6, 0x20      // Load lower byte: R6 = 0x0020 (Memory address)
+    SW R3, R6, 0      // Store R3 (0x000E) at memory[0x0020]
+    LW R7, R6, 0      // Load R7 from memory[0x0020] (expected: 0x000E)
+    ADD R8, R7, R1    // R8 = R7 + R1 (0x000E + 0x000B = 0x0019)
+                     // Immediate use of loaded value (testing load-use hazard)
 
-    // Branching Hazard (Control Hazard)
-    SUB R9, R1, R2    // R9 = R1 - R2 (0x0005 - 0x0003 = 0x0002)
+    ////////////////////////////////////////////////////////
+    // Branching Hazard (Control Hazard)                    //
+    ////////////////////////////////////////////////////////
+    SUB R9, R1, R2    // R9 = R1 - R2 (0x000B - 0x0003 = 0x0008)
     B 001, BRANCH1    // Branch if Equal (Z = 1) → should not branch
 
     // This section should execute if the branch was not taken
-    ADD R10, R1, R9   // R10 = R1 + R9 (0x0005 + 0x0002 = 0x0007)
+    ADD R10, R1, R9   // R10 = R1 + R9 (0x000B + 0x0008 = 0x0013)
 
 BRANCH1:
     SUB R11, R1, R1   // R11 = R1 - R1 (0x0000)
     B 011, END        // Branch if Less Than (N = 1) → should not branch
 
-    // Forwarding with Branches
+    ////////////////////////////////////////////////////////
+    // Forwarding with Branches                             //
+    ////////////////////////////////////////////////////////
     ADD R12, R4, R5   // R12 = R4 + R5 (0x0003 + 0x0000 = 0x0003)
     B 000, BRANCH2    // Branch if Not Equal (Z = 0) → should branch
 
-    // Unreachable if branch taken
+    // Unreachable if branch is taken
     ADD R13, R12, R1  // Shouldn't execute
 
 BRANCH2:
     ADD R14, R12, R2  // R14 = R12 + R2 (0x0003 + 0x0003 = 0x0006)
 
 END:
-    PCS R15           // Store PC in R15 to verify correctness
+    // Store PC in R15 to verify correctness
+    PCS R15           // R15 = PC value at halt
     HLT               // Halt execution

@@ -149,7 +149,7 @@ package Verification_tasks;
           end 
 
           // Get the full instruction.
-          get_full_instruction(.opcode(expected_EX_signals[6:3]), .rs(expected_EX_signals[62:59]), .rt(expected_EX_signals[58:55]), .rd(expected_WB_signals[7:4]), .actual_target(expected_branch_target), .ALU_imm(expected_EX_signals[38:23]), .cc(cc), .instr_name(instruction_full));
+          get_full_instruction(.opcode(expected_EX_signals[6:3]), .rs(expected_EX_signals[62:59]), .rt(expected_EX_signals[58:55]), .rd(expected_WB_signals[7:4]), .actual_target(expected_actual_target), .ALU_imm(expected_EX_signals[38:23]), .cc(cc), .instr_name(instruction_full));
 
           // Verify EX signals.
           verify_EX(.EX_signals(EX_signals), .expected_EX_signals(expected_EX_signals), .stage("DECODE"), .stage_msg(decode_msg));
@@ -209,7 +209,7 @@ package Verification_tasks;
           end
           
         // Get the decoded instruction.
-        display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_target), .actual_target(branch_target), .instr_state(instr_state));
+        display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(actual_target), .instr_state(instr_state));
 
         // If there is a stall at the decode stage, print out the stall along with reason.
         if (IF_ID_stall) begin

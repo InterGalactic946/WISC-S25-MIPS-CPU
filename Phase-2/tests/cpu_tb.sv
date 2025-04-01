@@ -90,7 +90,7 @@ module cpu_tb();
     TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
     // Wait for the print_done signal to be high before printing the messages.
-    repeat (1) @(posedge iVERIFY.print_done);
+    repeat (2) @(posedge iVERIFY.print_done);
     
     $display("CPU halted due to HLT instruction.\n");
 

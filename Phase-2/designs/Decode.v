@@ -116,14 +116,14 @@ module Decode (
   ////////////////////////////////////////////////////////////
   // Package each stage's control signals for the pipeline  //
   ////////////////////////////////////////////////////////////
-  // Package the execute stage control signals.
-  assign EX_signals = (is_NOP) ? 63'h0000000000000000 : {SrcReg1, SrcReg2, ALU_In1, ALU_imm, ALU_In2, ALUOp, ALUSrc, Z_en, NV_en};
+  // Package the execute stage control signals. // //(is_NOP) ? 63'h0000000000000000 :
+  assign EX_signals =  {SrcReg1, SrcReg2, ALU_In1, ALU_imm, ALU_In2, ALUOp, ALUSrc, Z_en, NV_en};
 
-  // Package the memory stage control signals.
-  assign MEM_signals = (is_NOP) ? 18'h00000 : {MemWriteData, MemEnable, MemWrite};
+  // Package the memory stage control signals. // (is_NOP) ? 18'h00000 :
+  assign MEM_signals = {MemWriteData, MemEnable, MemWrite};
 
-  // Package the write back stage control signals.
-  assign WB_signals = (is_NOP) ? 8'h00 : {reg_rd, RegWrite, MemToReg, HLT, PCS};
+  // Package the write back stage control signals. // (is_NOP) ? 8'h00 :
+  assign WB_signals = {reg_rd, RegWrite, MemToReg, HLT, PCS};
   /////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////

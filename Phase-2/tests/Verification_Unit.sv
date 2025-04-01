@@ -87,29 +87,16 @@
         end else if (stall) begin
             // Case 3: Stall condition (current cycle stalled).
             if (!cap_stall) begin
-                // If hlt is fetched, we make sure execute message is covered next cycle.
-                if (hlt) begin
-                    valid_fetch <= 1;
-                    valid_decode <= 0;
-                    valid_execute <= 1;
-                    valid_memory <= valid_execute;
-                    valid_wb <= valid_memory;
-                end else begin
-                    // First stall: freeze fetch and decode, propagate others.
-                    valid_fetch <= 0;
-                    valid_decode <= 0;
-                    valid_execute <= valid_decode; // Continue valid from decode.
-                    valid_memory <= valid_execute; // Continue valid from execute.
-                    valid_wb <= valid_memory;      // Continue valid from memory.
-                end
+                // First stall: freeze fetch and decode, propagate others.
+                valid_fetch <= 0;
+                valid_decode <= 0;
+                valid_execute <= valid_decode; // Continue valid from decode.
+                valid_memory <= valid_execute; // Continue valid from execute.
+                valid_wb <= valid_memory;      // Continue valid from memory.
             end else begin
-                // If hlt is fetched make sure to get execute message on next cycle.
+                // If hlt is fetched, we make sure to set the valid_wb signal to 1.
                 if (hlt) begin
-                    valid_fetch <= 0;
-                    valid_decode <= 0;
-                    valid_execute <= 1;
-                    valid_memory <= valid_execute;
-                    valid_wb <= valid_memory;
+                    valid_wb <= 1;
                 end else begin
                     // Continued stall (previous cycle was stalled).
                     // Freeze fetch, decode, and execute, propagate memory and wb.
@@ -122,6 +109,7 @@
             end
         end
     end
+    
 
 
     // This block is responsible for managing the message index on a stall.

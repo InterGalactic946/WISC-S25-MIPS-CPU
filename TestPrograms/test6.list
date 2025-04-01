@@ -17,13 +17,13 @@ LLB R5, 0x01      // Increment value (R5 = 1)
 LLB R6, 0x03      // Array element 1
 SW R6, R2, 0      // Store 0x0003 at memory[0x0020]
 LLB R6, 0x07      // Array element 2
-SW R6, R2, 2      // Store 0x0007 at memory[0x0022]
+SW R6, R2, 1      // Store 0x0007 at memory[0x0022]
 LLB R6, 0x0A      // Array element 3
-SW R6, R2, 4      // Store 0x000A at memory[0x0024]
+SW R6, R2, 2      // Store 0x000A at memory[0x0024]
 LLB R6, 0x02      // Array element 4
-SW R6, R2, 6      // Store 0x0002 at memory[0x0026]
+SW R6, R2, 3      // Store 0x0002 at memory[0x0026]
 LLB R6, 0x04      // Array element 5
-SW R6, R2, 8      // Store 0x0004 at memory[0x0028]
+SW R6, R2, 4      // Store 0x0004 at memory[0x0028]
 
 // Loop to sum the array elements
 SUM_LOOP:

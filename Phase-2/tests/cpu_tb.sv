@@ -246,8 +246,6 @@ module cpu_tb();
 
         decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-        $display(decode_msg);
-
       end
   end
 

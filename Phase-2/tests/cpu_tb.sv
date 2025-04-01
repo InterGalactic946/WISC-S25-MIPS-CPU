@@ -104,7 +104,7 @@ module cpu_tb();
   always @(negedge clk) begin
       if (rst_n) begin
         // Dump the contents of memory whenever we write to the BTB or BHT.
-        if (iDUT.wen_BHT || iDUT.wen_BTB) begin
+        if (iDUT.wen_BHT || iDUT.wen_BTB || hlt) begin
           log_BTB_BHT_dump (
             .model_BHT(iMODEL.iFETCH.iDBP_model.BHT),
             .model_BTB(iMODEL.iFETCH.iDBP_model.BTB),
@@ -114,7 +114,7 @@ module cpu_tb();
         end
 
         // Log data memory contents.
-        if (iDUT.EX_MEM_MemEnable) begin
+        if (iDUT.EX_MEM_MemEnable || hlt) begin
           log_data_dump(
               .model_data_mem(iMODEL.iDATA_MEM.data_memory),     
               .dut_data_mem(iDUT.iDATA_MEM.mem)          
@@ -122,7 +122,7 @@ module cpu_tb();
         end
         
         // Log the regfile contents.
-        if (iDUT.MEM_WB_RegWrite) begin
+        if (iDUT.MEM_WB_RegWrite || hlt) begin
           log_regfile_dump(.regfile(iMODEL.iDECODE.iRF.regfile));
         end
       end

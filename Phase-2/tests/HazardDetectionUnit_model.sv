@@ -57,7 +57,7 @@ module HazardDetectionUnit_model (
   assign ID_flush = load_to_use_hazard | B_hazard | BR_hazard;
 
   // We flush the IF_ID pipeline instruction word whenever we need to update the PC, i.e. on an incorrect branch fetch.
-  assign IF_flush = update_PC;
+  assign IF_flush = ~IF_ID_stall & update_PC;
   /////////////////////////////////////////////////////////////
 
   //////////////////////////////////

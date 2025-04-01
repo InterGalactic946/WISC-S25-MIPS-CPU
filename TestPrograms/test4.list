@@ -63,7 +63,7 @@ BRANCH2:
     ////////////////////////////////////////////////////////
     // Store Stall with Data Dependency                     //
     ////////////////////////////////////////////////////////
-    LW R7, R6, 0     // Load R11 from memory[0x0020] (expected: 0x000E)
+    LW R7, R6, 0     // Load R7 from memory[0x0020] (expected: 0x000E)
     SW R11, R7, 0    // Store R11 (0x000E) at memory[0x000E] (address from R7)
 
 END:

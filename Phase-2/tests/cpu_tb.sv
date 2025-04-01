@@ -255,7 +255,7 @@ module cpu_tb();
         decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
         $display("IF_ID_stall: %0d. @ Cycle: %0d", iDUT.IF_ID_stall, ($time/10));
-        $display("Instruction: %0h. @ Cycle: %0d", iDUT.iDECODE.pc_inst, ($time/10));
+        $display("IF_ID_PC_inst: %0h. @ Cycle: %0d", iDUT.IF_ID_PC_inst, ($time/10));
         // $display("Branch Taken: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.branch_taken, ($time/10));
         // $display("Branch Target: %0h. @ Cycle: %0d", iDUT.branch_target, ($time/10));        
         // $display("Update PC: %0d. @ Cycle: %0d", iDUT.update_PC, ($time/10));

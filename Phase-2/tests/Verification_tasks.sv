@@ -34,6 +34,7 @@ package Verification_tasks;
       end : timeout
       begin
         @(posedge sig) disable timeout; // Disable timeout if sig is asserted.
+        $display("Cycle %0t: %s signal asserted.", $time/10, signal);
       end
     join
   endtask

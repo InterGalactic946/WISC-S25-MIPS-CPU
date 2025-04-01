@@ -94,11 +94,11 @@
                 valid_memory <= valid_execute; // Continue valid from execute.
                 valid_wb <= valid_memory;      // Continue valid from memory.
             end else begin
-                // If hlt is fetched, we make sure to set the valid_wb signal to 1.
+                // Continued stall (previous cycle was stalled).
+                // If hlt is set, we make sure to set the valid_wb signal to 1.
                 if (hlt) begin
                     valid_wb <= 1;
                 end else begin
-                    // Continued stall (previous cycle was stalled).
                     // Freeze fetch, decode, and execute, propagate memory and wb.
                     valid_fetch <= 0;
                     valid_decode <= 0;

@@ -263,7 +263,7 @@ module cpu_tb();
         // $display("Mispredicted: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.mispredicted, ($time/10));
         // $display("wen_BTB: %0d. @ Cycle: %0d", iDUT.wen_BTB, ($time/10));
         // $display("wen_BHT: %0d. @ Cycle: %0d", iDUT.wen_BHT, ($time/10));
-        // $display("IF_flush: %0d. @ Cycle: %0d", IF_flush, ($time/10));
+        $display("IF_flush: %0d. @ Cycle: %0d", IF_flush, ($time/10));
 
       end
   end

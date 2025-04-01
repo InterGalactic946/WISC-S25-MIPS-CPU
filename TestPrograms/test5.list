@@ -29,7 +29,7 @@
     LW R13, R12, 0    // Load R13 from memory[R12 + 0]
 
     // Condition code testing
-    SUB R14, R13, R2   // R14 = R1 - R2 (Should be negative)
+    SUB R14, R1, R2   // R14 = R1 - R2 (Should be negative)
     B 000, L1         // Branch if Not Equal (Z = 0) → should branch
     B 001, L2         // Branch if Equal (Z = 1) → should not branch
     B 010, L3         // Branch if Greater Than (Z = N = 0) → should not branch

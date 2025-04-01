@@ -111,14 +111,14 @@ module ControlUnit_model (
                 // Check if there was a miscomputed target address
                 target_miscomputed = (IF_ID_predicted_target !== actual_target);
 
-                // Write to BTB if branch was taken or if target address was miscomputed
-                wen_BTB = (actual_taken || target_miscomputed) && Branch;
+                // Write to BTB if it was branch and if target address was miscomputed
+                wen_BTB = (target_miscomputed) && Branch;
 
                 // Write to BHT for every branch instruction
                 wen_BHT = Branch;
 
                 // Update PC if misprediction or miscomputed target occurred
-                update_PC = (mispredicted || target_miscomputed) && branch_taken;
+                update_PC = (mispredicted || target_miscomputed) && Branch;
             end
             4'b1110: begin  // PCS (Program Counter Shift)
                 PCS = 1'b1;   // Enable PCS operation

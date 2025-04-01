@@ -31,10 +31,10 @@
     ///////////////////////////////////
     // Declare any internal signals //
     /////////////////////////////////
-    integer fetch_id, decode_id, execute_id, memory_id, wb_id, msg_index;               // IDs for each stage.
-    logic cap_stall;                                                                    // Flag to indicate to capture stall messages in the pipeline.
-    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_done; // Valid signals for each stage.
-    debug_info_t pipeline_msgs[0:71];                                                   // Array to hold debug messages for each instruction.
+    integer fetch_id, decode_id, execute_id, memory_id, wb_id, msg_index;   // IDs for each stage.
+    logic cap_stall;                                                        // Flag to indicate to capture stall messages in the pipeline.
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb; // Valid signals for each stage.
+    debug_info_t pipeline_msgs[0:71];                                       // Array to hold debug messages for each instruction.
 
     // Tracks the pipeline and increments IDs.
     always @(posedge clk) begin
@@ -58,6 +58,7 @@
       end
     end
 
+
     // Propagate the valid signals across stages.
     always @(posedge clk) begin
         if (!rst_n) begin
@@ -78,8 +79,8 @@
             end else begin
                 // Case 2: No stall in current cycle, but previous cycle was stalled.
                 // Hold the valid signals for the stages that were stalled.
-                valid_fetch <= 1;  // Fetch can proceed.
-                valid_decode <= 1; // Decode can proceed, since fetch was valid last cycle.
+                valid_fetch <= 1;               // Fetch can proceed.
+                valid_decode <= 1;              // Decode can proceed, since fetch was valid last cycle.
                 valid_execute <= valid_decode;  // Execute propagates from decode.
                 valid_memory <= valid_execute;  // Memory propagates from execute.
                 valid_wb <= valid_memory;       // WB propagates from memory.
@@ -161,9 +162,7 @@
 
     // Print the message for each instruction.
     always @(posedge clk) begin
-      if (!rst_n)
-        print_done <= 1'b0; // Reset the print_done flag on reset
-      else  if (valid_wb) begin
+        if (valid_wb) begin
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, ($time / 10) - 1);
             $display("==========================================================");
@@ -171,7 +170,7 @@
             for (int j = 0; j < 5; j = j+1)
                     if (pipeline_msgs[wb_id].fetch_msgs[j] !== "")
                         $display("%s", pipeline_msgs[wb_id].fetch_msgs[j]);
-                            
+
             for (int j = 0; j < 5; j = j+1)
                     if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
                         $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
@@ -183,11 +182,7 @@
                 $display("%s", pipeline_msgs[wb_id].wb_msg);
             end
             $display("==========================================================\n");
-
-            print_done <= 1'b1; // Set the print_done flag to true after printing
-    end else begin
-            print_done <= 1'b0; // Reset the print_done flag when not in write-back stage
         end
-   end
+    end
 
 endmodule

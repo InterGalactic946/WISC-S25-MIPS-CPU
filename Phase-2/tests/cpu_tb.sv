@@ -89,7 +89,7 @@ module cpu_tb();
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
     TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
-    // Wait for the print_done signal to be high before printing the messages.
+    // Wait for 3 cycles to print last actual instruction, HLT, and the instruction following it.
     repeat (3) @(posedge clk);
     
     $display("CPU halted due to HLT instruction.\n");
@@ -193,7 +193,7 @@ module cpu_tb();
 
         fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-       // $display(fetch_msg);
+        $display(fetch_msg);
 
     end
   end

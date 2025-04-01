@@ -192,9 +192,6 @@ module cpu_tb();
         );
 
         fetch_msg = {"|", ftch_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-
-        $display(fetch_msg);
-
     end
   end
 
@@ -244,8 +241,6 @@ module cpu_tb();
 
         decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-      // $display(decode_msg);
-
       end
   end
 
@@ -282,8 +277,6 @@ module cpu_tb();
         );
 
         execute_msg = {"|", ex_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-
-        // $display(execute_msg);
       
     end   
   end
@@ -309,8 +302,6 @@ module cpu_tb();
       
       mem_msg = {"|", mem_verify_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
-      // $display(mem_msg);
-
     end
   end
 
@@ -331,8 +322,6 @@ module cpu_tb();
       );
       
       wb_msg = {"|", wbb_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
-
-      // $display(wb_msg);
 
     end
   end

@@ -152,7 +152,6 @@
       if (rst_n) begin
           if (valid_fetch || cap_stall) begin
               pipeline_msgs[fetch_id].fetch_msgs[msg_index] = fetch_msg;
-              $display("Fetch ID: %0d, Message: %s", fetch_id, fetch_msg);
           end
           if (valid_decode || cap_stall) begin
               pipeline_msgs[decode_id].decode_msgs[msg_index] = decode_msg;

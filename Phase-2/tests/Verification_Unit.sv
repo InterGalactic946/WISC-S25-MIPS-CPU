@@ -164,6 +164,7 @@
     // Print the message for each instruction.
     always @(posedge clk) begin
         if (valid_wb) begin
+            $display("WB ID: %0d", wb_id);
             $display("==========================================================");
             $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, ($time / 10) - 1);
             $display("==========================================================");

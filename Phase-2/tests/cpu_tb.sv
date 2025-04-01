@@ -102,8 +102,8 @@ module cpu_tb();
   always @(posedge clk) begin
     if (rst_n) begin
       $display("SrcReg2: 0x%h. SrcReg2_data: 0x%h. DstReg: 0x%h. DstData: 0x%h. WriteReg: %b", 
-       iMODEL.iDECODE.SrcReg2, iMODEL.iDECODE.SrcReg2_data,
-       iMODEL.iDECODE.DstReg, iMODEL.iDECODE.DstData, iMODEL.iDECODE.WriteReg);
+       iMODEL.iDECODE.iRF.SrcReg2, iMODEL.iDECODE.iRF.SrcReg2_data,
+       iMODEL.iDECODE.iRF.DstReg, iMODEL.iDECODE.iRF.DstData, iMODEL.iDECODE.iRF.WriteReg);
     end
   end
 

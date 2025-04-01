@@ -1,58 +1,39 @@
     // Initialize registers
-    LLB R1, 0x02      // Load lower byte of R1 with 0x02
-    LHB R1, 0x00      // Load upper byte of R1 with 0x00 (R1 = 0x0002)
-    LLB R2, 0x03      // Load lower byte of R2 with 0x03
-    LHB R2, 0x00      // Load upper byte of R2 with 0x00 (R2 = 0x0003)
-    LLB R3, 0x04      // Load lower byte of R3 with 0x04
-    LHB R3, 0x00      // Load upper byte of R3 with 0x00 (R3 = 0x0004)
+    LLB R1, 0x05      // R1 = 0x0005
+    LLB R2, 0x03      // R2 = 0x0003
 
-    // Arithmetic operations
-    ADD R4, R1, R2    // R4 = R1 + R2 (0x0002 + 0x0003)
-    SUB R5, R3, R1    // R5 = R3 - R1 (0x0004 - 0x0002)
-    XOR R6, R4, R5    // R6 = R4 ^ R5 (Bitwise XOR)
+    // Data Hazard Test (Forwarding)
+    ADD R3, R1, R2    // R3 = R1 + R2 (0x0005 + 0x0003 = 0x0008)
+    SUB R4, R3, R1    // R4 = R3 - R1 (0x0008 - 0x0005 = 0x0003)
+    XOR R5, R4, R2    // R5 = R4 ^ R2 (0x0003 ^ 0x0003 = 0x0000)
 
-    // Reduction operation
-    RED R7, R6, R0    // Reduce R6, store in R7 (R0 as dummy operand)
+    // Load-Use Hazard
+    LLB R6, 0x20      // R6 = 0x0020 (Memory address)
+    SW R3, R6, 0      // Store R3 (0x0008) at memory[0x0020]
+    LW R7, R6, 0      // Load R7 from memory[0x0020]
+    ADD R8, R7, R1    // Use loaded value immediately (testing load-use hazard)
 
-    // Shift operations
-    SLL R8, R2, 2     // R8 = R2 << 2 (Logical left shift by 2)
-    SRA R9, R3, 1     // R9 = R3 >> 1 (Arithmetic right shift by 1)
-    ROR R10, R4, 3    // R10 = Rotate right R4 by 3 bits
+    // Branching Hazard (Control Hazard)
+    SUB R9, R1, R2    // R9 = R1 - R2 (0x0005 - 0x0003 = 0x0002)
+    B 001, BRANCH1    // Branch if Equal (Z = 1) → should not branch
 
-    // Parallel Addition
-    PADDSB R11, R1, R3 // Parallel Add Signed Bytes
+    // This section should execute if the branch was not taken
+    ADD R10, R1, R9   // R10 = R1 + R9 (0x0005 + 0x0002 = 0x0007)
 
-    // Load and Store operations
-    LLB R12, 0x10     // Load lower byte with memory address 0x10
-    LHB R12, 0x00     // Load upper byte with 0x00 (Address = 0x0010)
-    SW R4, R12, 0     // Store R4 at memory[R12 + 0]
-    LW R13, R12, 0    // Load R13 from memory[R12 + 0]
+BRANCH1:
+    SUB R11, R1, R1   // R11 = R1 - R1 (0x0000)
+    B 011, END        // Branch if Less Than (N = 1) → should not branch
 
-    // Conditional branching tests
-    SUB R14, R1, R2   // R14 = R1 - R2 (Should be negative)
-    B 011, L1         // Branch if Less Than (N = 1) → should branch
+    // Forwarding with Branches
+    ADD R12, R4, R5   // R12 = R4 + R5 (0x0003 + 0x0000 = 0x0003)
+    B 000, BRANCH2    // Branch if Not Equal (Z = 0) → should branch
 
-    ADD R15, R3, R1   // R15 = R3 + R1 (Should execute if branch fails)
+    // Unreachable if branch taken
+    ADD R13, R12, R1  // Shouldn't execute
 
-L1:
-    B 001, L2         // Branch if Equal (Z = 1) → should not branch
-    B 000, L3         // Branch if Not Equal (Z = 0) → should branch
+BRANCH2:
+    ADD R14, R12, R2  // R14 = R12 + R2 (0x0003 + 0x0003 = 0x0006)
 
-L2:
-    ADD R15, R1, R1   // Shouldn't execute
-    HLT               // Shouldn't reach here
-
-L3:
-    B 100, L4         // Branch if Greater Than or Equal (Z = 1 or Z = N = 0)
-    B 101, L5         // Branch if Less Than or Equal (N = 1 or Z = 1) → should branch
-
-L4:
-    HLT               // Shouldn't reach here
-
-L5:
-    PCS R14           // Store PC in R14
+END:
+    PCS R15           // Store PC in R15 to verify correctness
     HLT               // Halt execution
-
-    // Unreachable instruction
-    ADD R15, R3, R2   // Shouldn't execute
-    HLT               // Halt again

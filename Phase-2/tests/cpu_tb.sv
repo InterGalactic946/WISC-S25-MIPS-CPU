@@ -257,6 +257,8 @@ module cpu_tb();
         $display("Branch Taken: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.branch_taken, ($time/10));
         $display("Branch Target: %0h. @ Cycle: %0d", iDUT.branch_target, ($time/10));        
         $display("Update PC: %0d. @ Cycle: %0d", iDUT.update_PC, ($time/10));
+        $display("Target Miscomputed: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.target_miscomputed, ($time/10));
+        $display("Mispredicted: %0d. @ Cycle: %0d", iDUT.iDECODE.iCC.mispredicted, ($time/10));
         $display("wen_BTB: %0d. @ Cycle: %0d", iDUT.wen_BTB, ($time/10));
         $display("wen_BHT: %0d. @ Cycle: %0d", iDUT.wen_BHT, ($time/10));
         $display("IF_flush: %0d. @ Cycle: %0d", IF_flush, ($time/10));

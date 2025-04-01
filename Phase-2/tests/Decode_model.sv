@@ -34,6 +34,7 @@ module Decode_model (
   ///////////////////////////////////////////////
   /////////////////////////// DECODE INSTRUCTION SIGNALS //////////////////////////
   logic [3:0] opcode;        // Opcode of the instruction
+  logic is_NOP;              // Indicates a NOP instruction
   /********************************** REGFILE Signals ******************************/
   logic [3:0] reg_rs;         // Register ID of the first source register extracted from the instruction
   logic [3:0] reg_rt;         // Register ID of the second source register extracted from the instruction
@@ -75,6 +76,9 @@ module Decode_model (
   // Get the opcode from the instructions.
   assign opcode = pc_inst[15:12];
 
+  // Indicates a NOP instruction.
+  assign is_NOP = (pc_inst == 16'h0000);
+
   // Instantiate the Control Unit.
   ControlUnit_model iCC (
     .Opcode(opcode),
@@ -107,13 +111,13 @@ module Decode_model (
   // Package each stage's control signals for the pipeline  //
   ////////////////////////////////////////////////////////////
   // Package the execute stage control signals.
-  assign EX_signals = {SrcReg1, SrcReg2, ALU_In1, ALU_imm, ALU_In2, ALUOp, ALUSrc, Z_en, NV_en};
+  assign EX_signals = (is_NOP) ? 63'h0000000000000000 : {SrcReg1, SrcReg2, ALU_In1, ALU_imm, ALU_In2, ALUOp, ALUSrc, Z_en, NV_en};
 
   // Package the memory stage control signals.
-  assign MEM_signals = {MemWriteData, MemEnable, MemWrite};
+  assign MEM_signals = (is_NOP) ? 18'h00000 : {MemWriteData, MemEnable, MemWrite};
 
   // Package the write back stage control signals.
-  assign WB_signals = {reg_rd, RegWrite, MemToReg, HLT, PCS};
+  assign WB_signals = (is_NOP) ? 8'h00 : {reg_rd, RegWrite, MemToReg, HLT, PCS};
   /////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////

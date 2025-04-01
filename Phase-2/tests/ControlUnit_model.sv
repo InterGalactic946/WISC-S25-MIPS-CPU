@@ -103,6 +103,8 @@ module ControlUnit_model (
                 Branch = 1'b1;   // Indicate a branch instruction
                 branch_taken = actual_taken && Branch;  // Set branch_taken signal based on actual branch outcome
 
+                RegWrite = 1'b0; // No register write for branch instructions
+
                 // Check if there was a branch misprediction
                 mispredicted = (IF_ID_predicted_taken !== actual_taken);
 

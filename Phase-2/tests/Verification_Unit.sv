@@ -176,9 +176,11 @@
                     if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
                         $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
 
-            $display("%s", pipeline_msgs[wb_id].execute_msg);
-            $display("%s", pipeline_msgs[wb_id].memory_msg);
-            $display("%s", pipeline_msgs[wb_id].wb_msg);
+            if (!hlt) begin
+                $display("%s", pipeline_msgs[wb_id].execute_msg);
+                $display("%s", pipeline_msgs[wb_id].memory_msg);
+                $display("%s", pipeline_msgs[wb_id].wb_msg);
+            end
             $display("==========================================================\n");
 
             print_done <= 1'b1; // Set the print_done flag to true after printing

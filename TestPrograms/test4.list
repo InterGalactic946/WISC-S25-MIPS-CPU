@@ -1,16 +1,10 @@
-////////////////////////////////////////////////////////
-// Forwarding and Hazard Test Program                  //
-// This program tests forwarding, data hazards,        //
-// load-use hazards, and control hazards (branching).   //
-// It also verifies that forwarding works correctly     //
-// with back-to-back arithmetic instructions.           //
-////////////////////////////////////////////////////////
-
-    // Initialize registers
-    LLB R1, 0x05      // Load lower byte: R1 = 0x0005
-    LLB R2, 0x03      // Load lower byte: R2 = 0x0003
-    LLB R3, 0x02      // Load lower byte: R3 = 0x0002
-    LLB R4, 0x01      // Load lower byte: R4 = 0x0001
+    ////////////////////////////////////////////////////////
+    // Initialize Registers                                 //
+    ////////////////////////////////////////////////////////
+    LLB R1, 0x05      // R1 = 0x0005
+    LLB R2, 0x03      // R2 = 0x0003
+    LLB R3, 0x02      // R3 = 0x0002
+    LLB R4, 0x01      // R4 = 0x0001
 
     ////////////////////////////////////////////////////////
     // Back-to-Back ADD Instructions (Forwarding Test)      //
@@ -27,13 +21,12 @@
     XOR R5, R4, R2    // R5 = R4 ^ R2 (0x0003 ^ 0x0003 = 0x0000)
 
     ////////////////////////////////////////////////////////
-    // Load-Use Hazard Test                                 //
+    // Load-Use Hazard                                      //
     ////////////////////////////////////////////////////////
-    LLB R6, 0x20      // Load lower byte: R6 = 0x0020 (Memory address)
+    LLB R6, 0x20      // R6 = 0x0020 (Memory address)
     SW R3, R6, 0      // Store R3 (0x000E) at memory[0x0020]
     LW R7, R6, 0      // Load R7 from memory[0x0020] (expected: 0x000E)
     ADD R8, R7, R1    // R8 = R7 + R1 (0x000E + 0x000B = 0x0019)
-                     // Immediate use of loaded value (testing load-use hazard)
 
     ////////////////////////////////////////////////////////
     // Branching Hazard (Control Hazard)                    //
@@ -54,13 +47,24 @@ BRANCH1:
     ADD R12, R4, R5   // R12 = R4 + R5 (0x0003 + 0x0000 = 0x0003)
     B 000, BRANCH2    // Branch if Not Equal (Z = 0) → should branch
 
-    // Unreachable if branch is taken
+    // Unreachable if branch taken
     ADD R13, R12, R1  // Shouldn't execute
 
 BRANCH2:
     ADD R14, R12, R2  // R14 = R12 + R2 (0x0003 + 0x0003 = 0x0006)
 
+    ////////////////////////////////////////////////////////
+    // Memory-to-Memory Forwarding (LW followed by SW)       //
+    ////////////////////////////////////////////////////////
+    LW R7, R6, 0     // Load R11 from memory[0x0020] (expected: 0x000E)
+    SW R11, R7, 0    // Store R11 (0x000E) at memory[0x000E] (address from R7)
+
+    ////////////////////////////////////////////////////////
+    // Store Stall with Data Dependency                     //
+    ////////////////////////////////////////////////////////
+    LW R12, R6, 0     // Load R12 from memory[0x0020] (expected: 0x000E)
+    SW R12, R8, 0     // Store R12 (loaded value) at memory[0x0019] (address from R8)
+
 END:
-    // Store PC in R15 to verify correctness
-    PCS R15           // R15 = PC value at halt
+    PCS R15           // Store PC in R15 to verify correctness
     HLT               // Halt execution

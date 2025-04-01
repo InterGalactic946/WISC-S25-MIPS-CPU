@@ -33,7 +33,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   logic [15:0] IF_ID_predicted_target; // Pipelined branch predicted target address (previous predicted_target) from the fetch stage
 
   /* DECODE stage signals */
-  logic [15:0] branch_target; // Computed branch target address
+  logic [15:0] actual_target; // Computed actual target address
   logic actual_taken;         // Signal used to determine whether an instruction met condition codes
   logic wen_BTB;              // Write enable for BTB (Branch Target Buffer)
   logic wen_BHT;              // Write enable for BHT (Branch History Table)
@@ -116,7 +116,7 @@ module cpu_model (clk, rst_n, hlt, pc);
       .clk(clk), 
       .rst(rst), 
       .stall(PC_stall), 
-      .actual_target(branch_target), 
+      .actual_target(actual_target), 
       .actual_taken(actual_taken), 
       .wen_BTB(wen_BTB),
       .wen_BHT(wen_BHT),
@@ -175,7 +175,7 @@ module cpu_model (clk, rst_n, hlt, pc);
 
     .is_branch(Branch),
     .is_BR(BR),
-    .branch_target(branch_target),
+    .actual_target(actual_target),
     .actual_taken(actual_taken),
     .wen_BTB(wen_BTB),
     .wen_BHT(wen_BHT),

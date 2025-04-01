@@ -15,17 +15,17 @@
 // value, considering both sequential execution and branch  //
 // control decisions.                                       //
 //////////////////////////////////////////////////////////////
-module Branch_Control(C, I, F, Rs, BR, PC_next, taken, PC_branch);
+module Branch_Control(C, I, F, Rs, BR, PC_next, taken, actual_target);
   
-  input wire [2:0] C;           // 3-bit condition code
-  input wire [8:0] I;           // 9-bit signed offset right shifted by one
-  input wire [2:0] F;           // 3-bit flag register inputs for (F[2] = Z, F[1] = V, F[0] = N)
-  input wire [15:0] Rs;         // Register source input for the BR instruction
-  input wire BR;                // indicates a BR instruction vs a B instruction
-  input wire [15:0] PC_next;    // 16-bit address of the next (PC+2) instruction (from the fetch stage)
+  input wire [2:0] C;               // 3-bit condition code
+  input wire [8:0] I;               // 9-bit signed offset right shifted by one
+  input wire [2:0] F;               // 3-bit flag register inputs for (F[2] = Z, F[1] = V, F[0] = N)
+  input wire [15:0] Rs;             // Register source input for the BR instruction
+  input wire BR;                    // indicates a BR instruction vs a B instruction
+  input wire [15:0] PC_next;        // 16-bit address of the next (PC+2) instruction (from the fetch stage)
   
-  output wire taken;            // Signal used to determine whether branch instruction met condition codes
-  output wire [15:0] PC_branch; // 16-bit address of the branch target
+  output wire taken;                // Signal used to determine whether branch instruction met condition codes
+  output wire [15:0] actual_target; // 16-bit address of the actual target
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
@@ -33,6 +33,7 @@ module Branch_Control(C, I, F, Rs, BR, PC_next, taken, PC_branch);
   wire [15:0] sext_offset;    // Sign-extended offset.
   wire [15:0] shifted_offset; // Shifted offset for the BR instruction.
   wire [15:0] PC_B;           // The PC value in case branch is taken (for B).
+  wire [15:0] PC_branch;      // 16-bit address of the Branch instruction
   //////////////////////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////////
@@ -60,6 +61,9 @@ module Branch_Control(C, I, F, Rs, BR, PC_next, taken, PC_branch);
   
   // Update the branch target address with the B instruction's computed offset or contents of Rs if it is a BR instruction.
   assign PC_branch = (BR) ? Rs : PC_B;
+
+  // The actual target address is the branch target address if the branch is taken, otherwise it is the next PC value.
+  assign actual_target = (taken) ? PC_branch : PC_next;
 
 endmodule
 

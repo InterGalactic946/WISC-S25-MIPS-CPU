@@ -28,7 +28,7 @@ module Decode (
     
     output wire is_branch,                // Indicates a branch instruction
     output wire is_BR,                    // Indicates a branch register instruction
-    output wire [15:0] branch_target,     // Computed branch target address
+    output wire [15:0] actual_target,     // Computed actual target address
     output wire actual_taken,             // Signal used to determine whether an instruction met condition codes
     output wire wen_BTB,                  // Write enable for BTB (Branch Target Buffer)
     output wire wen_BHT,                  // Write enable for BHT (Branch History Table)
@@ -91,7 +91,7 @@ module Decode (
     .actual_taken(actual_taken),
     .IF_ID_predicted_taken(IF_ID_predicted_taken),
     .IF_ID_predicted_target(IF_ID_predicted_target),
-    .actual_target(branch_target),
+    .actual_target(actual_target),
     
     .Branch(is_branch),
     .wen_BTB(wen_BTB),
@@ -148,7 +148,7 @@ module Decode (
       .PC_next(pc_next),
       
       .taken(actual_taken),
-      .PC_branch(branch_target)
+      .actual_target(actual_target)
   );
   ////////////////////////////////////////////////////////////////////////
 

@@ -22,7 +22,7 @@ module Decode_model (
     
     output logic is_branch,                // Indicates a branch instruction
     output logic is_BR,                    // Indicates a branch register instruction
-    output logic [15:0] branch_target,     // Computed branch target address
+    output logic [15:0] actual_target,     // Computed actual target address
     output logic actual_taken,             // Signal used to determine whether an instruction met condition codes
     output logic wen_BTB,                  // Write enable for BTB (Branch Target Buffer)
     output logic wen_BHT,                  // Write enable for BHT (Branch History Table)
@@ -85,7 +85,7 @@ module Decode_model (
     .actual_taken(actual_taken),
     .IF_ID_predicted_taken(IF_ID_predicted_taken),
     .IF_ID_predicted_target(IF_ID_predicted_target),
-    .actual_target(branch_target),
+    .actual_target(actual_target),
     
     .Branch(is_branch),
     .wen_BTB(wen_BTB),
@@ -142,7 +142,7 @@ module Decode_model (
       .PC_next(pc_next),
       
       .taken(actual_taken),
-      .PC_branch(branch_target)
+      .actual_target(actual_target)
   );
   ////////////////////////////////////////////////////////////////////////
 

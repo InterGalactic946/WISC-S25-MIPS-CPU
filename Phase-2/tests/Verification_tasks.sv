@@ -118,7 +118,7 @@ package Verification_tasks;
       input logic [2:0] cc, flag_reg,
       input logic is_branch, expected_is_branch,
       input logic is_BR, expected_is_BR,
-      input logic [15:0] branch_target, expected_branch_target,
+      input logic [15:0] actual_target, expected_actual_target,
       input logic actual_taken, expected_actual_taken,
       input logic wen_BTB, expected_wen_BTB,
       input logic wen_BHT, expected_wen_BHT,
@@ -171,8 +171,8 @@ package Verification_tasks;
               return;
           end
 
-          if (branch_target !== expected_branch_target) begin
-              decode_msg = $sformatf("[DECODE] ERROR: branch_target: 0x%h, expected_branch_target: 0x%h.", branch_target, expected_branch_target);
+          if (actual_target !== expected_actual_target) begin
+              decode_msg = $sformatf("[DECODE] ERROR: actual_target: 0x%h, expected_actual_target: 0x%h.", actual_target, expected_actual_target);
               return;
           end
 
@@ -209,7 +209,7 @@ package Verification_tasks;
           end
           
         // Get the decoded instruction.
-        display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_taken), .actual_target(branch_target), .instr_state(instr_state));
+        display_decoded_info(.opcode(EX_signals[6:3]), .flag_reg(flag_reg), .rs(EX_signals[62:59]), .rt(EX_signals[58:55]), .rd(WB_signals[7:4]), .ALU_imm(EX_signals[38:23]), .actual_taken(actual_target), .actual_target(branch_target), .instr_state(instr_state));
 
         // If there is a stall at the decode stage, print out the stall along with reason.
         if (IF_ID_stall) begin

@@ -186,24 +186,33 @@
     // Print the messages when the instruction is in the write-back stage.
     always @(posedge clk) begin
         if (valid_wb) begin
-            $display("WB ID: %0d", wb_id);
             $display("==========================================================");
-            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, ($time / 10) - 1);
+
+            // If this is the instruction after HLT, we print the instruction as UNKNOWN.
+            if (pipeline_msgs[wb_id].instr_full_msg === "")
+                $display("| Instruction: UNKNOWN | Completed At Cycle: %0t |", ($time / 10) - 1);
+            else
+                $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, ($time / 10) - 1);
+
             $display("==========================================================");
-                
+
+            // Print the fetch messages.
             for (int j = 0; j < 5; j = j+1)
                     if (pipeline_msgs[wb_id].fetch_msgs[j] !== "")
                         $display("%s", pipeline_msgs[wb_id].fetch_msgs[j]);
 
-            for (int j = 0; j < 5; j = j+1)
-                    if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
-                        $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
+            // Print the decode, memory, write-back messages, if not the instruction past HLT.
+            if (pipeline_msgs[wb_id].instr_full_msg !== "") begin
+                for (int j = 0; j < 5; j = j+1)
+                        if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
+                            $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
 
-            // Don't print execute, memory, and wb messages if the instruction is HLT.
-            if (pipeline_msgs[wb_id].instr_full_msg !== "HLT") begin
-                $display("%s", pipeline_msgs[wb_id].execute_msg);
-                $display("%s", pipeline_msgs[wb_id].memory_msg);
-                $display("%s", pipeline_msgs[wb_id].wb_msg);
+                // Don't print execute, memory, and wb messages if the instruction is HLT.
+                if (pipeline_msgs[wb_id].instr_full_msg !== "HLT") begin
+                    $display("%s", pipeline_msgs[wb_id].execute_msg);
+                    $display("%s", pipeline_msgs[wb_id].memory_msg);
+                    $display("%s", pipeline_msgs[wb_id].wb_msg);
+                end
             end
             $display("==========================================================\n");
         end

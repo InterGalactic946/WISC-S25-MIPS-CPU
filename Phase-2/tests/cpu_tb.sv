@@ -99,6 +99,14 @@ module cpu_tb();
     $stop();
   end
 
+  always @(posedge clk) begin
+    if (rst_n) begin
+      $display("SrcReg2: 0x%h. SrcReg2_data: 0x%h. DstReg: 0x%h. DstData: 0x%h. WriteReg: %b", 
+       iMODEL.iDECODE.SrcReg2, iMODEL.iDECODE.SrcReg2_data,
+       iMODEL.iDECODE.DstReg, iMODEL.iDECODE.DstData, iMODEL.iDECODE.WriteReg);
+    end
+  end
+
 
   // Dump contents of BHT, BTB, Data memory, and Regfile contents.
   always @(negedge clk) begin

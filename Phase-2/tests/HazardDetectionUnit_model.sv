@@ -56,7 +56,7 @@ module HazardDetectionUnit_model (
   // We flush the ID_EX pipeline register whenever there is a branch or load to use hazard, i.e. send nops to execute onward.
   assign ID_flush = load_to_use_hazard | B_hazard | BR_hazard;
 
-  // We flush the IF_ID pipeline instruction word whenever we need to update the PC, i.e. on an incorrect branch fetch.
+  // We flush the IF_ID pipeline instruction word whenever we are not stalling on decode and need to update the PC, i.e. on an incorrect branch fetch.
   assign IF_flush = ~IF_ID_stall & update_PC;
   /////////////////////////////////////////////////////////////
 
@@ -75,13 +75,13 @@ module HazardDetectionUnit_model (
   /////////////////////////////
   // Branch Hazard Detection //
   /////////////////////////////    
-  // Indicates the previous instruction in the EX stage is writing to the same register (not $0) as the BR
-  // instruction needs in the ID stage (Rs), so we need to stall.
-  assign MEM_to_ID_haz_BR = (EX_MEM_RegWrite & (EX_MEM_reg_rd != 4'h0)) & (EX_MEM_reg_rd == SrcReg1);
+  // Indicates the previous instruction in the EX stage is writing to the same register (not $0) 
+  // as the BR instruction needs in the ID stage (Rs), so we need to stall.
+  assign EX_to_ID_haz_BR = (ID_EX_RegWrite & (ID_EX_reg_rd != 4'h0)) & (ID_EX_reg_rd == SrcReg1);    
 
-  // Indicates the previous instruction in the MEM stage is writing to the same register (not $0) as the BR
-  // instruction needs in the ID stage (Rs), so we need to stall.
-  assign EX_to_ID_haz_BR = (ID_EX_RegWrite & (ID_EX_reg_rd != 4'h0)) & (ID_EX_reg_rd == SrcReg1);
+  // Indicates the previous instruction in the MEM stage is writing to the same register (not $0) 
+  // as the BR instruction needs in the ID stage (Rs), so we need to stall.
+  assign MEM_to_ID_haz_BR = (EX_MEM_RegWrite & (EX_MEM_reg_rd != 4'h0)) & (EX_MEM_reg_rd == SrcReg1);
 
   // There is a hazard for the B instruction when it is in the decode stage and 
   // a flag setting ALU instruction is in the EX stage.

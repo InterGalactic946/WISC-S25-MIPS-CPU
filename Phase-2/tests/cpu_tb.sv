@@ -246,6 +246,13 @@ module cpu_tb();
 
         decode_msg = {"|", dcode_msg, " @ Cycle: ", $sformatf("%0d", ($time/10))};
 
+        $display("Branch Taken: %0d. @ Cycle: %0d", iDUT.actual_taken, ($time/10));
+        $display("Branch Target: %0h. @ Cycle: %0d", iDUT.branch_target, ($time/10));        
+        $display("Update PC: %0d. @ Cycle: %0d", iDUT.update_PC, ($time/10));
+        $display("wen_BTB: %0d. @ Cycle: %0d", iDUT.wen_BTB, ($time/10));
+        $display("wen_BHT: %0d. @ Cycle: %0d", iDUT.wen_BHT, ($time/10));
+        $display("IF_flush: %0d. @ Cycle: %0d", IF_flush, ($time/10));
+
       end
   end
 

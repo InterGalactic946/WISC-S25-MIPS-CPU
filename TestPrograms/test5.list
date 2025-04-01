@@ -25,10 +25,10 @@ SW R7, R5, 0      // Store R7 to memory[0x0020]
 ////////////////////////////////////////////////////////
 // Arithmetic Instructions                            //
 ////////////////////////////////////////////////////////
-ADD R8, R1, R2    // R8 = R1 + R2 (0x000E + 0x0006 = 0x0014)
-SUB R9, R8, R2    // R9 = R8 - R2 (0x0014 - 0x0006 = 0x000E)
-MUL R10, R1, R2   // R10 = R1 * R2 (0x000E * 0x0006 = 0x0054)
-DIV R11, R10, R2  // R11 = R10 / R2 (0x0054 / 0x0006 = 0x000E)
+ADD R8, R1, R2     // R8 = R1 + R2 (0x000E + 0x0006 = 0x0014)
+SUB R9, R8, R2     // R9 = R8 - R2 (0x0014 - 0x0006 = 0x000E)
+PADDSB R10, R1, R2 // 
+RED R11, R10, R2   // 
 
 ////////////////////////////////////////////////////////
 // Logical Instructions                               //
@@ -48,7 +48,7 @@ ROR R3, R1, R4    // R3 = R1 ror 8 (0x0E00 -> 0x000E)
 ////////////////////////////////////////////////////////
 // Reduction and Parallel Addition                     //
 ////////////////////////////////////////////////////////
-RED R6, R1, R2, R3  // R6 = Reduce(R1, R2, R3) - Custom Reduction
+RED R6, R1, R2     // R6 = Reduce(R1, R2, R3) - Custom Reduction
 PADDSB R7, R3, R3  // R7 = Parallel signed add of R3 and R3
 
 ////////////////////////////////////////////////////////

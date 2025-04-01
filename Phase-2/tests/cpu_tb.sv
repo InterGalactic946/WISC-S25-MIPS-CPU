@@ -201,6 +201,7 @@ module cpu_tb();
         $display("PC_inst: %0h. @ Cycle: %0d", iDUT.PC_inst, ($time/10));
         $display("PC_curr: %0h. @ Cycle: %0d", pc, ($time/10));
         $display("PC_next: %0h. @ Cycle: %0d", iDUT.PC_next, ($time/10));
+        $display("Actual Target: %0h. @ Cycle: %0d", iDUT.iFETCH.actual_target, ($time/10));
 
     end
   end

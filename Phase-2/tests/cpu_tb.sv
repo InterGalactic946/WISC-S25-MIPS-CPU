@@ -167,6 +167,12 @@ module cpu_tb();
   end
 
 
+  always @(posedge clk) begin
+    if (rst_n)
+      $display("Z_flag_enable: %0d, V_flag_enable: %0d, N_flag_enable: %0d. Cycle: %0d.", iDUT.iEXECUTE.Z_en, iDUT.iEXECUTE.NV_en, iDUT.iEXECUTE.NV_en, ($time/10));
+  end
+
+
   // Always block for verify_FETCH stage.
   always @(posedge clk) begin
       if (rst_n) begin

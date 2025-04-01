@@ -31,10 +31,10 @@
     ///////////////////////////////////
     // Declare any internal signals //
     /////////////////////////////////
-    integer fetch_id, decode_id, execute_id, memory_id, wb_id, msg_index;   // IDs for each stage.
-    logic cap_stall;                                                        // Flag to indicate to capture stall messages in the pipeline.
-    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb; // Valid signals for each stage.
-    debug_info_t pipeline_msgs[0:71];                                       // Array to hold debug messages for each instruction.
+    integer fetch_id, decode_id, execute_id, memory_id, wb_id, msg_index;               // IDs for each stage.
+    logic cap_stall;                                                                    // Flag to indicate to capture stall messages in the pipeline.
+    logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_done; // Valid signals for each stage.
+    debug_info_t pipeline_msgs[0:71];                                                   // Array to hold debug messages for each instruction.
 
     // Tracks the pipeline and increments IDs.
     always @(posedge clk) begin
@@ -45,10 +45,15 @@
           memory_id <= 0;
           wb_id <= 0;
       end else if (cap_stall) begin
-          /* Only let the execute, mem, and wb stages propogate. */
-          execute_id <= decode_id; // Pass the decode_id to execute_id
-          memory_id <= execute_id; // Pass the execute_id to memory_id
-          wb_id <= memory_id;      // Pass the memory_id to wb_id
+          // If we are done printing the HLT instruction, we can increment the wb_id to print the last instruction.
+          if (print_done && pipeline_msgs[wb_id].instr_full_msg === "HLT") begin
+              wb_id <= wb_id + 1;
+          end else begin
+            /* Only let the execute, mem, and wb stages propogate. */
+            execute_id <= decode_id; // Pass the decode_id to execute_id
+            memory_id <= execute_id; // Pass the execute_id to memory_id
+            wb_id <= memory_id;      // Pass the memory_id to wb_id
+          end
       end else begin
           fetch_id <= fetch_id + 1; // Only increment fetch_id when there's no stall.
           decode_id <= fetch_id;    // Pass the fetch_id to decode_id
@@ -161,7 +166,19 @@
     end
 
 
-    // Print the message for each instruction.
+    // This block is responsible for setting the print_done signal.
+    always @(posedge clk) begin
+        if (!rst_n) begin
+            print_done <= 1'b0; // Reset print_done on reset
+        end else if (valid_wb) begin
+            print_done <= 1'b1; // Set print_done when valid_wb is high
+        end else begin
+            print_done <= 1'b0; // Reset otherwise
+        end
+    end
+
+
+    // Print the messages when the instruction is in the write-back stage.
     always @(posedge clk) begin
         if (valid_wb) begin
             $display("WB ID: %0d", wb_id);

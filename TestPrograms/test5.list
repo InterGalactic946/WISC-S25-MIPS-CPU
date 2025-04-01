@@ -7,7 +7,7 @@ LLB R1, 0x0E      // Load Lower Byte: R1 = 0x000E (for SW/LW test)
 LLB R2, 0x06      // Load Lower Byte: R2 = 0x0006 (for addition and subtraction)
 LLB R3, 0xFF      // Load Lower Byte: R3 = 0x00FF (mask for signed byte addition)
 LLB R4, 0x08      // Load Lower Byte: R4 = 0x0008 (shift amount)
-LLB R5, 0x20      // Load Lower Byte: R5 = 0x0020 (base memory address)
+LLB R5, 0x0A      // Load Lower Byte: R5 = 0x0020 (base memory address)
 
 ////////////////////////////////////////////////////////
 // Memory-to-Memory Forwarding (LW followed by SW)     //

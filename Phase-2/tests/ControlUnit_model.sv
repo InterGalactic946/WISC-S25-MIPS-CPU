@@ -118,7 +118,7 @@ module ControlUnit_model (
                 wen_BHT = Branch;
 
                 // Update PC if misprediction or miscomputed target occurred
-                update_PC = (mispredicted || target_miscomputed);
+                update_PC = (mispredicted || target_miscomputed) && Branch;
             end
             4'b1110: begin  // PCS (Program Counter Shift)
                 PCS = 1'b1;   // Enable PCS operation

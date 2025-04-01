@@ -70,8 +70,8 @@ module ControlUnit (
     assign wen_BHT = Branch;
 
     // We update the PC to fetch the actual target when the predictor either predicted incorrectly
-    // or when the target was miscomputed.
-    assign update_PC = (mispredicted | target_miscomputed);
+    // or when the target was miscomputed and it is a Branch instruction.
+    assign update_PC = (mispredicted | target_miscomputed) & (Branch);
     ////////////////////////
 
     //////////////////

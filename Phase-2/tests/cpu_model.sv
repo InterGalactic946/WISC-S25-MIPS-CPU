@@ -37,7 +37,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   logic BR;                   // Indicates it is a branch register instruction
   logic actual_taken;         // Signal used to determine whether an instruction met condition codes
   logic wen_BHT;              // Write enable for BHT (Branch History Table)
-  logic branch_target;        // Computed branch target address
+  logic [15:0] branch_target; // Computed branch target address
   logic wen_BTB;              // Write enable for BTB (Branch Target Buffer)
   logic [15:0] actual_target; // Computed actual target address
   logic update_PC;            // Signal to update the PC with the actual target

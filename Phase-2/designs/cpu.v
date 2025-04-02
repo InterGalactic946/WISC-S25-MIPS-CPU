@@ -39,7 +39,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire BR;                   // Indicates it is a branch register instruction
   wire actual_taken;         // Signal used to determine whether an instruction met condition codes
   wire wen_BHT;              // Write enable for BHT (Branch History Table)
-  wire branch_target;        // Computed branch target address
+  wire [15:0] branch_target; // Computed branch target address
   wire wen_BTB;              // Write enable for BTB (Branch Target Buffer)
   wire [15:0] actual_target; // Computed actual target address
   wire update_PC;            // Signal to update the PC with the actual target

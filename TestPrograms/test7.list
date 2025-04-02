@@ -12,22 +12,23 @@ LLB R4, 0x04      // Constant: 5 (for averaging)
 LLB R5, 0x06      //  Value (R5 = 6)
 LLB R8, 0x06      // Increment value (R8 = 6)
 LLB R9, 0x0A      // Increment value (R9 = 10)
+LLB R10, 0x0E      // Increment value (R9 = 14)
 
 
 // Load array values into memory (initialization)
-LLB R6, 0x16      // Array element 1
+LLB R6, 0x18      // Array element 1
 SW R6, R2, 0      // Store 0x0016 at memory[0x0000]
 
 // Test Register Hazard with LW (load word instruction)
 TEST_LW_HAZARD:
-    LW R3, R2, 0    // Load value from memory[0x00] into R3 (e.g., R3 = 0x0016 from address 0)
+    LW R3, R2, 0    // Load value from memory[0x00] into R3 (e.g., R3 = 0x0018 from address 0)
     BR 000, R3      // Branch if Not Equal (Z = 0) → should branch to TEST_ADD_HAZARD
 
     ADD R3, R3, R4  // This should not execute
 
 // Test Register Hazard with ADD instruction
 TEST_ADD_HAZARD:
-    ADD R2, R6, R8  // Get PC addr 0x001C into R2
+    ADD R2, R6, R8  // Get PC addr 0x001E into R2
     BR 000, R2      // Branch if Not Equal (Z = 0) → should branch to TEST_PADDSB_HAZARD
 
     // Code after branch (if branch not taken)
@@ -47,7 +48,7 @@ TEST_PADDSB_HAZARD:
 // Test Condition Code Hazard with ADD (affects condition flags)
 TEST_SLL_HAZARD:
     SLL R3, R3, 2    // R3 = R3 << 2, affects condition codes (Z, N)  R3 = 32
-    ADD R3, R3, R2    // R3 = R3 + R2, affects condition codes (Z, N)  R3 = 44
+    ADD R3, R3, R10    // R3 = R3 + R10, affects condition codes (Z, N)  R3 = 46
     BR 000, R3        // Branch if not Equal (Z = 1) → should branch to TEST_SUB_HAZARD
     
     // Code after branch (if branch not taken)

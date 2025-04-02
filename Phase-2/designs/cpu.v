@@ -28,7 +28,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire [15:0] predicted_target; // Predicted target address of the branch instruction
 
   /* IF/ID Pipeline Register signals */
-  wire [3:0] IF_ID_PC_curr;           // Pipelined lower 4-bits of current instruction (previous PC) address from the fetch stage
+  wire [15:0] IF_ID_PC_curr;          // Pipelined current instruction (previous PC) address from the fetch stage
   wire [15:0] IF_ID_PC_next;          // Pipelined next instruction (previous PC_next) address from the fetch stage
   wire [15:0] IF_ID_PC_inst;          // Pipelined instruction word (previous PC_inst) from the fetch stage
   wire [1:0] IF_ID_prediction;        // Pipelined branch prediction (previous predicted_taken) from the fetch stage

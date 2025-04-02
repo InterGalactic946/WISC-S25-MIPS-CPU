@@ -20,7 +20,7 @@ module Fetch (
     input wire wen_BTB,                // Write enable for BTB (Branch Target Buffer)
     input wire [15:0] actual_target,   // 16-bit address of the actual target
     input wire update_PC,              // Signal to update the PC with the actual target
-    input wire [3:0] IF_ID_PC_curr,    // Pipelined lower 4-bits of previous PC value (from the fetch stage)
+    input logic [15:0] IF_ID_PC_curr,  // Pipelined previous PC value (from the fetch stage)
     input wire [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
     
     output wire [15:0] PC_next,         // Computed next PC value
@@ -33,8 +33,9 @@ module Fetch (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire [15:0] PC_new;  // The new address the PC is updated with.
-  wire enable;         // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
+  wire predicted_taken;  // The predicted value of the current instruction.
+  wire [15:0] PC_new;    // The new address the PC is updated with.
+  wire enable;           // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
   ////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -45,13 +46,13 @@ module Fetch (
 
   // Update the PC with correct target on misprediction or miscomputation on a taken branch, or the predicted target address 
   // if predicted to be taken, otherwise assume not taken.
-  assign PC_new = (update_PC) ? actual_target : ((prediction[1]) ? predicted_target : PC_next);
+  assign PC_new = (update_PC) ? actual_target : ((predicted_taken) ? predicted_target : PC_next);
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
   DynamicBranchPredictor iDBP (
     .clk(clk), 
     .rst(rst), 
-    .PC_curr(PC_curr[3:0]), 
+    .PC_curr(PC_curr), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
@@ -60,6 +61,7 @@ module Fetch (
     .actual_taken(actual_taken),
     .actual_target(branch_target),  
     
+    .predicted_taken(predicted_taken),
     .prediction(prediction), 
     .predicted_target(predicted_target)
   );

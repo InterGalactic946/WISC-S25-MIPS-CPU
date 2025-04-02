@@ -14,7 +14,7 @@ module IF_ID_pipe_reg_model (
     input logic [1:0] prediction,        // The 2-bit predicted value of the current branch instruction from the fetch stage
     input logic [15:0] predicted_target, // The predicted target from the BTB.
     
-    output logic [15:0] IF_ID_PC_curr,           // Pipelined lower 4-bits of current instruction address passed to the decode stage
+    output logic [15:0] IF_ID_PC_curr,           // Pipelined current instruction address passed to the decode stage
     output logic [15:0] IF_ID_PC_next,           // Pipelined next PC passed to the decode stage
     output logic [15:0] IF_ID_PC_inst,           // Pipelined current instruction word passed to the decode stage
     output logic [1:0] IF_ID_prediction,         // Pipelined 2-bit branch prediction signal passed to the decode stage

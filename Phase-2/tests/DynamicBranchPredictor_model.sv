@@ -13,11 +13,12 @@ module DynamicBranchPredictor_model (
     input logic [15:0] IF_ID_PC_curr,     // Pipelined lower 4-bits of previous PC address
     input wire [1:0] IF_ID_prediction,    // The predicted value of the previous branch instruction.
     input logic enable,                   // Enable signal for the DynamicBranchPredictor
-    input wire wen_BTB,                  // Write enable for BTB (Branch Target Buffer) (from the decode stage)
-    input wire wen_BHT,                  // Write enable for BHT (Branch History Table) (from the decode stage)
+    input wire wen_BTB,                   // Write enable for BTB (Branch Target Buffer) (from the decode stage)
+    input wire wen_BHT,                   // Write enable for BHT (Branch History Table) (from the decode stage)
     input logic actual_taken,             // Actual branch taken value (from the decode stage)
     input logic [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
 
+    output logic predicted_taken,         // Indicates if the branch is predicted taken (1) or not (0)
     output logic [1:0] prediction,        // 2-bit Predicted branch signal (from BHT)
     output logic [15:0] predicted_target  // Predicted target address (from BTB)
 );
@@ -26,6 +27,7 @@ module DynamicBranchPredictor_model (
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
   logic [1:0] updated_prediction; // The new prediction to be stored in the BHT on an incorrect prediction.
+  logic tags_match;               // Used to determine if the current PC tag matches the previous PC tag cached in BHT.
   logic error;                    // Error flag raised when prediction state is invalid.
   model_BHT_t BHT [0:15];         // Declare BHT
   model_BTB_t BTB [0:15];         // Declare BTB
@@ -45,8 +47,8 @@ module DynamicBranchPredictor_model (
       else begin
           // Update BHT entry if needed (for example, on a misprediction)
           if (enable && wen_BHT) begin
-              BHT[IF_ID_PC_curr[3:1]].PC_addr  <= IF_ID_PC_curr;   // Store the PC address
-              BHT[IF_ID_PC_curr[3:1]].prediction <= updated_prediction; // Store the 2-bit prediction
+              BHT[IF_ID_PC_curr[3:1]].PC_addr  <= IF_ID_PC_curr;        // Store the PC address
+              BHT[IF_ID_PC_curr[3:1]].prediction <= updated_prediction; // Store the 2-bit prediction along with the tag
           end
 
           // Update BTB entry if needed (when a branch is taken)
@@ -59,6 +61,12 @@ module DynamicBranchPredictor_model (
 
   // Asynchronously read out the prediction when read enabled.
   assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]].prediction : 2'h0;
+
+    // Compare the tags of the current PC and previous PC address in the cache to determine if they match.
+  assign tags_match = (PC_curr[15:4] == BHT[PC_curr[3:1]].PC_addr[15:4]);
+
+  // If the tags match, use the prediction; otherwise, assume not taken.
+  assign taken = (tags_match) ? BHT[PC_curr[3:1]].prediction[1] : 1'b0; 
 
   // Asynchronously read out the target when read enabled.
   assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]].target : 16'h0000;

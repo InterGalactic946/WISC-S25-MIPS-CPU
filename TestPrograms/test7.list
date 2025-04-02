@@ -57,7 +57,7 @@ TEST_SLL_HAZARD:
 // Test Condition Code Hazard with SUB (affects condition flags)
 TEST_SUB_HAZARD:
     SUB R2, R1, R4    // R2 = R1 - R4, affects condition codes (Z, N)
-    BR 000, R2        // Branch if not Equal (Z = 1) → should not branch
+    BR 001, R2        // Branch if Equal (Z = 1) → should not branch
 
     // Code after branch (if branch not taken)
     ADD R3, R3, R4    // This should execute if branch not taken

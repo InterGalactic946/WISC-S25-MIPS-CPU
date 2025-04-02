@@ -35,7 +35,7 @@
     logic cap_stall;                                                                    // Flag to indicate to capture stall messages in the pipeline.
     logic valid_fetch, valid_decode, valid_execute, valid_memory, valid_wb, print_done; // Valid signals for each stage.
     logic fetched_last;                                                                 // Indicates we fetched the instruction past the HLT instruction.
-    debug_info_t pipeline_msgs[0:71];                                                   // Array to hold debug messages for each instruction.
+    debug_info_t pipeline_msgs[0:65535];                                                // Array to hold debug messages for each instruction.
 
     // Tracks the pipeline and increments IDs.
     always @(posedge clk) begin

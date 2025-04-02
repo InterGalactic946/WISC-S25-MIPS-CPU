@@ -52,7 +52,7 @@ PADDSB R12, R9, R10 // Parallel Add Signed Bytes (R12 = R9 + R10)
 
 // Test BR branch for equality (Z = 1, should branch)
 SUB R13, R4, R5    // R13 = 5 - 1 = 4
-BR 001, R13        // Branch if Equal (Z = 1) → should branch
+BR 001, R13        // Branch if Equal (Z = 1) → should not branch
 
 // Code to execute if branch was taken
 ADD R14, R3, R4    // R14 = Sum + 5 (should execute if branch taken)

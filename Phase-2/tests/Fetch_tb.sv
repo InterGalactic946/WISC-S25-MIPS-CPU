@@ -56,7 +56,7 @@ module Fetch_tb();
   Fetch iDUT (
     .clk(clk), 
     .rst(rst), 
-    .stall(PC_stall), 
+    .stall(enable), 
     .actual_taken(actual_taken),
     .wen_BHT(wen_BHT),
     .branch_target(branch_target),
@@ -77,7 +77,7 @@ module Fetch_tb();
   Fetch_model iFETCH (
     .clk(clk), 
     .rst(rst), 
-    .stall(PC_stall), 
+    .stall(enable), 
     .actual_taken(actual_taken),
     .wen_BHT(wen_BHT),
     .branch_target(branch_target),
@@ -149,7 +149,7 @@ module Fetch_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 12; // Number of tests to run.
+      num_tests = 32; // Number of tests to run.
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);

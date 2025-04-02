@@ -133,8 +133,8 @@ module Decode (
   // Get the condition codes to determine if branch is taken or not.
   assign c_codes = pc_inst[11:9];
 
-  // We update the PC to fetch the actual target when the current instruction fetched is not the same as the actual target.
-  assign update_PC = pc_curr != actual_target;
+  // We update the PC to fetch the actual target when the current instruction fetched is not the same as the actual target, on a branch instruction.
+  assign update_PC = (pc_curr != actual_target) & (Branch);
 
   // Instantiate the Branch Control Unit.
   Branch_Control iBC (

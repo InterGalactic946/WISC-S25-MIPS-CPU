@@ -7,7 +7,7 @@
 // offset (`I`), the flag register (`F`), and the source    //
 // register (`Rs`).                                         //
 //////////////////////////////////////////////////////////////
-module Branch_Control_model(C, I, F, Rs_data, BR, IF_ID_predicted_target, PC_next, taken, wen_BHT, PC_branch, wen_BTB, actual_target);
+module Branch_Control_model(C, I, F, Rs_data, BR, Branch, IF_ID_predicted_target, PC_next, taken, wen_BHT, PC_branch, wen_BTB, actual_target);
   
   input logic [2:0] C;                       // 3-bit condition code
   input logic [8:0] I;                       // 9-bit signed offset right shifted by one
@@ -56,7 +56,7 @@ module Branch_Control_model(C, I, F, Rs_data, BR, IF_ID_predicted_target, PC_nex
                  1'b0;                                      // Default: Condition not met (shouldn't happen if ccc is valid)
   
   // Update the branch target address with the B instruction's computed offset or contents of Rs if it is a BR instruction.
-  assign PC_branch = (BR) ? Rs : PC_B;
+  assign PC_branch = (BR) ? Rs_data : PC_B;
 
   // The actual target address is the branch target address if the branch is taken, otherwise it is the next PC value.
   assign actual_target = (branch_taken) ? PC_branch : PC_next;

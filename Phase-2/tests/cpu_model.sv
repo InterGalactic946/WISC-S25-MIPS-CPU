@@ -202,7 +202,7 @@ module cpu_model (clk, rst_n, hlt, pc);
       .ID_EX_RegWrite(ID_EX_WB_signals[3]),
       .ID_EX_reg_rd(ID_EX_WB_signals[7:4]),
       .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
-      .EX_MEM_RegWrite(ID_EX_WB_signals[3]),
+      .EX_MEM_RegWrite(EX_MEM_WB_signals[3]),
       .ID_EX_MemEnable(ID_EX_MEM_signals[1]),
       .ID_EX_MemWrite(ID_EX_MEM_signals[0]),
       .MemWrite(MEM_signals[1]),

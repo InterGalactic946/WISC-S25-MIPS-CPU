@@ -40,16 +40,16 @@ TEST_PADDSB_HAZARD:
     BR 001, R7         // Branch if Equal (Z = 0) → should not branch R7 = 4
 
     // Code after branch (if branch not taken)
-    ADD R3, R3, R4     // This should execute if branch not taken R3 = 4
+    ADD R7, R0, R4     // This should execute if branch not taken R7 = 4
 
     // Code after branch (if branch not taken)
-    ADD R3, R3, R3     // This should execute if branch not taken R3 = 8
+    ADD R7, R7, R7     // This should execute if branch not taken R7 = 8
 
 // Test Condition Code Hazard with ADD (affects condition flags)
 TEST_SLL_HAZARD:
-    SLL R3, R3, 2    // R3 = R3 << 2, affects condition codes (Z, N)  R3 = 32
-    ADD R3, R3, R10    // R3 = R3 + R10, affects condition codes (Z, N)  R3 = 48
-    BR 000, R3        // Branch if not Equal (Z = 1) → should branch to TEST_SUB_HAZARD
+    SLL R7, R7, 2    // R3 = R3 << 2, affects condition codes (Z, N)  R7 = 32
+    ADD R7, R3, R10    // R3 = R3 + R10, affects condition codes (Z, N)  R7 = 48
+    BR 000, R7        // Branch if not Equal (Z = 1) → should branch to TEST_SUB_HAZARD
     
     // Code after branch (if branch not taken)
     ADD R3, R3, R4    // This should execute if branch not taken

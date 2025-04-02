@@ -1,83 +1,71 @@
 ///////////////////////////////////////////////////////
-// Branch Test Program using BR ccc, Rs              //
-// This program demonstrates the usage of BR          //
-// (branch with condition codes and register operand)//
-// to test branch hazards in a pipelined processor.  //
+// Branch Hazard Test Program (Register & Condition) //
+// This program demonstrates register and condition  //
+// hazards in a pipelined processor.                 //
 ///////////////////////////////////////////////////////
 
-// Initialize registers and array base address
+// Initialize registers
 LLB R1, 0x05      // Loop counter (R1 = 5 elements)
-LLB R2, 0x20      // Base address of the array (R2 = 0x0020)
-LLB R3, 0x00      // Sum accumulator (R3 = 0x0000)
-LLB R4, 0x05      // Constant: 5 (for averaging)
-LLB R5, 0x01      // Increment value (R5 = 1)
-LLB R9, 0x02      // Increment value (R9 = 2)
+LLB R2, 0x00      // Register used in branch condition (R2 = 0)
+LLB R3, 0x00      // Accumulator for addition (R3 = 0)
+LLB R4, 0x01      // Constant for incrementing (R4 = 1)
+LLB R5, 0x02      // Another constant for incrementing (R5 = 2)
 
+// Test Register Hazard with LW (load word instruction)
+TEST_LW_HAZARD:
+    LW R2, R1, 0    // Load value from memory[0x00] into R2 (e.g., R2 = value from address 0)
+    BR 000, R2      // Branch if Not Equal (Z = 0) → should branch if R2 != 0
 
-// Load array values into memory (initialization)
-LLB R6, 0x03      // Array element 1
-SW R6, R2, 0      // Store 0x0003 at memory[0x0020]
-LLB R6, 0x07      // Array element 2
-SW R6, R2, 1      // Store 0x0007 at memory[0x0022]
-LLB R6, 0x0A      // Array element 3
-SW R6, R2, 2      // Store 0x000A at memory[0x0024]
-LLB R6, 0x02      // Array element 4
-SW R6, R2, 3      // Store 0x0002 at memory[0x0026]
-LLB R6, 0x04      // Array element 5
-SW R6, R2, 4      // Store 0x0004 at memory[0x0028]
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4  // This should execute if branch not taken
 
-// Loop to sum the array elements
-SUM_LOOP:
-    LW R7, R2, 0      // Load array element (memory[R2])
-    ADD R3, R3, R7    // Accumulate sum in R3
-    ADD R2, R2, R9    // Move to next element (increment address by 2)
-    SUB R1, R1, R5    // Decrement loop counter
-    B 000, SUM_LOOP   // Branch if Not Equal (Z = 0) - Loop back if R1 != 0
+// Test Register Hazard with RED (reduction instruction)
+TEST_RED_HAZARD:
+    RED R2, R3, R0  // Reduce R3, result stored in R2
+    BR 000, R2      // Branch if Not Equal (Z = 0) → should branch if R2 != 0
 
-// Calculate average (sum / 5)
-SLL R3, R3, 2      // Multiply sum by 4 (shift left by 2)
-ADD R3, R3, R3     // Multiply sum by 5 (4 + 1)
-SRA R3, R3, 3      // Divide by 8 (shift right by 3) to approximate average
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4  // This should execute if branch not taken
 
-// Reduction operation (dummy)
-RED R8, R3, R0     // Reduce R3, store in R8 (R0 as dummy operand)
+// Test Register Hazard with PADDSB (parallel addition signed bytes)
+TEST_PADDSB_HAZARD:
+    PADDSB R2, R3, R4  // Parallel add signed bytes (R2 = R3 + R4)
+    BR 000, R2         // Branch if Not Equal (Z = 0) → should branch if R2 != 0
 
-// Shift and Rotate Operations
-SLL R9, R3, 1      // Logical left shift (R9 = R3 << 1)
-SRA R10, R3, 2     // Arithmetic right shift (R10 = R3 >> 2)
-ROR R11, R3, 3     // Rotate right (R11 = R3 rotated right by 3)
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4     // This should execute if branch not taken
 
-// Parallel Addition (example usage)
-PADDSB R12, R9, R10 // Parallel Add Signed Bytes (R12 = R9 + R10)
+// Test Condition Code Hazard with ADD (affects condition flags)
+TEST_ADD_HAZARD:
+    ADD R2, R1, R4    // R2 = R1 + R4, affects condition codes (Z, N)
+    BR 001, R2        // Branch if Equal (Z = 1) → should branch if Z = 1 (R2 = 0)
+    
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4    // This should execute if branch not taken
 
-// Test BR branch for equality (Z = 1, should branch)
-SUB R13, R4, R5    // R13 = 5 - 1 = 4
-BR 001, R13        // Branch if Equal (Z = 1) → should not branch
+// Test Condition Code Hazard with SUB (affects condition flags)
+TEST_SUB_HAZARD:
+    SUB R2, R1, R4    // R2 = R1 - R4, affects condition codes (Z, N)
+    BR 001, R2        // Branch if Equal (Z = 1) → should branch if Z = 1 (R2 = 0)
 
-// Code to execute if branch was taken
-ADD R14, R3, R4    // R14 = Sum + 5 (should execute if branch taken)
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4    // This should execute if branch not taken
 
-// Test BR branch for Not Equal (Z = 0, should not branch)
-SUB R13, R4, R5    // R13 = 5 - 1 = 4
-BR 000, R13        // Branch if Not Equal (Z = 0) → should not branch
+// Test Both Register and Condition Code Hazard with ADD
+TEST_BOTH_ADD_HAZARD:
+    ADD R1, R1, R4    // R1 = R1 + R4, affects condition codes (Z, N) and modifies R1
+    BR 001, R1        // Branch if Equal (Z = 1) → should branch if R1 = 0 (Z = 1)
+    
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4    // This should execute if branch not taken
 
-// Code to execute if branch was not taken
-ADD R15, R3, R4    // R15 = Sum + 5 (should execute if branch not taken)
+// Test Both Register and Condition Code Hazard with SUB
+TEST_BOTH_SUB_HAZARD:
+    SUB R1, R1, R4    // R1 = R1 - R4, affects condition codes (Z, N) and modifies R1
+    BR 001, R1        // Branch if Equal (Z = 1) → should branch if R1 = 0 (Z = 1)
 
-// Test BR branch for Greater Than (N = 0, Z = 0, should branch)
-SUB R13, R4, R5    // R13 = 5 - 1 = 4
-BR 010, R13        // Branch if Greater Than (Z = 0, N = 0) → should branch
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4    // This should execute if branch not taken
 
-// Code to execute if branch was taken
-ADD R7, R3, R4     // R7 = Sum + 5 (should execute if branch taken)
-
-// Test BR branch for Less Than (N = 1, should not branch)
-SUB R13, R4, R5    // R13 = 5 - 1 = 4
-BR 011, R13        // Branch if Less Than (N = 1) → should not branch
-
-// Code to execute if branch was not taken
-ADD R6, R3, R4     // R6 = Sum + 5 (should execute if branch not taken)
-
-BRANCH_SKIP:
-PCS R0             // Store PC in R0 to verify correctness
+END:
 HLT                // Halt execution

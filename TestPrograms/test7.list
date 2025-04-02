@@ -48,7 +48,7 @@ TEST_PADDSB_HAZARD:
 // Test Condition Code Hazard with ADD (affects condition flags)
 TEST_SLL_HAZARD:
     SLL R7, R7, 2    // R3 = R3 << 2, affects condition codes (Z, N)  R7 = 32
-    ADD R7, R3, R10    // R3 = R3 + R10, affects condition codes (Z, N)  R7 = 48
+    ADD R7, R7, R10    // R3 = R3 + R10, affects condition codes (Z, N)  R7 = 48
     BR 000, R7        // Branch if not Equal (Z = 1) → should branch to TEST_SUB_HAZARD
     
     // Code after branch (if branch not taken)

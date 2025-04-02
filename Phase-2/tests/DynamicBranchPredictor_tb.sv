@@ -40,8 +40,10 @@ module DynamicBranchPredictor_tb();
   integer branch_count;                   // Number of branches executed.
   integer num_tests;                      // Number of test cases to execute.
 
+  wire predicted_taken;                   // The predicted value of the current instruction.
   wire [1:0] prediction;                  // The 2-bit predicted taken flag from the predictor
   wire [15:0] predicted_target;           // The predicted target address from the predictor
+  wire expected_predicted_taken;          // The expected predicted taken value from the model DBP
   wire [1:0] expected_prediction;         // The expected prediction from the model DBP
   wire [15:0] expected_predicted_target;  // The expected predicted target address from from the model DBP
 
@@ -49,24 +51,7 @@ module DynamicBranchPredictor_tb();
   DynamicBranchPredictor iDUT (
     .clk(clk), 
     .rst(rst), 
-    .PC_curr(PC_curr[3:0]), 
-    .IF_ID_PC_curr(IF_ID_PC_curr[3:0]), 
-    .IF_ID_prediction(IF_ID_prediction), 
-    .enable(enable),
-    .wen_BTB(wen_BTB),
-    .wen_BHT(wen_BHT),
-    .actual_taken(actual_taken),
-    .actual_target(actual_target),  
-    
-    .prediction(prediction), 
-    .predicted_target(predicted_target)
-  );
-
-  // Instantiate the model dynamic branch predictor.
-  DynamicBranchPredictor_model iDBP_model (
-    .clk(clk), 
-    .rst(rst), 
-    .PC_curr(PC_curr[3:0]), 
+    .PC_curr(PC_curr), 
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_prediction(IF_ID_prediction), 
     .enable(enable),
@@ -75,6 +60,25 @@ module DynamicBranchPredictor_tb();
     .actual_taken(actual_taken),
     .actual_target(actual_target),  
     
+    .predicted_taken(predicted_taken),
+    .prediction(prediction), 
+    .predicted_target(predicted_target)
+  );
+
+  // Instantiate the model dynamic branch predictor.
+  DynamicBranchPredictor_model iDBP_model (
+    .clk(clk), 
+    .rst(rst), 
+    .PC_curr(PC_curr), 
+    .IF_ID_PC_curr(IF_ID_PC_curr), 
+    .IF_ID_prediction(IF_ID_prediction), 
+    .enable(enable),
+    .wen_BTB(wen_BTB),
+    .wen_BHT(wen_BHT),
+    .actual_taken(actual_taken),
+    .actual_target(actual_target),  
+    
+    .predicted_taken(expected_predicted_taken),
     .prediction(expected_prediction), 
     .predicted_target(expected_predicted_target)
   );
@@ -82,6 +86,12 @@ module DynamicBranchPredictor_tb();
   // A task to verify the prediction and target.
   task verify_prediction_and_target();
     begin
+      // Verify the predicted taken value.
+      if (predicted_taken !== expected_predicted_taken) begin
+        $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, predicted_taken, expected_predicted_taken);
+        $stop();
+      end
+
       // Verify the prediction.
       if (prediction !== expected_prediction) begin
         $display("ERROR: PC_curr=0x%h, predicted_taken=0b%b, expected_predicted_taken=0b%b.", PC_curr, prediction[1], expected_prediction[1]);

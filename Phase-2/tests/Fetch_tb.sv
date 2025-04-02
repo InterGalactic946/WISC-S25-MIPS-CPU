@@ -199,7 +199,6 @@ module Fetch_tb();
       
       4, 5: begin // 25% of the time, randomize actual_target
         actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
-        branch_target = actual_target; // Set the branch target to a random address.
       end
 
       6:  // 12.5% of the time, randomize enable
@@ -210,7 +209,6 @@ module Fetch_tb();
         actual_taken = $random % 2;
         actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
         enable = $random % 2;
-        branch_target = actual_target;
       end
     endcase
   end
@@ -269,7 +267,7 @@ module Fetch_tb();
   assign mispredicted = (IF_ID_prediction[1] !== actual_taken);
 
   // A target is miscomputed when the predicted target differs from the actual target.
-  assign target_miscomputed = (IF_ID_predicted_target !== branch_target);
+  assign target_miscomputed = (IF_ID_predicted_target !== actual_target);
 
   // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
   assign wen_BTB = (is_branch) & ((actual_taken) | (target_miscomputed));

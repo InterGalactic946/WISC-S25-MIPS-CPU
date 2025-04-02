@@ -197,8 +197,10 @@ module Fetch_tb();
       2, 3:  // 25% of the time, randomize actual_taken
         actual_taken = $random % 2;
       
-      4, 5:  // 25% of the time, randomize actual_target
-      actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
+      4, 5: begin // 25% of the time, randomize actual_target
+        actual_target = (actual_taken && is_branch) ? (16'h0000 + ($random % num_tests) * 2) : PC_next;
+        branch_target = ($random % num_tests) * 2; // Set the branch target to a random address.
+      end
 
       6:  // 12.5% of the time, randomize enable
         enable = $random % 2;
@@ -206,8 +208,9 @@ module Fetch_tb();
       default: begin  // 12.5% of the time, randomize everything
         is_branch = $random % 2;
         actual_taken = $random % 2;
-        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
+        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : PC_next;
         enable = $random % 2;
+        branch_target = ($random % num_tests) * 2;
       end
     endcase
   end
@@ -266,7 +269,7 @@ module Fetch_tb();
   assign mispredicted = (IF_ID_prediction[1] != actual_taken);
 
   // A target is miscomputed when the predicted target differs from the actual target.
-  assign target_miscomputed = (IF_ID_predicted_target != actual_target);
+  assign target_miscomputed = (IF_ID_predicted_target != branch_target);
 
   // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
   assign wen_BTB = (is_branch) & ((actual_taken) | (target_miscomputed));
@@ -274,8 +277,7 @@ module Fetch_tb();
   // Update BHT on every branch.
   assign wen_BHT = (is_branch);
 
-  // We update the PC to fetch the actual target when the predictor either predicted incorrectly
-  // or when the target was miscomputed and the branch was actually taken.
-  assign update_PC = (mispredicted | target_miscomputed) & (branch_taken);
+  // We update the PC to fetch the actual target when the current instruction fetched is not the same as the actual target, on a branch instruction.
+  assign update_PC = (actual_target != PC_curr) & (is_branch);
 
 endmodule

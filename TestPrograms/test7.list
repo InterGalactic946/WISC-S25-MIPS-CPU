@@ -4,17 +4,23 @@
 // hazards in a pipelined processor.                 //
 ///////////////////////////////////////////////////////
 
-// Initialize registers
+// Initialize registers and array base address
 LLB R1, 0x05      // Loop counter (R1 = 5 elements)
-LLB R2, 0x00      // Register used in branch condition (R2 = 0)
-LLB R3, 0x00      // Accumulator for addition (R3 = 0)
-LLB R4, 0x01      // Constant for incrementing (R4 = 1)
-LLB R5, 0x02      // Another constant for incrementing (R5 = 2)
+LLB R2, 0x20      // Base address of the array (R2 = 0x0020)
+LLB R3, 0x00      // Sum accumulator (R3 = 0x0000)
+LLB R4, 0x05      // Constant: 5 (for averaging)
+LLB R5, 0x01      // Increment value (R5 = 1)
+LLB R9, 0x02      // Increment value (R9 = 2)
+
+
+// Load array values into memory (initialization)
+LLB R6, 0x22      // Array element 1
+SW R6, R2, 0      // Store 0x0003 at memory[0x0020]
 
 // Test Register Hazard with LW (load word instruction)
 TEST_LW_HAZARD:
-    LW R2, R1, 0    // Load value from memory[0x00] into R2 (e.g., R2 = value from address 0)
-    BR 000, R2      // Branch if Not Equal (Z = 0) → should branch if R2 != 0
+    LW R3, R2, 0    // Load value from memory[0x20] into R3 (e.g., R3 = value from address 0)
+    BR 000, R3      // Branch if Not Equal (Z = 0) → should branch if R2 != 0
 
     // Code after branch (if branch not taken)
     ADD R3, R3, R4  // This should execute if branch not taken

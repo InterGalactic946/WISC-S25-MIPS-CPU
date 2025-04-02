@@ -198,8 +198,8 @@ module Fetch_tb();
         actual_taken = $random % 2;
       
       4, 5: begin // 25% of the time, randomize actual_target
-        actual_target = (actual_taken && is_branch) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
-        branch_target = (16'h0000 + ($random % num_tests) * 2); // Set the branch target to a random address.
+        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
+        branch_target = actual_target; // Set the branch target to a random address.
       end
 
       6:  // 12.5% of the time, randomize enable
@@ -210,7 +210,7 @@ module Fetch_tb();
         actual_taken = $random % 2;
         actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
         enable = $random % 2;
-        branch_target = (16'h0000 + ($random % num_tests) * 2);
+        branch_target = actual_target;
       end
     endcase
   end
@@ -278,6 +278,6 @@ module Fetch_tb();
   assign wen_BHT = (is_branch);
 
   // We update the PC to fetch the actual target when the current instruction fetched is not the same as the actual target, on a branch instruction.
-  assign update_PC = (actual_target != PC_curr) & (is_branch);
+  assign update_PC = (actual_target !== PC_curr) & (is_branch);
 
 endmodule

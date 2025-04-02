@@ -69,15 +69,15 @@ SUB R13, R4, R5    // R13 = 5 - 1 = 4
 BR 010, R13        // Branch if Greater Than (Z = 0, N = 0) → should branch
 
 // Code to execute if branch was taken
-ADD R16, R3, R4    // R16 = Sum + 5 (should execute if branch taken)
+ADD R7, R3, R4     // R7 = Sum + 5 (should execute if branch taken)
 
 // Test BR branch for Less Than (N = 1, should not branch)
 SUB R13, R4, R5    // R13 = 5 - 1 = 4
 BR 011, R13        // Branch if Less Than (N = 1) → should not branch
 
 // Code to execute if branch was not taken
-ADD R17, R3, R4    // R17 = Sum + 5 (should execute if branch not taken)
+ADD R6, R3, R4     // R6 = Sum + 5 (should execute if branch not taken)
 
 BRANCH_SKIP:
-PCS R18            // Store PC in R18 to verify correctness
+PCS R0             // Store PC in R0 to verify correctness
 HLT                // Halt execution

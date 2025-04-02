@@ -8,17 +8,17 @@
 // predictions based on the branch PC address.             //
 /////////////////////////////////////////////////////////////
 module BHT (
-    input wire clk,                    // System clock
-    input wire rst,                    // active high reset signal
-    input wire [3:0] PC_curr,          // 4-bit address (lower 4-bits of current PC from the fetch stage)
-    input wire [3:0] IF_ID_PC_curr,    // Pipelined 4-bit address (lower 4-bits of previous PC from the fetch stage)
-    input wire [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
-    input wire wen,                    // used to update the BTB memory on a misprediction
-    input wire enable,                 // Enable signal for the BHT
-    input wire actual_taken,           // Actual taken value (from the decode stage)
+    input wire clk,                     // System clock
+    input wire rst,                     // active high reset signal
+    input wire [15:0] PC_curr,          // Current PC from the fetch stage
+    input wire [15:0] IF_ID_PC_curr,    // Pipelined previous PC from the fetch stage
+    input wire [1:0] IF_ID_prediction,  // The predicted value of the previous branch instruction
+    input wire wen,                     // used to update the BTB memory on a misprediction
+    input wire enable,                  // Enable signal for the BHT
+    input wire actual_taken,            // Actual taken value (from the decode stage)
     
-    output wire taken,                 // Indicates if the branch is predicted taken (1) or not (0)
-    output wire [1:0] prediction       // The 2-bit predicted value of the current branch instruction.
+    output wire taken,                  // Indicates if the branch is predicted taken (1) or not (0)
+    output wire [1:0] prediction        // The 2-bit predicted value of the current branch instruction.
   );
 
   ///////////////////////////////////////////

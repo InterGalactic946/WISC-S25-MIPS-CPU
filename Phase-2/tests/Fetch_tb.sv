@@ -198,7 +198,7 @@ module Fetch_tb();
         actual_taken = $random % 2;
       
       4, 5: begin // 25% of the time, randomize actual_target
-        actual_target = (actual_taken && is_branch) ? (16'h0000 + ($random % num_tests) * 2) : PC_next;
+        actual_target = (actual_taken && is_branch) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
         branch_target = ($random % num_tests) * 2; // Set the branch target to a random address.
       end
 
@@ -208,7 +208,7 @@ module Fetch_tb();
       default: begin  // 12.5% of the time, randomize everything
         is_branch = $random % 2;
         actual_taken = $random % 2;
-        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : PC_next;
+        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
         enable = $random % 2;
         branch_target = ($random % num_tests) * 2;
       end

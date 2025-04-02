@@ -13,6 +13,7 @@
 module Decode (
     input wire clk,                       // System clock
     input wire rst,                       // Active high synchronous reset
+    input wire [15:0] pc_curr,            // The current fetched PC value
     input wire [15:0] pc_inst,            // The current instruction word
     input wire [15:0] pc_next,            // The next instruction's address
     input wire [2:0] flags,               // Flag register signals (ZF, VF, NF)
@@ -28,10 +29,11 @@ module Decode (
     
     output wire is_branch,                // Indicates a branch instruction
     output wire is_BR,                    // Indicates a branch register instruction
-    output wire [15:0] actual_target,     // Computed actual target address
-    output wire actual_taken,             // Signal used to determine whether an instruction met condition codes
-    output wire wen_BTB,                  // Write enable for BTB (Branch Target Buffer)
+    output wire actual_taken,             // Signal used to determine whether branch instruction met condition codes
     output wire wen_BHT,                  // Write enable for BHT (Branch History Table)
+    output wire [15:0] branch_target,     // 16-bit address of the branch target
+    output wire wen_BTB,                  // Write enable for BTB (Branch Target Buffer)
+    output wire [15:0] actual_target,     // 16-bit address of the actual target
     output wire update_PC                 // Signal to update the PC with the actual target
   );
   
@@ -39,8 +41,8 @@ module Decode (
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
   /////////////////////////// DECODE INSTRUCTION SIGNALS //////////////////////////
-  wire [3:0] opcode;        // Opcode of the instruction
-  wire is_NOP;              // Indicates a NOP instruction
+  wire [3:0] opcode;         // Opcode of the instruction
+  wire is_NOP;               // Indicates a NOP instruction
   /********************************** REGFILE Signals ******************************/
   wire [3:0] reg_rs;         // Register ID of the first source register extracted from the instruction
   wire [3:0] reg_rt;         // Register ID of the second source register extracted from the instruction
@@ -88,15 +90,8 @@ module Decode (
   // Instantiate the Control Unit.
   ControlUnit iCC (
     .Opcode(opcode),
-    .actual_taken(actual_taken),
-    .IF_ID_predicted_taken(IF_ID_predicted_taken),
-    .IF_ID_predicted_target(IF_ID_predicted_target),
-    .actual_target(actual_target),
     
     .Branch(is_branch),
-    .wen_BTB(wen_BTB),
-    .wen_BHT(wen_BHT),
-    .update_PC(update_PC),
     
     .ALUOp(ALUOp),
     .ALUSrc(ALUSrc),
@@ -110,7 +105,7 @@ module Decode (
     .MemtoReg(MemToReg),
     .HLT(HLT),
     .PCS(PCS)
-    );
+  );
   //////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////
@@ -138,16 +133,24 @@ module Decode (
   // Get the condition codes to determine if branch is taken or not.
   assign c_codes = pc_inst[11:9];
 
+  // We update the PC to fetch the actual target when the current instruction fetched is not the same as the actual target.
+  assign update_PC = pc_curr != actual_target;
+
   // Instantiate the Branch Control Unit.
   Branch_Control iBC (
       .C(c_codes),
       .I(Branch_imm),
       .F(flags),
-      .Rs(SrcReg1_data),
+      .Rs_data(SrcReg1_data),
+      .Branch(is_branch),
       .BR(is_BR),
+      .IF_ID_predicted_target(IF_ID_predicted_target),
       .PC_next(pc_next),
       
       .taken(actual_taken),
+      .wen_BHT(wen_BHT),
+      .PC_branch(branch_target),
+      .wen_BTB(wen_BTB),
       .actual_target(actual_target)
   );
   ////////////////////////////////////////////////////////////////////////

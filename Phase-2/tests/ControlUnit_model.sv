@@ -10,15 +10,8 @@
 
 module ControlUnit_model (
     input logic [3:0] Opcode,                  // Opcode of the current instruction
-    input logic actual_taken,                  // Indicates if the branch was actually taken
-    input logic IF_ID_predicted_taken,         // Predicted taken value from the branch predictor
-    input logic [15:0] IF_ID_predicted_target, // Predicted target address from the branch predictor of the previous instruction
-    input logic [15:0] actual_target,          // Actual target address computed by the ALU
     
     output logic Branch,                       // Indicates if the current instruction is a branch
-    output logic wen_BTB,                      // Write enable for Branch Target Buffer (BTB)
-    output logic wen_BHT,                      // Write enable for Branch History Table (BHT)
-    output logic update_PC,                    // Signal to update the PC with the actual target
 
     output logic [3:0] ALUOp,                  // Control lines for the ALU to determine its operation
     output logic ALUSrc,                       // Determines if the ALU uses an immediate or register value
@@ -34,14 +27,6 @@ module ControlUnit_model (
     output logic HLT,                          // Signal to halt the execution
     output logic PCS                          // Signal to indicate a PCS (Program Counter Shift)
 );
-
-    /////////////////////////////////////////////////
-    // Internal signals to track branch and target //
-    /////////////////////////////////////////////////
-    logic mispredicted;        // Indicates if the previous instruction was mispredicted
-    logic target_miscomputed;  // Indicates if the target address was miscomputed
-    logic branch_taken;        // Indicates if the branch was actually taken
-    ////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////
     // Generate control signals by decoding the opcode //
@@ -60,12 +45,6 @@ module ControlUnit_model (
         ALUOp = Opcode;
         Z_en = 1'b0;    
         NV_en = 1'b0; 
-        branch_taken = 1'b0;
-        mispredicted = 1'b0;
-        target_miscomputed = 1'b0;
-        wen_BTB = 1'b0;
-        wen_BHT = 1'b0;
-        update_PC = 1'b0;
 
         // Decode control signals based on the opcode
         case (Opcode)
@@ -101,24 +80,8 @@ module ControlUnit_model (
             end
             4'b1100, 4'b1101: begin  // Branch (B, BR)
                 Branch = 1'b1;   // Indicate a branch instruction
-                branch_taken = actual_taken && Branch;  // Set branch_taken signal based on actual branch outcome
 
                 RegWrite = 1'b0; // No register write for branch instructions
-
-                // Check if there was a branch misprediction
-                mispredicted = (IF_ID_predicted_taken !== actual_taken);
-
-                // Check if there was a miscomputed target address
-                target_miscomputed = (IF_ID_predicted_target !== actual_target);
-
-                // Write to BTB if it was branch and if target address was miscomputed
-                wen_BTB = (target_miscomputed) && Branch;
-
-                // Write to BHT for every branch instruction
-                wen_BHT = Branch;
-
-                // Update PC if misprediction or miscomputed target occurred
-                update_PC = (mispredicted || target_miscomputed) && Branch;
             end
             4'b1110: begin  // PCS (Program Counter Shift)
                 PCS = 1'b1;   // Enable PCS operation
@@ -141,12 +104,6 @@ module ControlUnit_model (
                 ALUOp = Opcode;
                 Z_en = 1'b0;    
                 NV_en = 1'b0; 
-                branch_taken = 1'b0;
-                mispredicted = 1'b0;
-                target_miscomputed = 1'b0;
-                wen_BTB = 1'b0;
-                wen_BHT = 1'b0;
-                update_PC = 1'b0;
             end
         endcase
     end

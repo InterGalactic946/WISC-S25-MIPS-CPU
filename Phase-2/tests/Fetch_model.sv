@@ -7,11 +7,12 @@ module Fetch_model (
     input logic clk,                    // System clock
     input logic rst,                    // Active high synchronous reset
     input logic stall,                  // Stall signal for the PC (from the hazard detection unit)
-    input logic [15:0] actual_target,   // Target address for branch instructions (from the decode stage)
-    input logic actual_taken,           // Indicates whether the branch is actually taken (from the decode stage)
-    input logic wen_BTB,                // Write enable for BTB (Branch Target Buffer) (from the decode stage)
-    input logic wen_BHT,                // Write enable for BHT (Branch History Table) (from the decode stage)
-    input logic update_PC,              // Signal to update the PC with the actual target (from the decode stage)
+    input logic actual_taken,           // Signal used to determine whether branch instruction met condition codes
+    input logic wen_BHT,                // Write enable for BHT (Branch History Table)
+    input logic [15:0] branch_target,   // 16-bit address of the branch target
+    input logic wen_BTB,                // Write enable for BTB (Branch Target Buffer)
+    input logic [15:0] actual_target,   // 16-bit address of the actual target
+    input logic update_PC,              // Signal to update the PC with the actual target
     input logic [15:0] IF_ID_PC_curr,   // Pipelined lower 4-bits of previous PC value (from the fetch stage)
     input logic [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
     
@@ -51,7 +52,7 @@ module Fetch_model (
     .wen_BTB(wen_BTB),
     .wen_BHT(wen_BHT),
     .actual_taken(actual_taken),
-    .actual_target(actual_target),  
+    .actual_target(branch_target),  
     
     .prediction(prediction), 
     .predicted_target(predicted_target)

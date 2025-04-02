@@ -33,13 +33,14 @@ module cpu_model (clk, rst_n, hlt, pc);
   logic [15:0] IF_ID_predicted_target; // Pipelined branch predicted target address (previous predicted_target) from the fetch stage
 
   /* DECODE stage signals */
-  logic [15:0] actual_target; // Computed actual target address
-  logic actual_taken;         // Signal used to determine whether an instruction met condition codes
-  logic wen_BTB;              // Write enable for BTB (Branch Target Buffer)
-  logic wen_BHT;              // Write enable for BHT (Branch History Table)
-  logic update_PC;            // Signal to update the PC with the actual target
   logic Branch;               // Indicates it is a branch instruction
   logic BR;                   // Indicates it is a branch register instruction
+  logic actual_taken;         // Signal used to determine whether an instruction met condition codes
+  logic wen_BHT;              // Write enable for BHT (Branch History Table)
+  logic branch_target;        // Computed branch target address
+  logic wen_BTB;              // Write enable for BTB (Branch Target Buffer)
+  logic [15:0] actual_target; // Computed actual target address
+  logic update_PC;            // Signal to update the PC with the actual target
   logic [62:0] EX_signals;    // Execute stage control signals
   logic [17:0] MEM_signals;   // Memory stage control signals
   logic [7:0] WB_signals;     // Write-back stage control signals
@@ -113,22 +114,23 @@ module cpu_model (clk, rst_n, hlt, pc);
   // FETCH instruction from PC  //
   ////////////////////////////////
   Fetch_model iFETCH (
-      .clk(clk), 
-      .rst(rst), 
-      .stall(PC_stall), 
-      .actual_target(actual_target), 
-      .actual_taken(actual_taken), 
-      .wen_BTB(wen_BTB),
-      .wen_BHT(wen_BHT),
-      .update_PC(update_PC),
-      .IF_ID_PC_curr(IF_ID_PC_curr),
-      .IF_ID_prediction(IF_ID_prediction), 
+    .clk(clk), 
+    .rst(rst), 
+    .stall(PC_stall), 
+    .actual_taken(actual_taken),
+    .wen_BHT(wen_BHT),
+    .branch_target(branch_target),
+    .wen_BTB(wen_BTB),
+    .actual_target(actual_target),
+    .update_PC(update_PC),
+    .IF_ID_PC_curr(IF_ID_PC_curr),
+    .IF_ID_prediction(IF_ID_prediction), 
       
-      .PC_next(PC_next), 
-      .PC_inst(PC_inst), 
-      .PC_curr(pc),
-      .prediction(prediction),
-      .predicted_target(predicted_target)
+    .PC_next(PC_next), 
+    .PC_inst(PC_inst), 
+    .PC_curr(pc),
+    .prediction(prediction),
+    .predicted_target(predicted_target)
   );
   ///////////////////////////////////
 
@@ -160,6 +162,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   Decode_model iDECODE (
     .clk(clk),
     .rst(rst),
+    .pc_curr(pc),
     .pc_inst(IF_ID_PC_inst),
     .pc_next(IF_ID_PC_next),
     .flags({ZF, VF, NF}), 
@@ -175,10 +178,11 @@ module cpu_model (clk, rst_n, hlt, pc);
 
     .is_branch(Branch),
     .is_BR(BR),
-    .actual_target(actual_target),
     .actual_taken(actual_taken),
-    .wen_BTB(wen_BTB),
     .wen_BHT(wen_BHT),
+    .branch_target(branch_target),
+    .wen_BTB(wen_BTB),
+    .actual_target(actual_target),
     .update_PC(update_PC)
   );
   ///////////////////////////////////////////////////////////////////////////

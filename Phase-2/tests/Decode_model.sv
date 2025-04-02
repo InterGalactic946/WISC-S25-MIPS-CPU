@@ -7,6 +7,7 @@
 module Decode_model (
     input logic clk,                       // System clock
     input logic rst,                       // Active high synchronous reset
+    input logic [15:0] pc_curr,            // The current fetched PC value
     input logic [15:0] pc_inst,            // The current instruction word
     input logic [15:0] pc_next,            // The next instruction's address
     input logic [2:0] flags,               // Flag register signals (ZF, VF, NF)
@@ -22,10 +23,11 @@ module Decode_model (
     
     output logic is_branch,                // Indicates a branch instruction
     output logic is_BR,                    // Indicates a branch register instruction
-    output logic [15:0] actual_target,     // Computed actual target address
-    output logic actual_taken,             // Signal used to determine whether an instruction met condition codes
-    output logic wen_BTB,                  // Write enable for BTB (Branch Target Buffer)
+    output logic actual_taken,             // Signal used to determine whether branch instruction met condition codes
     output logic wen_BHT,                  // Write enable for BHT (Branch History Table)
+    output logic [15:0] branch_target,     // 16-bit address of the branch target
+    output logic wen_BTB,                  // Write enable for BTB (Branch Target Buffer)
+    output logic [15:0] actual_target,     // 16-bit address of the actual target
     output logic update_PC                 // Signal to update the PC with the actual target
   );
   
@@ -82,15 +84,8 @@ module Decode_model (
   // Instantiate the Control Unit.
   ControlUnit_model iCC (
     .Opcode(opcode),
-    .actual_taken(actual_taken),
-    .IF_ID_predicted_taken(IF_ID_predicted_taken),
-    .IF_ID_predicted_target(IF_ID_predicted_target),
-    .actual_target(actual_target),
     
     .Branch(is_branch),
-    .wen_BTB(wen_BTB),
-    .wen_BHT(wen_BHT),
-    .update_PC(update_PC),
     
     .ALUOp(ALUOp),
     .ALUSrc(ALUSrc),
@@ -104,7 +99,7 @@ module Decode_model (
     .MemtoReg(MemToReg),
     .HLT(HLT),
     .PCS(PCS)
-    );
+  );
   //////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////
@@ -132,16 +127,24 @@ module Decode_model (
   // Get the condition codes to determine if branch is taken or not.
   assign c_codes = pc_inst[11:9];
 
+  // We update the PC to fetch the actual target when the current instruction fetched is not the same as the actual target.
+  assign update_PC = pc_curr != actual_target;
+
   // Instantiate the Branch Control Unit.
   Branch_Control_model iBC (
       .C(c_codes),
       .I(Branch_imm),
       .F(flags),
-      .Rs(SrcReg1_data),
+      .Rs_data(SrcReg1_data),
+      .Branch(is_branch),
       .BR(is_BR),
+      .IF_ID_predicted_target(IF_ID_predicted_target),
       .PC_next(pc_next),
       
       .taken(actual_taken),
+      .wen_BHT(wen_BHT),
+      .PC_branch(branch_target),
+      .wen_BTB(wen_BTB),
       .actual_target(actual_target)
   );
   ////////////////////////////////////////////////////////////////////////

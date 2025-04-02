@@ -11,15 +11,8 @@
 ///////////////////////////////////////////////////////////
 module ControlUnit (
     input wire [3:0] Opcode,                  // Opcode of the current instruction
-    input wire actual_taken,                  // Indicates if the branch was actually taken
-    input wire IF_ID_predicted_taken,         // Predicted taken value from the branch predictor
-    input wire [15:0] IF_ID_predicted_target, // Predicted target address from the branch predictor of the previous instruction
-    input wire [15:0] actual_target,          // Actual target address computed by the ALU
     
     output wire Branch,                       // Used to signal that the PC fetched a branch instruction
-    output wire wen_BTB,                      // Write enable for BTB (Branch Target Buffer)
-    output wire wen_BHT,                      // Write enable for BHT (Branch History Table)
-    output wire update_PC,                    // Signal to update the PC with the actual target
 
     output wire [3:0] ALUOp,                  // Control lines into the ALU to allow for the unit to determine its operation
     output wire ALUSrc,                       // Determines whether to use the immediate or register-value as the ALU input
@@ -36,14 +29,6 @@ module ControlUnit (
     output wire PCS                          // Used to signal a PCS instruction
 );
 
-    /////////////////////////////////////////////////
-    // Declare any internal signals as type wire  //
-    ///////////////////////////////////////////////
-    wire mispredicted;        // Indicates previous instruction's fetch mispredicted.
-    wire target_miscomputed;  // Indicates previous instruction's fetch miscomputed the target.
-    wire branch_taken;        // Indicates branch was actually taken.
-    ////////////////////////////////////////////////
-
     //////////////////////////////////////////////////////
     // Generate control signals by decoding the opcode //
     ////////////////////////////////////////////////////
@@ -53,25 +38,6 @@ module ControlUnit (
     /////////////////////
     // Branch is only 1 for B and BR
     assign Branch = Opcode[3] & Opcode[2] & ~Opcode[1];
-
-    // Indicates branch is actually taken.
-    assign branch_taken = (Branch & actual_taken);
-
-    // It is mispredicted when the predicted taken value doesn't match the actual taken value.
-    assign mispredicted = (IF_ID_predicted_taken != actual_taken);
-
-    // A target is miscomputed when the predicted target differs from the actual target.
-    assign target_miscomputed = (IF_ID_predicted_target != actual_target);
-
-    // Update BTB whenever the it is a branch and when the target was miscomputed.
-    assign wen_BTB = (Branch) & (target_miscomputed);
-
-    // Update BHT on every branch.
-    assign wen_BHT = Branch;
-
-    // We update the PC to fetch the actual target when the predictor either predicted incorrectly
-    // or when the target was miscomputed and it is a Branch instruction.
-    assign update_PC = (mispredicted | target_miscomputed) & (Branch);
     ////////////////////////
 
     //////////////////

@@ -21,7 +21,8 @@ module Fetch_tb();
   
   logic actual_taken;                     // Flag indicating whether the branch was actually taken
   string fetch_msg;                       // Systematically prints out the state of the instruction fetched
-  logic [15:0] actual_target;             // Actual target address of the branch
+  logic [15:0] actual_target;             // Actual target address
+  logic [15:0] branch_target;             // Actual target address for the branch instruction
   logic [1:0] IF_ID_prediction;           // Pipelined predicted signal passed to the decode stage
   logic [15:0] IF_ID_predicted_target;    // Predicted target passed to the decode stage
   logic [15:0] IF_ID_PC_curr;             // IF/ID stage current PC value
@@ -53,42 +54,44 @@ module Fetch_tb();
 
   // Instantiate the DUT: Dynamic Branch Predictor.
   Fetch iDUT (
-      .clk(clk), 
-      .rst(rst), 
-      .stall(enable), 
-      .actual_target(actual_target), 
-      .actual_taken(actual_taken), 
-      .wen_BTB(wen_BTB),
-      .wen_BHT(wen_BHT),
-      .update_PC(update_PC),
-      .IF_ID_PC_curr(IF_ID_PC_curr[3:0]),
-      .IF_ID_prediction(IF_ID_prediction), 
+    .clk(clk), 
+    .rst(rst), 
+    .stall(PC_stall), 
+    .actual_taken(actual_taken),
+    .wen_BHT(wen_BHT),
+    .branch_target(branch_target),
+    .wen_BTB(wen_BTB),
+    .actual_target(actual_target),
+    .update_PC(update_PC),
+    .IF_ID_PC_curr(IF_ID_PC_curr),
+    .IF_ID_prediction(IF_ID_prediction), 
       
-      .PC_next(PC_next), 
-      .PC_inst(PC_inst), 
-      .PC_curr(PC_curr),
-      .prediction(prediction),
-      .predicted_target(predicted_target)
+    .PC_next(PC_next), 
+    .PC_inst(PC_inst), 
+    .PC_curr(pc),
+    .prediction(prediction),
+    .predicted_target(predicted_target)
   );
 
   // Instantiate the model fetch unit.
   Fetch_model iFETCH (
-      .clk(clk), 
-      .rst(rst), 
-      .stall(enable), 
-      .actual_target(actual_target), 
-      .actual_taken(actual_taken), 
-      .wen_BTB(wen_BTB),
-      .wen_BHT(wen_BHT),
-      .update_PC(update_PC),
-      .IF_ID_PC_curr(IF_ID_PC_curr),
-      .IF_ID_prediction(IF_ID_prediction), 
+    .clk(clk), 
+    .rst(rst), 
+    .stall(PC_stall), 
+    .actual_taken(actual_taken),
+    .wen_BHT(wen_BHT),
+    .branch_target(branch_target),
+    .wen_BTB(wen_BTB),
+    .actual_target(actual_target),
+    .update_PC(update_PC),
+    .IF_ID_PC_curr(IF_ID_PC_curr),
+    .IF_ID_prediction(IF_ID_prediction), 
       
-      .PC_next(expected_PC_next), 
-      .PC_inst(expected_PC_inst), 
-      .PC_curr(expected_PC_curr),
-      .prediction(expected_prediction),
-      .predicted_target(expected_predicted_target)
+    .PC_next(PC_next), 
+    .PC_inst(PC_inst), 
+    .PC_curr(pc),
+    .prediction(prediction),
+    .predicted_target(predicted_target)
   );
 
   // At negative edge of clock, verify the predictions match the model.
@@ -131,6 +134,7 @@ module Fetch_tb();
       is_branch = 1'b0;        // Initially no branch
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
+      branch_target = 16'h0000; // Set target to 0 initially
       IF_ID_PC_curr = 16'h0000;    // Start with PC = 0
       IF_ID_prediction = 2'b00; // Start with strongly not taken prediction (prediction[1] = 0)
       fetch_msg = "";

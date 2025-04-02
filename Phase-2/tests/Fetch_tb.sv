@@ -266,10 +266,10 @@ module Fetch_tb();
   assign branch_taken = (is_branch & actual_taken);
 
   // It is mispredicted when the predicted taken value doesn't match the actual taken value.
-  assign mispredicted = (IF_ID_prediction[1] != actual_taken);
+  assign mispredicted = (IF_ID_prediction[1] !== actual_taken);
 
   // A target is miscomputed when the predicted target differs from the actual target.
-  assign target_miscomputed = (IF_ID_predicted_target != branch_target);
+  assign target_miscomputed = (IF_ID_predicted_target !== branch_target);
 
   // Update BTB whenever the it is a branch and it is actually taken or when the target was miscomputed.
   assign wen_BTB = (is_branch) & ((actual_taken) | (target_miscomputed));

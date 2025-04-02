@@ -279,6 +279,6 @@ module DynamicBranchPredictor_tb();
 
   // We update the PC to fetch the actual target when the predictor either predicted incorrectly
   // or when the target was miscomputed and the branch was actually taken.
-  assign update_PC = (mispredicted | target_miscomputed) & (branch_taken);
+  assign update_PC = (PC_curr !== actual_target) && (is_branch);
 
 endmodule

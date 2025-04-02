@@ -73,7 +73,7 @@ package Verification_tasks;
 
           // Verify the prediction.
           if (prediction !== expected_prediction) begin
-              fetch_msg = $sformatf("[FETCH] ERROR: prediction: %b, expected_prediction: %b.", prediction, expected_prediction);
+              fetch_msg = $sformatf("[FETCH] ERROR: predicted_taken: %b, expected_predicted_taken: %b.", prediction[1], expected_prediction[1]);
               return;  // Exit task on error
           end
 

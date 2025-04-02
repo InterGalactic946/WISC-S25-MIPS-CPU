@@ -66,7 +66,7 @@ module DynamicBranchPredictor_model (
   assign tags_match = (PC_curr[15:4] == BHT[PC_curr[3:1]].PC_addr[15:4]);
 
   // If the tags match, use the prediction; otherwise, assume not taken.
-  assign taken = (tags_match) ? BHT[PC_curr[3:1]].prediction[1] : 1'b0; 
+  assign taken = (tags_match) ? prediction[1] : 1'b0; 
 
   // Asynchronously read out the target when read enabled.
   assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]].target : 16'h0000;

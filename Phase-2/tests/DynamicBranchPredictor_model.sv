@@ -64,7 +64,7 @@ module DynamicBranchPredictor_model (
   assign addr = (wen_BHT) ? IF_ID_PC_curr : PC_curr;
 
   // Asynchronously read out the prediction when read enabled.
-  assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]].prediction : 2'h0;
+  assign prediction = (enable & ~wen_BHT) ? BHT[addr[3:1]].prediction : 2'h0;
 
   // Compare the tags of the current PC and previous PC address in the cache to determine if they match.
   assign tags_match = (addr[15:4] == BHT[addr[3:1]].PC_addr[15:4]);

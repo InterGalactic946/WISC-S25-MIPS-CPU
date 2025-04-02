@@ -67,7 +67,7 @@ module DynamicBranchPredictor_model (
   assign prediction = (enable & ~wen_BHT) ? BHT[addr[3:1]].prediction : 2'h0;
 
   // Compare the tags of the current PC and previous PC address in the cache to determine if they match.
-  assign tags_match = (addr[15:4] == BHT[addr[3:1]].PC_addr[15:4]);
+  assign tags_match = (addr[15:4] === BHT[addr[3:1]].PC_addr[15:4]);
 
   // If the tags match, use the prediction; otherwise, assume not taken.
   assign predicted_taken = (tags_match) ? prediction[1] : 1'b0; 

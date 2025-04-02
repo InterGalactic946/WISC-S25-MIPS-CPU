@@ -37,6 +37,9 @@ module DynamicBranchPredictor_model (
   ////////////////////////////////////////
   // Model the Dynamic Branch Predictor //
   ////////////////////////////////////////
+  // Our read address is PC_curr while our write address is IF_ID_PC_curr.
+  assign addr = (wen_BHT || wen_BTB) ? IF_ID_PC_curr : PC_curr;
+
   // Model the BTB/BHT memory.
   always @(posedge clk) begin
       if (rst) begin
@@ -48,20 +51,17 @@ module DynamicBranchPredictor_model (
       else begin
           // Update BHT entry if needed (for example, on a misprediction)
           if (enable && wen_BHT) begin
-              BHT[IF_ID_PC_curr[3:1]].PC_addr  <= IF_ID_PC_curr;        // Store the PC address
-              BHT[IF_ID_PC_curr[3:1]].prediction <= updated_prediction; // Store the 2-bit prediction along with the tag
+              BHT[addr[3:1]].PC_addr  <= IF_ID_PC_curr;        // Store the PC address
+              BHT[addr[3:1]].prediction <= updated_prediction; // Store the 2-bit prediction along with the tag
           end
 
           // Update BTB entry if needed (when a branch is taken)
           if (enable && wen_BTB) begin
-              BTB[IF_ID_PC_curr[3:1]].PC_addr <= IF_ID_PC_curr;  // Store the PC address
-              BTB[IF_ID_PC_curr[3:1]].target  <= actual_target;  // Store the target address
+              BTB[addr[3:1]].PC_addr <= IF_ID_PC_curr;  // Store the PC address
+              BTB[addr[3:1]].target  <= actual_target;  // Store the target address
           end
       end
   end
-
-  // Our read address is PC_curr while our write address is IF_ID_PC_curr.
-  assign addr = (wen_BHT) ? IF_ID_PC_curr : PC_curr;
 
   // Asynchronously read out the prediction when read enabled.
   assign prediction = (enable & ~wen_BHT) ? BHT[addr[3:1]].prediction : 2'h0;
@@ -73,7 +73,7 @@ module DynamicBranchPredictor_model (
   assign predicted_taken = (tags_match) ? prediction[1] : 1'b0; 
 
   // Asynchronously read out the target when read enabled.
-  assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]].target : 16'h0000;
+  assign predicted_target = (enable & ~wen_BTB) ? BTB[addr[3:1]].target : 16'h0000;
   //////////////////////////////////////////
 
   /////////////////////////////////

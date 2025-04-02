@@ -20,7 +20,7 @@ module Fetch (
     input wire wen_BTB,                // Write enable for BTB (Branch Target Buffer)
     input wire [15:0] actual_target,   // 16-bit address of the actual target
     input wire update_PC,              // Signal to update the PC with the actual target
-    input logic [15:0] IF_ID_PC_curr,  // Pipelined previous PC value (from the fetch stage)
+    input wire [15:0] IF_ID_PC_curr,   // Pipelined previous PC value (from the fetch stage)
     input wire [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
     
     output wire [15:0] PC_next,         // Computed next PC value

@@ -68,7 +68,7 @@ module Fetch_tb();
       
     .PC_next(PC_next), 
     .PC_inst(PC_inst), 
-    .PC_curr(pc),
+    .PC_curr(PC_curr),
     .prediction(prediction),
     .predicted_target(predicted_target)
   );
@@ -87,11 +87,11 @@ module Fetch_tb();
     .IF_ID_PC_curr(IF_ID_PC_curr),
     .IF_ID_prediction(IF_ID_prediction), 
       
-    .PC_next(PC_next), 
-    .PC_inst(PC_inst), 
-    .PC_curr(pc),
-    .prediction(prediction),
-    .predicted_target(predicted_target)
+    .PC_next(expected_PC_next), 
+    .PC_inst(expected_PC_inst), 
+    .PC_curr(expected_PC_curr),
+    .prediction(expected_prediction),
+    .predicted_target(expected_predicted_target)
   );
 
   // At negative edge of clock, verify the predictions match the model.

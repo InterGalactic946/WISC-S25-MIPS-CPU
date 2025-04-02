@@ -28,6 +28,7 @@ module DynamicBranchPredictor_model (
   ///////////////////////////////////////////////
   logic [1:0] updated_prediction; // The new prediction to be stored in the BHT on an incorrect prediction.
   logic tags_match;               // Used to determine if the current PC tag matches the previous PC tag cached in BHT.
+  logic [15:0] addr;              // Used to determine read vs write address.
   logic error;                    // Error flag raised when prediction state is invalid.
   model_BHT_t BHT [0:15];         // Declare BHT
   model_BTB_t BTB [0:15];         // Declare BTB
@@ -59,11 +60,14 @@ module DynamicBranchPredictor_model (
       end
   end
 
+  // Our read address is PC_curr while our write address is IF_ID_PC_curr.
+  assign addr = (wen_BHT) ? IF_ID_PC_curr : PC_curr;
+
   // Asynchronously read out the prediction when read enabled.
   assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]].prediction : 2'h0;
 
-    // Compare the tags of the current PC and previous PC address in the cache to determine if they match.
-  assign tags_match = (PC_curr[15:4] == BHT[PC_curr[3:1]].PC_addr[15:4]);
+  // Compare the tags of the current PC and previous PC address in the cache to determine if they match.
+  assign tags_match = (addr[15:4] == BHT[addr[3:1]].PC_addr[15:4]);
 
   // If the tags match, use the prediction; otherwise, assume not taken.
   assign predicted_taken = (tags_match) ? prediction[1] : 1'b0; 
@@ -79,10 +83,10 @@ module DynamicBranchPredictor_model (
       error = 1'b0;              // Default error state.
       updated_prediction = 2'h0; // Default predict not taken.
       case (IF_ID_prediction)
-          2'h0: updated_prediction = (actual_taken) ? 2'h1 : 2'h0; // Strong Not Taken
-          2'h1: updated_prediction = (actual_taken) ? 2'h2 : 2'h1; // Weak Not Taken
-          2'h2: updated_prediction = (actual_taken) ? 2'h3 : 2'h2; // Weak Taken
-          2'h3: updated_prediction = (actual_taken) ? 2'h3 : 2'h2; // Strong Taken
+          2'h0: updated_prediction = (tags_match) ? ((actual_taken) ? 2'h1 : 2'h0) : 2'h0; // Strong Not Taken (invalidate if tags don't match).
+          2'h1: updated_prediction = (tags_match) ? ((actual_taken) ? 2'h2 : 2'h1) : 2'h0; // Weak Not Taken (invalidate if tags don't match).
+          2'h2: updated_prediction = (tags_match) ? ((actual_taken) ? 2'h3 : 2'h2) : 2'h0; // Weak Taken (invalidate if tags don't match).
+          2'h3: updated_prediction = (tags_match) ? ((actual_taken) ? 2'h3 : 2'h2) : 2'h0; // Strong Taken (invalidate if tags don't match).
           default: begin
             updated_prediction = 2'h0; // Default predict not taken.
             error = 1'b1;              // Invalid prediction state.

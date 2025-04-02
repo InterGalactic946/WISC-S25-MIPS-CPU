@@ -26,7 +26,7 @@ module BHT (
   ///////////////////////////////////////////
   reg [15:0] updated_prediction;  // The new prediction to be stored in the BHT on an incorrect prediction.
   wire [15:0] prediction_ext;     // The 16-bit predicted value of the current branch instruction, of which we only use lower 2-bits.
-  wire [3:0] addr;                // Used to determine read vs write address.
+  wire [15:0] addr;               // Used to determine read vs write address.
   wire tags_match;                // Used to determine if the current PC tag matches the previous PC tag cached in BHT.
   reg error;                      // Error flag raised when prediction state is invalid.
   //////////////////////////////////////////////////////////////////
@@ -40,7 +40,7 @@ module BHT (
   // Infer the branch history table as an asynchronously read, synchronously written memory, enabled when not stalling.
   memory1c #(4) iMEM_BHT (.data_out(prediction_ext),
                           .data_in(updated_prediction),
-                          .addr(addr),
+                          .addr(addr[3:0]),
                           .enable(enable),
                           .data(1'b1),
                           .wr(wen),
@@ -51,8 +51,8 @@ module BHT (
   // Output the current prediction as the lower 2 bits of the prediction_ext.
   assign prediction = prediction_ext[1:0];
 
-  // Compare the tags of the current PC and previous PC address in the cache to determine if they match.
-  assign tags_match = (PC_curr[15:4] == prediction_ext[13:2]);
+  // Compare the tags of the current PC address and previous PC address in the cache to determine if they match.
+  assign tags_match = (addr[15:4] == prediction_ext[13:2]);
 
   // If the tags match, use the prediction; otherwise, assume not taken.
   assign taken = (tags_match) ? prediction_ext[1] : 1'b0; 
@@ -66,24 +66,24 @@ module BHT (
       updated_prediction = 16'h0000; // Default predict not taken.
       case (IF_ID_prediction)
           2'h0: begin
-            updated_prediction[15:14] = 2'h0;                       // Default upper bits.
-            updated_prediction[13:2] = IF_ID_PC_curr[15:4];         // Update the tag.
-            updated_prediction[1:0] = (actual_taken) ? 2'h1 : 2'h0; // Strong Not Taken
+            updated_prediction[15:14] = 2'h0;                                               // Default upper bits.
+            updated_prediction[13:2] = IF_ID_PC_curr[15:4];                                 // Update the tag.
+            updated_prediction[1:0] = (tags_match) ? ((actual_taken) ? 2'h1 : 2'h0) : 2'h0; // Strong Not Taken (invalidate if tags don't match).
           end
           2'h1: begin
-            updated_prediction[15:14] = 2'h0;                       // Default upper bits.
-            updated_prediction[13:2] = IF_ID_PC_curr[15:4];         // Update the tag.
-            updated_prediction[1:0] = (actual_taken) ? 2'h2 : 2'h1; // Weak Not Taken
+            updated_prediction[15:14] = 2'h0;                                               // Default upper bits.
+            updated_prediction[13:2] = IF_ID_PC_curr[15:4];                                 // Update the tag.
+            updated_prediction[1:0] = (tags_match) ? ((actual_taken) ? 2'h2 : 2'h1) : 2'h0; // Weak Not Taken (invalidate if tags don't match).
           end
           2'h2: begin
-            updated_prediction[15:14] = 2'h0;                       // Default upper bits.
-            updated_prediction[13:2] = IF_ID_PC_curr[15:4];         // Update the tag.
-            updated_prediction[1:0] = (actual_taken) ? 2'h3 : 2'h2; // Weak Taken
+            updated_prediction[15:14] = 2'h0;                                               // Default upper bits.
+            updated_prediction[13:2] = IF_ID_PC_curr[15:4];                                 // Update the tag.
+            updated_prediction[1:0] = (tags_match) ? ((actual_taken) ? 2'h3 : 2'h2) : 2'h0; // Weak Taken (invalidate if tags don't match).
           end
           2'h3: begin
-            updated_prediction[15:14] = 2'h0;                       // Default upper bits.
-            updated_prediction[13:2] = IF_ID_PC_curr[15:4];         // Update the tag.
-            updated_prediction[1:0] = (actual_taken) ? 2'h3 : 2'h2; // Strong Taken
+            updated_prediction[15:14] = 2'h0;                                               // Default upper bits.
+            updated_prediction[13:2] = IF_ID_PC_curr[15:4];                                 // Update the tag.
+            updated_prediction[1:0] = (tags_match) ? ((actual_taken) ? 2'h3 : 2'h2) : 2'h0; // Strong Taken (invalidate if tags don't match).
           end
           default: begin
             updated_prediction = 16'h0000; // Default predict not taken.

@@ -80,8 +80,8 @@ module DynamicBranchPredictor_model (
       updated_prediction = 2'h0; // Default predict not taken.
       case (IF_ID_prediction)
           2'h0: updated_prediction = (actual_taken) ? 2'h1 : 2'h0; // Strong Not Taken
-          2'h1: updated_prediction = (actual_taken) ? 2'h2 : 2'h1; // Weak Not Taken
-          2'h2: updated_prediction = (actual_taken) ? 2'h3 : 2'h2; // Weak Taken
+          2'h1: updated_prediction = (actual_taken) ? 2'h2 : 2'h0; // Weak Not Taken
+          2'h2: updated_prediction = (actual_taken) ? 2'h3 : 2'h1; // Weak Taken
           2'h3: updated_prediction = (actual_taken) ? 2'h3 : 2'h2; // Strong Taken
           default: begin
             updated_prediction = 2'h0; // Default predict not taken.

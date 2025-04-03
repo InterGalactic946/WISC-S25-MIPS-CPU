@@ -73,12 +73,12 @@ module BHT (
           2'h1: begin
             updated_prediction[15:14] = 2'h0;                       // Default upper bits.
             updated_prediction[13:2] = IF_ID_PC_curr[15:4];         // Update the tag.
-            updated_prediction[1:0] = (actual_taken) ? 2'h2 : 2'h1; // Weak Not Taken
+            updated_prediction[1:0] = (actual_taken) ? 2'h2 : 2'h0; // Weak Not Taken
           end
           2'h2: begin
             updated_prediction[15:14] = 2'h0;                       // Default upper bits.
             updated_prediction[13:2] = IF_ID_PC_curr[15:4];         // Update the tag.
-            updated_prediction[1:0] = (actual_taken) ? 2'h3 : 2'h2; // Weak Taken
+            updated_prediction[1:0] = (actual_taken) ? 2'h3 : 2'h1; // Weak Taken
           end
           2'h3: begin
             updated_prediction[15:14] = 2'h0;                       // Default upper bits.

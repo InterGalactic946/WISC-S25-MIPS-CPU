@@ -11,10 +11,10 @@ module DynamicBranchPredictor_model (
     input logic rst,                      // Active high reset signal
     input logic [15:0] PC_curr,           // Current PC address
     input logic [15:0] IF_ID_PC_curr,     // Pipelined previous PC address
-    input wire [1:0] IF_ID_prediction,    // The predicted value of the previous branch instruction.
+    input logic [1:0] IF_ID_prediction,   // The predicted value of the previous branch instruction.
     input logic enable,                   // Enable signal for the DynamicBranchPredictor
-    input wire wen_BTB,                   // Write enable for BTB (Branch Target Buffer) (from the decode stage)
-    input wire wen_BHT,                   // Write enable for BHT (Branch History Table) (from the decode stage)
+    input logic wen_BTB,                  // Write enable for BTB (Branch Target Buffer) (from the decode stage)
+    input logic wen_BHT,                  // Write enable for BHT (Branch History Table) (from the decode stage)
     input logic actual_taken,             // Actual branch taken value (from the decode stage)
     input logic [15:0] actual_target,     // Actual target address for the branch (from the decode stage)
 
@@ -22,11 +22,17 @@ module DynamicBranchPredictor_model (
     output logic [1:0] prediction,        // 2-bit Predicted branch signal (from BHT)
     output logic [15:0] predicted_target  // Predicted target address (from BTB)
 );
+  
+  ///////////////////////////////////////
+  // Declare state types as enumerated //
+  ///////////////////////////////////////
+  typedef enum logic [1:0] {STRONG_NOT_TAKEN, WEAK_NOT_TAKEN, WEAK_TAKEN, STRONG_TAKEN} state_t;
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  logic [1:0] updated_prediction; // The new prediction to be stored in the BHT on an incorrect prediction.
+  state_t prev_prediction;        // Holds the previous prediction.
+  state_t updated_prediction;     // The new prediction to be stored in the BHT on an incorrect prediction.
   logic tags_match;               // Used to determine if the current PC tag matches the previous PC tag cached in BHT.
   logic error;                    // Error flag raised when prediction state is invalid.
   model_BHT_t BHT [0:15];         // Declare BHT
@@ -75,17 +81,20 @@ module DynamicBranchPredictor_model (
   /////////////////////////////////
   // Model the prediction states //
   /////////////////////////////////
+  // Cast the incoming previous prediction as of state type.
+  assign prev_prediction = state_t'(IF_ID_prediction);
+
   always_comb begin
-      error = 1'b0;              // Default error state.
-      updated_prediction = 2'h0; // Default predict not taken.
-      case (IF_ID_prediction)
-          2'h0: updated_prediction = (actual_taken) ? 2'h1 : 2'h0; // Strong Not Taken
-          2'h1: updated_prediction = (actual_taken) ? 2'h2 : 2'h0; // Weak Not Taken
-          2'h2: updated_prediction = (actual_taken) ? 2'h3 : 2'h1; // Weak Taken
-          2'h3: updated_prediction = (actual_taken) ? 2'h3 : 2'h2; // Strong Taken
+      error = 1'b0;                          // Default error state.
+      updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
+      case (prev_prediction) // Update the new prediction based on the previous prediction.
+          STRONG_NOT_TAKEN: updated_prediction = (actual_taken) ? WEAK_NOT_TAKEN : STRONG_NOT_TAKEN; // Stay in strong not taken or go to weak not taken
+          WEAK_NOT_TAKEN: updated_prediction = (actual_taken) ? WEAK_TAKEN : STRONG_NOT_TAKEN; // Go to weak taken or go back to strong not taken
+          WEAK_TAKEN: updated_prediction = (actual_taken) ? STRONG_TAKEN : WEAK_NOT_TAKEN; // Go to strong taken or go back to weak not taken
+          STRONG_TAKEN: updated_prediction = (actual_taken) ? STRONG_TAKEN : WEAK_TAKEN; // Stay in strong taken or go back to weak taken
           default: begin
-            updated_prediction = 2'h0; // Default predict not taken.
-            error = 1'b1;              // Invalid prediction state.
+            updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
+            error = 1'b1;                          // Invalid prediction state.
           end
       endcase
   end

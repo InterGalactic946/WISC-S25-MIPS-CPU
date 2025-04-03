@@ -4,11 +4,16 @@
 // of data memory, register file, and BTB, BHT contents.     //
 ///////////////////////////////////////////////////////////////
 package Monitor_tasks;
+  
+  ///////////////////////////////////////
+  // Declare state types as enumerated //
+  ///////////////////////////////////////
+  typedef enum logic [1:0] {STRONG_NOT_TAKEN, WEAK_NOT_TAKEN, WEAK_TAKEN, STRONG_TAKEN} state_t;
 
   // Struct Definitions for BTB, BHT, and data memory models.
   typedef struct {
     logic [15:0] PC_addr;
-    logic [1:0] prediction;
+    state_t prediction;
   } model_BHT_t;
   
   typedef struct {

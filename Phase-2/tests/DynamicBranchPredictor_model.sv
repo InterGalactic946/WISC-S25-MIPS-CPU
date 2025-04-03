@@ -22,11 +22,6 @@ module DynamicBranchPredictor_model (
     output logic [1:0] prediction,        // 2-bit Predicted branch signal (from BHT)
     output logic [15:0] predicted_target  // Predicted target address (from BTB)
 );
-  
-  ///////////////////////////////////////
-  // Declare state types as enumerated //
-  ///////////////////////////////////////
-  typedef enum logic [1:0] {STRONG_NOT_TAKEN, WEAK_NOT_TAKEN, WEAK_TAKEN, STRONG_TAKEN} state_t;
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
@@ -45,9 +40,9 @@ module DynamicBranchPredictor_model (
   // Model the BTB/BHT memory.
   always @(posedge clk) begin
       if (rst) begin
-          // Initialize BHT: PC_addr = 'x, prediction = 2'b00
-          BHT <= '{default: '{PC_addr: 16'hxxxx, prediction: 2'b00}};
-          // Initialize BTB: PC_addr = 'x, target = 'x
+          // Initialize BHT: PC_addr = 'x, prediction = STRONG_NOT_TAKEN
+          BHT <= '{default: '{PC_addr: 16'hxxxx, prediction: STRONG_NOT_TAKEN}};
+          // Initialize BTB: PC_addr = 'x, target = '0
           BTB <= '{default: '{PC_addr: 16'hxxxx, target: 16'h0000}};
       end 
       else begin

@@ -35,7 +35,7 @@ module BHT (
   // Implement BHT as structural/dataflow verilog //
   //////////////////////////////////////////////////
   // Our read address is PC_curr while our write address is IF_ID_PC_curr.
-  assign addr = (wen) ? IF_ID_PC_curr : PC_curr;
+  assign addr = (wen) ? IF_ID_PC_curr[3:0] : PC_curr[3:0];
 
   // Infer the branch history table as an asynchronously read, synchronously written memory, enabled when not stalling.
   memory1c #(4) iMEM_BHT (.data_out(prediction_ext),
@@ -55,7 +55,7 @@ module BHT (
   assign tags_match = (PC_curr[15:4] == prediction_ext[13:2]);
 
   // If the tags match, use the prediction; otherwise, assume not taken.
-  assign taken = (tags_match) ? prediction_ext[1] : 1'b0; 
+  assign taken = (tags_match) ? prediction[1] : 1'b0; 
   ///////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////

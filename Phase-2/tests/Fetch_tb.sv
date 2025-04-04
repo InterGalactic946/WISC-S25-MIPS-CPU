@@ -110,6 +110,8 @@ module Fetch_tb();
               .expected_PC_curr(expected_PC_curr), 
               .prediction(prediction), 
               .expected_prediction(expected_prediction), 
+              .predicted_taken(iDUT.predicted_taken),
+              .expected_predicted_taken(iFETCH.predicted_taken),
               .predicted_target(predicted_target), 
               .expected_predicted_target (expected_predicted_target),
               .fetch_msg(fetch_msg)

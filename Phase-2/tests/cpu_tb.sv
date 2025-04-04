@@ -190,7 +190,9 @@ module cpu_tb();
               .PC_curr(pc), 
               .expected_PC_curr(expected_pc), 
               .prediction(iDUT.prediction), 
-              .expected_prediction(iMODEL.prediction), 
+              .expected_prediction(iMODEL.prediction),
+              .predicted_taken(iDUT.iFETCH.predicted_taken),
+              .expected_predicted_taken(iMODEL.iFETCH.predicted_taken), 
               .predicted_target(iDUT.predicted_target), 
               .expected_predicted_target(iMODEL.predicted_target),
               .fetch_msg(ftch_msg)

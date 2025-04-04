@@ -472,7 +472,7 @@ package Verification_tasks;
 
       // Verify memory data written.
       if (EX_MEM_MemEnable && EX_MEM_MemWrite) begin
-        if (MemData !== expected_MemData) begin
+        if (MemWriteData !== expected_MemWriteData) begin
         mem_verify_msg = $sformatf("[MEMORY] ERROR: MemWriteData (Written): 0x%h, expected_MemWriteData: 0x%h.", MemWriteData, expected_MemWriteData);
         return;
         end

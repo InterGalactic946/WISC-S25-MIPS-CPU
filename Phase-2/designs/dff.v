@@ -2,9 +2,9 @@
 
 module dff (q, d, wen, clk, rst);
 
-    output         q;   //DFF output
-    input          d;   //DFF input
-    input 	      wen;  //Write Enable
+    output         q; //DFF output
+    input          d; //DFF input
+    input 	   wen; //Write Enable
     input          clk; //Clock
     input          rst; //Reset (used synchronously)
 
@@ -13,7 +13,7 @@ module dff (q, d, wen, clk, rst);
     assign q = state;
 
     always @(posedge clk) begin
-      state = rst ? 0 : (wen ? d : state);
+      state <= rst ? 0 : (wen ? d : state);
     end
 
 endmodule

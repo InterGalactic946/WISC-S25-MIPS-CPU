@@ -14,6 +14,8 @@ module EX_MEM_pipe_reg (
     input wire [15:0] ID_EX_PC_next,       // Pipelined next PC from the fetch stage
     input wire [15:0] ALU_out,             // ALU output from the execute stage
     input wire [3:0] ID_EX_SrcReg2,        // Pipelined second source register ID pfrom the decode stage
+    input wire ForwardMEM_EX,              // Forwarding signal for MEM stage to EX stage for SW instruction
+    input wire MEM_WB_RegWriteData,        // Register write data from the write-back stage
     input wire [17:0] ID_EX_MEM_signals,   // Pipelined memory stage signals from the decode stage
     input wire [7:0] ID_EX_WB_signals,     // Pipelined write back stage signals from the decode stage
     
@@ -27,6 +29,7 @@ module EX_MEM_pipe_reg (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
+  wire MemWriteData; // Memory write data signal passed to the memory stage
   /////////////////////////// MEMORY STAGE ///////////////////////////////////////
   wire [15:0] EX_MEM_MemWriteData; // Pipelined Memory write data signal passed to the memory stage
   wire EX_MEM_MemEnable;           // Pipelined Memory enable signal passed to the memory stage
@@ -57,8 +60,11 @@ module EX_MEM_pipe_reg (
   // Register for storing second source register ID.
   CPU_Register #(.WIDTH(4)) iSrcReg2_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_SrcReg2), .data_out(EX_MEM_SrcReg2));
 
+  // Choose between the register write data and the decoded memory write data.
+  assign MemWriteData = (ForwardMEM_EX) ? MEM_WB_RegWriteData : ID_EX_MEM_signals[17:2];
+
   // Register for storing Memory write data (ID_EX_MEM_signals[17:2] == MemWriteData).
-  CPU_Register #(.WIDTH(16)) iMemWriteData_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[17:2]), .data_out(EX_MEM_MemWriteData));
+  CPU_Register #(.WIDTH(16)) iMemWriteData_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(MemWriteData), .data_out(EX_MEM_MemWriteData));
 
   // Register for storing Memory enable signal (ID_EX_MEM_signals[1] == MemEnable).
   CPU_Register #(.WIDTH(1)) iMemEnable_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[1]), .data_out(EX_MEM_MemEnable));

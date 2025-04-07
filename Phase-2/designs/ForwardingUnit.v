@@ -13,6 +13,7 @@
 module ForwardingUnit (
     input wire [3:0] ID_EX_SrcReg1, // Pipelined first source register ID from the decode stage
     input wire [3:0] ID_EX_SrcReg2, // Pipelined second source register ID from the decode stage
+    input wire ID_EX_MemWrite,      // Pipelined write enable to data memory from the decode stage
     input wire [3:0] EX_MEM_SrcReg2,// Pipelined register ID second source register from the memory stage
     input wire [3:0] EX_MEM_reg_rd, // Pipelined register ID of the destination register from the memory stage
     input wire [3:0] MEM_WB_reg_rd, // Pipelined register ID of the destination register from the write-back stage
@@ -21,7 +22,8 @@ module ForwardingUnit (
 
     output wire [1:0] ForwardA,     // Forwarding signal for the first ALU input (ALU_In1)
     output wire [1:0] ForwardB,     // Forwarding signal for the second ALU input (ALU_In2)
-    output wire ForwardMEM          // Forwarding signal for MEM stage to MEM stage
+    output wire ForwardMEM_EX,      // Forwarding signal for MEM stage to EX stage for SW instruction
+    output wire ForwardMEM,         // Forwarding signal for MEM stage to MEM stage
 );
 
   /////////////////////////////////////////////////
@@ -47,7 +49,10 @@ module ForwardingUnit (
                     (MEM_to_EX_haz_B) ? 2'b01 :
                     2'b00;
   
-  // Set the correct signals to enable/disable MEM-to-MEM forwarding
+  // Set the correct signals to enable/disable MEM-to-EX forwarding for SW instruction.
+  assign ForwardMEM_EX = MEM_to_EX_haz_B & ID_EX_MemWrite;
+
+  // Set the correct signals to enable/disable MEM-to-MEM forwarding.
   assign ForwardMEM = MEM_to_MEM_haz;
   ////////////////////////////////////
 

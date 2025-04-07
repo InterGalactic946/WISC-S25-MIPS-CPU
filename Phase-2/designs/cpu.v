@@ -72,7 +72,8 @@ module cpu (clk, rst_n, hlt, pc);
   /* FORWARDING UNIT signals */
   wire [1:0] ForwardA;              // Forwarding signal for the first ALU input (ALU_In1)
   wire [1:0] ForwardB;              // Forwarding signal for the second ALU input (ALU_In2)
-  wire ForwardMEM;                  // Forwarding signal for MEM stage to MEM stage
+  wire ForwardMEM_EX;               // Forwarding signal for MEM stage to EX stage for SW instruction
+  wire ForwardMEM;                  // Forwarding signal for MEM stage to MEM stage for SW instruction
 
   /* EX/MEM Pipeline Register signals */
   wire [15:0] EX_MEM_ALU_out;      // Pipelined data memory address/arithemtic computation result computed from the execute stage
@@ -270,10 +271,11 @@ module cpu (clk, rst_n, hlt, pc);
   //////////////////////////////////////
   // Instantiate the Forwarding Unit  //
   //////////////////////////////////////
-  // EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
+  // ID_EX_MEM_signals[0] == ID_EX_MemWrite, EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
   ForwardingUnit iFWD (
     .ID_EX_SrcReg1(ID_EX_SrcReg1),
     .ID_EX_SrcReg2(ID_EX_SrcReg2),
+    .ID_EX_MemWrite(ID_EX_MEM_signals[0]),
     .EX_MEM_SrcReg2(EX_MEM_SrcReg2),
     .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
     .MEM_WB_reg_rd(MEM_WB_reg_rd),
@@ -282,6 +284,7 @@ module cpu (clk, rst_n, hlt, pc);
     
     .ForwardA(ForwardA),
     .ForwardB(ForwardB),
+    .ForwardMEM_EX(ForwardMEM_EX),
     .ForwardMEM(ForwardMEM)
   );
   ///////////////////////////////////////
@@ -294,6 +297,8 @@ module cpu (clk, rst_n, hlt, pc);
       .ID_EX_PC_next(ID_EX_PC_next),
       .ALU_out(ALU_out),
       .ID_EX_SrcReg2(ID_EX_SrcReg2),
+      .ForwardMEM_EX(ForwardMEM_EX),
+      .MEM_WB_RegWriteData(RegWriteData),
       .ID_EX_MEM_signals(ID_EX_MEM_signals),
       .ID_EX_WB_signals(ID_EX_WB_signals),
       

@@ -10,6 +10,8 @@ module EX_MEM_pipe_reg_model (
     input logic [15:0] ID_EX_PC_next,       // Pipelined next PC from the fetch stage
     input logic [15:0] ALU_out,             // ALU output from the execute stage
     input logic [3:0] ID_EX_SrcReg2,        // Pipelined second source register ID pfrom the decode stage
+    input logic ForwardMEM_EX,              // Forwarding signal for MEM stage to EX stage for SW instruction
+    input logic MEM_WB_RegWriteData,        // Register write data from the write-back stage
     input logic [17:0] ID_EX_MEM_signals,   // Pipelined memory stage signals from the decode stage
     input logic [7:0] ID_EX_WB_signals,     // Pipelined write back stage signals from the decode stage
     
@@ -19,6 +21,10 @@ module EX_MEM_pipe_reg_model (
     output logic [17:0] EX_MEM_MEM_signals, // Pipelined memory stage signals passed to the memory stage
     output logic [7:0] EX_MEM_WB_signals    // Pipelined write back stage signals passed to the memory stage
 );
+  /////////////////////////////////////////////////
+  // Declare any internal signals as type wire  //
+  ///////////////////////////////////////////////
+  logic [15:0] MemWriteData; // Memory write data signal passed to the memory stage
 
   //////////////////////////////////////////////////////////////////////////////
   // Pipeline the next instruction's address to be passed to the memory stage //
@@ -53,13 +59,16 @@ module EX_MEM_pipe_reg_model (
   ////////////////////////////////////////////////////////////////////////////
   // Pipeline the MEMORY control signals to be passed to the execute stage  //
   ////////////////////////////////////////////////////////////////////////////
+  // Choose between the register write data and the decoded memory write data.
+  assign MemWriteData = (ForwardMEM_EX) ? MEM_WB_RegWriteData : ID_EX_MEM_signals[17:2];
+
   always @(posedge clk) begin
     if (rst) begin
       EX_MEM_MEM_signals[17:2] <= 16'h0000;
       EX_MEM_MEM_signals[1]    <= 1'b0;
       EX_MEM_MEM_signals[0]    <= 1'b0;
     end else begin
-      EX_MEM_MEM_signals[17:2] <= ID_EX_MEM_signals[17:2];
+      EX_MEM_MEM_signals[17:2] <= MemWriteData;
       EX_MEM_MEM_signals[1] <= ID_EX_MEM_signals[1];
       EX_MEM_MEM_signals[0] <= ID_EX_MEM_signals[0];
     end

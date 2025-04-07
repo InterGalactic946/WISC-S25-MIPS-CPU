@@ -44,9 +44,9 @@ XOR R14, R8, R9   // XOR R8 and R9: R14 = 0x0014 ^ 0x000E = 0x001A
 // Shift and Rotate Instructions                       //
 // Testing logical/arithmetic shifts and rotation      //
 ////////////////////////////////////////////////////////
-SLL R1, R1, R4    // Shift Left Logical: R1 = 0x000E << 8 = 0x0E00
-SRA R2, R1, R4    // Shift Right Arithmetic: R2 = 0x0E00 >> 8 = 0x000E
-ROR R3, R1, R4    // Rotate Right: R3 = 0x0E00 ror 8 = 0x000E
+SLL R1, R1, 8     // Shift Left Logical: R1 = 0x000E << 8 = 0x0E00
+SRA R2, R1, 8     // Shift Right Arithmetic: R2 = 0x0E00 >> 8 = 0x000E
+ROR R3, R1, 8     // Rotate Right: R3 = 0x0E00 ror 8 = 0x000E
 
 ////////////////////////////////////////////////////////
 // Reduction and Parallel Addition                     //

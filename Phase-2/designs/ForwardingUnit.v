@@ -23,7 +23,7 @@ module ForwardingUnit (
     output wire [1:0] ForwardA,     // Forwarding signal for the first ALU input (ALU_In1)
     output wire [1:0] ForwardB,     // Forwarding signal for the second ALU input (ALU_In2)
     output wire ForwardMEM_EX,      // Forwarding signal for MEM stage to EX stage for SW instruction
-    output wire ForwardMEM,         // Forwarding signal for MEM stage to MEM stage
+    output wire ForwardMEM          // Forwarding signal for MEM stage to MEM stage
 );
 
   /////////////////////////////////////////////////

@@ -1,0 +1,9 @@
+# Test stalling
+LLB R1, 0x51
+LHB R1, 0x51
+LLB R2, 0xB0
+LHB R2, 0xA0
+ADD R3, R1, R2
+SUB R2, R1, R2
+ADD R4, R3, R1
+HLT

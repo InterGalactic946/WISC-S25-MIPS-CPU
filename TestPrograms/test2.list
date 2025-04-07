@@ -7,6 +7,7 @@
 	SW R1, R2, 2
 	ADD R5, R2, R3
 	LW R4, R5, 0
+	SW R4, R5, 2
 	PADDSB R5, R4, R2
 	RED R5, R5, R5
 	HLT

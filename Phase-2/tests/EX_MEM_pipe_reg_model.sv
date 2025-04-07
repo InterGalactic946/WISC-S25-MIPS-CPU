@@ -11,7 +11,7 @@ module EX_MEM_pipe_reg_model (
     input logic [15:0] ALU_out,             // ALU output from the execute stage
     input logic [3:0] ID_EX_SrcReg2,        // Pipelined second source register ID pfrom the decode stage
     input logic ForwardMEM_EX,              // Forwarding signal for MEM stage to EX stage for SW instruction
-    input logic MEM_WB_RegWriteData,        // Register write data from the write-back stage
+    input logic [15:0] MEM_WB_RegWriteData, // Register write data from the write-back stage
     input logic [17:0] ID_EX_MEM_signals,   // Pipelined memory stage signals from the decode stage
     input logic [7:0] ID_EX_WB_signals,     // Pipelined write back stage signals from the decode stage
     

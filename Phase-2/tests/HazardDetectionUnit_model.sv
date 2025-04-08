@@ -20,7 +20,6 @@ module HazardDetectionUnit_model (
     input logic Branch,                 // Branch signal indicating a branch instruction
     input logic BR,                     // BR signal indicating a BR instruction
     input logic update_PC,              // Signal that we need to update the PC
-    input logic HLT,                    // Halt signal indicating a halt instruction
     
     output logic PC_stall,              // Stall signal for IF stage
     output logic IF_ID_stall,           // Stall signal for ID stage

@@ -197,7 +197,6 @@ module cpu (clk, rst_n, hlt, pc);
   // EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
   // ID_EX_MEM_signals[1] == ID_EX_MemEnable, ID_EX_MEM_signals[0] == ID_EX_MemWrite.
   // MEM_signals[1] == MemEnable.
-  // WB_signals[1] == HLT.
   // EX_signals[62:59] == SrcReg1, EX_signals[58:55] == SrcReg2. 
   HazardDetectionUnit iHDU (
       .SrcReg1(EX_signals[62:59]),
@@ -214,7 +213,6 @@ module cpu (clk, rst_n, hlt, pc);
       .Branch(Branch),
       .BR(BR),
       .update_PC(update_PC),
-      .HLT(WB_signals[1]),
       
       .PC_stall(PC_stall),
       .IF_ID_stall(IF_ID_stall),

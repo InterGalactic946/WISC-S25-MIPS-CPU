@@ -22,7 +22,6 @@ module HazardDetectionUnit (
     input wire Branch,                 // Branch signal indicating a branch instruction
     input wire BR,                     // BR signal indicating a BR instruction
     input wire update_PC,              // Signal that we need to update the PC
-    input wire HLT,                    // Halt signal indicating a halt instruction
     
     output wire PC_stall,              // Stall signal for IF stage
     output wire IF_ID_stall,           // Stall signal for ID stage
@@ -48,7 +47,7 @@ module HazardDetectionUnit (
   // We stall PC whenever we stall the IF_ID pipeline register.
   assign PC_stall = IF_ID_stall;
 
-  // We stall anytime there is a branch or load to use hazard in the decode stage or when it is a halt instruction.
+  // We stall anytime there is a branch or load to use hazard in the decode stage.
   assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
   /////////////////////////////////////////////////////
 

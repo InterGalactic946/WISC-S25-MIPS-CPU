@@ -34,9 +34,11 @@ module Fetch (
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
   wire predicted_taken;  // The predicted value of the current instruction.
-  wire [15:0] PC_new;    // The new address the PC is updated with.
   wire enable;           // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
   wire hlt_fetched;      // Indicates if the fetched instruction is a halt instruction.
+  wire [15:0] PC_target; // The target address of the branch instruction from the BTB or the next PC.
+  wire [15:0] PC_new;    // The PC is updated with the current PC if HLT is fetched, or the target address otherwise.
+  wire [15:0] PC_update; // The address to update the PC with.
   ////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -48,9 +50,14 @@ module Fetch (
   // We write to the PC whenever we don't stall on decode.
   assign enable = ~stall;
 
-  // Update the PC with correct target on misprediction or miscomputation on a taken branch, or keep it at the current PC if HLT, 
-  // or the predicted target address if predicted to be taken, otherwise assume not taken.
-  assign PC_new = (update_PC) ? actual_target : (hlt_fetched) ? PC_curr : (((predicted_taken) ? predicted_target : PC_next));
+  // Get the branch instruction address from the BTB, if predicted to be taken, else it is PC + 2.
+  assign PC_target = (predicted_taken) ? predicted_target : PC_next;
+
+  // Get the new PC with the current PC if HLT is fetched, or the target address otherwise.
+  assign PC_new = (hlt_fetched) ? PC_curr : PC_target;
+
+  // Update the PC with correct target on misprediction or the new PC otherwise.
+  assign PC_update = (update_PC) ? actual_target : PC_new;
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
   DynamicBranchPredictor iDBP (
@@ -71,7 +78,7 @@ module Fetch (
   );
 
   // Infer the PC Register.
-  CPU_Register iPC (.clk(clk), .rst(rst), .wen(enable), .data_in(PC_new), .data_out(PC_curr));
+  CPU_Register iPC (.clk(clk), .rst(rst), .wen(enable), .data_in(PC_update), .data_out(PC_curr));
 
   // Infer the instruction memory, it is read enabled when not stalling and never write enabled.
   memory1c iINSTR_MEM (.data_out(PC_inst),

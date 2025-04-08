@@ -27,10 +27,12 @@ module Fetch_model (
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
   logic predicted_taken;            // The predicted value of the current instruction.
-  logic [15:0] PC_new;              // The new address the PC is updated with.
-  logic [15:0] inst_mem [0:65535];  // Models the instruction memory.
   logic enable;                     // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
   logic hlt_fetched;                // Indicates if the fetched instruction is a halt instruction.
+  logic [15:0] inst_mem [0:65535];  // Models the instruction memory.
+  logic [15:0] PC_target;           // The target address of the branch instruction from the BTB or the next PC.
+  logic [15:0] PC_new;              // The PC is updated with the current PC if HLT is fetched, or the target address otherwise.
+  logic [15:0] PC_update;           // The address to update the PC with.
   ////////////////////////////////////////////////
 
   ///////////////////////////
@@ -42,9 +44,14 @@ module Fetch_model (
   // We write to the PC whenever we don't stall on decode.
   assign enable = ~stall;
 
-  // Update the PC with correct target on misprediction or miscomputation on a taken branch, or keep it at the current PC if HLT, 
-  // or the predicted target address if predicted to be taken, otherwise assume not taken.
-  assign PC_new = (update_PC) ? actual_target : (hlt_fetched) ? PC_curr : (((predicted_taken) ? predicted_target : PC_next));
+  // Get the branch instruction address from the BTB, if predicted to be taken, else it is PC + 2.
+  assign PC_target = (predicted_taken) ? predicted_target : PC_next;
+
+  // Get the new PC with the current PC if HLT is fetched, or the target address otherwise.
+  assign PC_new = (hlt_fetched) ? PC_curr : PC_target;
+
+  // Update the PC with correct target on misprediction or the new PC otherwise.
+  assign PC_update = (update_PC) ? actual_target : PC_new;
 
   // Instantiate the Dynamic Branch Predictor model.
   DynamicBranchPredictor_model iDBP_model (
@@ -69,7 +76,7 @@ module Fetch_model (
     if (rst)
       PC_curr <= 16'h0000;
     else if (enable)
-      PC_curr <= PC_new;
+      PC_curr <= PC_update;
 
   // Model the instruction memory (read only).
   always @(posedge clk) begin

@@ -118,7 +118,7 @@ package Verification_tasks;
   task automatic verify_DECODE(
       input logic IF_ID_stall, expected_IF_ID_stall,
       input logic IF_flush, expected_IF_flush,
-      input logic br_hazard, b_hazard, load_use_hazard, hlt,
+      input logic br_hazard, b_hazard, load_use_hazard,
       input logic [62:0] EX_signals, expected_EX_signals,
       input logic [17:0] MEM_signals, expected_MEM_signals,
       input logic [7:0] WB_signals, expected_WB_signals,
@@ -151,9 +151,7 @@ package Verification_tasks;
             hazard_type = "Branch (BR) hazard";
           end else if (b_hazard) begin
             hazard_type = "Branch (B) hazard";
-          end else if (hlt) begin
-            hazard_type = "HLT instruction";
-          end 
+          end
 
           // Get the full instruction.
           get_full_instruction(.opcode(expected_EX_signals[6:3]), .rs(expected_EX_signals[62:59]), .rt(expected_EX_signals[58:55]), .rd(expected_WB_signals[7:4]), .actual_target(expected_actual_target), .ALU_imm(expected_EX_signals[38:23]), .cc(cc), .instr_name(instruction_full));

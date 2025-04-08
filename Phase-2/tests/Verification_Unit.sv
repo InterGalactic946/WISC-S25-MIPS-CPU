@@ -54,7 +54,7 @@
             execute_id <= decode_id; // Pass the decode_id to execute_id
             memory_id <= execute_id; // Pass the execute_id to memory_id
             wb_id <= memory_id;      // Pass the memory_id to wb_id
-          end
+          // end
       end else begin
           fetch_id <= fetch_id + 1; // Only increment fetch_id when there's no stall.
           decode_id <= fetch_id;    // Pass the fetch_id to decode_id

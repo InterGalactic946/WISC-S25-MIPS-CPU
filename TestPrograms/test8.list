@@ -1,8 +1,9 @@
+Double stall test:
 # Test double stall
 # First, try to trick it
 # Save a halt instruction for later....
         B 111, pass
-STOP:   HLT
+GOOD1:  B 111, OTHER
 # Set the condition codes, and make R1 0
 pass:   ADD R1, R0, R0
 # R2 is an address to store
@@ -22,3 +23,37 @@ pass:   ADD R1, R0, R0
         LW R5, R2, 3
         BR 001, R5
 # Should halt after that
+# If it doesn't, flag updating is probably fucked
+        B 111, BAD
+        HLT     # This should never execute
+        HLT
+        HLT
+        HLT
+OTHER:
+        # Test single stall
+        LW R5, R2, 3
+        ADD R0, R5, R5
+        # This should have stalled once
+        LW R5, R2, 2
+        ADD R0, R0, R0
+        ADD R0, R5, R5
+        # This shouldn't stall
+        HLT
+
+BAD:    XOR R0, R0, R0
+// Compute first few fibonacci numbers
+// V 1.0
+// PASS
+        ADD R1, R0, R0
+        LLB R2, 0X1
+        LLB R3, 0X9
+        LLB R4, 0X1
+Ltop:
+        ADD R1, R1, R2
+        XOR R1, R2, R1
+        XOR R2, R1, R2
+        XOR R1, R2, R1
+        // DBG point -> R1 and r2 have fib numbers
+        SUB R3, R3, R4
+        B 000, Ltop
+        HLT

@@ -46,15 +46,10 @@
           memory_id <= 0;
           wb_id <= 0;
       end else if (cap_stall) begin
-          // If we are done printing the HLT instruction, we can increment the wb_id to print the last instruction.
-        //   if (fetched_last) begin
-        //       wb_id <= wb_id + 1;
-        //   end else begin
-            /* Only let the execute, mem, and wb stages propogate. */
-            execute_id <= decode_id; // Pass the decode_id to execute_id
-            memory_id <= execute_id; // Pass the execute_id to memory_id
-            wb_id <= memory_id;      // Pass the memory_id to wb_id
-          // end
+         /* Only let the execute, mem, and wb stages propogate. */
+          execute_id <= decode_id; // Pass the decode_id to execute_id
+          memory_id <= execute_id; // Pass the execute_id to memory_id
+          wb_id <= memory_id;      // Pass the memory_id to wb_id
       end else begin
           fetch_id <= fetch_id + 1; // Only increment fetch_id when there's no stall.
           decode_id <= fetch_id;    // Pass the fetch_id to decode_id
@@ -63,10 +58,6 @@
           wb_id <= memory_id;       // Pass the memory_id to wb_id
       end
     end
-
-
-    // Assign the fetched_last signal to indicate if we fetched the instruction past the HLT instruction.
-    // assign fetched_last = print_done && pipeline_msgs[wb_id].instr_full_msg === "HLT";
 
 
     // Propagate the valid signals across stages.

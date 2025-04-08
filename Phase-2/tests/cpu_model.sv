@@ -59,6 +59,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   logic [3:0] ID_EX_ALUOp;          // Pipelined ALU operation code from the decode stage
   logic ID_EX_ALUSrc;               // Pipelined ALU select signal to choose between register/immediate operand from the decode stage
   logic ID_EX_Z_en, ID_EX_NV_en;    // Pipelined enable signals setting the Z, N, and V flags from the decode stage
+  logic [15:0] ID_EX_MemWriteData;  // Pipelined write data for SW from the decode stage or forwarded data from the WB stage
   logic [17:0] ID_EX_MEM_signals;   // Pipelined Memory stage control signals from the decode stage
   logic [7:0] ID_EX_WB_signals;     // Pipelined Write-back stage control signals from the decode stage
   logic [15:0] ID_EX_PC_next;       // Pipelined next instruction (previous PC_next) address from the fetch stage
@@ -70,8 +71,8 @@ module cpu_model (clk, rst_n, hlt, pc);
   /* FORWARDING UNIT signals */
   logic [1:0] ForwardA;              // Forwarding signal for the first ALU input (ALU_In1)
   logic [1:0] ForwardB;              // Forwarding signal for the second ALU input (ALU_In2)
-  logic ForwardMEM_EX;               // Forwarding signal for MEM stage to EX stage for SW instruction
-  logic ForwardMEM;                  // Forwarding signal for MEM stage to MEM stage
+  logic ForwardSW_EX;                // Forwarding signal for the SW instruction in the EX stage
+  logic ForwardSW_MEM;               // Forwarding signal for the SW instruction in the MEM stage
 
   /* EX/MEM Pipeline Register signals */
   logic [15:0] EX_MEM_ALU_out;      // Pipelined data memory address/arithemtic computation result computed from the execute stage
@@ -267,11 +268,10 @@ module cpu_model (clk, rst_n, hlt, pc);
   //////////////////////////////////////
   // Instantiate the Forwarding Unit  //
   //////////////////////////////////////
-  // ID_EX_MEM_signals[0] == ID_EX_MemWrite, EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
+  // EX_MEM_WB_signals[7:4] == EX_MEM_reg_rd, EX_MEM_WB_signals[3] == EX_MEM_RegWrite.
   ForwardingUnit_model iFWD (
     .ID_EX_SrcReg1(ID_EX_SrcReg1),
     .ID_EX_SrcReg2(ID_EX_SrcReg2),
-    .ID_EX_MemWrite(ID_EX_MEM_signals[0]),
     .EX_MEM_SrcReg2(EX_MEM_SrcReg2),
     .EX_MEM_reg_rd(EX_MEM_WB_signals[7:4]),
     .MEM_WB_reg_rd(MEM_WB_reg_rd),
@@ -280,10 +280,13 @@ module cpu_model (clk, rst_n, hlt, pc);
     
     .ForwardA(ForwardA),
     .ForwardB(ForwardB),
-    .ForwardMEM_EX(ForwardMEM_EX),
-    .ForwardMEM(ForwardMEM)
+    .ForwardSW_EX(ForwardSW_EX),
+    .ForwardSW_MEM(ForwardSW_MEM)
   );
   ///////////////////////////////////////
+
+  // Decide to pipeline the memory write data from decode or the forwarded data from the write-back stage.
+  assign ID_EX_MemWriteData = (ForwardSW_EX) ? RegWriteData : ID_EX_MEM_signals[17:2];
 
   /////////////////////////////////////////////////
   // Pass the next PC, ALU output along with control signals to the EX/MEM pipeline register. 
@@ -293,9 +296,7 @@ module cpu_model (clk, rst_n, hlt, pc);
       .ID_EX_PC_next(ID_EX_PC_next),
       .ALU_out(ALU_out),
       .ID_EX_SrcReg2(ID_EX_SrcReg2),
-      .ForwardMEM_EX(ForwardMEM_EX),
-      .MEM_WB_RegWriteData(RegWriteData),
-      .ID_EX_MEM_signals(ID_EX_MEM_signals),
+      .ID_EX_MEM_signals({ID_EX_MemWriteData, ID_EX_MEM_signals[1:0]}),
       .ID_EX_WB_signals(ID_EX_WB_signals),
       
       .EX_MEM_PC_next(EX_MEM_PC_next),
@@ -311,7 +312,7 @@ module cpu_model (clk, rst_n, hlt, pc);
   //////////////////////////////////////////////////////////////////
   // Use the value read out from data memory from the previous instruction 
   // or previous ALU result if forwarded otherwise the current value. 
-  assign MemWriteData = (ForwardMEM) ? RegWriteData : EX_MEM_MemWriteData;
+  assign MemWriteData = (ForwardSW_MEM) ? RegWriteData : EX_MEM_MemWriteData;
   
   // Access data memory.
   memory iDATA_MEM  (.data_out(MemData),

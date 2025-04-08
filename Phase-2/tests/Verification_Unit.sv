@@ -47,9 +47,9 @@
           wb_id <= 0;
       end else if (cap_stall) begin
           // If we are done printing the HLT instruction, we can increment the wb_id to print the last instruction.
-          if (fetched_last) begin
-              wb_id <= wb_id + 1;
-          end else begin
+        //   if (fetched_last) begin
+        //       wb_id <= wb_id + 1;
+        //   end else begin
             /* Only let the execute, mem, and wb stages propogate. */
             execute_id <= decode_id; // Pass the decode_id to execute_id
             memory_id <= execute_id; // Pass the execute_id to memory_id
@@ -66,7 +66,7 @@
 
 
     // Assign the fetched_last signal to indicate if we fetched the instruction past the HLT instruction.
-    assign fetched_last = print_done && pipeline_msgs[wb_id].instr_full_msg === "HLT";
+    // assign fetched_last = print_done && pipeline_msgs[wb_id].instr_full_msg === "HLT";
 
 
     // Propagate the valid signals across stages.
@@ -186,13 +186,7 @@
     always @(posedge clk) begin
         if (valid_wb) begin
             $display("==========================================================");
-
-            // If this is the instruction after HLT, we print the instruction as UNKNOWN.
-            if (pipeline_msgs[wb_id].instr_full_msg === "")
-                $display("| Instruction: UNKNOWN | Completed At Cycle: %0t |", ($time / 10) - 1);
-            else
-                $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, ($time / 10) - 1);
-
+            $display("| Instruction: %s | Completed At Cycle: %0t |", pipeline_msgs[wb_id].instr_full_msg, ($time / 10) - 1);
             $display("==========================================================");
 
             // Print the fetch messages.
@@ -200,16 +194,14 @@
                     if (pipeline_msgs[wb_id].fetch_msgs[j] !== "")
                         $display("%s", pipeline_msgs[wb_id].fetch_msgs[j]);
 
-            // Print the decode, memory, write-back messages, if not the instruction past HLT.
-            if (pipeline_msgs[wb_id].instr_full_msg !== "") begin
-                for (int j = 0; j < 5; j = j+1)
-                        if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
-                            $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
+            // Print the decode messages.
+            for (int j = 0; j < 5; j = j+1)
+                if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
+                    $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
 
-                $display("%s", pipeline_msgs[wb_id].execute_msg);
-                $display("%s", pipeline_msgs[wb_id].memory_msg);
-                $display("%s", pipeline_msgs[wb_id].wb_msg);
-            end
+            $display("%s", pipeline_msgs[wb_id].execute_msg);
+            $display("%s", pipeline_msgs[wb_id].memory_msg);
+            $display("%s", pipeline_msgs[wb_id].wb_msg);
             $display("==========================================================\n");
         end
     end

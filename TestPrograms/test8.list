@@ -23,7 +23,7 @@ pass:   ADD R1, R0, R0
         LW R5, R2, 3
         BR 001, R5
 # Should halt after that
-# If it doesn't, flag updating is probably fucked
+# If it doesn't, flag updating is probably wrong
         B 111, BAD
         HLT     # This should never execute
         HLT

@@ -49,7 +49,7 @@ module HazardDetectionUnit (
   assign PC_stall = IF_ID_stall;
 
   // We stall anytime there is a branch or load to use hazard in the decode stage or when it is a halt instruction.
-  assign IF_ID_stall = HLT | load_to_use_hazard | B_hazard | BR_hazard;
+  assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
   /////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////

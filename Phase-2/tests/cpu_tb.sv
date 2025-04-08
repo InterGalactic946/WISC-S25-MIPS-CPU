@@ -94,8 +94,8 @@ module cpu_tb();
     // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
     TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
-    // Wait for 3 cycles to print last actual instruction, HLT, and the instruction following it.
-    repeat (3) @(posedge clk);
+    // Wait for 3 cycles to print last actual instruction and HLT.
+    repeat (2) @(posedge clk);
     
     $display("CPU halted due to HLT instruction.\n");
 

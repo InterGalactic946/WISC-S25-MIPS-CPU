@@ -36,17 +36,21 @@ module Fetch (
   wire predicted_taken;  // The predicted value of the current instruction.
   wire [15:0] PC_new;    // The new address the PC is updated with.
   wire enable;           // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
+  wire hlt_fetched;      // Indicates if the fetched instruction is a halt instruction.
   ////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
   // Implement PC_control as structural/dataflow verilog //
   ////////////////////////////////////////////////////////
-  // We write to the PC whenever we don't stall.
+  // Get the condition that we fetched a halt instruction.
+  assign hlt_fetched = &PC_inst[15:12];
+
+  // We write to the PC whenever we don't stall on decode.
   assign enable = ~stall;
 
-  // Update the PC with correct target on misprediction or miscomputation on a taken branch, or the predicted target address 
-  // if predicted to be taken, otherwise assume not taken.
-  assign PC_new = (update_PC) ? actual_target : ((predicted_taken) ? predicted_target : PC_next);
+  // Update the PC with correct target on misprediction or miscomputation on a taken branch, or keep it at the current PC if HLT, 
+  // or the predicted target address if predicted to be taken, otherwise assume not taken.
+  assign PC_new = (update_PC) ? actual_target : (hlt_fetched) ? PC_curr : (((predicted_taken) ? predicted_target : PC_next));
 
   // Instantiate the Dynamic Branch Predictor to get the target branch address cached in the BTB before the decode stage.
   DynamicBranchPredictor iDBP (

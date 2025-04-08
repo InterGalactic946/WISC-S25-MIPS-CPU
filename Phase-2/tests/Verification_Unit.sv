@@ -206,12 +206,9 @@
                         if (pipeline_msgs[wb_id].decode_msgs[j] !== "")
                             $display("%s", pipeline_msgs[wb_id].decode_msgs[j]);
 
-                // Don't print execute, memory, and wb messages if the instruction is HLT.
-                if (pipeline_msgs[wb_id].instr_full_msg !== "HLT") begin
-                    $display("%s", pipeline_msgs[wb_id].execute_msg);
-                    $display("%s", pipeline_msgs[wb_id].memory_msg);
-                    $display("%s", pipeline_msgs[wb_id].wb_msg);
-                end
+                $display("%s", pipeline_msgs[wb_id].execute_msg);
+                $display("%s", pipeline_msgs[wb_id].memory_msg);
+                $display("%s", pipeline_msgs[wb_id].wb_msg);
             end
             $display("==========================================================\n");
         end

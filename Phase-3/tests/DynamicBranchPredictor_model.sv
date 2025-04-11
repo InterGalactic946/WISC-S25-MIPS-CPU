@@ -28,7 +28,8 @@ module DynamicBranchPredictor_model (
   ///////////////////////////////////////////////
   state_t prev_prediction;        // Holds the previous prediction.
   state_t updated_prediction;     // The new prediction to be stored in the BHT on an incorrect prediction.
-  logic tags_match;               // Used to determine if the current PC tag matches the previous PC tag cached in BHT.
+  logic read_tags_match;          // Used to determine if the current PC tag matches the previous PC tag cached in BHT.
+  logic write_tags_match;         // Used to determine if the current IF_ID_PC tag matches the previous PC tag cached in BHT.
   logic error;                    // Error flag raised when prediction state is invalid.
   model_BHT_t BHT [0:15];         // Declare BHT
   model_BTB_t BTB [0:15];         // Declare BTB
@@ -79,18 +80,45 @@ module DynamicBranchPredictor_model (
   // Cast the incoming previous prediction as of state type.
   assign prev_prediction = state_t'(IF_ID_prediction);
 
+  // Check if the write tags match for the current IF_ID_PC and the previous PC address in the cache.
+  assign write_tags_match = (IF_ID_PC_curr[15:4] == BHT[IF_ID_PC_curr[3:1]].PC_addr[15:4]);
+
   always_comb begin
       error = 1'b0;                          // Default error state.
       updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
       case (prev_prediction) // Update the new prediction based on the previous prediction.
-          STRONG_NOT_TAKEN: updated_prediction = (actual_taken) ? WEAK_NOT_TAKEN : STRONG_NOT_TAKEN; // Stay in strong not taken or go to weak not taken
-          WEAK_NOT_TAKEN: updated_prediction = (actual_taken) ? WEAK_TAKEN : STRONG_NOT_TAKEN; // Go to weak taken or go back to strong not taken
-          WEAK_TAKEN: updated_prediction = (actual_taken) ? STRONG_TAKEN : WEAK_NOT_TAKEN; // Go to strong taken or go back to weak not taken
-          STRONG_TAKEN: updated_prediction = (actual_taken) ? STRONG_TAKEN : WEAK_TAKEN; // Stay in strong taken or go back to weak taken
-          default: begin
-            updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
-            error = 1'b1;                          // Invalid prediction state.
-          end
+            STRONG_NOT_TAKEN: begin
+                if (write_tags_match) begin // If the tags match, update the prediction.
+                    updated_prediction = (actual_taken) ? WEAK_NOT_TAKEN : STRONG_NOT_TAKEN; // Go to weak not taken or stay in strong not taken
+                end else begin // If the tags do not match, assume not taken.
+                    updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
+                end
+            end
+            WEAK_NOT_TAKEN: begin
+                if(write_tags_match) begin // If the tags match, update the prediction.
+                    updated_prediction = (actual_taken) ? WEAK_TAKEN : STRONG_NOT_TAKEN; // Go to weak taken or go back to strong not taken
+                end else begin // If the tags do not match, assume not taken.
+                    updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
+                end
+            end
+            WEAK_TAKEN: begin
+                if(write_tags_match) begin // If the tags match, update the prediction.
+                    updated_prediction = (actual_taken) ? STRONG_TAKEN : WEAK_NOT_TAKEN; // Go to strong taken or go back to weak not taken
+                end else begin // If the tags do not match, assume not taken.
+                    updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
+                end
+            end
+            STRONG_TAKEN: begin
+                if(write_tags_match) begin // If the tags match, update the prediction.
+                    updated_prediction = (actual_taken) ? STRONG_TAKEN : WEAK_TAKEN; // Stay in strong taken or go back to weak taken
+                end else begin // If the tags do not match, assume not taken.
+                    updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
+                end
+            end
+            default: begin
+                updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
+                error = 1'b1;                          // Invalid prediction state.
+            end
       endcase
   end
   ///////////////////////////////////

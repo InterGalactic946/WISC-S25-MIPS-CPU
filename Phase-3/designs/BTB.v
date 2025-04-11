@@ -20,28 +20,20 @@ module BTB (
     output wire [15:0] predicted_target // Predicted cached target address (16-bit) along with the valid bit (MSB)
 );
 
-  ///////////////////////////////////////////
-  // Declare any internal signals as wire  //
-  ///////////////////////////////////////////
-  wire [3:0] addr; // Used to determine read vs write address.
-  ///////////////////////////////////////////
-
-  //////////////////////////////////////////////////
-  // Implement BTB as structural/dataflow verilog //
-  //////////////////////////////////////////////////
-  // Our read address is PC_curr while our write address is IF_ID_PC_curr.
-  assign addr = (wen) ? IF_ID_PC_curr : PC_curr;
-
   // Infer the branch target buffer as an asynchronously read, synchronously written memory, enabled when not stalling.
-  memory1c #(4) iMEM_BTB (.data_out(predicted_target),
-                          .data_in(actual_target),
-                          .addr(addr),
-                          .enable(enable),
-                          .data(1'b1),
-                          .wr(wen),
-                          .clk(clk),
-                          .rst(rst)
-                          );
+  Branch_Cache iMEM_BTB (
+              .clk(clk),
+              .rst(rst),
+              .SrcCurr(PC_curr[3:1]),
+              .SrcPrev(IF_ID_PC_curr[3:1]),
+              .DstPrev(IF_ID_PC_curr[3:1]),
+              .enable(enable),
+              .wen(wen),
+              .DstData(actual_target),
+              .SrcDataCurr(predicted_target),
+              .SrcDataPrev()
+            );
+
 endmodule
 
 `default_nettype wire // Reset default behavior at the end

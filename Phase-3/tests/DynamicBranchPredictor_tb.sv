@@ -114,12 +114,11 @@ module DynamicBranchPredictor_tb();
 
       // Dump the contents of memory whenever we write to the BTB or BHT.
       if (wen_BHT || wen_BTB)
-      log_BTB_BHT_dump (
-        .model_BHT(iDBP_model.BHT),
-        .model_BTB(iDBP_model.BTB),
-        .dut_BHT(iDUT.iBHT.iMEM_BHT.mem),
-        .dut_BTB(iDUT.iBTB.iMEM_BTB.mem)
-      );    end
+        log_BTB_BHT_dump (
+          .model_BHT(iDBP_model.BHT),
+          .model_BTB(iDBP_model.BTB)
+        );
+    end
   end
 
   // Initialize the testbench.

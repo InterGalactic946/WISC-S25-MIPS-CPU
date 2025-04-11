@@ -119,12 +119,10 @@ module Fetch_tb();
 
       // Dump the contents of memory whenever we write to the BTB or BHT.
       if (wen_BHT || wen_BTB)
-      log_BTB_BHT_dump (
-        .model_BHT(iFETCH.iDBP_model.BHT),
-        .model_BTB(iFETCH.iDBP_model.BTB),
-        .dut_BHT(iDUT.iDBP.iBHT.iMEM_BHT.mem),
-        .dut_BTB(iDUT.iDBP.iBTB.iMEM_BTB.mem)
-      );
+        log_BTB_BHT_dump (
+            .model_BHT(iFETCH.iDBP_model.BHT),
+            .model_BTB(iFETCH.iDBP_model.BTB)
+        );
     end
   end
 

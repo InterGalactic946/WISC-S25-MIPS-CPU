@@ -43,17 +43,14 @@ package Monitor_tasks;
 
   // Task: Dumps contents of DUT and model BHT and BTB memory.
   task automatic log_BTB_BHT_dump(
-    input model_BHT_t model_BHT [0:15],  
-    input model_BTB_t model_BTB [0:15], 
-    input [15:0] dut_BHT [0:15], 
-    input [15:0] dut_BTB [0:15] 
+    input model_BHT_t model_BHT [0:7],  
+    input model_BTB_t model_BTB [0:7]
   );
 
     integer i, file;
     int clock_cycle;
-    logic [15:0] model_PC_BHT, model_pred, dut_pred;
-    logic [15:0] model_PC_BTB, model_target, dut_target;
-    logic match_BHT, match_BTB;
+    logic [15:0] model_PC_BHT, model_pred;
+    logic [15:0] model_PC_BTB, model_target;
 
       begin
           // Calculate the clock cycle
@@ -75,23 +72,19 @@ package Monitor_tasks;
           $fdisplay(file, "-------------------------------------|----------------------------------------");
           $fdisplay(file, "                 BHT                 |                   BTB                  ");
           $fdisplay(file, "-------------------------------------|----------------------------------------");
-          $fdisplay(file, "IF_ID_PC_curr | Model | DUT | MATCH  | IF_ID_PC_curr |  Model  |  DUT  | MATCH");
+          $fdisplay(file, "    IF_ID_PC_curr | PREDICTION       |      IF_ID_PC_curr | TARGET            ");
 
-          for (i = 0; i < 16; i = i + 1) begin  
+          for (i = 0; i < 8; i = i + 1) begin  
               // Fetch values from Model and DUT  
               model_PC_BHT = model_BHT[i].PC_addr;
               model_pred   = model_BHT[i].prediction;
-              dut_pred     = dut_BHT[i][1:0];
-              match_BHT    = (model_pred === dut_pred);
 
               model_PC_BTB = model_BTB[i].PC_addr;
               model_target = model_BTB[i].target;
-              dut_target   = dut_BTB[i];
-              match_BTB    = (model_target === dut_target);
               
               // Write to File with newline
-              $fwrite(file, "  0x%04X         %2b     %2b    %-3s    |", (model_PC_BHT === 16'hxxxx) ? 16'hXXXX : model_PC_BHT, model_pred, dut_pred, match_BHT ? "YES" : "NO");
-              $fdisplay(file, "   0x%04X        0x%04X   0x%04X   %-3s", (model_PC_BTB === 16'hxxxx) ? 16'hXXXX : model_PC_BTB, model_target, dut_target, match_BTB ? "YES" : "NO");
+              $fwrite(file, "         0x%04X         %2b           |", (model_PC_BHT === 16'hxxxx) ? 16'hXXXX : model_PC_BHT, model_pred);
+              $fdisplay(file, "         0x%04X       0x%04X   ", (model_PC_BTB === 16'hxxxx) ? 16'hXXXX : model_PC_BTB, model_target);
           end  
 
           $fdisplay(file, "\n");

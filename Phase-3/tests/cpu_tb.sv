@@ -109,14 +109,12 @@ module cpu_tb();
   always @(negedge clk) begin
       if (rst_n) begin
         // Dump the contents of memory whenever we write to the BTB or BHT.
-        // if (iDUT.wen_BHT || iDUT.wen_BTB || hlt) begin
-        //   log_BTB_BHT_dump (
-        //     .model_BHT(iMODEL.iFETCH.iDBP_model.BHT),
-        //     .model_BTB(iMODEL.iFETCH.iDBP_model.BTB),
-        //     .dut_BHT(iDUT.iFETCH.iDBP.iBHT.iMEM_BHT.mem),
-        //     .dut_BTB(iDUT.iFETCH.iDBP.iBTB.iMEM_BTB.mem)
-        //   );
-        // end
+        if (iDUT.wen_BHT || iDUT.wen_BTB || hlt) begin
+          log_BTB_BHT_dump (
+            .model_BHT(iMODEL.iFETCH.iDBP_model.BHT),
+            .model_BTB(iMODEL.iFETCH.iDBP_model.BTB)
+          );
+        end
 
         // Log data memory contents.
         if (iDUT.EX_MEM_MemEnable || hlt) begin

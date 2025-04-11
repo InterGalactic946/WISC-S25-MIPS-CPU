@@ -31,8 +31,8 @@ module DynamicBranchPredictor_model (
   logic read_tags_match;          // Used to determine if the current PC tag matches the previous PC tag cached in BHT.
   logic write_tags_match;         // Used to determine if the current IF_ID_PC tag matches the previous PC tag cached in BHT.
   logic error;                    // Error flag raised when prediction state is invalid.
-  model_BHT_t BHT [0:15];         // Declare BHT
-  model_BTB_t BTB [0:15];         // Declare BTB
+  model_BHT_t BHT [0:7];          // Declare BHT
+  model_BTB_t BTB [0:7];          // Declare BTB
   ////////////////////////////////////////////////
 
   ////////////////////////////////////////
@@ -65,10 +65,10 @@ module DynamicBranchPredictor_model (
   assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]].prediction : 2'h0;
 
     // Compare the tags of the current PC and previous PC address in the cache to determine if they match.
-  assign tags_match = (PC_curr[15:4] == BHT[PC_curr[3:1]].PC_addr[15:4]);
+  assign read_tags_match = (PC_curr[15:4] == BHT[PC_curr[3:1]].PC_addr[15:4]);
 
   // If the tags match, use the prediction; otherwise, assume not taken.
-  assign predicted_taken = (tags_match) ? prediction[1] : 1'b0; 
+  assign predicted_taken = (read_tags_match) ? prediction[1] : 1'b0; 
 
   // Asynchronously read out the target when read enabled.
   assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]].target : 16'h0000;
@@ -88,11 +88,7 @@ module DynamicBranchPredictor_model (
       updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
       case (prev_prediction) // Update the new prediction based on the previous prediction.
             STRONG_NOT_TAKEN: begin
-                if (write_tags_match) begin // If the tags match, update the prediction.
-                    updated_prediction = (actual_taken) ? WEAK_NOT_TAKEN : STRONG_NOT_TAKEN; // Go to weak not taken or stay in strong not taken
-                end else begin // If the tags do not match, assume not taken.
-                    updated_prediction = STRONG_NOT_TAKEN; // Default predict not taken.
-                end
+                updated_prediction = (actual_taken) ? WEAK_NOT_TAKEN : STRONG_NOT_TAKEN; // Go to weak not taken or stay in strong not taken
             end
             WEAK_NOT_TAKEN: begin
                 if(write_tags_match) begin // If the tags match, update the prediction.

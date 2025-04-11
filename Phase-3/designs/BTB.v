@@ -25,7 +25,7 @@ module BTB (
               .clk(clk),
               .rst(rst),
               .SrcCurr(PC_curr[3:1]),
-              .SrcPrev(IF_ID_PC_curr[3:1]),
+              .SrcPrev(3'h0),
               .DstPrev(IF_ID_PC_curr[3:1]),
               .enable(enable),
               .wen(wen),

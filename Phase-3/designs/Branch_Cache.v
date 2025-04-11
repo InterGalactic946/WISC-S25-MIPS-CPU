@@ -3,14 +3,15 @@
 ////////////////////////////////////////////////////////////
 // Branch_Cache.v: WIDTH-bit cache for branch prediction  //
 //                                                        //
-// This design implements a cache for branch prediction.  //
-// It allows reading from two source registers (`SrcReg1` //
-// and `SrcReg2`) and writing to a destination register   //
-// (`DstReg`). The `WriteReg` signal enables writing      //
-// data to the `DstReg`, and `DstData` is the data to be  //
-// written.                                               //
+// This module implements a small register file-like      //
+// structure to support branch prediction mechanisms.     //
+// It tracks recently used registers involved in branch   //
+// instructions and provides quick access to their data.  //
+// The cache supports reading values for two source       //
+// registers and conditionally writing new data to a      //
+// destination register on each clock cycle.              //
 ////////////////////////////////////////////////////////////
-module Branch_Cache(clk, rst, SrcCurr, SrcPrev, DstPrev, wen, DstData, SrcDataCurr, SrcDataPrev);
+module Branch_Cache(clk, rst, SrcCurr, SrcPrev, DstPrev, enable, wen, DstData, SrcDataCurr, SrcDataPrev);
 
   parameter WIDTH = 16;                             // Width of the registers in bits.
   
@@ -26,10 +27,10 @@ module Branch_Cache(clk, rst, SrcCurr, SrcPrev, DstPrev, wen, DstData, SrcDataCu
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire data_prev, data_curr;          // Data read out from both registers.
-  wire write_enable;                  // Write enable signal for the cache.
-  wire [7:0] Wordline_1, Wordline_2;  // Select lines for register 1 and 2.
-  wire [7:0] Wordline_dst;            // Select line for destination register.
+  wire [WIDTH-1:0] data_prev, data_curr;    // Data read out from both registers.
+  wire write_enable;                        // Write enable signal for the cache.
+  wire [7:0] Wordline_curr, Wordline_prev;  // Select lines for previous and current registers.
+  wire [7:0] Wordline_dst;                  // Select line for destination register.
   //////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////
@@ -46,11 +47,13 @@ module Branch_Cache(clk, rst, SrcCurr, SrcPrev, DstPrev, wen, DstData, SrcDataCu
   WriteDecoder_3_8 iWRITE (.RegId(DstPrev), .WriteReg(write_enable), .Wordline(Wordline_dst));
 
   // Vector instantiate 8 registers to track the last 8 branch instructions.
-  Register iBRANCH_CACHE[0:7] (.clk({WIDTH{clk}}), .rst({WIDTH{rst}}), .D(DstData), .WriteReg(Wordline_dst), .ReadEnable1(Wordline_curr), .ReadEnable2(Wordline_prev), .Bitline1(data_curr), .Bitline2(data_prev));
+  Register #(WIDTH) iBRANCH_CACHE[0:7] (.clk({8{clk}}), .rst({8{rst}}), .D(DstData), .WriteReg(Wordline_dst), .ReadEnable1(Wordline_curr), .ReadEnable2(Wordline_prev), .Bitline1(data_curr), .Bitline2(data_prev));
 
-  // Read the data from the cache registers.
-  assign SrcDataCurr = data_curr;
-  assign SrcDataPrev = data_prev;
+  // Read the data from the current location in the cache only if the cache is enabled and wen is not asserted.
+  assign SrcDataCurr = (enable & ~wen) ? data_curr : {WIDTH{1'b0}};
+
+  // Read the data from the previous location in the cache only if the cache is enabled.
+  assign SrcDataPrev = (enable) ? data_prev : {WIDTH{1'b0}};
 
 endmodule
 

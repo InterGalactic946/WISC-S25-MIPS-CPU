@@ -72,7 +72,7 @@ module BHT (
       case (IF_ID_prediction)
           2'h0: begin
             updated_prediction[13:2] = IF_ID_PC_curr[15:4];         // Update the tag.
-            updated_prediction[1:0] = (write_tags_match) ? ((actual_taken) ? 2'h1 : 2'h0) : 2'h0; // Strong Not Taken; invalidate the entry if write tags do not match.
+            updated_prediction[1:0] = (actual_taken) ? 2'h1 : 2'h0; // Strong Not Taken
           end
           2'h1: begin
             updated_prediction[13:2] = IF_ID_PC_curr[15:4];         // Update the tag.

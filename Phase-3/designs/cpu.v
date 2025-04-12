@@ -162,7 +162,6 @@ module cpu (clk, rst_n, hlt, pc);
   ///////////////////////////////////////////////////////////////////////////
   // DECODE instruction word, resolve branches, and access register file   //
   ///////////////////////////////////////////////////////////////////////////
-  // IF_ID_predicted_taken = IF_ID_prediction[1].
   Decode iDECODE (
     .clk(clk),
     .rst(rst),
@@ -170,7 +169,6 @@ module cpu (clk, rst_n, hlt, pc);
     .pc_inst(IF_ID_PC_inst),
     .pc_next(IF_ID_PC_next),
     .flags({ZF, VF, NF}), 
-    .IF_ID_predicted_taken(IF_ID_prediction[1]),
     .IF_ID_predicted_target(IF_ID_predicted_target),
     .MEM_WB_RegWrite(MEM_WB_RegWrite),
     .MEM_WB_reg_rd(MEM_WB_reg_rd),

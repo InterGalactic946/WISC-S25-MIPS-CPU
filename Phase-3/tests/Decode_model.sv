@@ -11,7 +11,6 @@ module Decode_model (
     input logic [15:0] pc_inst,            // The current instruction word
     input logic [15:0] pc_next,            // The next instruction's address
     input logic [2:0] flags,               // Flag register signals (ZF, VF, NF)
-    input logic IF_ID_predicted_taken,     // Predicted taken signal from the IF/ID stage
     input logic [15:0] IF_ID_predicted_target, // Predicted target address from the branch predictor of the previous instruction
     input logic MEM_WB_RegWrite,           // Write enable to the register file (from the MEM/WB stage)
     input logic [3:0] MEM_WB_reg_rd,       // Register ID of the destination register (from the MEM/WB stage)

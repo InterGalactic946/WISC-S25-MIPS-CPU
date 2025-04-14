@@ -7,7 +7,7 @@ set -o noclobber
 
 
 echo ""
-echo "***************************Starting Synthesis**************************"
+echo "***************************Starting Synthesis For the Files Below**************************"
 # check the existance of dc setup file and dc run script
 SETUPFILE=.synopsys_dc.setup
 SRCSETUPFILE=synopsys_dc.setup
@@ -43,7 +43,7 @@ vsuff=v
 
 echo ""
 # echo "Synthesize designs in *.v files:"
-if ls *.$vsuff; then
+if ls *.$vsuff > /dev/null; then
     for dut in $(ls *.$vsuff)
     do
         dutname="${dut%.*}"

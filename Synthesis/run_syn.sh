@@ -32,14 +32,14 @@ svsuff=sv
 vsuff=v
 
 # rename *.v to *.sv
-echo ""
-echo "Check *.v files:"
-if ls *.$svsuff; then
-    for dut in $(ls *.$svsuff)
-    do
-        echo "Find system verilog src file: $dut"
-    done
-fi
+# echo ""
+# echo "Check *.v files:"
+# if ls *.$svsuff; then
+#     for dut in $(ls *.$svsuff)
+#     do
+#         echo "Find system verilog src file: $dut"
+#     done
+# fi
 
 echo ""
 echo "Synthesize designs in *.v files:"

@@ -135,13 +135,13 @@ log:
 			case "$(word 2, $(logargs))" in \
 			a) \
 				echo "Displaying area report:"; \
-				cat ./Synthesis/32nm_rvt/cpu/cpu_area.syn.txt ;; \
+				@cat ./Synthesis/32nm_rvt/cpu/cpu_area.syn.txt ;; \
 			p) \
 				echo "Displaying power report:"; \
-				cat ./Synthesis/32nm_rvt/cpu/cpu_power.syn.txt ;; \
+				@cat ./Synthesis/32nm_rvt/cpu/cpu_power.syn.txt ;; \
 			x) \
 				echo "Displaying max delay report:"; \
-				cat ./Synthesis/32nm_rvt/cpu/cpu_max_delay.syn.txt ;; \
+				@cat ./Synthesis/32nm_rvt/cpu/cpu_max_delay.syn.txt ;; \
 			*) \
 				echo "Error: Invalid sub-argument for 's'. Use one of: a, p, x."; \
 				exit 1 ;; \

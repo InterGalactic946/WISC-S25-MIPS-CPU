@@ -1,59 +1,66 @@
-Double stall test:
-# Test double stall
-# First, try to trick it
-# Save a halt instruction for later....
-        B 111, pass
-GOOD1:  B 111, OTHER
-# Set the condition codes, and make R1 0
-pass:   ADD R1, R0, R0
-# R2 is an address to store
-        LLB R2, 56
-# R3 is addr of halt instruction
-        LLB R3, 2
-# R4 gets some nonsense value
-        LLB R4, 72
-# Store R3 and load to R4 to create a dependent load
-        SW R3, R2, 2
-        LW R4, R2, 2
-# Got R4? Let's go there
-# This shouldn't actually need any stalls
-        BR 000, R4
-# Now let's do this
-        SW R4, R2, 3
-        LW R5, R2, 3
-        BR 001, R5
-# Should halt after that
-# If it doesn't, flag updating is probably wrong
-        B 111, BAD
-        HLT     # This should never execute
-        HLT
-        HLT
-        HLT
-OTHER:
-        # Test single stall
-        LW R5, R2, 3
-        ADD R0, R5, R5
-        # This should have stalled once
-        LW R5, R2, 2
-        ADD R0, R0, R0
-        ADD R0, R5, R5
-        # This shouldn't stall
-        HLT
+///////////////////////////////////////////////////////
+// Branch Hazard Test Program (Register & Condition) //
+// This program demonstrates register and condition  //
+// hazards in a pipelined processor.                 //
+///////////////////////////////////////////////////////
 
-BAD:    XOR R0, R0, R0
-// Compute first few fibonacci numbers
-// V 1.0
-// PASS
-        ADD R1, R0, R0
-        LLB R2, 0X1
-        LLB R3, 0X9
-        LLB R4, 0X1
-Ltop:
-        ADD R1, R1, R2
-        XOR R1, R2, R1
-        XOR R2, R1, R2
-        XOR R1, R2, R1
-        // DBG point -> R1 and r2 have fib numbers
-        SUB R3, R3, R4
-        B 000, Ltop
-        HLT
+// Initialize registers and array base address
+LLB R1, 0x05      // Loop counter (R1 = 5 elements)
+LLB R2, 0x00      // Base address of the array (R2 = 0x0000)
+LLB R3, 0x00      // Sum accumulator (R3 = 0x0000)
+LLB R4, 0x04      // Constant: 5 (for averaging)
+LLB R5, 0x06      //  Value (R5 = 6)
+LLB R8, 0x06      // Increment value (R8 = 6)
+LLB R9, 0x0A      // Increment value (R9 = 10)
+LLB R10, 0x10     // Increment value (R9 = 16)
+
+
+// Load array values into memory (initialization)
+LLB R6, 0x1A      // Array element 1
+SW R6, R2, 0      // Store 0x001A at memory[0x0000]
+
+// Test Register Hazard with LW (load word instruction)
+TEST_LW_HAZARD:
+    LW R3, R2, 0    // Load value from memory[0x00] into R3 (e.g., R3 = 0x001A from address 0)
+    BR 000, R3      // Branch if Not Equal (Z = 0) → should branch to TEST_ADD_HAZARD
+
+    ADD R3, R3, R4  // This should not execute
+
+// Test Register Hazard with ADD instruction
+TEST_ADD_HAZARD:
+    ADD R2, R6, R8  // Get PC addr 0x0020 into R2
+    BR 000, R2      // Branch if Not Equal (Z = 0) → should branch to TEST_PADDSB_HAZARD
+
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4  // This should not execute 
+
+// Test Register Hazard with PADDSB (parallel addition signed bytes)
+TEST_PADDSB_HAZARD:
+    PADDSB R7, R3, R4  // Parallel add signed bytes (R7 = R3 + R4) = 4
+    BR 001, R7         // Branch if Equal (Z = 0) → should not branch R7 = 4
+
+    // Code after branch (if branch not taken)
+    ADD R7, R0, R4     // This should execute if branch not taken R7 = 4
+
+    // Code after branch (if branch not taken)
+    ADD R7, R7, R7     // This should execute if branch not taken R7 = 8
+
+// Test Condition Code Hazard with ADD (affects condition flags)
+TEST_SLL_HAZARD:
+    SLL R7, R7, 2    // R3 = R3 << 2, affects condition codes (Z, N)  R7 = 32
+    ADD R7, R7, R10    // R3 = R3 + R10, affects condition codes (Z, N)  R7 = 48
+    BR 000, R7        // Branch if not Equal (Z = 1) → should branch to TEST_SUB_HAZARD
+    
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4    // This should execute if branch not taken
+
+// Test Condition Code Hazard with SUB (affects condition flags)
+TEST_SUB_HAZARD:
+    SUB R2, R1, R4    // R2 = R1 - R4, affects condition codes (Z, N)
+    BR 001, R2        // Branch if Equal (Z = 1) → should not branch
+
+    // Code after branch (if branch not taken)
+    ADD R3, R3, R4    // This should execute if branch not taken
+
+END:
+HLT                // Halt execution

@@ -1,98 +1,71 @@
-// Program to Test Various Instructions
-////////////////////////////////////////////////////////
-// Initialize Data in Memory                          //
-// Setting up register values and memory addresses     //
-////////////////////////////////////////////////////////
-LLB R1, 0x0E      // Load Lower Byte: R1 = 0x000E (for SW/LW test)
-LLB R2, 0x06      // Load Lower Byte: R2 = 0x0006 (for addition and subtraction)
-LLB R3, 0xFF      // Load Lower Byte: R3 = 0x00FF (mask for signed byte addition)
-LLB R4, 0x08      // Load Lower Byte: R4 = 0x0008 (shift amount)
-LLB R5, 0x0A      // Load Lower Byte: R5 = 0x0020 (base memory address)
+    ////////////////////////////////////////////////////////
+    // Initialize Registers                                 //
+    ////////////////////////////////////////////////////////
+    LLB R1, 0x05      // R1 = 0x0005
+    LLB R2, 0x03      // R2 = 0x0003
+    LLB R3, 0x02      // R3 = 0x0002
+    LLB R4, 0x01      // R4 = 0x0001
 
-////////////////////////////////////////////////////////
-// Memory-to-Memory Forwarding (LW followed by SW)     //
-// Tests load-to-store forwarding to check for hazards //
-////////////////////////////////////////////////////////
-LW R6, R5, 0      // Load word from memory[0x0020] into R6 (initial value)
-SW R6, R5, 0      // Store the loaded value back to memory[0x0020]
+    ////////////////////////////////////////////////////////
+    // Back-to-Back ADD Instructions (Forwarding Test)      //
+    ////////////////////////////////////////////////////////
+    ADD R1, R1, R2    // R1 = R1 + R2 (0x0005 + 0x0003 = 0x0008)
+    ADD R1, R1, R3    // R1 = R1 + R3 (0x0008 + 0x0002 = 0x000A)
+    ADD R1, R1, R4    // R1 = R1 + R4 (0x000A + 0x0001 = 0x000B)
 
-////////////////////////////////////////////////////////
-// Store Stall with Data Dependency                    //
-// Verifying proper stall handling with load dependency //
-////////////////////////////////////////////////////////
-LW R7, R5, 0      // Load word from memory[0x0020] into R7
-ADD R7, R7, R2    // Add R7 and R2, storing result in R7 (0x0006 + 0x0006 = 0x000C)
-SW R7, R5, 0      // Store the result (0x000C) back to memory[0x0020]
+    ////////////////////////////////////////////////////////
+    // Data Hazard Test (Forwarding)                        //
+    ////////////////////////////////////////////////////////
+    ADD R3, R1, R2    // R3 = R1 + R2 (0x000B + 0x0003 = 0x000E)
+    SUB R4, R3, R1    // R4 = R3 - R1 (0x000E - 0x000B = 0x0003)
+    XOR R5, R4, R2    // R5 = R4 ^ R2 (0x0003 ^ 0x0003 = 0x0000)
 
-////////////////////////////////////////////////////////
-// Arithmetic Instructions                            //
-// Testing addition, subtraction, parallel addition,  //
-// and reduction to verify correct ALU operations      //
-////////////////////////////////////////////////////////
-ADD R8, R1, R2     // Add R1 and R2: R8 = 0x000E + 0x0006 = 0x0014
-SUB R9, R8, R2     // Subtract R2 from R8: R9 = 0x0014 - 0x0006 = 0x000E
-PADDSB R10, R1, R2 // Parallel Add Signed Byte: R10 = signed add of bytes from R1 and R2
-RED R11, R10, R2   // Reduction operation on R10 and R2 (custom reduction)
+    ////////////////////////////////////////////////////////
+    // Load-Use Hazard                                      //
+    ////////////////////////////////////////////////////////
+    LLB R6, 0x20      // R6 = 0x0020 (Memory address)
+    SW R3, R6, 0      // Store R3 (0x000E) at memory[0x0020]
+    LW R7, R6, 0      // Load R7 from memory[0x0020] (expected: 0x000E)
+    ADD R8, R7, R1    // R8 = R7 + R1 (0x000E + 0x000B = 0x0019)
 
-////////////////////////////////////////////////////////
-// Logical Instructions                               //
-// Verifying XOR and its effect on bit patterns        //
-////////////////////////////////////////////////////////
-XOR R14, R8, R9   // XOR R8 and R9: R14 = 0x0014 ^ 0x000E = 0x001A
+    ////////////////////////////////////////////////////////
+    // Branching Hazard (Control Hazard)                    //
+    ////////////////////////////////////////////////////////
+    SUB R9, R1, R2    // R9 = R1 - R2 (0x000B - 0x0003 = 0x0008)
+    B 001, BRANCH1    // Branch if Equal (Z = 1) → should not branch
 
-////////////////////////////////////////////////////////
-// Shift and Rotate Instructions                       //
-// Testing logical/arithmetic shifts and rotation      //
-////////////////////////////////////////////////////////
-SLL R1, R1, 8     // Shift Left Logical: R1 = 0x000E << 8 = 0x0E00
-SRA R2, R1, 8     // Shift Right Arithmetic: R2 = 0x0E00 >> 8 = 0x000E
-ROR R3, R1, 8     // Rotate Right: R3 = 0x0E00 ror 8 = 0x000E
+    // This section should execute if the branch was not taken
+    ADD R10, R1, R9   // R10 = R1 + R9 (0x000B + 0x0008 = 0x0013)
 
-////////////////////////////////////////////////////////
-// Reduction and Parallel Addition                     //
-// Verifying reduction and parallel addition logic     //
-////////////////////////////////////////////////////////
-RED R6, R1, R2     // Reduction operation on R1 and R2 (custom logic)
-PADDSB R7, R3, R3  // Parallel Add Signed Bytes: R7 = signed add of R3 and R3
+BRANCH1:
+    SUB R11, R1, R1   // R11 = R1 - R1 (0x0000)
+    B 011, END        // Branch if Less Than (N = 1) → should not branch
 
-////////////////////////////////////////////////////////
-// Branch Instructions                                 //
-// Demonstrates branch handling for various conditions //
-// Equal, Greater Than, Less Than, Overflow, Unconditional //
-////////////////////////////////////////////////////////
-LLB R1, 0x01      // Load Lower Byte: R1 = 0x0001 (for branch condition)
-ADD R8, R1, R1    // Add R1 to R1: R8 = 0x0001 + 0x0001 = 0x0002
+    ////////////////////////////////////////////////////////
+    // Forwarding with Branches                             //
+    ////////////////////////////////////////////////////////
+    ADD R12, R4, R5   // R12 = R4 + R5 (0x0003 + 0x0000 = 0x0003)
+    B 000, BRANCH2    // Branch if Not Equal (Z = 0) → should branch
 
-// Branch if Equal (Z = 1)
-SUB R8, R8, R8    // Subtract R8 from itself: R8 = 0x0000
-B 001, EQ_LABEL   // Branch if Equal (Z = 1) - Should branch
+    // Unreachable if branch taken
+    ADD R13, R12, R1  // Shouldn't execute
 
-// Branch if Greater Than (Z = N = 0)
-ADD R8, R1, R1    // Add R1 to R1: R8 = 0x0001 + 0x0001 = 0x0002
-B 010, GT_LABEL   // Branch if Greater Than (Z = N = 0) - Should branch
+BRANCH2:
+    ADD R14, R12, R2  // R14 = R12 + R2 (0x0003 + 0x0003 = 0x0006)
 
-// Branch if Less Than (N = 1)
-SUB R8, R1, R2    // Subtract R2 from R1: R8 = 0x0001 - 0x000E = -13
-B 011, LT_LABEL   // Branch if Less Than (N = 1) - Should branch
+    ////////////////////////////////////////////////////////
+    // Memory-to-Memory Forwarding (LW followed by SW)       //
+    ////////////////////////////////////////////////////////
+    LW R12, R6, 0     // Load R12 from memory[0x0020] (expected: 0x000E)
+    SW R12, R8, 0     // Store R12 (loaded value) at memory[0x0019] (address from R8)
 
-EQ_LABEL:
-ADD R8, R8, R1    // Increment R8: R8 = 0x0000 + 0x0001 = 0x0001
 
-GT_LABEL:
-ADD R8, R8, R1    // Increment R8: R8 = 0x0002 + 0x0001 = 0x0003
+    ////////////////////////////////////////////////////////
+    // Store Stall with Data Dependency                     //
+    ////////////////////////////////////////////////////////
+    LW R7, R6, 0     // Load R7 from memory[0x0020] (expected: 0x000E)
+    SW R11, R7, 0    // Store R11 (0x000E) at memory[0x000E] (address from R7)
 
-LT_LABEL:
-ADD R8, R8, R1    // Increment R8: R8 = 0x0003 + 0x0001 = 0x0004
-
-// Unconditional Branch (Always)
-B 111, END_LABEL  // Unconditional branch to end the program
-
-// Overflow Branch
-ADD R8, R8, R8    // Add R8 to itself to test overflow
-B 110, OFL_LABEL  // Branch if Overflow (V = 1) - Should branch if overflow occurs
-
-OFL_LABEL:
-ADD R8, R8, R1    // Handle overflow: R8 = R8 + R1
-
-END_LABEL:
-HLT               // Halt the execution
+END:
+    PCS R15           // Store PC in R15 to verify correctness
+    HLT               // Halt execution

@@ -1,71 +1,46 @@
-    ////////////////////////////////////////////////////////
-    // Initialize Registers                                 //
-    ////////////////////////////////////////////////////////
-    LLB R1, 0x05      // R1 = 0x0005
-    LLB R2, 0x03      // R2 = 0x0003
-    LLB R3, 0x02      // R3 = 0x0002
-    LLB R4, 0x01      // R4 = 0x0001
-
-    ////////////////////////////////////////////////////////
-    // Back-to-Back ADD Instructions (Forwarding Test)      //
-    ////////////////////////////////////////////////////////
-    ADD R1, R1, R2    // R1 = R1 + R2 (0x0005 + 0x0003 = 0x0008)
-    ADD R1, R1, R3    // R1 = R1 + R3 (0x0008 + 0x0002 = 0x000A)
-    ADD R1, R1, R4    // R1 = R1 + R4 (0x000A + 0x0001 = 0x000B)
-
-    ////////////////////////////////////////////////////////
-    // Data Hazard Test (Forwarding)                        //
-    ////////////////////////////////////////////////////////
-    ADD R3, R1, R2    // R3 = R1 + R2 (0x000B + 0x0003 = 0x000E)
-    SUB R4, R3, R1    // R4 = R3 - R1 (0x000E - 0x000B = 0x0003)
-    XOR R5, R4, R2    // R5 = R4 ^ R2 (0x0003 ^ 0x0003 = 0x0000)
-
-    ////////////////////////////////////////////////////////
-    // Load-Use Hazard                                      //
-    ////////////////////////////////////////////////////////
-    LLB R6, 0x20      // R6 = 0x0020 (Memory address)
-    SW R3, R6, 0      // Store R3 (0x000E) at memory[0x0020]
-    LW R7, R6, 0      // Load R7 from memory[0x0020] (expected: 0x000E)
-    ADD R8, R7, R1    // R8 = R7 + R1 (0x000E + 0x000B = 0x0019)
-
-    ////////////////////////////////////////////////////////
-    // Branching Hazard (Control Hazard)                    //
-    ////////////////////////////////////////////////////////
-    SUB R9, R1, R2    // R9 = R1 - R2 (0x000B - 0x0003 = 0x0008)
-    B 001, BRANCH1    // Branch if Equal (Z = 1) → should not branch
-
-    // This section should execute if the branch was not taken
-    ADD R10, R1, R9   // R10 = R1 + R9 (0x000B + 0x0008 = 0x0013)
-
-BRANCH1:
-    SUB R11, R1, R1   // R11 = R1 - R1 (0x0000)
-    B 011, END        // Branch if Less Than (N = 1) → should not branch
-
-    ////////////////////////////////////////////////////////
-    // Forwarding with Branches                             //
-    ////////////////////////////////////////////////////////
-    ADD R12, R4, R5   // R12 = R4 + R5 (0x0003 + 0x0000 = 0x0003)
-    B 000, BRANCH2    // Branch if Not Equal (Z = 0) → should branch
-
-    // Unreachable if branch taken
-    ADD R13, R12, R1  // Shouldn't execute
-
-BRANCH2:
-    ADD R14, R12, R2  // R14 = R12 + R2 (0x0003 + 0x0003 = 0x0006)
-
-    ////////////////////////////////////////////////////////
-    // Memory-to-Memory Forwarding (LW followed by SW)       //
-    ////////////////////////////////////////////////////////
-    LW R12, R6, 0     // Load R12 from memory[0x0020] (expected: 0x000E)
-    SW R12, R8, 0     // Store R12 (loaded value) at memory[0x0019] (address from R8)
-
-
-    ////////////////////////////////////////////////////////
-    // Store Stall with Data Dependency                     //
-    ////////////////////////////////////////////////////////
-    LW R7, R6, 0     // Load R7 from memory[0x0020] (expected: 0x000E)
-    SW R11, R7, 0    // Store R11 (0x000E) at memory[0x000E] (address from R7)
-
-END:
-    PCS R15           // Store PC in R15 to verify correctness
-    HLT               // Halt execution
+	LLB R1, 0X8A		
+	LLB R6, 0X80		
+	LHB R6, 0X01		
+	SW R1, R6, 0		
+	LLB R1, 0X10		
+	LLB R2, 0X70		
+	LLB R3, 0X02		
+WR_LP1:	SW  R1, R2, 0     
+	ADD R2, R2, R3		
+	SUB R1, R1, R3		
+	B 000, WR_LP1
+	LLB R1, 0X10		
+	LLB R2, 0X70		
+	LLB R5, 0X80		
+MV_LP:	LW R4, R2, 0		
+	ADD R2, R2, R3		
+	SW R4, R5, 0      
+	ADD R5, R5, R3		
+	SUB R1, R1, R3
+	B 000, MV_LP
+	LLB R1, 0X10		
+	LLB R5, 0X80	
+CHK_LP:	LW R4, R5, 0	
+	SUB R0, R4, R1		
+	B 000, FAIL	
+	ADD R5, R5, R3		
+	SUB R1, R1, R3		
+	B 000, CHK_LP		
+	LW R2, R6, 0		
+	LLB R1, 0X8A		
+	SUB R0, R1, R2	
+	B 000, FAIL
+	LLB R6, 0X80
+	LHB R6, 0X00		
+	LW R2, R6, 0
+	LLB R1, 0X10
+	SUB R0, R1, R2
+	B 001, PASS
+FAIL:	LLB R1, 0XFF		
+	HLT		
+	ADD R11, R11, R10	
+	ADD R11, R11, R10	
+	ADD R11, R11, R10   
+PASS:	LLB R1, 0XAA		
+	LHB R1, 0XAA		
+	HLT

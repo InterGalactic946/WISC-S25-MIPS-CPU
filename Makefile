@@ -129,11 +129,10 @@ run:
 #   make log <log_type>
 ##################################################
 log:
-	@if [ "$(words $(logargs))" -ge 1 ]; then \
-		case "$(word 1,$(logargs))" in \
+	@if [ $(words $(logargs)) -ge 1 ]; then \
+		case "$(word 1, $(logargs))" in \
 		s) \
-			# Handle 's' for synthesis reports. \
-			case "$(word 2,$(logargs))" in \
+			case "$(word 2, $(logargs))" in \
 			a) \
 				echo "Displaying area report:"; \
 				cat ./Synthesis/32nm_rvt/cpu/cpu_area.syn.txt ;; \
@@ -144,30 +143,27 @@ log:
 				echo "Displaying max delay report:"; \
 				cat ./Synthesis/32nm_rvt/cpu/cpu_max_delay.syn.txt ;; \
 			*) \
-				echo "Error: Invalid sub-argument for 's' log type. Valid options: a, p, x."; \
+				echo "Error: Invalid sub-argument for 's'. Use one of: a, p, x."; \
 				exit 1 ;; \
 			esac ;; \
 		c) \
-				cd Scripts && python3 execute_tests.py -l c; \
-				;; \
+			cd Scripts && python3 execute_tests.py -l c ;; \
 		t) \
-				cd Scripts && python3 execute_tests.py -l t; \
-				;; \
+			cd Scripts && python3 execute_tests.py -l t ;; \
 		*) \
-			# Handle invalid log types. \
-			echo "Error: Invalid argument for log target. Usage:"; \
-			echo "  make log s <report_type>"; \
-			echo "  make log c"; \
-			echo "  make log t"; \
+			echo "Error: Invalid log type. Usage:"; \
+			echo "  make log logargs='s <a|p|x>'"; \
+			echo "  make log logargs='c'"; \
+			echo "  make log logargs='t'"; \
 			exit 1 ;; \
 		esac; \
-	
-	# If the arguments are invalid or incomplete, print an error. \
 	else \
 		echo "Error: Missing or invalid arguments for 'log' target. Usage:"; \
-		echo "  make log s <report_type>|c|t"; \
+		echo "  make log logargs='s <a|p|x>'"; \
+		echo "  make log logargs='c'"; \
+		echo "  make log logargs='t'"; \
 		exit 1; \
-	fi;
+	fi
 
 
 ##################################################

@@ -78,7 +78,7 @@ kill:
 #   make synthesis
 ##################################################
 synthesis:
-	@cd Scripts && bash ./Synthesis/auto_syn.sh
+	@cd Synthesis && bash ./auto_syn.sh
 
 
 ##################################################

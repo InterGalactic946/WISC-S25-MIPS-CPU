@@ -2,6 +2,7 @@
 # Makefile for handling check, run, log, and clean targets with arguments.
 # This Makefile supports the following goals:
 # - check: Checks if Verilog design files are compliant.
+# - synthesis: Synthesizes design to Synopsys 32-nm Cell Library.
 # - kill: Closes all vsim instances started from the script.
 # - run: Executes tests with specified arguments.
 # - log: Displays logs based on the provided log mode.
@@ -10,6 +11,7 @@
 # Usage:
 # - make check               - Checks if Verilog design files are compliant.
 # - make kill           	 - Closes all started vsim instances from the script.
+# - make synthesis           - Synthesizes design to Synopsys 32-nm Cell Library.
 # - make run <mode> (as) (a) - Assemble and run tests in a specified directory with a selected mode (optionally all tests in the directory).
 # - make log <log_type>      - Display logs for a specified directory and log type.
 # - make clean               - Clean up generated files in a specified directory.
@@ -28,6 +30,7 @@ default:
 	@echo "Usage instructions for the Makefile:"
 	@echo "  make check 	           - Checks all .v design files for compliancy within a selected directory."
 	@echo "  make kill 	           - Closes all started vsim instances from the script."
+	@echo "  make synthesis        - Synthesizes design to Synopsys 32-nm Cell Library."
 	@echo "  make run <mode> [as] [a] - Run tests in a specified directory with a selected mode (c,s,g,v) and optionally assembles files."
 	@echo "  make log <log_type>      - Display logs for a specified directory and log type."
 	@echo "  make clean 	           - Clean up generated files in a specified directory."
@@ -44,7 +47,7 @@ else ifeq ($(firstword $(MAKECMDGOALS)), log)
 endif
 
 # Declare phony targets.
-.PHONY: default check kill run log clean $(runargs) $(logargs)
+.PHONY: default check synthesis kill run log clean $(runargs) $(logargs)
 
 
 ##################################################
@@ -66,6 +69,16 @@ check:
 kill:
 	@echo "Closing all started vsim instances..."
 	@ pkill vish -9
+
+
+##################################################
+# Target: synthesis
+# This target runs the synthesis script and produces log files.
+# Usage:
+#   make synthesis
+##################################################
+synthesis:
+	bash ./Synthesis/auto_syn.sh
 
 
 ##################################################
@@ -111,28 +124,48 @@ run:
 ##################################################
 # Target: log
 # This target displays logs based on the provided log mode:
-# - <log_type>: Type of log (either `c` for compilation logs or `t` for transcript logs).
+# - <log_type>: Type of log (either `s` for synthesis along with <report_type>, `c` for compilation logs, or `t` for transcript logs).
 # Usage:
 #   make log <log_type>
 ##################################################
 log:
-	@if [ "$(words $(logargs))" -eq 1 ]; then \
-		case "$(word 1, $(logargs))" in \
-			c) \
+	@if [ "$(words $(logargs))" -ge 1 ]; then \
+		case "$(word 1,$(logargs))" in \
+		s) \
+			# Handle 's' for synthesis reports. \
+			case "$(word 2,$(logargs))" in \
+			a) \
+				echo "Displaying area report:"; \
+				cat ./Synthesis/32nm_rvt/cpu/cpu_area.syn.txt ;; \
+			p) \
+				echo "Displaying power report:"; \
+				cat ./Synthesis/32nm_rvt/cpu/cpu_power.syn.txt ;; \
+			x) \
+				echo "Displaying max delay report:"; \
+				cat ./Synthesis/32nm_rvt/cpu/cpu_max_delay.syn.txt ;; \
+			*) \
+				echo "Error: Invalid sub-argument for 's' log type. Valid options: a, p, x."; \
+				exit 1 ;; \
+			esac ;; \
+		c) \
 				cd Scripts && python3 execute_tests.py -l c; \
 				;; \
-			t) \
+		t) \
 				cd Scripts && python3 execute_tests.py -l t; \
 				;; \
-			*) \
-				echo "Error: Invalid log mode. Supported modes are c (compilation) or t (transcript)."; \
-				exit 1; \
-				;; \
+		*) \
+			# Handle invalid log types. \
+			echo "Error: Invalid argument for log target. Usage:"; \
+			echo "  make log s <report_type>"; \
+			echo "  make log c"; \
+			echo "  make log t"; \
+			exit 1 ;; \
 		esac; \
+	
 	# If the arguments are invalid or incomplete, print an error. \
 	else \
 		echo "Error: Missing or invalid arguments for 'log' target. Usage:"; \
-		echo "  make log c|t"; \
+		echo "  make log s <report_type>|c|t"; \
 		exit 1; \
 	fi;
 

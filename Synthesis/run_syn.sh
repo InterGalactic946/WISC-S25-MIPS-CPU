@@ -7,7 +7,7 @@ set -o noclobber
 
 
 echo ""
-echo "***************************Starting Synthesis For the Files Below**************************"
+echo "***************************Starting Synthesis**************************"
 # check the existance of dc setup file and dc run script
 SETUPFILE=.synopsys_dc.setup
 SRCSETUPFILE=synopsys_dc.setup

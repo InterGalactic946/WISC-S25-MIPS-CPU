@@ -28,12 +28,12 @@
 # It helps users understand how to use the Makefile.
 default:
 	@echo "Usage instructions for the Makefile:"
-	@echo "  make check 	           - Checks all .v design files for compliancy within a selected directory."
+	@echo "  make check 	             - Checks all .v design files for compliancy within a selected directory."
 	@echo "  make kill 	              - Closes all started vsim instances from the script."
 	@echo "  make synthesis              - Synthesizes design to Synopsys 32-nm Cell Library."
-	@echo "  make run <mode> [as] [a]   - Run tests in a specified directory with a selected mode (c,s,g,v) and optionally assembles files."
+	@echo "  make run <mode> [as] [a]    - Run tests in a specified directory with a selected mode (c,s,g,v) and optionally assembles files."
 	@echo "  make log <log_type> [a|p|x] - Display logs for a specified directory and log type."
-	@echo "  make clean 	             - Clean up generated files in a specified directory."
+	@echo "  make clean 	              - Clean up generated files in a specified directory."
 
 # Handle different goals (run, log, clean) by parsing arguments passed to make.
 ifeq ($(firstword $(MAKECMDGOALS)), run)

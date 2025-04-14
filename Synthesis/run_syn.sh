@@ -7,7 +7,7 @@ set -o noclobber
 
 
 echo ""
-echo "***************************Starting Synthesis**************************"
+echo "***************************Synthesising CPU to Synopsys 32-nm Cell Library**************************"
 # check the existance of dc setup file and dc run script
 SETUPFILE=.synopsys_dc.setup
 SRCSETUPFILE=synopsys_dc.setup

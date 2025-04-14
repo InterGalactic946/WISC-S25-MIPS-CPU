@@ -9,12 +9,12 @@
 # - clean: Cleans up generated files in the specified directory.
 #
 # Usage:
-# - make check               - Checks if Verilog design files are compliant.
-# - make kill           	 - Closes all started vsim instances from the script.
-# - make synthesis           - Synthesizes design to Synopsys 32-nm Cell Library.
-# - make run <mode> (as) (a) - Assemble and run tests in a specified directory with a selected mode (optionally all tests in the directory).
-# - make log <log_type>      - Display logs for a specified directory and log type.
-# - make clean               - Clean up generated files in a specified directory.
+# - make check                  - Checks if Verilog design files are compliant.
+# - make kill           	    - Closes all started vsim instances from the script.
+# - make synthesis              - Synthesizes design to Synopsys 32-nm Cell Library.
+# - make run <mode> (as) (a)    - Assemble and run tests in a specified directory with a selected mode (optionally all tests in the directory).
+# - make log <log_type> (a|p|x) - Display logs for a specified directory and log type.
+# - make clean                  - Clean up generated files in a specified directory.
 #
 # Example:
 # - make check  - Checks all .v design files that are not testbenches for compliancy.
@@ -32,7 +32,7 @@ default:
 	@echo "  make kill 	           - Closes all started vsim instances from the script."
 	@echo "  make synthesis           - Synthesizes design to Synopsys 32-nm Cell Library."
 	@echo "  make run <mode> [as] [a] - Run tests in a specified directory with a selected mode (c,s,g,v) and optionally assembles files."
-	@echo "  make log <log_type>      - Display logs for a specified directory and log type."
+	@echo "  make log <log_type> [a|p|x]   - Display logs for a specified directory and log type."
 	@echo "  make clean 	           - Clean up generated files in a specified directory."
 
 # Handle different goals (run, log, clean) by parsing arguments passed to make.
@@ -126,7 +126,7 @@ run:
 # This target displays logs based on the provided log mode:
 # - <log_type>: Type of log (either `s` for synthesis along with <report_type>, `c` for compilation logs, or `t` for transcript logs).
 # Usage:
-#   make log <log_type>
+#   make log <log_type> [a|p|x]
 ##################################################
 log:
 	@if [ $(words $(logargs)) -ge 1 ]; then \
@@ -152,16 +152,16 @@ log:
 			cd Scripts && python3 execute_tests.py -l t ;; \
 		*) \
 			echo "Error: Invalid log type. Usage:"; \
-			echo "  make log logargs='s <a|p|x>'"; \
-			echo "  make log logargs='c'"; \
-			echo "  make log logargs='t'"; \
+			echo "  make log s <a|p|x>"; \
+			echo "  make log c"; \
+			echo "  make log t"; \
 			exit 1 ;; \
 		esac; \
 	else \
 		echo "Error: Missing or invalid arguments for 'log' target. Usage:"; \
-		echo "  make log logargs='s <a|p|x>'"; \
-		echo "  make log logargs='c'"; \
-		echo "  make log logargs='t'"; \
+		echo "  make log s <a|p|x>"; \
+		echo "  make log c"; \
+		echo "  make log t"; \
 		exit 1; \
 	fi
 

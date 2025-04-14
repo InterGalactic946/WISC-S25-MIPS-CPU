@@ -66,5 +66,6 @@ grep -Ri "Error" ./*
 grep -Ri "connected" ./*
 echo ""
 echo "******************************All Done******************************"
+echo "Run 'make log s a|p|x' for more details."
 echo ""
 

@@ -378,10 +378,11 @@ def assemble():
 
     # Get the full path of the selected input file.
     infile = os.path.join(TEST_PROGRAMS_DIR, asm_files[choice])
-    outfile = os.path.join(TESTS_DIR, "instructions.img") 
+    assembler_out = os.path.join(TESTS_DIR, "instructions.img")
+    outfile = os.path.join(TESTS_DIR, "loadfile_all.img") 
 
-    # Construct the command to run the assembler.
-    command = f"perl {SCRIPTS_DIR}/assembler.pl {infile} > {outfile}"
+    # Construct the command to run the assembler and store image to temporary file.
+    command = f"perl {SCRIPTS_DIR}/assembler.pl {infile} > {assembler_out}"
 
     # Execute the assembler command with error handling.
     try:
@@ -399,6 +400,20 @@ def assemble():
         print(f"{error_message}")
         sys.exit(1)  # Exit the script with an error code
     
+    # Parse assembled output (only first 4 chars per line).
+    with open(assembler_out, 'r') as f:
+        assembled_lines = [line.strip()[:4] for line in f.readlines()]
+
+    # Generate full memory image (65536 lines).
+    full_memory = assembled_lines + ["0000"] * (65536 - len(assembled_lines))
+
+    # Write to final output file.
+    with open(outfile, "w") as f:
+        f.write('\n'.join(full_memory) + '\n')
+
+    # Remove the instructions.img file after use.
+    os.remove(assembler_out)
+
     # Set the infile for use.
     TEST_FILE = os.path.splitext(os.path.basename(infile))[0]
 

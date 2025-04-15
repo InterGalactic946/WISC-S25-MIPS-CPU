@@ -82,7 +82,7 @@ module cpu_tb();
       // Load instructions into memory for the CPU to execute.
       if (!error) begin
         // Load instructions into memory for the CPU to execute.
-        LoadImage("./tests/instructions.img", instr_memory);
+        LoadImage("./tests/loadfile_all.img", instr_memory);
 
         // Load instructions into data memory for the CPU to perform memory operations.
         LoadImage("./tests/data.img", data_memory);

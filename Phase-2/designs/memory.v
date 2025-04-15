@@ -56,7 +56,7 @@ module memory1c (data_out, data_in, data, addr, enable, wr, clk, rst);
             if (data)
               $readmemh("./tests/data.img", mem);
             else
-              $readmemh("./tests/instructions.img", mem);
+              $readmemh("./tests/loadfile_all.img", mem);
             loaded = 1;
          end
           

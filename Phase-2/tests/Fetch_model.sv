@@ -82,7 +82,7 @@ module Fetch_model (
   always @(posedge clk) begin
     if (rst) begin
       // Initialize the instruction memory on reset.
-      $readmemh("./tests/instructions.img", inst_mem);
+      $readmemh("./tests/loadfile_all.img", inst_mem);
     end
   end
 

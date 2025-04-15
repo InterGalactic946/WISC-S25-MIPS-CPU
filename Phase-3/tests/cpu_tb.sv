@@ -23,6 +23,12 @@ module cpu_tb();
   logic [15:0] pc;                   // Current program counter value
   logic stall;                       // Indicates a stall in the pipeline.
   
+  logic wen_BHT;                     // Write enable for BHT
+  logic wen_BTB;                     // Write enable for BTB
+  logic MemEnable;                   // Enable for memory
+  logic RegWrite;                    // Register write signal
+  logic HLT;                         // hlt instruction
+
   logic IF_flush;                    // Indicates a flush in the instruction fetch stage. 
   logic expected_IF_flush;           // Expected flush signal for verification.
   logic ID_flush;                    // Indicates a flush in the instruction decode stage.
@@ -109,7 +115,7 @@ module cpu_tb();
   always @(negedge clk) begin
       if (rst_n) begin
         // Dump the contents of memory whenever we write to the BTB or BHT.
-        if (iDUT.wen_BHT || iDUT.wen_BTB || hlt) begin
+        if (wen_BHT || wen_BTB || HLT) begin
           log_BTB_BHT_dump (
             .model_BHT(iMODEL.iFETCH.iDBP_model.BHT),
             .model_BTB(iMODEL.iFETCH.iDBP_model.BTB)
@@ -117,7 +123,7 @@ module cpu_tb();
         end
 
         // Log data memory contents.
-        if (iDUT.EX_MEM_MemEnable || hlt) begin
+        if (MemEnable || HLT) begin
           log_data_dump(
               .model_data_mem(iMODEL.iDATA_MEM.data_memory),     
               .dut_data_mem(iDUT.iDATA_MEM.mem)          
@@ -125,12 +131,28 @@ module cpu_tb();
         end
         
         // Log the regfile contents.
-        if (iDUT.MEM_WB_RegWrite || hlt) begin
+        if (RegWrite || HLT) begin
           log_regfile_dump(.regfile(iMODEL.iDECODE.iRF.regfile));
         end
       end
   end
 
+  // Pipeline the write/enable signals for printing out.
+  always @(posedge clk) begin
+    if (!rst_n) begin
+      wen_BHT <= 1'b0;
+      wen_BTB <= 1'b0;
+      MemEnable <= 1'b0;
+      RegWrite <= 1'b0;
+      HLT <= 1'b0;
+    end else begin
+      wen_BHT <= iDUT.wen_BHT;
+      wen_BTB <= iDUT.wen_BTB;
+      MemEnable <= iDUT.EX_MEM_MemEnable;
+      RegWrite <= iDUT.MEM_WB_RegWrite;
+      HLT <= hlt;
+    end
+  end
 
   // Pass the flush signal to the verify decode task.
   always @(posedge clk) begin

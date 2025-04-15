@@ -81,8 +81,8 @@ module Branch_Control(C, I, F, Rs_data, BR, Branch, IF_ID_predicted_target, PC_n
   // A branch target is miscomputed when the predicted branch target differs from the actual branch target.
   assign branch_target_miscomputed = (IF_ID_predicted_target != PC_branch);
 
-  // Update BTB whenever the it is a branch and when the branch is taken or the branch target was miscomputed.
-  assign wen_BTB = (Branch) & (taken | branch_target_miscomputed);
+  // Update BTB whenever the it is a branch and when the branch is taken and the branch target was miscomputed.
+  assign wen_BTB = (Branch & taken & branch_target_miscomputed);
 
   // Update BHT on every branch.
   assign wen_BHT = Branch;

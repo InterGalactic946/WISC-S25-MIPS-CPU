@@ -14,6 +14,7 @@ package Monitor_tasks;
   typedef struct {
     logic [15:0] PC_addr;
     state_t prediction;
+    logic valid;
   } model_BHT_t;
   
   typedef struct {

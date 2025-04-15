@@ -90,7 +90,7 @@ module Fetch (
                         .clk(clk),
                         .rst(rst)
                       );
-
+  
   // Instantiate the PC+2 adder.
   CLA_16bit iCLA_next (.A(PC_curr), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());
 

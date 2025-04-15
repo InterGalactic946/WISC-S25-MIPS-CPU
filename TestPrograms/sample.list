@@ -9,7 +9,7 @@
 	SLL 	R5, R5, 2 
 	SRA 	R6, R7, 5 
 	ROR 	R6, R8, 10 
-L1:	LW 	R10, R0, 0 
+L1:	LW 	R10, R0, 0
 	SW 	R10, R0, 0 
 	B	001, L1
 	BR	010, R3

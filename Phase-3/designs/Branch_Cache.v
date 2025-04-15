@@ -41,7 +41,7 @@ module Branch_Cache(clk, rst, SrcCurr, SrcPrev, DstPrev, enable, wen, DstData, S
   ReadDecoder_3_8 iREAD_PREV (.RegId(SrcPrev), .Wordline(Wordline_prev));
 
   // Cache is only one write enabled if both enable and wen are high.
-  assign write_enable = (enable & wen) ? 1'b1 : 1'b0;
+  assign write_enable = enable & wen;
 
   // Instantiate a single write decoder.
   WriteDecoder_3_8 iWRITE (.RegId(DstPrev), .WriteReg(write_enable), .Wordline(Wordline_dst));
@@ -49,8 +49,8 @@ module Branch_Cache(clk, rst, SrcCurr, SrcPrev, DstPrev, enable, wen, DstData, S
   // Vector instantiate 8 registers to track the last 8 branch instructions.
   Register #(WIDTH) iBRANCH_CACHE[0:7] (.clk({8{clk}}), .rst({8{rst}}), .D(DstData), .WriteReg(Wordline_dst), .ReadEnable1(Wordline_curr), .ReadEnable2(Wordline_prev), .Bitline1(data_curr), .Bitline2(data_prev));
 
-  // Read the data from the current location in the cache only if the cache is enabled and wen is not asserted.
-  assign SrcDataCurr = (enable & ~wen) ? data_curr : {WIDTH{1'b0}};
+  // Read the data from the current location in the cache only if the cache is enabled.
+  assign SrcDataCurr = (enable) ? data_curr : {WIDTH{1'b0}};
 
   // Read the data from the previous location in the cache only if the cache is enabled.
   assign SrcDataPrev = (enable) ? data_prev : {WIDTH{1'b0}};

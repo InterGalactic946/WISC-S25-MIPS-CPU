@@ -61,8 +61,8 @@ module DynamicBranchPredictor_model (
       end
   end
 
-  // Asynchronously read out the prediction when read enabled.
-  assign prediction = (enable & ~wen_BHT) ? BHT[PC_curr[3:1]].prediction : 2'h0;
+  // Asynchronously read out the prediction when enabled.
+  assign prediction = (enable) ? BHT[PC_curr[3:1]].prediction : 2'h0;
 
     // Compare the tags of the current PC and previous PC address in the cache to determine if they match.
   assign read_tags_match = (PC_curr[15:4] == BHT[PC_curr[3:1]].PC_addr[15:4]);
@@ -70,8 +70,8 @@ module DynamicBranchPredictor_model (
   // If the tags match, use the prediction; otherwise, assume not taken.
   assign predicted_taken = (read_tags_match) ? prediction[1] : 1'b0; 
 
-  // Asynchronously read out the target when read enabled.
-  assign predicted_target = (enable & ~wen_BTB) ? BTB[PC_curr[3:1]].target : 16'h0000;
+  // Asynchronously read out the target when enabled.
+  assign predicted_target = (enable) ? BTB[PC_curr[3:1]].target : 16'h0000;
   //////////////////////////////////////////
 
   /////////////////////////////////

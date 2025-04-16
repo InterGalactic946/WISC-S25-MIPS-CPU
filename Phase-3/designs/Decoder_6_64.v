@@ -27,9 +27,9 @@ module Decoder_6_64(RegId, Wordline);
 
   // Instantiate 4 4-to-16 Decoders for the lower 4 bits, enabled from the one-hot 2:4 decoder output.
   Decoder_4_16 iDECODER_first (.RegId(RegId[3:0]), .en(Wordline_2_4[0]), .Wordline(Wordline_first));
-  Decoder_4_16 iDECODER_first (.RegId(RegId[3:0]), .en(Wordline_2_4[1]), .Wordline(Wordline_second));
-  Decoder_4_16 iDECODER_first (.RegId(RegId[3:0]), .en(Wordline_2_4[2]), .Wordline(Wordline_third));
-  Decoder_4_16 iDECODER_first (.RegId(RegId[3:0]), .en(Wordline_2_4[3]), .Wordline(Wordline_fourth));
+  Decoder_4_16 iDECODER_second (.RegId(RegId[3:0]), .en(Wordline_2_4[1]), .Wordline(Wordline_second));
+  Decoder_4_16 iDECODER_third (.RegId(RegId[3:0]), .en(Wordline_2_4[2]), .Wordline(Wordline_third));
+  Decoder_4_16 iDECODER_fourth (.RegId(RegId[3:0]), .en(Wordline_2_4[3]), .Wordline(Wordline_fourth));
 
   // Concatenate all outputs.
   assign Wordline = {Wordline_first, Wordline_second, Wordline_third, Wordline_fourth};

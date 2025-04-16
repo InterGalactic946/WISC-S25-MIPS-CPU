@@ -16,23 +16,20 @@ module Decoder_4_16(RegId, Wordline);
   ////////////////////////////////////////////////
   // Declare any internal signals as type wire //
   //////////////////////////////////////////////
-  wire [15:0] Wordline_operand; // Shifted wordline result.
+  wire [7:0] Wordline_first;  // The first 3:8 decoder output.
+  wire [7:0] Wordline_second; // The second 3:8 decoder output.
   /////////////////////////////////////////////
 
   ////////////////////////////////////////////
   // Implement Decoder as dataflow verilog //
   //////////////////////////////////////////  
-  // First 4:1 MUX for SLL shifts 16'h0001 by 0, 1, 2, 3 bits.
-  assign Wordline_operand = (RegId[1:0] == 2'h1) ? 16'h0002 :
-                            (RegId[1:0] == 2'h2) ? 16'h0004 :
-                            (RegId[1:0] == 2'h3) ? 16'h0008: 16'h0001;
-  
-  // Wordline is only one-hot high if that register is selected.
-  assign Wordline = (RegId[3:2] == 2'h1) ? {Wordline_operand[11:0], 4'h0}   :
-                    (RegId[3:2] == 2'h2) ? {Wordline_operand[7:0], 8'h00}   :
-                    (RegId[3:2] == 2'h3) ? {Wordline_operand[3:0], 12'h000} : Wordline_operand;
+  // Instantiate two 3:8 decoders for the lower 3 bits of the RegId enabled on RegId[3].
+  Decoder_3_8 iDECODER_first (.RegId(RegId[2:0]), .en(RegId[3]), .Wordline(Wordline_first));
+  Decoder_3_8 iDECODER_second (.RegId(RegId[2:0]), .en(~RegId[3]), .Wordline(Wordline_second));
 
-	
+  // Concatenate both outputs.
+  assign Wordline = {Wordline_first, Wordline_second};
+
 endmodule
 
 `default_nettype wire // Reset default behavior at the end

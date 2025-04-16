@@ -1,7 +1,7 @@
 `default_nettype none // Set the default as none to avoid errors
 
 //////////////////////////////////////////////////////
-// Decoder_3_8.v: 3:8 Decoder                       //
+// Decoder_3_8.v: 3:8 Decoder with enable           //
 //                                                  //
 // This design takes in a 3-bit signal (`RegId`)    //
 // and outputs a 8-bit one-hot encoded signal       //
@@ -9,25 +9,28 @@
 // the input value. Typically used for register     //
 // selection or enable signal generation.           //
 //////////////////////////////////////////////////////
-module Decoder_3_8(RegId, Wordline);
+module Decoder_3_8(RegId, en, Wordline);
 
   input wire [2:0] RegId;     // 3-bit register ID
+  input wire en;              // 1-bit enable
   output wire [7:0] Wordline; // 8-bit one hot output
 
   ////////////////////////////////////////////////
   // Declare any internal signals as type wire //
   //////////////////////////////////////////////
-  wire [15:0] Wordline_operand; // Shifted wordline result.
+  wire [3:0] Wordline_first;  // The first 2:4 decoder output.
+  wire [3:0] Wordline_second; // The second 2:4 decoder output.
   /////////////////////////////////////////////
 
   //////////////////////////////////////////////////
   // Implement 3:8 Decoder as structural verilog //
   ////////////////////////////////////////////////
-  // Instantiate a 4-to-16 Decoder but only care about lower 8 bits.
-  Decoder_4_16 iDECODER_4_16 (.RegId({1'b0, RegId}), .Wordline(Wordline_operand));
+  // Instantiate two 2:4 decoders using the lower 2 bits of RegId, and MSB dictating the enable.
+  Decoder_2_4 iDECODER_first (.RegId(RegId[1:0]), .en(RegId[2]), .Wordline(Wordline_first));
+  Decoder_2_4 iDECODER_second (.RegId(RegId[1:0]), .en(~RegId[2]), .Wordline(Wordline_second));
 
-  // Wordline is one hot and only care about the lower 8 bits from the 4:16 decoder.
-  assign Wordline = Wordline_operand[7:0];
+  // Concatenate both outputs and only output it if enabled, else 0.
+  assign Wordline = (en) ? {Wordline_first, Wordline_second} : 8'h00;
 
 endmodule
 

@@ -23,7 +23,7 @@ module WriteDecoder_3_8(RegId, WriteReg, Wordline);
   // Implement WriteDecoder as structural/dataflow verilog //
   //////////////////////////////////////////////////////////
   // Instantiate a 3:8 decoder to get which word of the 8 words to write to.
-  Decoder_3_8 iWORD_DECODER (.RegId(RegId), .Wordline(Wordline_operand));
+  Decoder_3_8 iWORD_DECODER (.RegId(RegId), .en(1'b1), .Wordline(Wordline_operand));
 
   // Wordline is only one hot high if WriteReg is high.
   assign Wordline = (WriteReg) ? Wordline_operand : 8'h00;

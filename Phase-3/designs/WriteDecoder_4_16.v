@@ -23,7 +23,7 @@ module WriteDecoder_4_16(RegId, WriteReg, Wordline);
   // Implement WriteDecoder as structural/dataflow verilog //
   //////////////////////////////////////////////////////////
   // Instantiate a 4-to-16 Decoder for the 4 bit RegId.
-  Decoder_4_16 iDECODER_4_16 (.RegId(RegId), .Wordline(Wordline_operand));
+  Decoder_4_16 iDECODER_4_16 (.RegId(RegId), .en(1'b1), .Wordline(Wordline_operand));
 
   // Wordline is only one hot high if WriteReg is high.
   assign Wordline = (WriteReg) ? Wordline_operand : 16'h0000;

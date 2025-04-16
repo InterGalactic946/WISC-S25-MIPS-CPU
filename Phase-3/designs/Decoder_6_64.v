@@ -16,15 +16,23 @@ module Decoder_6_64(RegId, Wordline);
   ////////////////////////////////////////////////
   // Declare any internal signals as type wire //
   //////////////////////////////////////////////
-  wire [15:0] Wordline_operand; // Output of the 4-to-16 decoder.
-  ////////////////////////////////////////////
-  // Instantiate a 4-to-16 Decoder for the lower 4 bits.
-  Decoder_4_16 iDECODER_4_16 (.RegId(RegId[3:0]), .Wordline(Wordline_operand));
+  wire [3:0] Wordline_2_4;     // The wordline of the 2:4 decoder.
+  wire [15:0] Wordline_first;  // The first 4:16 decoder output.
+  wire [15:0] Wordline_second; // The second 4:16 decoder output.
+  wire [15:0] Wordline_third;  // The third 4:16 decoder output.
+  wire [15:0] Wordline_fourth; // The fourth 4:16 decoder output.
+  /////////////////////////////////////////////
+  // Instantiate a 2:4 decoder using the upper 2 bits of RegId.
+  Decoder_2_4 iDECODER_2_4 (.RegId(RegId[5:4]), .en(1'b1), .Wordline(Wordline_2_4));
 
-  // Shift the lower level decoded value based on the upper 2 bits. (Essentially saying take the output from the 4:16 decoder and shift it by 16*RegId[5:4] bits
-  assign Wordline = (RegId[5:4] == 2'h1) ? {32'h00000000, Wordline_operand, 16'h0000} :
-                    (RegId[5:4] == 2'h2) ? {16'h0000, Wordline_operand, 32'h00000000} :
-                    (RegId[5:4] == 2'h3) ? {Wordline_operand, 48'h000000000000} : {48'h000000000000, Wordline_operand};
+  // Instantiate 4 4-to-16 Decoders for the lower 4 bits, enabled from the one-hot 2:4 decoder output.
+  Decoder_4_16 iDECODER_first (.RegId(RegId[3:0]), .en(Wordline_2_4[0]), .Wordline(Wordline_first));
+  Decoder_4_16 iDECODER_first (.RegId(RegId[3:0]), .en(Wordline_2_4[1]), .Wordline(Wordline_second));
+  Decoder_4_16 iDECODER_first (.RegId(RegId[3:0]), .en(Wordline_2_4[2]), .Wordline(Wordline_third));
+  Decoder_4_16 iDECODER_first (.RegId(RegId[3:0]), .en(Wordline_2_4[3]), .Wordline(Wordline_fourth));
+
+  // Concatenate all outputs.
+  assign Wordline = {Wordline_first, Wordline_second, Wordline_third, Wordline_fourth};
 
 endmodule
 

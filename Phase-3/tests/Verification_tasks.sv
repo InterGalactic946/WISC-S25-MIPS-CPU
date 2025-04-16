@@ -51,8 +51,12 @@ package Verification_tasks;
       output string fetch_msg
   );
     begin
-        // Initialize message.
-        fetch_msg = "";
+          // Stores the state of the prediction.
+          string pred_str;
+
+          // Initialize messages.
+          fetch_msg = "";
+          pred_str = "";
 
           // Verify the PC next.
           if (PC_next !== expected_PC_next) begin
@@ -96,6 +100,14 @@ package Verification_tasks;
               return;  // Exit task on error
           end
 
+          // Print out the exact case of the taken state.
+          case (prediction)
+            2'b00: pred_str = "Strongly NOT Taken";
+            2'b01: pred_str = "Weakly NOT Taken";
+            2'b10: pred_str = "Weakly Taken";
+            2'b11: pred_str = "Strongly Taken";
+            default: pred_str = "Invalid";
+          endcase
           
           // If all checks pass, store success message.
           if (PC_stall && !HLT) // If the stall is not due to HLT.
@@ -104,12 +116,12 @@ package Verification_tasks;
             fetch_msg = $sformatf("[FETCH] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", PC_curr, PC_next, PC_inst);
           else if (predicted_taken)
             // Branch is predicted taken.
-            fetch_msg = $sformatf("[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted Taken | Predicted Target: 0x%h.",
-                                                PC_curr, PC_next, PC_inst, predicted_target);
+            fetch_msg = $sformatf("[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted %s | Predicted Target: 0x%h.",
+                                    PC_curr, PC_next, PC_inst, pred_str, predicted_target);
           else
             // Branch is not predicted taken.
-            fetch_msg = $sformatf("[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted NOT Taken.",
-                                                PC_curr, PC_next, PC_inst);
+            fetch_msg = $sformatf("[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted %s.",
+                                    PC_curr, PC_next, PC_inst, pred_str);
     end
   endtask
 

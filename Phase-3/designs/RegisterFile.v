@@ -34,8 +34,8 @@ module RegisterFile(clk, rst, SrcReg1, SrcReg2, DstReg, WriteReg, DstData, SrcDa
   // Implement Register as structural/dataflow verilog //
   //////////////////////////////////////////////////////
   // Instantiate two read register decoders.
-  ReadDecoder_4_16 iREAD_1 (.RegId(SrcReg1), .Wordline(Wordline_1));
-  ReadDecoder_4_16 iREAD_2 (.RegId(SrcReg2), .Wordline(Wordline_2));
+  Decoder_4_16 iREAD_1 (.RegId(SrcReg1), .Wordline(Wordline_1));
+  Decoder_4_16 iREAD_2 (.RegId(SrcReg2), .Wordline(Wordline_2));
 
   // Instantiate a single write decoder.
   WriteDecoder_4_16 iWRITE (.RegId(DstReg), .WriteReg(WriteReg), .Wordline(Wordline_dst));

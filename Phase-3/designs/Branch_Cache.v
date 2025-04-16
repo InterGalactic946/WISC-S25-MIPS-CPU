@@ -37,8 +37,8 @@ module Branch_Cache(clk, rst, SrcCurr, SrcPrev, DstPrev, enable, wen, DstData, S
   // Implement the branch cache as structural/dataflow verilog //
   //////////////////////////////////////////////////////////////
   // Instantiate two read register decoders.
-  ReadDecoder_3_8 iREAD_CURR (.RegId(SrcCurr), .Wordline(Wordline_curr));
-  ReadDecoder_3_8 iREAD_PREV (.RegId(SrcPrev), .Wordline(Wordline_prev));
+  Decoder_3_8 iREAD_CURR (.RegId(SrcCurr), .Wordline(Wordline_curr));
+  Decoder_3_8 iREAD_PREV (.RegId(SrcPrev), .Wordline(Wordline_prev));
 
   // Cache is only one write enabled if both enable and wen are high.
   assign write_enable = enable & wen;

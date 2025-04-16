@@ -16,17 +16,17 @@ module WriteDecoder_3_8(RegId, WriteReg, Wordline);
   ////////////////////////////////////////////////
   // Declare any internal signals as type wire //
   //////////////////////////////////////////////
-  wire [15:0] Wordline_operand; // Shifted wordline result.
+  wire [7:0] Wordline_operand; // Shifted wordline result.
   /////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////
   // Implement WriteDecoder as structural/dataflow verilog //
   //////////////////////////////////////////////////////////
-  // Decode the ID by shifting 1 left by RegID amount, only if WriteReg is high otherwise it is zero.
-  Shifter iSHIFT (.Shift_In(16'h0001), .Mode(2'h0), .Shift_Val({1'b0, RegId}), .Shift_Out(Wordline_operand));
+  // Instantiate a 3:8 decoder to get which word of the 8 words to write to.
+  Decoder_3_8 iWORD_DECODER (.RegId(RegId), .Wordline(Wordline_operand));
 
-  // Wordline is only one hot high if WriteReg is high and only the lower 8 bits are used.
-  assign Wordline = (WriteReg) ? Wordline_operand[7:0] : 8'h00;
+  // Wordline is only one hot high if WriteReg is high.
+  assign Wordline = (WriteReg) ? Wordline_operand : 8'h00;
 
 endmodule
 

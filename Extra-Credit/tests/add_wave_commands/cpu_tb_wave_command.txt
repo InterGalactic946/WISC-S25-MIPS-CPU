@@ -1,0 +1,1 @@
+add wave iDUT/IF_ID_PC_curr; add wave iDUT/iHDU/BR_inst; add wave iDUT/iHDU/BR; add wave iDUT/Branch; add wave iDUT/BR_hazard; add wave iDUT/iHDU/EX_to_ID_haz_BR; add wave iDUT/iHDU/MEM_to_ID_haz_BR; add wave iDUT/iHDU/IF_ID_stall; add wave iDUT/iHDU/EX_MEM_RegWrite; add wave iDUT/iHDU/EX_MEM_reg_rd; add wave iDUT/iDECODE/SrcReg1;

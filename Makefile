@@ -78,7 +78,7 @@ kill:
 #   make synthesis
 ##################################################
 synthesis:
-	@cd Synthesis && bash ./auto_syn.sh
+	@cd Extra-Credit/Synthesis && bash ./auto_syn.sh
 
 
 ##################################################
@@ -175,12 +175,12 @@ log:
 clean:
 	@echo "Available directories to clean:"; \
 	# List the top-level directories in the current directory. \
-	top_level_dirs=$$(ls -d */ | grep -E 'Phase-1|Phase-2|Phase-3'); \
+	top_level_dirs=$$(ls -d */ | grep -E 'Phase-1|Phase-2|Phase-3|Extra-Credit'); \
 	if [ -z "$$top_level_dirs" ]; then \
-		echo "No valid top-level directories (Phase-1, Phase-2, Phase-3) found."; \
+		echo "No valid top-level directories (Phase-1, Phase-2, Phase-3, Extra-Credit) found."; \
 		exit 1; \
 	fi; \
-	PS3="Please select a top-level directory (Phase-1, Phase-2, Phase-3) to clean: "; \
+	PS3="Please select a top-level directory (Phase-1, Phase-2, Phase-3, Extra-Credit) to clean: "; \
 	select top_level_dir in $$top_level_dirs; do \
 		if [ -n "$$top_level_dir" ] && [ -d "$$top_level_dir" ]; then \
 			echo "Cleaning up generated files in $$top_level_dir..."; \

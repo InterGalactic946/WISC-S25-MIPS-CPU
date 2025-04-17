@@ -12,6 +12,7 @@ SCRIPTS_DIR = os.path.join(ROOT_DIR, "Scripts")
 PHASE1_DIR = os.path.join(ROOT_DIR, "Phase-1")
 PHASE2_DIR = os.path.join(ROOT_DIR, "Phase-2")       
 PHASE3_DIR = os.path.join(ROOT_DIR, "Phase-3")         
+EXTRA_CREDIT_DIR = os.path.join(ROOT_DIR, "Extra-Credit")    
 TEST_PROGRAMS_DIR = os.path.join(ROOT_DIR, "TestPrograms")
 
 TEST_DIR = None
@@ -85,7 +86,7 @@ def choose_directory(args):
         str: The selected subdirectory's path.
     """
     # Define the top-level valid directories
-    top_level_dirs = [PHASE1_DIR, PHASE2_DIR, PHASE3_DIR]
+    top_level_dirs = [PHASE1_DIR, PHASE2_DIR, PHASE3_DIR, EXTRA_CREDIT_DIR]
 
     # Determine the prompt message based on the args flags
     if args.logs == "c":

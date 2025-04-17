@@ -1,0 +1,650 @@
+`default_nettype none // Set the default as none to avoid errors
+
+//////////////////////////////////////////////////////////////////
+// ALU_tb.v: Testbench for the 16-bit ALU                      //
+// This testbench verifies the functionality of the 16-bit    //
+// ALU by applying random stimulus to the inputs and         //
+// monitoring the outputs.                                  //               
+/////////////////////////////////////////////////////////////
+module ALU_tb();
+
+  reg [31:0] stim;    		           // stimulus input vector of type reg
+  reg [15:0] B_operand;              // B operand of the ALu
+  reg [3:0] stim_op;    		         // stimulus opcode vector of type reg
+  wire [15:0] result; 		           // 16-bit result of the ALU
+  wire ZF, VF, NF;     		           // zero, overflow, and signed flag set signasls of the ALU
+  reg pos_ov, neg_ov;                // positive and negative overflow flags
+  reg expected_ZF; 	                 // expected z_set flag
+  reg expected_VF;                   // expected v_set flag
+  reg expected_NF;                   // expected n_set flag
+  string instr_name;                 // name of the instruction
+  reg [15:0] expected_result;        // expected result
+  reg [19:0] addition_operations;    // number of addition operations performed
+  reg [19:0] subtraction_operations; // number of subtraction operations performed
+  reg [19:0] lw_operations;          // number of load word computations performed
+  reg [19:0] sw_operations;          // number of store word computations performed
+  reg [19:0] xor_operations;         // number of xor operations performed
+  reg [19:0] reduction_operations;   // number of reduction additions performed
+  reg [19:0] asr_operations;         // number of asr operations performed
+  reg [19:0] ror_operations;         // number of ror operations performed
+  reg [19:0] sll_operations;         // number of sll operations performed
+  reg [19:0] paddsb_operations;      // number of parallel sub-additions performed
+  reg [19:0] llb_operations;         // number of llb operations performed
+  reg [19:0] lhb_operations;         // number of lhb operations performed
+  reg [19:0] nop_operations;         // number of nops performed
+  reg error;                         // set an error flag on error
+  
+  //////////////////////
+  // Instantiate DUT //
+  ////////////////////
+  ALU iDUT(.ALU_In1(stim[31:16]),.ALU_In2(B_operand),.Opcode(stim_op),.ALU_Out(result),.Z_set(ZF),.N_set(NF), .V_set(VF));
+
+  // Decodes opcodes based on the instruction.
+  task automatic decode_opcode();
+      begin
+          case (stim_op)
+              4'h0: instr_name = "ADD";     // Addition
+              4'h1: instr_name = "SUB";     // Subtraction
+              4'h2: instr_name = "XOR";     // Bitwise XOR
+              4'h3: instr_name = "RED";     // Reduction Addition
+              4'h4: instr_name = "SLL";     // Shift Left Logical
+              4'h5: instr_name = "SRA";     // Shift Right Arithmetic
+              4'h6: instr_name = "ROR";     // Rotate Right
+              4'h7: instr_name = "PADDSB";  // Parallel Sub-word Addition
+              4'h8: instr_name = "LW";      // Load Word
+              4'h9: instr_name = "SW";      // Store Word
+              4'hA: instr_name = "LLB";     // Load Word
+              4'hB: instr_name = "LHB";     // Store Word
+              default: instr_name = "INVALID"; // Invalid opcode
+          endcase
+      end
+  endtask
+
+  // Task: Get positive and negative overflow for addition or subtraction.
+  task automatic get_overflow(
+    input signed [15:0] A,               // Operand A (16-bit)
+    input signed [15:0] B,               // Operand B (16-bit)
+    input signed [15:0] result,   // Expected result (ALU result)
+    output reg expected_pos_overflow, // Positive overflow flag
+    output reg expected_neg_overflow  // Negative overflow flag
+  );
+    begin
+      // Initialize the overflow flags to 0 (no overflow)
+      expected_pos_overflow = 1'b0;
+      expected_neg_overflow = 1'b0;
+
+      if (stim_op === 4'h1) begin
+        // Subtraction (stim_op = 4'h1)
+        if ((A[15] === 1'b0) && (B[15] === 1'b1) && (result[15] === 1'b1)) begin
+          expected_pos_overflow = 1'b1;  // Positive overflow detected (positive - negative giving positive result)
+        end else if ((A[15] === 1'b1) && (B[15] === 1'b0) && (result[15] === 1'b0)) begin
+          expected_neg_overflow = 1'b1;  // Negative overflow detected (negative - positive giving negative result)
+        end
+      end else begin
+        // Addition (stim_op is not 4'h1)
+        // Overflow occurs in addition when both operands have the same sign and the result has a different sign.
+        if (~A[15] & ~B[15] & result[15]) begin
+          // Case when both operands are positive
+          expected_pos_overflow = 1'b1;  // Positive overflow detected
+        end else if (A[15] & B[15] & ~result[15]) begin
+          // Case when both operands are negative
+          expected_neg_overflow = 1'b1;  // Negative overflow detected
+        end
+      end
+    end
+  endtask
+
+  // Task: Verify the flag set signals.
+  task automatic verify_flags(input signed [15:0] A, input signed [15:0] B, input signed [15:0] ALU_out);
+    begin
+      // Get the actual flag results.
+      reg ov;
+      reg zero;
+      reg neg;
+
+      // It is zero when the output is zero.
+      zero = ALU_out === 16'h0000;
+
+      // It is negative when the MSB of the output is zero.
+      neg = ALU_out[15];
+
+      // Get the positive/negative overflow.
+      ov = pos_ov | neg_ov;
+
+      // Set the flags based on the stim_op.
+      if (stim_op === 4'h0 || stim_op === 4'h1) begin
+        expected_ZF = zero;
+        expected_NF = neg;
+        expected_VF = ov;
+      end else if (stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
+        expected_ZF = zero;
+        expected_NF = 1'b0;
+        expected_VF = 1'b0;
+      end else begin
+        expected_ZF = 1'b0;
+        expected_NF = 1'b0;
+        expected_VF = 1'b0;
+      end
+
+      // Verify the correct Z flags only for ADD/SUB/XOR/SLL/SRA/ROR instructions and don't care about the rest as they will not be enabled.
+      if (stim_op === 4'h0 || stim_op === 4'h1 || stim_op === 4'h2 || stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6) begin
+        // Verify that the zero set flag is working correctly.
+        if (ZF !== expected_ZF) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Zero set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_ZF, ZF);
+            error = 1'b1;
+        end
+      end
+
+      // Verify correct N/V flags only for ADD/SUB instructions and don't care about the rest as they will not be enabled.
+      if (stim_op === 4'h0 || stim_op === 4'h1) begin   
+        // Verify that the signed set flag is working correctly.
+        if (NF !== expected_NF) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Signed set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_NF, NF);
+            error = 1'b1;
+        end
+
+        // Verify that the overflow set flag is working correctly.
+        if (VF !== expected_VF) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Overflow set signal expected 0x%h, got 0x%h.", A, B, instr_name, expected_VF, VF);
+            error = 1'b1;
+        end
+      end
+    end
+  endtask
+
+  // Task: Verify the normal sum for ADD/SUB/LW/SW instructions.
+  task automatic verify_sum(input signed [15:0] A, input signed [15:0] B);
+    begin
+      reg [15:0] sum;
+      reg signed [15:0] A_op, B_op;
+
+      // By default A_op, B_op are A, B except in case of LW/SW.
+      A_op = A;
+      B_op = B;
+
+      // Expected operands for LW/SW.
+      if (stim_op === 4'h8 || stim_op === 4'h9) begin
+        A_op = (A & 16'hFFFE);
+        B_op = ({B[14:0], 1'b0});
+      end
+
+      // Form the sum based on the opcode.
+      if (stim_op === 4'h1)
+        sum = A_op - B_op;
+      else 
+        sum = A_op + B_op;
+      
+      // Get the expected overflow based on addition/subtraction.
+      get_overflow(.A($signed(A_op)), .B($signed(B_op)), .result($signed(sum)), .expected_pos_overflow(pos_ov), .expected_neg_overflow(neg_ov)); 
+
+      // Modify the result based on overflow.
+      if (stim_op[3:1] === 4'h0) // ADD/SUB
+        if (pos_ov)
+          expected_result = 16'h7FFF;
+        else if (neg_ov)
+          expected_result = 16'h8000;
+        else
+          expected_result = sum;
+      else // LW/SW
+        expected_result = sum;
+
+      // Validate that the result is the expected result.
+      if ($signed(result) !== $signed(expected_result)) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Sum expected 0x%h, got 0x%h.", A, B, instr_name, expected_result, result);
+          error = 1'b1;
+      end
+            
+      // Verify expected ZF/NF/VF for ADD/SUB/LW/SW.
+      verify_flags(.A($signed(A)), .B($signed(B)), .ALU_out($signed(expected_result)));
+    end
+  endtask
+
+  // Task: Verify the reduction unit sum.
+  task automatic verify_red_sum(input signed [15:0] A, input signed [15:0] B);
+    begin
+      reg [4:0] expected_first_level_sum[0:3];  // expected first level sums
+      reg [5:0] expected_second_level_sum[0:1]; // expected second level sums
+
+      // Get the expected first level sums.
+      expected_first_level_sum[3] = $signed(A[15:12]) + $signed(B[15:12]);
+      expected_first_level_sum[2] = $signed(A[11:8]) + $signed(B[11:8]);
+      expected_first_level_sum[1] = $signed(A[7:4]) + $signed(B[7:4]);
+      expected_first_level_sum[0] = $signed(A[3:0]) + $signed(B[3:0]);
+
+      // Get the expected second level sums.
+      expected_second_level_sum[1] = $signed(expected_first_level_sum[3]) + $signed(expected_first_level_sum[2]);
+      expected_second_level_sum[0] = $signed(expected_first_level_sum[1]) + $signed(expected_first_level_sum[0]);
+
+      // Get the expected sum.
+      expected_result = $signed(expected_second_level_sum[1]) + $signed(expected_second_level_sum[0]);
+
+      // Validate that the result is the expected result.
+      if ($signed(result) !== $signed(expected_result)) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Reduction Sum expected 0x%h, got 0x%h.", A, B, instr_name, expected_result, result);
+          error = 1'b1;
+      end
+
+      // Verify flags for RED sum.
+      verify_flags(.A($signed(A)), .B($signed(B)), .ALU_out($signed(expected_result)));
+    end
+  endtask
+
+  // Function to calculate the expected ROR result.
+  function [15:0] expected_ror;
+    input [15:0] data;
+    input [3:0] shift_val;
+    integer i;
+    reg [15:0] result;
+    begin
+      result = data;
+      // Perform the shift for each shift amount (0 to 15 bits)
+      for (i = 0; i < shift_val; i = i + 1) begin
+        result = {result[0], result[15:1]}; // Rotate right by 1 bit
+      end
+      expected_ror = result;
+    end
+  endfunction
+
+    // Task: Verify the reduction unit sum.
+  task automatic verify_shift(input signed [15:0] A, input [15:0] B);
+    begin
+      // Expected result and for SLL/SRA/ROR.
+      if (stim_op === 4'h4)
+        expected_result = A << B[3:0];
+      else if (stim_op === 4'h5)
+        expected_result = $signed(A) >>> B[3:0];
+      else if (stim_op === 4'h6)
+        expected_result = expected_ror(.data(A), .shift_val(B[3:0]));
+
+      // Validate that the result is the expected result.
+      if ($signed(result) !== $signed(expected_result)) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Shifted result expected 0x%h, got 0x%h.", A, B, instr_name, expected_result, result);
+          error = 1'b1;
+      end
+
+      // Verify flags for shift.
+      verify_flags(.A($signed(A)), .B($signed(B)), .ALU_out($signed(expected_result)));
+    end
+  endtask
+
+  // Task: Check for positive or negative overflow for each 4-bit sub-word.
+  task automatic check_pad_overflow(input signed [15:0] A, input signed [15:0] B, output reg pos_overflow[0:3], output reg neg_overflow[0:3]);
+    begin
+      // Declare the sum variables for each nibble addition.
+      reg [3:0] sum; // 4 bits to store the result of adding two 4-bit nibbles
+
+      // Check overflow for each 4-bit sub-word (nibble)
+      // Checking the sum and determining whether the overflow is positive or negative.
+
+      // Check for overflow in the MSB nibble.
+      sum = A[15:12] + B[15:12];
+      if (~A[15] & ~B[15]) begin  // Both operands are positive
+          // If sum[3] (sign bit) is 1, it means positive overflow occurred
+          if (sum[3]) 
+              pos_overflow[3] = 1;  // Positive overflow
+          else
+              pos_overflow[3] = 0;  // No Positive overflow
+          neg_overflow[3] = 0;  // No negative overflow
+      end else if (A[15] & B[15]) begin  // Both operands are negative 
+          // If sum[3] (sign bit) is 0, it means negative overflow occurred
+          if (~sum[3]) 
+              neg_overflow[3] = 1;  // Negative overflow
+          else
+              neg_overflow[3] = 0;  // No negative overflow
+          pos_overflow[3] = 0;  // No positive overflow
+      end else begin  // Case when operands have different signs (no overflow expected)
+          pos_overflow[3] = 0;  // No positive overflow
+          neg_overflow[3] = 0;  // No negative overflow
+      end
+
+      // Check for overflow in the second MSB nibble
+      sum = A[11:8] + B[11:8];
+      if (~A[11] & ~B[11]) begin  // Both operands are positive
+          // If sum[3] (sign bit) is 1, it means positive overflow occurred
+          if (sum[3]) 
+              pos_overflow[2] = 1;  // Positive overflow
+          else
+              pos_overflow[2] = 0;  // No Positive overflow
+          neg_overflow[2] = 0;  // No negative overflow
+      end else if (A[11] & B[11]) begin  // Both operands are negative
+          // If sum[3] (sign bit) is 0, it means negative overflow occurred
+          if (~sum[3]) 
+              neg_overflow[2] = 1;  // Negative overflow
+          else
+              neg_overflow[2] = 0;  // No negative overflow
+          pos_overflow[2] = 0;  // No positive overflow
+      end else begin  // Case when operands have different signs (no overflow expected)
+          pos_overflow[2] = 0;  // No positive overflow
+          neg_overflow[2] = 0;  // No negative overflow
+      end
+
+      // Check for overflow in the second LSB nibble
+      sum = A[7:4] + B[7:4];
+      if (~A[7] & ~B[7]) begin  // Both operands are positive
+          // If sum[3] (sign bit) is 1, it means positive overflow occurred
+          if (sum[3]) 
+              pos_overflow[1] = 1;  // Positive overflow
+          else
+              pos_overflow[1] = 0;  // No Positive overflow
+          neg_overflow[1] = 0;  // No negative overflow
+      end else if (A[7] & B[7]) begin  // Both operands are negative
+          // If sum[3] (sign bit) is 0, it means negative overflow occurred
+          if (~sum[3]) 
+              neg_overflow[1] = 1;  // Negative overflow
+          else
+              neg_overflow[1] = 0;  // No negative overflow
+          pos_overflow[1] = 0;  // No positive overflow
+      end else begin  // Case when operands have different signs (no overflow expected)
+          pos_overflow[1] = 0;  // No positive overflow
+          neg_overflow[1] = 0;  // No negative overflow
+      end
+
+      // Check for overflow in the LSB nibble
+      sum = A[3:0] + B[3:0];
+      if (~A[3] & ~B[3]) begin  // Both operands are positive 
+          // If sum[3] (sign bit) is 1, it means positive overflow occurred
+          if (sum[3]) 
+              pos_overflow[0] = 1;  // Positive overflow
+          else
+              pos_overflow[0] = 0;  // No Positive overflow
+          neg_overflow[0] = 0;  // No negative overflow
+      end else if (A[3] & B[3]) begin  // Both operands are negative
+          // If sum[3] (sign bit) is 0, it means negative overflow occurred
+          if (~sum[3]) 
+              neg_overflow[0] = 1;  // Negative overflow
+          else
+              neg_overflow[0] = 0;  // No negative overflow
+          pos_overflow[0] = 0;  // No positive overflow
+      end else begin  // Case when operands have different signs (no overflow expected)
+          pos_overflow[0] = 0;  // No positive overflow
+          neg_overflow[0] = 0;  // No negative overflow
+      end
+    end
+  endtask
+
+  // Task: Verify the PADDSB instruction.
+  task automatic verify_paddsb_sum(input signed [15:0] A, input signed [15:0] B);
+      // Apply saturation based on the overflow flags for each nibble in the expected_sum array
+    begin
+      reg pos_overflow[0:3];
+      reg neg_overflow[0:3];
+      reg [3:0] expected_sum[0:3];
+
+      // Get the overflow of the sum.
+      check_pad_overflow(.A(A), .B(B), .pos_overflow(pos_overflow), .neg_overflow(neg_overflow));
+
+      // Handle Most Significant Nibble (MSN)
+      if (pos_overflow[3] === 1) begin
+          expected_sum[3] = 4'h7;  // Saturate to max positive value for most significant nibble
+      end else if (neg_overflow[3] === 1) begin
+          expected_sum[3] = 4'h8;  // Saturate to max negative value for most significant nibble
+      end else begin
+          expected_sum[3] = stim[31:28] + B_operand[15:12];  // No overflow, use the actual sum
+      end
+
+      // Handle second Most Significant Nibble (MSMN)
+      if (pos_overflow[2] === 1) begin
+          expected_sum[2] = 4'h7;  // Saturate to max positive value for second most significant nibble
+      end else if (neg_overflow[2] === 1) begin
+          expected_sum[2] = 4'h8;  // Saturate to max negative value for second most significant nibble
+      end else begin
+          expected_sum[2] = stim[27:24] + B_operand[11:8];  // No overflow, use the actual sum
+      end
+
+      // Handle second Least Significant Nibble (LSMN)
+      if (pos_overflow[1] === 1) begin
+          expected_sum[1] = 4'h7;  // Saturate to max positive value for second least significant nibble
+      end else if (neg_overflow[1] === 1) begin
+          expected_sum[1] = 4'h8;  // Saturate to max negative value for second least significant nibble
+      end else begin
+          expected_sum[1] = stim[23:20] + B_operand[7:4];  // No overflow, use the actual sum
+      end
+
+      // Handle Least Significant Nibble (LSN)
+      if (pos_overflow[0] === 1) begin
+          expected_sum[0] = 4'h7;  // Saturate to max positive value for least significant nibble
+      end else if (neg_overflow[0] === 1) begin
+          expected_sum[0] = 4'h8;  // Saturate to max negative value for least significant nibble
+      end else begin
+          expected_sum[0] = stim[19:16] + B_operand[3:0];  // No overflow, use the actual sum
+      end
+      
+      // Form the expected_PSA_sum.
+      expected_result = {expected_sum[3], expected_sum[2], expected_sum[1], expected_sum[0]};
+
+      // Validate that the result is the expected result.
+      if ($signed(result) !== $signed(expected_result)) begin
+          $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Parallel sub word addition expected 0x%h, got 0x%h.", A, B, instr_name, expected_result, result);
+          error = 1'b1;
+      end
+
+      // Verify flags for PADDSB.
+      verify_flags(.A($signed(A)), .B($signed(B)), .ALU_out($signed(expected_result)));
+    end
+  endtask
+
+  // Initialize the inputs and expected outputs and wait till all tests finish.
+  initial begin
+    stim = 32'h00000000; // Initialize stimulus
+    B_operand = 16'h0000; // initialize B operand.
+    stim_op = 4'h0; // Initialize opcode
+    expected_ZF = 1'b0;                  // initialize expected z_set flag
+    expected_VF = 1'b0;                  // initialize expected v_set flag
+    expected_NF = 1'b0;                  // initialize expected n_set flag
+    pos_ov = 1'b0;                       // initialize positive overflow
+    neg_ov = 1'b0;                       // initialize negative overflow
+    expected_result = 16'h0000;          // initialize expected result
+    instr_name = "NULL";                 // initialize the instruction name
+    addition_operations = 20'h00000; // initialize addition operation count
+    subtraction_operations = 20'h00000; // initialize subtraction operation count
+    lw_operations = 20'h00000; // initialize load word operation count
+    sw_operations = 20'h00000; // initialize store word operation count
+    xor_operations = 20'h00000; // initialize xor operation count
+    reduction_operations = 20'h00000; // initialize reduction addition count
+    asr_operations = 20'h00000; // initialize asr operation count
+    ror_operations = 20'h00000; // initialize ror operation count
+    sll_operations = 20'h00000; // initialize sll operation count
+    llb_operations = 20'h00000; // initialize llb operation count
+    lhb_operations = 20'h00000; // initialize lhb operation count
+    paddsb_operations = 20'h00000; // initialize parallel sub-addition count
+    nop_operations = 20'h00000; // initialize nop operation count
+    error = 1'b0; // initialize error flag
+
+    // Wait to process the change in the input.
+    #5;
+
+    // Apply stimulus as 100000 random input vectors.
+    repeat (1000000) begin
+      stim = $random; // Generate random stimulus
+      stim_op = $random & 4'hF; // generate random opcode.
+
+      // Modify the B_operand input based on a shift instruction.
+      if (stim_op === 4'h4 || stim_op === 4'h5 || stim_op === 4'h6)
+        B_operand = {{12{stim[3]}}, stim[3:0]};
+      else
+        B_operand = stim[15:0];
+
+      // Wait to process the change in the input.
+      #1;
+
+      // Get the instruction word.
+      decode_opcode();
+
+      // Perform the operation based on the opcode
+      case(stim_op)
+        4'h0, 4'h1, 4'h8, 4'h9: begin 
+          // Verify the ADD/SUB/LW/SW sums.
+          verify_sum(.A(stim[31:16]), .B(B_operand));
+
+          // Count up the number of successful operations performed.
+          if (!error) begin
+            if (stim_op === 4'h0)
+              addition_operations = addition_operations + 1'b1;
+            else if (stim_op === 4'h1)
+              subtraction_operations = subtraction_operations + 1'b1;
+            else if (stim_op === 4'h8)
+              lw_operations = lw_operations + 1'b1;
+            else if (stim_op === 4'h9)
+              sw_operations = sw_operations + 1'b1;
+          end
+        end
+        4'h2: begin
+          // Get the XOR.
+          expected_result = stim[31:16] ^ B_operand;
+
+          // Validate that the result is the expected result.
+          if ($signed(result) !== $signed(expected_result)) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: XOR. Result expected 0x%h, got 0x%h.", stim[31:16], B_operand, expected_result, result);
+            error = 1'b1;
+          end
+
+          // Verify flags for XOR.
+          verify_flags(.A($signed(stim[31:16])), .B($signed(B_operand)), .ALU_out($signed(expected_result)));
+
+          // Count up the number of successful XOR operations performed.
+          if (!error)
+            xor_operations = xor_operations + 1'b1;
+        end
+        4'h3: begin
+          // Verify the RED sum.
+          verify_red_sum(.A($signed(stim[31:16])), .B($signed(B_operand)));
+
+          // Count up the number of successful reduction operations performed.
+          if (!error)
+            reduction_operations = reduction_operations + 1'b1;
+        end   
+        4'h4, 4'h5, 4'h6: begin
+          // Verify the SLL/SRA/ROR output.
+          verify_shift(.A($signed(stim[31:16])), .B($signed(B_operand)));
+
+          // Count up the number of successful shift operations performed.
+          if (!error) begin
+            if (stim_op === 4'h4)
+              sll_operations = sll_operations + 1'b1;
+            else if (stim_op === 4'h5)
+              asr_operations = asr_operations + 1'b1;
+            else if (stim_op === 4'h6)
+              ror_operations = ror_operations + 1'b1;
+          end
+        end
+        4'h7: begin
+          // Verify the PADDSB sum.
+          verify_paddsb_sum(.A($signed(stim[31:16])), .B($signed(B_operand)));
+
+          // Count up the number of successful parallel subword operations performed.
+          if (!error)
+            paddsb_operations = paddsb_operations + 1'b1;
+        end
+        4'hA: begin
+          // Verify the LLB computation.
+          expected_result = (stim[31:16] & 16'hFF00) | (B_operand[7:0]);
+
+          // Validate that the result is the expected result.
+          if ($signed(result) !== $signed(expected_result)) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Result expected 0x%h, got 0x%h.", stim[31:16], B_operand, instr_name, expected_result, result);
+            error = 1'b1;
+          end
+
+          // Verify flags for LLB.
+          verify_flags(.A($signed(stim[31:16])), .B($signed(B_operand)), .ALU_out($signed(expected_result)));
+
+          // Count up the number of successful XOR operations performed.
+          if (!error)
+            llb_operations = llb_operations + 1'b1;
+        end           
+        4'hB: begin
+          // Verify the LHB computation.
+          expected_result = (stim[31:16] & 16'h00FF) | ({B_operand[7:0], 8'h00});
+
+          // Validate that the result is the expected result.
+          if ($signed(result) !== $signed(expected_result)) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Result expected 0x%h, got 0x%h.", stim[31:16], B_operand, instr_name, expected_result, result);
+            error = 1'b1;
+          end
+
+          // Verify flags for LLB.
+          verify_flags(.A($signed(stim[31:16])), .B($signed(B_operand)), .ALU_out($signed(expected_result)));
+
+          // Count up the number of successful XOR operations performed.
+          if (!error)
+            lhb_operations = lhb_operations + 1'b1;
+        end           
+        default: begin
+          // Validate that the error flag internal to the ALU is set for invalid opcode.
+          if (iDUT.error !== 1'b1) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Error flag expected 0x%h, got 0x%h.", stim[31:16], B_operand, instr_name, iDUT.error, 1'h0);
+            error = 1'b1;
+          end
+
+          // Validate that the result is correct.
+          if (result !== 16'h0000) begin
+            $display("ERROR: A: 0x%h, B: 0x%h, Mode: %s. Result expected 0x%h, got 0x%h.", stim[31:16], B_operand, instr_name, expected_result, result);
+            error = 1'b1;
+          end
+
+          // Count up the number of successful nops performed.
+          if (!error)
+            nop_operations = nop_operations + 1'b1;
+        end
+      endcase
+
+      // Print out a status message when the error flag is set.
+      if (error) begin
+          // Print out the total number of operations performed.
+          $display("\nTotal operations performed: %d.", 
+                  addition_operations + subtraction_operations + 
+                  xor_operations + reduction_operations + 
+                  asr_operations + ror_operations + 
+                  sll_operations + paddsb_operations + 
+                  lw_operations + sw_operations + llb_operations + lhb_operations + 
+                  nop_operations);
+          // Print individual operation counts.
+          $display("Number of Successful Additions Performed: %d.", addition_operations);
+          $display("Number of Successful Subtractions Performed: %d.", subtraction_operations);
+          $display("Number of Successful XORs Performed: %d.", xor_operations);
+          $display("Number of Successful Reductions Performed: %d.", reduction_operations);
+          $display("Number of Successful ASRs Performed: %d.", asr_operations);
+          $display("Number of Successful RORs Performed: %d", ror_operations);
+          $display("Number of Successful SLLs Performed: %d.", sll_operations);
+          $display("Number of Successful PADDSBs Performed: %d.", paddsb_operations);
+          $display("Number of Successful Load Word Operations Performed: %d.", lw_operations);
+          $display("Number of Successful Store Word Operations Performed: %d.", sw_operations);
+          $display("Number of Successful LLB Operations Performed: %d.", llb_operations);
+          $display("Number of Successful LHB Operations Performed: %d.", lhb_operations);
+          $display("Number of NOPs Performed: %d.", nop_operations);
+          $stop();
+      end
+
+      #5; // wait 5 time units before the next iteration
+    end
+
+    // Print out the total number of operations performed.
+    $display("\nTotal operations performed: %d.", 
+            addition_operations + subtraction_operations + 
+            xor_operations + reduction_operations + 
+            asr_operations + ror_operations + 
+            sll_operations + paddsb_operations + 
+            lw_operations + sw_operations + llb_operations + lhb_operations + 
+            nop_operations);
+          $display("Number of Successful Additions Performed: %d.", addition_operations);
+          $display("Number of Successful Subtractions Performed: %d.", subtraction_operations);
+          $display("Number of Successful XORs Performed: %d.", xor_operations);
+          $display("Number of Successful Reductions Performed: %d.", reduction_operations);
+          $display("Number of Successful ASRs Performed: %d.", asr_operations);
+          $display("Number of Successful RORs Performed: %d", ror_operations);
+          $display("Number of Successful SLLs Performed: %d.", sll_operations);
+          $display("Number of Successful PADDSBs Performed: %d.", paddsb_operations);
+          $display("Number of Successful Load Word Operations Performed: %d.", lw_operations);
+          $display("Number of Successful Store Word Operations Performed: %d.", sw_operations);
+          $display("Number of Successful LLB Operations Performed: %d.", llb_operations);
+          $display("Number of Successful LHB Operations Performed: %d.", lhb_operations);
+          $display("Number of NOPs Performed: %d.", nop_operations);
+
+    // If we reached here, it means that all tests passed.
+    $display("YAHOO!! All tests passed.");
+    $stop();
+  end
+
+endmodule
+
+`default_nettype wire // Reset default behavior at the end

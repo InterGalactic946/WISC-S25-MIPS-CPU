@@ -1,0 +1,1 @@
+add wave /project_phase1_tb/iDUT/iFR/iFFN/clk;

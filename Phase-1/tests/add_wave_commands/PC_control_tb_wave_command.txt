@@ -1,0 +1,1 @@
+add wave /PC_control_tb/Branch;

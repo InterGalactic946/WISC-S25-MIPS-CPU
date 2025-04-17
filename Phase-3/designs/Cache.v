@@ -64,18 +64,18 @@ module Cache (
   // and keeping the content the same. Otherwise, if it is a cache miss, and we must evict the first "way", we update it with the new tag along with LRU bit unset. If
   // we don't have to evict the first "way", we set its LRU bit as the the second "way" that is evicted is now most recently used.
   assign TagIn_first_way  = (hit) ?
-                              (((first_match) ? {tag, 1'b1, 1'b0} : {TagOut_first_way[7:1], 1'b1})) :
-                              (((~WaySelect) ? {tag, 1'b1, 1'b0} : {TagOut_first_way[7:1], 1'b1}));
+                              (((first_match) ? {TagOut_first_way[7:1], 1'b0} : {TagOut_first_way[7:1], 1'b1})) :
+                              (((~evict_way) ? {tag, 1'b1, 1'b0} : {TagOut_first_way[7:1], 1'b1}));
 
   // On a cache hit on the second way, we update the tag with the new incoming tag, valid bit set, and LRU bit unset. Else if it did not hit on the first way, we set its LRU bit,
   // and keeping the content the same. Otherwise, if it is a cache miss, and we must evict the second "way", we update it with the new tag along with LRU bit unset. If
   // we don't have to evict the second "way", we set its LRU bit as the first "way" that is evicted is now most recently used.
   assign TagIn_second_way = (hit) ?
-                              ((second_match) ? {tag, 1'b1, 1'b0} : {TagOut_second_way[7:1], 1'b1}) :
-                              ((WaySelect) ? {tag, 1'b1, 1'b0} : {TagOut_second_way[7:1], 1'b1});
+                              ((second_match) ? {TagOut_second_way[7:1], 1'b0} : {TagOut_second_way[7:1], 1'b1}) :
+                              ((evict_way) ? {tag, 1'b1, 1'b0} : {TagOut_second_way[7:1], 1'b1});
 
   // Grab the data to be output based on which way had a hit, else if not a hit, just output 0s.
-  assign DataOut = (hit) ? ((WaySelect) ? DataOut_second_way : DataOut_first_way) : 16'h0000;
+  assign DataOut = (hit) ? ((second_match) ? DataOut_second_way : DataOut_first_way) : 16'h0000;
 
 endmodule
 

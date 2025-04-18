@@ -5,7 +5,7 @@
 // and tag arrays once the memory returns valid data.    //
 ///////////////////////////////////////////////////////////
 module Cache_Control_model (
-    input  logic        clk, rst_n,         // Clock signal and active low reset signal
+    input  logic        clk, rst,           // Clock signal and active high reset signal
     input  logic        miss_detected,      // High when tag match logic detects a cache miss
     input  logic [15:0] miss_address,       // Address that missed in the cache
     input  logic [15:0] memory_data,        // Data returned by memory after delay
@@ -43,7 +43,7 @@ module Cache_Control_model (
   // Keep track of the number of words filled in the cache data array //
   /////////////////////////////////////////////////////////////////////
   always_ff @(posedge clk) begin
-    if (!rst_n) begin                 
+    if (rst) begin                 
       word_count <= 4'h0;              // Reset the word count to zero.
     end else if (clr_count) begin      // Clear the word count register when we get a cache miss.
       word_count <= 4'h0;              // Reset the word count to zero.
@@ -52,25 +52,11 @@ module Cache_Control_model (
     end
   end
 
-  // ////////////////////////////////////////////////////////////////////////////
-  // // Pipeline the miss_detected signal to avoid timing issues with the FSM //
-  // //////////////////////////////////////////////////////////////////////////
-  // always_ff @(posedge clk) begin
-  //   if (!rst_n) begin
-  //     miss_detected_pl <= 1'b0;          // Reset the delayed miss_detected signal to zero.
-  //   end else begin
-  //     miss_detected_pl <= miss_detected; // Store the delayed miss_detected signal.
-  //   end
-  // end
-
-  // // Clear the word count register when we get a cache miss and only on the first cycle of the miss.
-  // assign clr_count = miss_detected & ~miss_detected_pl;
-
   ////////////////////////////////////////////////////
   // Keep track of the address to read from memory //
   //////////////////////////////////////////////////
   always_ff @(posedge clk) begin
-    if (!rst_n) begin             
+    if (rst) begin             
       memory_address <= 16'h0000;                  // Clear the memory address register on reset.
     end else if (clr_count) begin                  // On a cache miss, set the memory address to the miss address.
       memory_address <= {miss_address[15:4], 4'h0};// Set the memory address to the first address of the block.
@@ -84,7 +70,7 @@ module Cache_Control_model (
   ///////////////////////////////////
   // Implements state machine register, holding current state or next state, accordingly.
   always_ff @(posedge clk) begin
-    if(!rst_n)
+    if(rst)
       state <= IDLE; // Reset into the idle state if machine is reset.
     else
       state <= nxt_state; // Store the next state as the current state by default.

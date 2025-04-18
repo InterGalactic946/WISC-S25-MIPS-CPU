@@ -7,7 +7,8 @@
 module Cache_Control_tb();
 
   logic clk;                             // Clock signal
-  logic rst_n;                           // Reset signal
+  logic rst;                             // Active high reset 
+  logic rst_n;                           // Active low reset signal
   
   // Cache block structure to hold data and tag.
   typedef struct {
@@ -44,10 +45,13 @@ module Cache_Control_tb();
   logic [15:0] expected_memory_address;   // Expected value of memory_address
   logic [15:0] expected_memory_data_out;  // Expected value of memory_data_out
 
+  // Make reset active high for modules that require it.
+  assign rst = ~rst_n;
+
   // Instantiate the DUT: cache_fill_FSM.
   Cache_Control iDUT (
     .clk(clk),
-    .rst_n(rst_n),
+    .rst(rst),
     .miss_detected(miss_detected),
     .miss_address(miss_address),
     .memory_data(memory_data),
@@ -63,7 +67,7 @@ module Cache_Control_tb();
   // Instantiate the model cache_fill_FSM.
   Cache_Control_model iCACHE_FSM (
     .clk(clk),
-    .rst_n(rst_n),
+    .rst(rst),
     .miss_detected(miss_detected),
     .miss_address(miss_address),
     .memory_data(memory_data),

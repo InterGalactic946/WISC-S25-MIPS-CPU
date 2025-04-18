@@ -7,7 +7,7 @@
 // and tag arrays once the memory returns valid data.    //
 ///////////////////////////////////////////////////////////
 module Cache_Control (
-    input  wire        clk, rst_n,         // Clock signal and active low reset signal
+    input  wire        clk, rst,           // Clock signal and active high reset signal
     input  wire        miss_detected,      // High when tag match logic detects a cache miss
     input  wire [15:0] miss_address,       // Address that missed in the cache
     input  wire [15:0] memory_data,        // Data returned by memory after delay
@@ -43,16 +43,6 @@ module Cache_Control (
   reg nxt_state;             // Holds the next state. 
   reg error;                 // Error flag raised when state machine is in an invalid state.  
   ////////////////////////////////////////////////
-  // Make reset active high for modules that require it.
-  assign rst = ~rst_n;
-
-  // ////////////////////////////////////////////////////////////////////////////
-  // // Pipeline the miss_detected signal to avoid timing issues with the FSM //
-  // //////////////////////////////////////////////////////////////////////////
-  // CPU_Register #(.WIDTH(1)) iMISS_DETECTED_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(miss_detected), .data_out(miss_detected_pl));
-
-  // // // Clear the word count register when we get a cache miss and only on the first cycle of the miss.
-  // // assign clr_count = miss_detected & ~miss_detected_pl;
 
   ///////////////////////////////////////////////////////////////////////
   // Keep track of the number of words filled in the cache data array //

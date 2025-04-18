@@ -14,12 +14,12 @@ module proc (
 
   // Memory interface
   input  wire        mem_data_valid,    // Indicates valid data on read
-  input  wire [15:0] mem_data_out,      // Data read from memory
+  input  wire [15:0] mem_data_in,       // Data read from memory
 
   output wire        mem_en,            // Memory enable signal
   output wire [15:0] mem_addr,          // Address to read/write
   output wire        mem_wr,            // Memory write enable
-  output wire [15:0] mem_data_in,       // Data to be written to memory
+  output wire [15:0] mem_data_out,      // Data to be written to memory
 
   // Top-level outputs
   output wire        hlt,               // Processor halt signal
@@ -140,6 +140,30 @@ module proc (
     .predicted_target(predicted_target)
   );
   ///////////////////////////////////
+
+  ////////////////////////////////////////
+  // Instantiate instruction memory cache along with control.
+  memory_system iINSTR_MEM_CACHE (
+      .clk(clk),
+      .rst(rst),
+      .enable(1'b1),
+      .on_chip_wr(1'b0),
+      .on_chip_memory_address(pc),
+      .on_chip_memory_data(16'h0000),
+
+      .enable_prev(enable_prev),
+      .hit_prev(hit_prev),
+      .first_tag_LRU_prev(first_tag_LRU_prev),
+      .first_match_prev(first_match_prev),
+
+      .off_chip_memory_data(mem_data_in),
+      .memory_data_valid(mem_data_valid),
+
+      .off_chip_memory_address(mem_addr),
+      .fsm_busy(PC_stall),
+      .data_out(PC_inst)
+  );
+  //////////////////////////////////////////
 
   /////////////////////////////////////////////////
   // Pass the instruction word, current PC, prediction & target, and the next PC address to the IF/ID pipeline register.
@@ -317,16 +341,27 @@ module proc (
   // or previous ALU result if forwarded otherwise the current value. 
   assign MemWriteData = (ForwardSW_MEM) ? RegWriteData : EX_MEM_MemWriteData;
 
-  // Access data memory.
-  memory1c iDATA_MEM (.data_out(MemData),
-                      .data_in(MemWriteData),
-                      .addr(EX_MEM_ALU_out),
-                      .data(1'b1),
-                      .enable(EX_MEM_MemEnable),
-                      .wr(EX_MEM_MemWrite),
-                      .clk(clk),
-                      .rst(rst)
-                    );
+  // Instantiate data memory cache along with control.
+  memory_system iDATA_MEM_CACHE (
+      .clk(clk),
+      .rst(rst),
+      .enable(EX_MEM_MemEnable),
+      .on_chip_wr(EX_MEM_MemWrite),
+      .on_chip_memory_address(EX_MEM_ALU_out),
+      .on_chip_memory_data(MemWriteData),
+
+      .enable_prev(enable_prev),
+      .hit_prev(hit_prev),
+      .first_tag_LRU_prev(first_tag_LRU_prev),
+      .first_match_prev(first_match_prev),
+
+      .off_chip_memory_data(mem_data_in),
+      .memory_data_valid(mem_data_valid),
+
+      .off_chip_memory_address(mem_addr),
+      .fsm_busy(fsm_busy),
+      .data_out(MemData)
+  );
   //////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////////////

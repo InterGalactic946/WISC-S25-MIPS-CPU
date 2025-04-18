@@ -12,21 +12,21 @@ module Cache (
   input  wire [15:0]  addr,                // Address of the memory to access
 
   // Data array control signals
-  input  wire [15:0]  DataIn,              // Data (instruction or word) to write into the cache
-  input  wire         MEM_WB_WaySelect,    // The line which had a hit or the block to evict the cycle we update the tag array
-  input  wire         WriteDataArray,      // Write enable for data array
+  input  wire [15:0]  data_in,             // Data (instruction or word) to write into the cache
+  input  wire         way_select,          // The line which had a hit or the block to evict the cycle we update the tag array
+  input  wire         write_data_array,    // Write enable for data array
 
   // Meta data array control signals
-  input wire [7:0] TagIn_first_way,        // First "way" tag info (6-bit tag, 1-bit valid, 1-bit LRU).
-  input wire [7:0] TagIn_second_way,       // Second "way" tag info (6-bit tag, 1-bit valid, 1-bit LRU)
-  input wire        WriteTagArray,         // Write enable for meta data array
+  input wire [7:0] first_tag_in,           // First "way" tag info (6-bit tag, 1-bit valid, 1-bit LRU).
+  input wire [7:0] second_tag_in,          // Second "way" tag info (6-bit tag, 1-bit valid, 1-bit LRU)
+  input wire       write_tag_array,        // Write enable for meta data array
 
   // Outputs
-  output wire [7:0] TagOut_first_way,      // The tag currently stored in the first line of the cache to compare to.
-  output wire [7:0] TagOut_second_way,     // The tag currently stored in the second line of the cache to compare to.
-  output wire [15:0]  DataOut,             // Output data from cache (e.g., fetched instruction or memory word)
-  output wire      WaySelect,              // The line which had a hit or the block to evict this cycle after a read or a write
-  output wire         hit                  // Indicates cache hit or miss
+  output wire [7:0] first_tag_out,         // The tag currently stored in the first line of the cache to compare to.
+  output wire [7:0] second_tag_out,        // The tag currently stored in the second line of the cache to compare to.
+  output wire [15:0] data_out,             // Output data from cache (e.g., fetched instruction or memory word)
+  output wire first_match,                 // 1-bit signal indicating the first "way" in the set caused a cache hit.
+  output wire second_match                 // 1-bit signal indicating the second "way" in the set caused a cache hit.  
 );
 
   /////////////////////////////////////////////////
@@ -34,8 +34,8 @@ module Cache (
   ///////////////////////////////////////////////
   wire [63:0] set_enable;      // One hot set enable for the 64 sets in the cache.
   wire [7:0] word_enable;      // One hot word enable based on the b-bits of the address.
-  wire first_match;            // 1-bit signal indicating the first "way" in the set caused a cache hit.
-  wire second_match;           // 1-bit signal indicating the second "way" in the set caused a cache hit.
+  wire WaySelect;              // The line which had a hit or the block to evict this cycle after a read or a write
+  wire hit;                    // Indicates cache hit or miss
   wire evict_way;              // 1-bit signal indicating which "way" has LRU bit set.
   ///////////////////////////////////////////////
 
@@ -52,35 +52,35 @@ module Cache (
   DataArray iDA (
       .clk(clk),
       .rst(rst),
-      .Write(WriteDataArray),
-      .DataIn(DataIn),
-      .WaySelect(MEM_WB_WaySelect),
+      .Write(write_data_array),
+      .DataIn(data_in),
+      .WaySelect(way_select),
       .SetEnable(set_enable),
       .WordEnable(word_enable),
       
-      .DataOut_first_way(DataOut_first_way),
-      .DataOut_second_way(DataOut_second_way)
+      .DataOut_first_way(first_data_out),
+      .DataOut_second_way(second_data_out)
   );
 
   // Instantiate the meta data array for the cache.
   MetaDataArray iMDA (
       .clk(clk),
       .rst(rst),
-      .Write(WriteTagArray),
-      .DataIn_first_way(TagIn_first_way),
-      .DataIn_second_way(TagIn_second_way),
+      .Write(write_tag_array),
+      .DataIn_first_way(first_tag_in),
+      .DataIn_second_way(second_tag_in),
       .SetEnable(set_enable),
       
-      .DataOut_first_way(TagOut_first_way),
-      .DataOut_second_way(TagOut_second_way)
+      .DataOut_first_way(first_tag_out),
+      .DataOut_second_way(second_tag_out)
   );
 
   // Compare the tag stored in the cache currently at both "ways/lines" in parallel, checking for equality and valid bit set. (addr[16:8] == tag and TagOut[1] == valid)
-  assign first_match = (addr[16:8] == TagOut_first_way[7:2]) & TagOut_first_way[1];
-  assign second_match = (addr[16:8] == TagOut_second_way[7:2]) & TagOut_second_way[1];
+  assign first_match = (addr[16:8] == first_tag_out[7:2]) & first_tag_out[1];
+  assign second_match = (addr[16:8] == second_tag_out[7:2]) & second_tag_out[1];
   
   // If first_way LRU is 1, evict first_way (0), else evict second_way (1). (TagOut[0] == LRU)
-  assign evict_way = (TagOut_first_way[0]) ? 1'b0 : 1'b1; 
+  assign evict_way = (first_tag_out[0]) ? 1'b0 : 1'b1; 
 
   // On a hit, pick the way that matched (If second_match is 1, the second "way" matched, else if 0, the first "way" matched). On a miss, pick the evicted way.
   assign WaySelect = (hit) ? second_match : evict_way;
@@ -103,7 +103,7 @@ module Cache (
   assign hit = first_match | second_match;
 
   // Grab the data to be output based on which way had a read hit, else if not a read hit, just output 0s.
-  assign DataOut = (hit & ~WriteDataArray) ? ((second_match) ? DataOut_second_way : DataOut_first_way) : 16'h0000;
+  assign DataOut = (hit & ~WriteDataArray) ? ((second_match) ? second_data_out : first_data_out) : 16'h0000;
 
 endmodule
 

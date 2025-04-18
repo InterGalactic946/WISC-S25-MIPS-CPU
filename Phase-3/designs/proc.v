@@ -32,6 +32,7 @@ module proc (
   /*ARBITRATOR SIGNALS */
   wire ICACHE_proceed;          // Signal to proceed with data memory access on an ICACHE miss
   wire DCACHE_proceed;          // Signal to proceed with data memory access on an DCACHE miss
+  wire mem_en_miss;             // Enables main memory on a cache miss
   
   /* FETCH stage signals */
   wire [15:0] PC_next;          // Next PC address
@@ -40,6 +41,7 @@ module proc (
 
   /* ICACHE signals */
   wire [15:0] PC_inst;          // Instruction fetched from memory at the current PC address
+  wire hlt_fetched;             // Indicates if the fetched instruction is a halt instruction.
   wire [15:0] I_MEM_addr;       // The address to access in off chip memory on an ICACHE miss
   wire ICACHE_busy;             // Indicates ICACHE FSM is currently busy processing
   wire PC_first_tag_LRU;        // LRU tag result for the current PC (used in caching decisions)
@@ -140,6 +142,32 @@ module proc (
   // Halts the processor if a HLT instruction is encountered and is in the WB stage.
   assign hlt = MEM_WB_HLT;
 
+  //////////////////////////////////////////////////////////
+  // Arbitrate accesses to data memory between I/D caches //
+  //////////////////////////////////////////////////////////
+  Cache_Arbiter iARBITER (
+    .clk(clk),        
+    .rst(rst),         
+    .ICACHE_busy(ICACHE_busy),   
+    .DCACHE_busy(DCACHE_busy),   
+    
+    .mem_en(mem_en_miss),
+    .i_grant(ICACHE_proceed),
+    .d_grant(DCACHE_proceed)        
+  );
+
+  // We send out the main memory address as from the instruction cache or data cache based on which is granted.
+  assign mem_addr = (ICACHE_proceed) ? I_MEM_addr :
+                    (DCACHE_proceed) ? D_MEM_addr :
+                    16'h0000;
+
+  // We enable main memory either on a cache miss or on a DCACHE write.
+  assign mem_en = mem_en_miss | (DCACHE_hit & EX_MEM_MemWrite & EX_MEM_MemEnable);
+
+  // We write to main memory on a DCACHE write hit as it is a write through cache.
+  assign mem_wr = (DCACHE_hit & EX_MEM_MemWrite & EX_MEM_MemEnable);
+  /////////////////////////////////////////////////////////////
+
   ////////////////////////////////
   // FETCH instruction from PC  //
   ////////////////////////////////
@@ -147,6 +175,7 @@ module proc (
     .clk(clk), 
     .rst(rst), 
     .stall(PC_stall), 
+    .hlt_fetched(hlt_fetched),
     .actual_taken(actual_taken),
     .wen_BHT(wen_BHT),
     .branch_target(branch_target),
@@ -192,6 +221,9 @@ module proc (
       .data_out(PC_inst),
       .hit(ICACHE_hit)
   );
+
+  // Get the condition that we fetched a halt instruction.
+  assign hlt_fetched = &PC_inst[15:12];
   //////////////////////////////////////////
 
   /////////////////////////////////////////////////

@@ -14,6 +14,7 @@ module Fetch (
     input wire clk,                    // System clock
     input wire rst,                    // Active high synchronous reset
     input wire stall,                  // Stall signal for the PC (from the hazard detection unit)
+    input wire hlt_fetched,            // Indicates if the fetched instruction is a halt instruction
     input wire actual_taken,           // Signal used to determine whether branch instruction met condition codes
     input wire wen_BHT,                // Write enable for BHT (Branch History Table)
     input wire [15:0] branch_target,   // 16-bit address of the branch target
@@ -24,7 +25,6 @@ module Fetch (
     input wire [1:0] IF_ID_prediction, // The predicted value of the previous branch instruction
     
     output wire [15:0] PC_next,         // Computed next PC value
-    output wire [15:0] PC_inst,         // Instruction fetched from the current PC address
     output wire [15:0] PC_curr,         // Current PC value
     output wire [1:0] prediction,       // The 2-bit predicted value of the current branch instruction
     output wire [15:0] predicted_target // The predicted target from the BTB.
@@ -35,7 +35,6 @@ module Fetch (
   ///////////////////////////////////////////////
   wire predicted_taken;  // The predicted value of the current instruction.
   wire enable;           // Enables the reads/writes for PC, instruction memory, and BHT, BTB.
-  wire hlt_fetched;      // Indicates if the fetched instruction is a halt instruction.
   wire [15:0] PC_target; // The target address of the branch instruction from the BTB or the next PC.
   wire [15:0] PC_new;    // The PC is updated with the current PC if HLT is fetched, or the target address otherwise.
   wire [15:0] PC_update; // The address to update the PC with.
@@ -44,9 +43,6 @@ module Fetch (
   //////////////////////////////////////////////////////////
   // Implement PC_control as structural/dataflow verilog //
   ////////////////////////////////////////////////////////
-  // Get the condition that we fetched a halt instruction.
-  assign hlt_fetched = &PC_inst[15:12];
-
   // We write to the PC whenever we don't stall on decode.
   assign enable = ~stall;
 
@@ -79,17 +75,6 @@ module Fetch (
 
   // Infer the PC Register.
   CPU_Register iPC (.clk(clk), .rst(rst), .wen(enable), .data_in(PC_update), .data_out(PC_curr));
-
-  // Infer the instruction memory, it is read enabled when not stalling and never write enabled.
-  memory1c iINSTR_MEM (.data_out(PC_inst),
-                       .data_in(16'h0000),
-                        .addr(PC_curr),
-                        .enable(enable),
-                        .data(1'b0),
-                        .wr(1'b0),
-                        .clk(clk),
-                        .rst(rst)
-                      );
   
   // Instantiate the PC+2 adder.
   CLA_16bit iCLA_next (.A(PC_curr), .B(16'h0002), .sub(1'b0), .Sum(PC_next), .Cout(), .Ovfl(), .pos_Ovfl(), .neg_Ovfl());

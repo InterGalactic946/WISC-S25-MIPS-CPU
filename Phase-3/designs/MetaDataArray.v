@@ -3,8 +3,13 @@
 //Each block will have 1 byte
 //BlockEnable is one-hot
 //WriteEnable is one on writes and zero on reads
-module MetaDataArray(input clk, input rst, input [7:0] DataIn_first_way, input [7:0] DataIn_second_way, input Write, input [63:0] SetEnable, output [7:0] DataOut_first_way, output [7:0] DataOut_second_way);
-	MetaDataSet set[63:0] (.clk(clk), .rst(rst), .DataIn_first_way(DataIn_first_way), .DataIn_second_way(DataIn_second_way), .Write(Write), .SetEnable(SetEnable), .DataOut_first_way(DataOut_first_way), .DataOut_second_way(DataOut_second_way));
+module MetaDataArray(input clk, input rst, input [7:0] DataIn_first_way, input [7:0] DataIn_second_way, input Write, input [63:0] SetEnable, input Set_First_LRU,, output [7:0] DataOut_first_way, output [7:0] DataOut_second_way);
+    wire [7:0] DataIn_first;
+	wire [7:0] DataIn_second;
+	assign DataIn_first = {DataIn_first_way[7:1], Set_First_LRU};
+	assign DataIn_second = {DataIn_second_way[7:1], ~Set_First_LRU};
+	
+	MetaDataSet set[63:0] (.clk(clk), .rst(rst), .DataIn_first_way(DataIn_first), .DataIn_second_way(DataIn_second), .Write(Write), .SetEnable(SetEnable), .DataOut_first_way(DataOut_first_way), .DataOut_second_way(DataOut_second_way));
 endmodule
 
 // Each set has 2 "ways" or cache lines

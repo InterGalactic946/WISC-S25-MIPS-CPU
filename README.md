@@ -89,8 +89,7 @@ make synthesis
 ```
 ### Description:
 - Synthesizes the design to a Synopsys 32-nm Cell Library.
-- Generates: a compilation log file, min/max delay reports, an area report, a `.vg` file (netlist), and a `.sdc` file (timing constraints).
-- Automatically runs only if source files or the synthesis script have been updated.
+- Generates: a compilation log file, power/max delay reports, an area report, a `.vg` file (netlist), and a `.sdc` file (timing constraints).
 
 ### Output Files:
 - `cpu_area.syn.txt`(Area Report)
@@ -102,7 +101,7 @@ make synthesis
 ---
 
 ## **Run Simulations**
-Executes test cases in different modes (CMD, GUI, save waveforms).
+Executes testbenches in different modes (CMD, GUI, save waveforms) in a selected directory.
 
 ### Usage:
 ```bash

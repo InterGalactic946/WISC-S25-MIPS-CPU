@@ -11,7 +11,6 @@
 module Decoder_6_64(RegId, Wordline);
 
   input wire [5:0] RegId;      // 6-bit register ID
-  input wire en;               // 1-bit enable
   output wire [63:0] Wordline; // 64-bit one-hot output
   
   ////////////////////////////////////////////////
@@ -29,7 +28,7 @@ module Decoder_6_64(RegId, Wordline);
   Decoder_5_32 iDECODER_second (.RegId(RegId[4:0]), .en(~RegId[5]), .Wordline(Wordline_second));
 
   // Concatenate all outputs.
-  assign Wordline = (en) ? {Wordline_first, Wordline_second} : 64'h0000000000000000;
+  assign Wordline = {Wordline_first, Wordline_second};
 
 endmodule
 

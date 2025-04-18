@@ -30,8 +30,6 @@ module memory_system (
     ///////////////////////////////////////////////
     wire wr_data_enable;       // Condition we write to the cache data array.
     wire wr_tag_enable;        // Condition we write to the cache data array.
-    wire [5:0] tag;            // Extract upper 6 bits of address as tag.
-    wire [63:0] set_enable;    // One hot set enable for the 64 sets in the cache.
     wire [15:0] data_in;       // Data input to the cache.
     wire [15:0] main_mem_data; // Get the data from main memory for input to the cache.
     wire write_data_array;     // Write enable to cache data array to signal when filling with memory_data.
@@ -40,37 +38,32 @@ module memory_system (
     wire hit;                  // Indicates that a cache hit occurred at this address.
     ///////////////////////////////////////////////
 
-    // Instantiate a 3:8 decoder to get which word of the 8 words to write to.
-    Decoder_3_8 iWORD_DECODER (.RegId(on_chip_memory_address[3:1]), en(1'b1), .Wordline(word_enable));
-
-    // Instantiate a 6:64 read decoder to get which set of the 64 sets to enable.
-    Decoder_6_64 iSET_DECODER (.RegId(on_chip_memory_address[9:4]), .Wordline(set_enable));
-
     ///////////////////////////
     // Instantiate L1-cache //
     /////////////////////////
     Cache iL1_CACHE (
         .clk(clk),
         .rst(rst),  
-        .tag(tag),
-        .SetEnable(set_enable),
+        .addr(on_chip_memory_address),
         
         .DataIn(data_in),
+        .MEM_WB_WaySelect(MEM_WB_WaySelect),
         .WriteDataArray(wr_data_enable),
-        .WordEnable(word_enable),
-        
+
+        .TagIn_first_way(MEM_WB_TagIn_first_way),
+        .TagIn_second_way(MEM_WB_TagIn_second_way),         
         .WriteTagArray(wr_tag_enable),
         
+        .TagOut_first_way(TagOut_first_way),
+        .TagOut_second_way(TagOut_second_way),
         .DataOut(data_out),
+        .WaySelect(WaySelect),
         .hit(hit)
     );
     
     // We write to the cache either when we have a hit and we are writing from on-chip, or we 
     // have a miss and writing from off chip.
     assign wr_data_enable = (hit) ? on_chip_wr : write_data_array;
-
-    // Grab the tag as the upper 6 bits of the requested address.
-    assign tag = on_chip_memory_address[15:10];
 
     // The data input to the cache is either the main memory data or the on-chip data.
     assign data_in = (hit) ? on_chip_memory_data : main_mem_data;

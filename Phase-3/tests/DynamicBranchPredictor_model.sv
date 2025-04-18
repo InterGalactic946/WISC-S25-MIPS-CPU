@@ -68,7 +68,7 @@ module DynamicBranchPredictor_model (
   end
 
   // Get the valid bit of the branch.
-  assign valid = BHT[PC_curr[3:1]].valid;
+  assign valid = (enable) ? BHT[PC_curr[3:1]].valid : 1'b0;
 
   // Asynchronously read out the prediction when enabled.
   assign prediction_rd = (enable) ? BHT[PC_curr[3:1]].prediction : 2'h0;

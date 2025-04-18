@@ -31,14 +31,16 @@ module Fetch_tb();
   logic target_miscomputed;               // Indicates previous instruction's fetch miscomputed the target.
   logic branch_taken;                     // Indicates branch was actually taken.
 
-  integer actual_taken_count;             // Number of times branch was actually taken.
-  integer predicted_taken_count;          // Number of times branch was predicted to be taken.
-  integer predicted_not_taken_count;      // Number of times branch was predicted to not be taken.
-  integer misprediction_count;            // Number of times branch was mispredicted.
-  integer test_counter;                   // Number of tests executed.
-  integer branch_count;                   // Number of branches executed.
-  integer stalls;                         // Number of PC stalls.
-  integer num_tests;                      // Number of test cases to execute.
+  integer predicted_taken_actual_not_count;       // Number of times predictor said taken, but branch wasn't (false positive).
+  integer predicted_not_taken_actual_taken_count; // Number of times predictor said not taken, but branch was (false negative).
+  integer actual_taken_count;                     // Number of times branch was actually taken.
+  integer predicted_taken_count;                  // Number of times branch was predicted to be taken.
+  integer predicted_not_taken_count;              // Number of times branch was predicted to not be taken.
+  integer misprediction_count;                    // Number of times branch prediction was incorrect.
+  integer test_counter;                           // Number of tests executed (e.g., instructions tested).
+  integer stalls;                                 // Number of PC stall cycles due to pipeline bubbles or hazards.
+  integer branch_count;                           // Number of branch instructions executed.
+  integer num_tests;                              // Number of test cases to execute.
     
   logic [15:0] PC_next;                   // Computed next PC value
   logic [15:0] PC_inst;                   // Instruction fetched from the current PC address
@@ -95,7 +97,7 @@ module Fetch_tb();
   );
 
   // At negative edge of clock, verify the predictions match the model.
-  always @(negedge clk) begin
+  always @(posedge clk) begin
     // Verify the DUT other than reset.
     if (!rst) begin
       verify_FETCH(
@@ -117,6 +119,8 @@ module Fetch_tb();
               .fetch_msg(fetch_msg)
       );
 
+      $display(fetch_msg);
+
       // Dump the contents of memory whenever we write to the BTB or BHT.
       if (wen_BHT || wen_BTB)
         log_BTB_BHT_dump (
@@ -129,17 +133,17 @@ module Fetch_tb();
   // Initialize the testbench.
   initial begin
       clk = 1'b0;              // Initially clk is low
-      rst = 1'b0;              // Initially rst is low
+      rst = 1'b1;              // Initially rst is high
       enable = 1'b1;           // Enable the branch predictor
       is_branch = 1'b0;        // Initially no branch
       actual_taken = 1'b0;     // Initially the branch is not taken
       actual_target = 16'h0000; // Set target to 0 initially
       branch_target = 16'h0000; // Set target to 0 initially
-      IF_ID_PC_curr = 16'h0000;    // Start with PC = 0
-      IF_ID_prediction = 2'b00; // Start with strongly not taken prediction (prediction[1] = 0)
       fetch_msg = "";
 
       // Initialize counter values.
+      predicted_taken_actual_not_count = 0;
+      predicted_not_taken_actual_taken_count = 0;
       actual_taken_count = 0;
       predicted_taken_count = 0;
       predicted_not_taken_count = 0;
@@ -149,7 +153,7 @@ module Fetch_tb();
       stalls = 0;
 
       // initialize num_tests.
-      num_tests = 32; // Number of tests to run.
+      num_tests = 300; // Number of tests to run.
 
       // Wait for the first clock cycle to assert reset
       @(posedge clk);
@@ -163,22 +167,42 @@ module Fetch_tb();
       // Run for num_tests.
       repeat (num_tests) begin
         @(posedge clk);
-
-        $display(fetch_msg);
       end
 
       // If all predictions are correct, print out the counts.
-      $display("\nNumber of PC stall cycles: %0d.", stalls);
-      $display("Number of branches predicted to be taken: %0d.", predicted_taken_count);
-      $display("Number of branches predicted to be not taken: %0d.", predicted_not_taken_count);
-      $display("Number of penalty cycles for misprediction: %0d.", misprediction_count);
-      $display("Number of branches actually taken: %0d.", actual_taken_count);
-      $display("Number of branch instructions executed: %0d.", branch_count);
-      $display("Number of instructions executed: %0d.", num_tests);
-      $display("Accuracy of predictor: %0f%%.", (1.0 - (real'(misprediction_count) / real'(branch_count))) * 100);
+      $display("\n================ Branch Predictor Statistics ================");
+
+      // General execution stats
+      $display("Total instructions executed:                 %0d", num_tests);
+      $display("Total branch instructions executed:          %0d", branch_count);
+      $display("  └─ Actually taken:                         %0d", actual_taken_count);
+      $display("  └─ Actually not taken:                     %0d", branch_count - actual_taken_count);
+      
+      // Prediction outcomes
+      $display("Predicted taken:                             %0d", predicted_taken_count);
+      $display("Predicted not taken:                         %0d", predicted_not_taken_count);
+      $display("  ├─ False positives (pred taken, not taken):%0d", predicted_taken_actual_not_count);
+      $display("  └─ False negatives (pred not taken, taken):%0d", predicted_not_taken_actual_taken_count);
+
+      // Misprediction and stall stats
+      $display("Total mispredictions:                        %0d", misprediction_count);
+      $display("Total PC stall cycles:                       %0d", stalls);
+
+      // Accuracy and rates
+      if (branch_count > 0) begin
+        $display("Prediction accuracy:                         %0.2f%%", 
+                100.0 * (1.0 - real'(misprediction_count) / real'(branch_count)));
+        $display("False positive rate:                         %0.2f%%", 
+                100.0 * real'(predicted_taken_actual_not_count) / real'(branch_count));
+        $display("False negative rate:                         %0.2f%%", 
+                100.0 * real'(predicted_not_taken_actual_taken_count) / real'(branch_count));
+      end else begin
+        $display("Prediction accuracy:                         N/A (no branches)");
+      end
+      $display("============================================================\n");
       
       // If we reached here it means all tests passed.
-      $display("\nYAHOO!! All tests passed.");
+      $display("YAHOO!! All tests passed.");
       $stop();
   end
 
@@ -186,56 +210,75 @@ module Fetch_tb();
     #5 clk = ~clk; // toggle clock every 5 time units.
 
 
-  // Model Decode stage.
+  // Model Decode stage behavior using pseudo-randomized control signals.
+  // Varies is_branch, actual_taken, actual_target, and enable based on test_counter mod 8.
   always @(posedge clk) begin
-    test_counter = test_counter + 1;
+    test_counter <= test_counter + 1;
 
     case (test_counter % 8)
-      0, 1:  // 25% of the time, randomize is_branch
-        is_branch = $random % 2;
+      0, 1: begin
+        // 25% of the time: Randomize whether it's a branch.
+        is_branch <= $random % 2;
+      end
       
-      2, 3:  // 25% of the time, randomize actual_taken
-        actual_taken = $random % 2;
-      
-      4, 5: begin // 25% of the time, randomize actual_target
-        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
+      2, 3: begin
+        // 25% of the time: Randomize actual taken status.
+        actual_taken <= $random % 2;
       end
 
-      6:  // 12.5% of the time, randomize enable
-        enable = $random % 2;
-      
-      default: begin  // 12.5% of the time, randomize everything
-        is_branch = $random % 2;
-        actual_taken = $random % 2;
-        actual_target = (actual_taken) ? (16'h0000 + ($random % num_tests) * 2) : 16'h0000;
-        enable = $random % 2;
+      4, 5: begin
+        // 25% of the time: Randomize actual target (only if taken).
+        actual_target <= (actual_taken) ? (16'h0000 + ($random % (num_tests != 0 ? num_tests : 1)) * 2) : 16'h0000;
+      end
+
+      6: begin
+        // 12.5% of the time: Randomize enable.
+        enable <= $random % 2;
+      end
+
+      default: begin
+        // 12.5% of the time: Randomize all relevant control signals.
+        is_branch <= $random % 2;
+        actual_taken <= $random % 2;
+        actual_target <= (actual_taken) ? (16'h0000 + ($random % (num_tests != 0 ? num_tests : 1)) * 2) : 16'h0000;
+        enable <= $random % 2;
       end
     endcase
   end
 
-  // Get the counts for debugging.
-  always @(negedge clk) begin
-    // Count the number of stalls.
+
+  // Debugging counters for branch prediction analysis.
+  always @(posedge clk) begin
     if (!enable) begin
+      // Count the number of stalls.
       stalls++;
     end else begin
-      // Track actual taken count.
-      if (actual_taken && is_branch)
-        actual_taken_count++;
-
-      // Track predicted counts.
-      if (IF_ID_prediction[1] && is_branch) 
-        predicted_taken_count++;
-      else if (!IF_ID_prediction[1] && is_branch)
-        predicted_not_taken_count++;
-      
-      // Track penalty count (how many times we update the PC).
-      if (update_PC) 
-        misprediction_count++;
-      
-      // Track how many times the instruction was a branch.
-      if (is_branch) 
+      if (is_branch) begin
         branch_count++;
+
+        // Track actual taken count.
+        if (actual_taken)
+          actual_taken_count++;
+
+        // Track prediction stats.
+        if (IF_ID_prediction[1]) begin
+          predicted_taken_count++;
+
+          // Case: predicted taken but actually not taken (false positive)
+          if (!actual_taken)
+            predicted_taken_actual_not_count++;
+        end else begin
+          predicted_not_taken_count++;
+
+          // Case: predicted not taken but actually taken (false negative)
+          if (actual_taken)
+            predicted_not_taken_actual_taken_count++;
+        end
+
+        // Track mispredictions — if PC was updated due to wrong prediction
+        if (update_PC)
+          misprediction_count++;
+      end
     end
   end
 

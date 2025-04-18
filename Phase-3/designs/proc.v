@@ -28,19 +28,33 @@ module proc (
 
   ///////////////////////////////////
   // Declare any internal signals //
-  /////////////////////////////////  
+  /////////////////////////////////
+  /*ARBITRATOR SIGNALS */
+  wire ICACHE_proceed;          // Signal to proceed with data memory access on an ICACHE miss
+  wire DCACHE_proceed;          // Signal to proceed with data memory access on an DCACHE miss
+  
   /* FETCH stage signals */
   wire [15:0] PC_next;          // Next PC address
-  wire [15:0] PC_inst;          // Instruction at the current PC address
   wire [1:0] prediction;        // 2-bit Prediction from the branch history table
   wire [15:0] predicted_target; // Predicted target address of the branch instruction
 
+  /* ICACHE signals */
+  wire [15:0] PC_inst;          // Instruction fetched from memory at the current PC address
+  wire [15:0] I_MEM_addr;       // The address to access in off chip memory on an ICACHE miss
+  wire ICACHE_busy;             // Indicates ICACHE FSM is currently busy processing
+  wire PC_first_tag_LRU;        // LRU tag result for the current PC (used in caching decisions)
+  wire PC_first_match;          // Cache tag match result for the current PC on the first "way"
+  wire ICACHE_hit;              // Indicates a cache hit for the current PC access
+
   /* IF/ID Pipeline Register signals */
-  wire [15:0] IF_ID_PC_curr;          // Pipelined current instruction (previous PC) address from the fetch stage
-  wire [15:0] IF_ID_PC_next;          // Pipelined next instruction (previous PC_next) address from the fetch stage
-  wire [15:0] IF_ID_PC_inst;          // Pipelined instruction word (previous PC_inst) from the fetch stage
-  wire [1:0] IF_ID_prediction;        // Pipelined branch prediction (previous predicted_taken) from the fetch stage
-  wire [15:0] IF_ID_predicted_target; // Pipelined branch predicted target address (previous predicted_target) from the fetch stage
+  wire [15:0] IF_ID_PC_curr;            // Current PC value pipelined from the Fetch stage
+  wire [15:0] IF_ID_PC_next;            // Next PC value pipelined from the Fetch stage
+  wire IF_ID_first_tag_LRU;             // LRU tag pipelined from the Fetch stage (used for ICACHE debug or forwarding)
+  wire IF_ID_first_match;               // Cache match flag pipelined from the Fetch stage
+  wire IF_ID_ICACHE_hit;                // Cache hit flag pipelined from the Fetch stage
+  wire [15:0] IF_ID_PC_inst;            // Instruction word pipelined from the Fetch stage
+  wire [1:0]  IF_ID_prediction;         // Branch prediction outcome pipelined from the Fetch stage
+  wire [15:0] IF_ID_predicted_target;   // Predicted branch target address pipelined from the Fetch stage
 
   /* DECODE stage signals */
   wire Branch;               // Indicates it is a branch instruction
@@ -94,12 +108,21 @@ module proc (
   wire [15:0] EX_MEM_PC_next;      // Pipelined next instruction (previous PC_next) address from the fetch stage
 
   /* MEMORY stage signals */
-  wire [15:0] MemData;             // Data read from memory
   wire [15:0] MemWriteData;        // Data written to memory
+  wire [15:0] D_MEM_addr;          // The address to access in off chip memory on an DCACHE miss
+  wire DCACHE_busy;                // Indicates the DCACHE FSM is busy processing
+  wire [15:0] MemData;             // Data read from memory
+  wire first_tag_LRU;              // LRU tag result for current access
+  wire first_match;                // Tag match result for current access
+  wire DCACHE_hit;                 // Indicates if current memory access was a cache hit
 
   /* MEM/WB Pipeline Register signals */
   wire [15:0] MEM_WB_MemData; // Pipelined data read from memory from the memory stage
   wire [15:0] MEM_WB_ALU_out; // Pipelined arithemtic computation result computed from the execute stage
+  wire MEM_WB_MemEnable;      // Previous cycle's memory enable (for FSM bookkeeping)
+  wire MEM_WB_first_tag_LRU;  // Previous cycle's LRU result on the first "way"
+  wire MEM_WB_first_match;    // Previous cycle's tag match result on the first "way"
+  wire MEM_WB_DCACHE_hit;     // Previous cycle's cache hit signal
   wire [3:0] MEM_WB_reg_rd;   // Pipelined register ID of the destination register from the decode stage
   wire MEM_WB_RegWrite;       // Pipelined write enable to the register file from the decode stage
   wire MEM_WB_MemToReg;       // Pipelined select signal to write data read from memory or ALU result back to the register file
@@ -134,7 +157,6 @@ module proc (
     .IF_ID_prediction(IF_ID_prediction), 
       
     .PC_next(PC_next), 
-    .PC_inst(PC_inst), 
     .PC_curr(pc),
     .prediction(prediction),
     .predicted_target(predicted_target)
@@ -147,21 +169,28 @@ module proc (
       .clk(clk),
       .rst(rst),
       .enable(1'b1),
+      .proceed(ICACHE_proceed),
       .on_chip_wr(1'b0),
       .on_chip_memory_address(pc),
       .on_chip_memory_data(16'h0000),
 
-      .enable_prev(enable_prev),
-      .hit_prev(hit_prev),
-      .first_tag_LRU_prev(first_tag_LRU_prev),
-      .first_match_prev(first_match_prev),
+      .enable_prev(1'b1),
+      .hit_prev(IF_ID_ICACHE_hit),
+      .first_tag_LRU_prev(IF_ID_first_tag_LRU),
+      .first_match_prev(IF_ID_first_match),
 
       .off_chip_memory_data(mem_data_in),
       .memory_data_valid(mem_data_valid),
 
-      .off_chip_memory_address(mem_addr),
-      .fsm_busy(PC_stall),
-      .data_out(PC_inst)
+      .off_chip_memory_address(I_MEM_addr),
+      
+      .fsm_busy(ICACHE_busy),
+    
+      .first_tag_LRU(PC_first_tag_LRU),
+      .first_match(PC_first_match),
+
+      .data_out(PC_inst),
+      .hit(ICACHE_hit)
   );
   //////////////////////////////////////////
 
@@ -174,12 +203,18 @@ module proc (
     .flush(IF_flush),
     .PC_curr(pc),
     .PC_next(PC_next),
+    .first_tag_LRU(PC_first_tag_LRU),
+    .first_match(PC_first_match),
+    .hit(ICACHE_hit),
     .PC_inst(PC_inst),
     .prediction(prediction),
     .predicted_target(predicted_target),
     
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_PC_next(IF_ID_PC_next),
+    .IF_ID_first_tag_LRU(IF_ID_first_tag_LRU),
+    .IF_ID_first_match(IF_ID_first_match),
+    .IF_ID_ICACHE_hit(IF_ID_ICACHE_hit),
     .IF_ID_PC_inst(IF_ID_PC_inst),
     .IF_ID_prediction(IF_ID_prediction),
     .IF_ID_predicted_target(IF_ID_predicted_target)
@@ -238,6 +273,7 @@ module proc (
       .ID_EX_NV_en(ID_EX_NV_en),
       .Branch(Branch),
       .BR(BR),
+      .ICACHE_busy(ICACHE_busy),
       .update_PC(update_PC),
       
       .PC_stall(PC_stall),
@@ -346,21 +382,28 @@ module proc (
       .clk(clk),
       .rst(rst),
       .enable(EX_MEM_MemEnable),
+      .proceed(DCACHE_proceed),
       .on_chip_wr(EX_MEM_MemWrite),
       .on_chip_memory_address(EX_MEM_ALU_out),
       .on_chip_memory_data(MemWriteData),
 
-      .enable_prev(enable_prev),
-      .hit_prev(hit_prev),
-      .first_tag_LRU_prev(first_tag_LRU_prev),
-      .first_match_prev(first_match_prev),
+      .enable_prev(MEM_WB_MemEnable),
+      .hit_prev(MEM_WB_DCACHE_hit),
+      .first_tag_LRU_prev(MEM_WB_first_tag_LRU),
+      .first_match_prev(MEM_WB_first_match),
 
       .off_chip_memory_data(mem_data_in),
       .memory_data_valid(mem_data_valid),
 
-      .off_chip_memory_address(mem_addr),
-      .fsm_busy(fsm_busy),
-      .data_out(MemData)
+      .off_chip_memory_address(D_MEM_addr),
+
+      .fsm_busy(DCACHE_busy),
+
+      .first_tag_LRU(first_tag_LRU),
+      .first_match(first_match),
+      
+      .data_out(MemData),
+      .hit(DCACHE_hit)
   );
   //////////////////////////////////////////////////////////////////
 
@@ -371,11 +414,19 @@ module proc (
       .rst(rst),
       .EX_MEM_PC_next(EX_MEM_PC_next),
       .EX_MEM_ALU_out(EX_MEM_ALU_out),
+      .EX_MEM_MemEnable(EX_MEM_MemEnable),
+      .first_tag_LRU(first_tag_LRU),
+      .first_match(first_match),
+      .DCACHE_hit(DCACHE_hit),
       .MemData(MemData),
       .EX_MEM_WB_signals(EX_MEM_WB_signals),
       
       .MEM_WB_PC_next(MEM_WB_PC_next),
       .MEM_WB_ALU_out(MEM_WB_ALU_out),
+      .MEM_WB_MemEnable(MEM_WB_MemEnable),
+      .MEM_WB_first_tag_LRU(MEM_WB_first_tag_LRU),
+      .MEM_WB_first_match(MEM_WB_first_match),
+      .MEM_WB_DCACHE_hit(MEM_WB_DCACHE_hit),
       .MEM_WB_MemData(MEM_WB_MemData),
       .MEM_WB_WB_signals({MEM_WB_reg_rd, MEM_WB_RegWrite, MEM_WB_MemToReg, MEM_WB_HLT, MEM_WB_PCS})
   );

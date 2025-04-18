@@ -13,11 +13,19 @@ module MEM_WB_pipe_reg (
     input wire rst,                        // Active high synchronous reset
     input wire [15:0] EX_MEM_PC_next,      // Pipelined next PC from the fetch stage
     input wire [15:0] EX_MEM_ALU_out,      // Pipelined ALU output from the execute stage
+    input wire EX_MEM_MemEnable,           // Pipelined memory enable signal from memory stage
+    input wire first_tag_LRU,              // LRU bit from the first "way"
+    input wire first_match,                // Whether the first tag matched
+    input wire DCACHE_hit,                 // Whether DCACHE hit in this cycle
     input wire [15:0] MemData,             // Data read out from data memory from the memory stage
     input wire [7:0] EX_MEM_WB_signals,    // Pipelined write back stage signals from the decode stage
     
     output wire [15:0] MEM_WB_PC_next,     // Pipelined next PC passed to the write-back stage
     output wire [15:0] MEM_WB_ALU_out,     // Pipelined ALU result passed to the write-back stage
+    output wire MEM_WB_MemEnable,          // Pipelined memory enable
+    output wire MEM_WB_first_tag_LRU,      // Pipelined LRU bit
+    output wire MEM_WB_first_match,        // Pipelined first tag match signal
+    output wire MEM_WB_DCACHE_hit,         // Pipelined DCACHE hit signal
     output wire [15:0] MEM_WB_MemData,     // Pipelined data read from memory passed to the write-back stage
     output wire [7:0] MEM_WB_WB_signals    // Pipelined write back stage signals passed to the write-back stage
 );
@@ -44,6 +52,30 @@ module MEM_WB_pipe_reg (
   //////////////////////////////////////////////////////////////////
   CPU_Register iALU_OUT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_ALU_out), .data_out(MEM_WB_ALU_out));
   //////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////
+  // Pipeline MemEnable signal //
+  ///////////////////////////////
+  CPU_Register #(.WIDTH(1)) iMEM_ENABLE_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_MemEnable), .data_out(MEM_WB_MemEnable));
+  //////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////
+  // Pipeline the first_tag_LRU //
+  ////////////////////////////////
+  CPU_Register #(.WIDTH(1)) iLRU_TAG_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(first_tag_LRU), .data_out(MEM_WB_first_tag_LRU));
+  ////////////////////////////////
+
+  //////////////////////////////////////
+  // Pipeline the first_match signal //
+  ////////////////////////////////////
+  CPU_Register #(.WIDTH(1)) iFIRST_MATCH_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(first_match), .data_out(MEM_WB_first_match));
+  ///////////////////////////////////
+
+  /////////////////////////////////////
+  // Pipeline the DCACHE_hit signal //
+  ///////////////////////////////////
+  CPU_Register #(.WIDTH(1)) iDCACHE_HIT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(DCACHE_hit), .data_out(MEM_WB_DCACHE_hit));
+  //////////////////////////////////
 
   //////////////////////////////////////////////////////////////////////
   // Pipeline the MemData output to be passed to the write-back stage //

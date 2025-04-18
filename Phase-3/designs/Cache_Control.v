@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////
 module Cache_Control (
     input  wire        clk, rst,           // Clock signal and active high reset signal
+    input  wire        proceed,            // Signal to proceed with memory filling on a cache miss
     input  wire        miss_detected,      // High when tag match logic detects a cache miss from previous cycle         
     input  wire [15:0] miss_address,       // Address that missed in the cache
     input  wire [15:0] memory_data,        // Data returned by memory after delay
@@ -128,9 +129,9 @@ module Cache_Control (
       end
 
       IDLE : begin // IDLE state - waits for a cache miss to occur.
-        fsm_busy =  (miss_detected);  // Assert fsm_busy when a cache miss is detected.
-        clr_count = (miss_detected);  // Clear the counts and capture the new miss address.
-        nxt_state = (miss_detected);  // Go to the WAIT state to capture the address of the cache miss.
+        fsm_busy =  (miss_detected);            // Assert fsm_busy when a cache miss is detected.
+        clr_count = (miss_detected);            // Clear the counts and capture the new miss address.
+        nxt_state = (miss_detected & proceed);  // Go to the WAIT state to capture the address of the cache miss only when allowed to proceed, else stay in IDLE.
       end
 
       default : begin // ERROR state - invalid state.

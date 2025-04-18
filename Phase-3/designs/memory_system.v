@@ -11,6 +11,7 @@ module memory_system (
     input  wire         clk,
     input  wire         rst,                    // Active-high reset
     input  wire         enable,                 // Enable for the memory
+    input  wire         proceed,                // Allows this instance of memory_system to proceed to access main memory, if low, it must stall
     input  wire         on_chip_wr,             // Write enable from on chip
     input  wire [15:0]  on_chip_memory_address, // Address used to index into the cache (can also be the miss address)
     input  wire [15:0]  on_chip_memory_data,    // Memory data coming from the on chip processor core
@@ -27,7 +28,11 @@ module memory_system (
     output wire [15:0]  off_chip_memory_address, // Address used to index into the off chip DRAM to grab data not in cache
 
     output wire         fsm_busy,                // Stalls the processor in the case of a cache miss
-    output wire [15:0]  data_out                 // Data output read from the cache
+    
+    output wire [2:0]   first_tag_LRU,           // LRU index output from cache
+    output wire         first_match,             // Indicates if first way matched
+    output wire [15:0]  data_out,                // Data output read from the cache
+    output wire         hit                      // Indicates a cache hit
 );
 
     /////////////////////////////////////////////////
@@ -38,9 +43,6 @@ module memory_system (
     /******************** CACHE SIGNALS **************************************/
     wire [15:0] data_in;             // Data input to the cache (on-chip or memory)
     wire [15:0] tag_in;              // Tag to be written to tag array
-    wire first_match;                // Indicates if first way matched
-    wire [2:0] first_tag_LRU;        // LRU index output from cache
-    wire hit;                        // Indicates a cache hit
     /******************** CACHE CONTROLLER SIGNALS ***************************/
     wire write_data_array;          // FSM signal to write data array
     wire write_tag_array;           // FSM signal to write tag array
@@ -88,6 +90,7 @@ module memory_system (
     Cache_Control iL1_CACHE_CONTROLLER (
         .clk(clk),
         .rst(rst),
+        .proceed(proceed),
         .miss_detected(~hit_prev),
         .miss_address(on_chip_memory_address),
         .memory_data(off_chip_memory_data),

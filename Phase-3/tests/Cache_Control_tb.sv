@@ -15,7 +15,7 @@ module Cache_Control_tb();
     logic [15:0] data[0:7];              // Cache data array
     logic [15:0] mem_addr[0:7];          // Memory address array
     integer cycle_time[0:8];             // Cycle time array
-    logic [11:0] tag;                    // Cache tag
+    logic [7:0] tag;                     // Cache tag
   } cache_block_t;                       // Cache block structure
 
   logic [2:0] cycle_count;               // Cycle count for the FSM
@@ -48,7 +48,7 @@ module Cache_Control_tb();
   // Make reset active high for modules that require it.
   assign rst = ~rst_n;
 
-  // Instantiate the DUT: cache_fill_FSM.
+  // Instantiate the DUT: Cache Control.  
   Cache_Control iDUT (
     .clk(clk),
     .rst(rst),
@@ -56,29 +56,45 @@ module Cache_Control_tb();
     .miss_address(miss_address),
     .memory_data(memory_data),
     .memory_data_valid(memory_data_valid),
-    
+    .first_tag_LRU(first_tag_LRU_prev),
+    .first_match(first_match_prev),
+       
     .fsm_busy(fsm_busy),
-    .write_data_array(write_data_array),
+                
+    .TagIn(tag_in),
     .write_tag_array(write_tag_array),
-    .memory_address(memory_address),
-    .memory_data_out(memory_data_out)
-    );
+    .Set_First_LRU(Set_First_LRU),
+    .evict_first_way(evict_first_way),
 
-  // Instantiate the model cache_fill_FSM.
-  Cache_Control_model iCACHE_FSM (
+    .write_data_array(write_data_array),
+      
+    .memory_address(off_chip_memory_address),
+    .memory_data_out(main_mem_data)               
+  );
+
+  // Instantiate the model Cache_Control.
+ Cache_Control_model iCACHE_CONTROL (
     .clk(clk),
     .rst(rst),
     .miss_detected(miss_detected),
     .miss_address(miss_address),
     .memory_data(memory_data),
     .memory_data_valid(memory_data_valid),
-        
+    .first_tag_LRU(first_tag_LRU_prev),
+    .first_match(first_match_prev),
+       
     .fsm_busy(expected_fsm_busy),
-    .write_data_array(expected_write_data_array),
+                
+    .TagIn(expected_tag_in),
     .write_tag_array(expected_write_tag_array),
+    .Set_First_LRU(expected_Set_First_LRU),
+    .evict_first_way(expected_evict_first_way),
+
+    .write_data_array(expected_write_data_array),
+      
     .memory_address(expected_memory_address),
-    .memory_data_out(expected_memory_data_out)
-    );
+    .memory_data_out(expected_memory_data_out)               
+  );
 
   // A task to verify the prediction and target.
   task verify_cache_fill_FSM();

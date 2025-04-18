@@ -29,7 +29,6 @@ module Cache_Control (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire rst;                  // Active high reset signal.
   wire miss_detected_pl;     // Pipelined version of the miss_detected signal.
   reg clr_count;             // Clear the word count register.
   reg incr_cnt;              // Increment the word count register.

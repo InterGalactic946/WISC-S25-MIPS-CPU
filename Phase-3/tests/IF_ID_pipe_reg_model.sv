@@ -18,7 +18,7 @@ module IF_ID_pipe_reg_model (
     output logic [15:0] IF_ID_PC_next,           // Pipelined next PC passed to the decode stage
     output logic [15:0] IF_ID_PC_inst,           // Pipelined current instruction word passed to the decode stage
     output logic [1:0]  IF_ID_prediction,        // Pipelined 2-bit branch prediction signal passed to the decode stage
-    output logic [15:0] IF_ID_predicted_target,  // Pipelined predicted target passed to the decode stage
+    output logic [15:0] IF_ID_predicted_target   // Pipelined predicted target passed to the decode stage
   );
 
   ///////////////////////////////////////////////

@@ -17,7 +17,7 @@ module MEM_WB_pipe_reg_model (
     output logic [15:0] MEM_WB_PC_next,     // Pipelined next PC passed to the write-back stage
     output logic [15:0] MEM_WB_ALU_out,     // Pipelined ALU result passed to the write-back stage
     output logic [15:0] MEM_WB_MemData,     // Pipelined data read from memory passed to the write-back stage
-    output logic [7:0]  MEM_WB_WB_signals,  // Pipelined write back stage signals passed to the write-back stage
+    output logic [7:0]  MEM_WB_WB_signals   // Pipelined write back stage signals passed to the write-back stage
 );
 
   ///////////////////////////////////////////////

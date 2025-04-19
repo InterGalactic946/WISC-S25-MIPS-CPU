@@ -27,7 +27,7 @@ module ID_EX_pipe_reg (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  logic wen;                      // Register write enable signal.
+  wire wen;                       // Register write enable signal.
   wire clr;                       // Clear signal for all registers
   ///////////////////////////// EXECUTE STAGE ////////////////////////////////////
   wire [3:0] ID_EX_SrcReg1;       // Pipelined first source register ID passed to the execute stage

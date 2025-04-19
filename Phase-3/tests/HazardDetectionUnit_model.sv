@@ -29,7 +29,7 @@ module HazardDetectionUnit_model (
     output logic EX_MEM_stall,          // Stall signal for MEM stage
     output logic MEM_flush,             // Flush signal for EX/MEM register
     output logic ID_flush,              // Flush signal for ID/EX register
-    output logic IF_flush,              // Flush signal for IF/ID register
+    output logic IF_flush               // Flush signal for IF/ID register
 );
 
   /////////////////////////////////////////////////

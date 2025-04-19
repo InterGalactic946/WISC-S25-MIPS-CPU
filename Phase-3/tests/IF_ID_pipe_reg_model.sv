@@ -15,8 +15,8 @@ module IF_ID_pipe_reg_model (
     input logic [1:0]  prediction,       // The 2-bit predicted value of the current branch instruction from the fetch stage
     input logic [15:0] predicted_target, // The predicted target from the BTB.
 
-    input logic [15:0] first_tag_LRU,    // First tag in the LRU way of I-Cache from fetch stage
-    input logic [15:0] first_match,      // First matched tag from I-Cache
+    input logic first_tag_LRU,           // First tag in the LRU way of I-Cache from fetch stage
+    input logic first_match,             // First matched tag from I-Cache
     input logic        hit,              // I-Cache hit signal
 
     output logic [15:0] IF_ID_PC_curr,           // Pipelined current instruction address passed to the decode stage
@@ -25,9 +25,9 @@ module IF_ID_pipe_reg_model (
     output logic [1:0]  IF_ID_prediction,        // Pipelined 2-bit branch prediction signal passed to the decode stage
     output logic [15:0] IF_ID_predicted_target,  // Pipelined predicted target passed to the decode stage
 
-    output logic [15:0] IF_ID_first_tag_LRU,     // Pipelined LRU tag from I-Cache
-    output logic [15:0] IF_ID_first_match,       // Pipelined matched tag from I-Cache
-    output logic        IF_ID_ICACHE_hit         // Pipelined I-Cache hit signal
+    output logic IF_ID_first_tag_LRU,     // Pipelined LRU tag from I-Cache
+    output logic IF_ID_first_match,       // Pipelined matched tag from I-Cache
+    output logic IF_ID_ICACHE_hit         // Pipelined I-Cache hit signal
 );
 
   ///////////////////////////////////////////////
@@ -84,7 +84,7 @@ module IF_ID_pipe_reg_model (
   // Model register for storing the first LRU tag (clear on flush).
   always_ff @(posedge clk)
     if (clr)
-      IF_ID_first_tag_LRU <= 16'h0000;
+      IF_ID_first_tag_LRU <= 1'b0';
     else if (wen)
       IF_ID_first_tag_LRU <= first_tag_LRU;
 

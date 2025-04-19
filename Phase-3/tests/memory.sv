@@ -13,19 +13,20 @@
 
 import Monitor_tasks::*;
 
-module memory (
-    output logic data_valid,                // Output signal indicating when the data_out is valid
-    output logic [15:0] data_out,           // 16-bit data output read from memory
-    input logic [15:0] data_in,             // 16-bit data input to be written into memory
-    input logic [ADDR_WIDTH-1:0] addr,      // Address for memory read/write operation
-    input logic enable,                     // Enable signal for memory access
-    input logic wr,                         // Write enable (1 for write, 0 for read)
-    input logic clk,                        // System clock
-    input logic rst                         // Synchronous, active-high reset
-);
+module memory(data_out, data_in, addr, enable, wr, clk, rst, data_valid);
 
     // Parameter for memory address width
     parameter ADDR_WIDTH = 16;
+
+    output logic data_valid;                // Output signal indicating when the data_out is valid
+    output logic [15:0] data_out;           // 16-bit data output read from memory
+    input logic [15:0] data_in;             // 16-bit data input to be written into memory
+    input logic [ADDR_WIDTH-1:0] addr;      // Address for memory read/write operation
+    input logic enable;                     // Enable signal for memory access
+    input logic wr;                         // Write enable (1 for write, 0 for read)
+    input logic clk;                        // System clock
+    input logic rst;                        // Synchronous, active-high reset
+
 
     // Internal signals to simulate a 4-cycle latency for memory reads
     logic [15:0] data_out_4;

@@ -26,7 +26,7 @@ module memory_system_model (
     output logic [15:0] off_chip_memory_address, // Address to external memory
     output logic        fsm_busy,                // Busy signal to stall processor
 
-    output logic [2:0]  first_tag_LRU,          // LRU metadata from cache
+    output logic first_tag_LRU,                 // LRU metadata from cache
     output logic        first_match,            // Indicates first way matched
     output logic [15:0] data_out,               // Data read from cache
     output logic        hit                     // Cache hit signal
@@ -57,7 +57,8 @@ module memory_system_model (
 
         .data_in(data_in),
         .write_data_array(wr_data_enable),
-
+        
+        .write_tag_array(wr_tag_enable),
         .TagIn(tag_in),
         .evict_first_way(evict_first_way),
         .Set_First_LRU(Set_First_LRU),

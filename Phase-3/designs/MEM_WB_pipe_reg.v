@@ -11,7 +11,7 @@
 module MEM_WB_pipe_reg (
     input wire clk,                        // System clock
     input wire rst,                        // Active high synchronous reset
-    input logic flush,                     // Flush pipeline register
+    input wire flush,                      // Flush pipeline register
 
     input wire [15:0] EX_MEM_PC_next,      // Pipelined next PC from the fetch stage
     input wire [15:0] EX_MEM_ALU_out,      // Pipelined ALU output from the execute stage
@@ -35,7 +35,7 @@ module MEM_WB_pipe_reg (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  logic clr;                 // Clear signal
+  wire clr;                  // Clear signal
   /////////////////////////// WRITE BACK STAGE ///////////////////////////////////
   wire [3:0] MEM_WB_reg_rd;  // Pipelined Destination register address passed to the write-back stage
   wire MEM_WB_RegWrite;      // Pipelined Register write enable signal passed to the write-back stage

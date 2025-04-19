@@ -17,6 +17,7 @@ module Cache_model (
     input  logic        write_data_array,    // Write enable for data array
 
     // Meta data array control signals
+    input logic         write_tag_array,     // Write enable for tag array
     input  logic [7:0]  TagIn,               // The new tag to be written to the cache on a miss
     input  logic        evict_first_way,     // Indicates which line we are evicting on a cache miss
     input  logic        Set_First_LRU,       // Signal to set the LRU bit of the first line

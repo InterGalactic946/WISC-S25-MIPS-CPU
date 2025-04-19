@@ -31,7 +31,7 @@ module HazardDetectionUnit (
     output wire EX_MEM_stall,          // Stall signal for MEM stage
     output wire MEM_flush,             // Flush signal for EX/MEM register
     output wire ID_flush,              // Flush signal for ID/EX register
-    output wire IF_flush,              // Flush signal for IF/ID register
+    output wire IF_flush               // Flush signal for IF/ID register
 );
 
   /////////////////////////////////////////////////

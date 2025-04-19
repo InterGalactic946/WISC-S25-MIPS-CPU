@@ -16,6 +16,7 @@ module Cache (
   input  wire         write_data_array,    // Write enable for data array
 
   // Meta data array control signals
+  input wire       write_tag_array,        // Write enable for tag array
   input wire [7:0] TagIn,                  // The new tag to be written to the cache on a miss
   input wire       evict_first_way,        // Indicates which line we are evicting on a cache miss
   input wire       Set_First_LRU,          // Signal to set the LRU bit of the first line
@@ -33,6 +34,9 @@ module Cache (
   ///////////////////////////////////////////////
   wire [63:0] set_enable;      // One hot set enable for the 64 sets in the cache.
   wire [7:0] word_enable;      // One hot word enable based on the b-bits of the address.
+  wire [15:0] first_data_out;  // The data currently stored in the first line of the cache.
+  wire [15:0] second_data_out; // The data currently stored in the second line of the cache.
+  wire second_match;           // 1-bit signal indicating the second "way" in the set caused a cache hit.
   wire [7:0] first_tag_in;     // Input to the first line in MDA.
   wire [7:0] second_tag_in;    // Input to the second line in MDA.
   wire [7:0] first_tag_out;    // The tag currently stored in the first line of the cache to compare to.
@@ -40,7 +44,7 @@ module Cache (
   ///////////////////////////////////////////////
 
   // Instantiate a 3:8 decoder to get which word of the 8 words to write to.
-  Decoder_3_8 iWORD_DECODER (.RegId(addr[3:1]), en(1'b1), .Wordline(word_enable));
+  Decoder_3_8 iWORD_DECODER (.RegId(addr[3:1]), .en(1'b1), .Wordline(word_enable));
 
   // Instantiate a 6:64 read decoder to get which set of the 64 sets to enable.
   Decoder_6_64 iSET_DECODER (.RegId(addr[9:4]), .Wordline(set_enable));
@@ -92,7 +96,7 @@ module Cache (
   assign hit = first_match | second_match;
 
   // Grab the data to be output based on which way had a read hit, else if not a read hit, just output 0s.
-  assign DataOut = (hit & ~write_data_array) ? ((second_match) ? second_data_out : first_data_out) : 16'h0000;
+  assign data_out = (hit & ~write_data_array) ? ((second_match) ? second_data_out : first_data_out) : 16'h0000;
 
 endmodule
 

@@ -25,6 +25,7 @@ module Cache_Arbiter (
     ///////////////////////////////////////////////
     wire i_grant_next; // Grants the intruction cache to access main memory.
     wire d_grant_next; // Grants the data cache to access main memory.
+    wire mem_en_nxt;   // Enables main memory whenever I/D caches request it.
     ///////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////

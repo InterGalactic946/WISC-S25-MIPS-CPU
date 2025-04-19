@@ -91,7 +91,7 @@ module MEM_WB_pipe_reg_model (
   //////////////////////////////////////////////////////////
   always @(posedge clk) begin
     if (rst) begin
-      MEM_WB_first_tag_LRU <= 16'h0000;
+      MEM_WB_first_tag_LRU <= 1'b0;
       MEM_WB_first_match   <= 1'b0;
       MEM_WB_DCACHE_hit    <= 1'b0;
     end else begin

@@ -28,7 +28,7 @@ module EX_MEM_pipe_reg (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  logic wen;                       // Register write enable signal.
+  wire wen;                        // Register write enable signal.
   /////////////////////////// MEMORY STAGE ///////////////////////////////////////
   wire [15:0] EX_MEM_MemWriteData; // Pipelined Memory write data signal passed to the memory stage
   wire EX_MEM_MemEnable;           // Pipelined Memory enable signal passed to the memory stage

@@ -62,6 +62,7 @@ module memory_system (
         .data_in(data_in),
         .write_data_array(wr_data_enable),
 
+        .write_tag_array(wr_tag_enable),
         .TagIn(tag_in),
         .evict_first_way(evict_first_way), 
         .Set_First_LRU(Set_First_LRU),        

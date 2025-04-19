@@ -10,7 +10,7 @@ package Monitor_tasks;
   ///////////////////////////////////////
   typedef enum logic [1:0] {STRONG_NOT_TAKEN, WEAK_NOT_TAKEN, WEAK_TAKEN, STRONG_TAKEN} state_t;
 
-  // Struct Definitions for BTB, BHT, and data memory models.
+  // Struct Definitions for BTB, BHT, cache, and data memory models.
   typedef struct {
     logic [15:0] PC_addr;
     state_t prediction;
@@ -21,6 +21,42 @@ package Monitor_tasks;
     logic [15:0] PC_addr; 
     logic [15:0] target;
   } model_BTB_t;
+
+  // Tag block each entry holds LRU, valid and 6-bit tag along with full address for debugging
+  typedef struct {
+    logic [15:0] addr; // Full address
+    logic [5:0] tag;   // Tag bits
+    logic valid;       // Valid bit
+    logic lru;         // LRU bit
+  } tag_block_t;
+
+  // Tag set each entry holds two instances of a tag block
+  typedef struct {
+    tag_block_t first_way;
+    tag_block_t second_way;
+  } tag_set_t;
+
+  // Tag array each entry holds 64 instances of tag set.
+  typedef struct {
+    tag_set_t tag_set[0:63];
+  } tag_array_t;
+
+  // Data entry each entry holds two blocks of 8B each storing 8 words, overall 64B per cache line and 128B per cache set.
+  typedef struct {
+    logic [7:0] first_way[0:7];
+    logic [7:0] second_way[0:7];
+  } data_set_t;
+
+  // Infer the data array as 64 data sets.
+  typedef struct {
+    data_set_t data_set[0:63];
+  } data_array_t;
+
+  // Infer the cache as a data array and tag array.
+  typedef struct {
+    data_array_t cache_data_array;
+    tag_array_t cache_tag_array;
+  } model_cache_t;
 
   typedef struct {
     logic [15:0] mem_addr [0:65535]; 

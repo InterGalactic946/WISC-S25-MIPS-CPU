@@ -19,6 +19,7 @@ module HazardDetectionUnit_model (
     input logic ID_EX_NV_en,            // Negative/Overflow flag enable signal from ID/EX stage
     input logic Branch,                 // Branch signal indicating a branch instruction
     input logic BR,                     // BR signal indicating a BR instruction
+    input logic ICACHE_busy,            // Signal indicating that the instruction cache is busy so PC/IF_ID must stall
     input logic update_PC,              // Signal that we need to update the PC
     
     output logic PC_stall,              // Stall signal for IF stage
@@ -45,8 +46,8 @@ module HazardDetectionUnit_model (
   // We stall PC whenever we stall the IF_ID pipeline register.
   assign PC_stall = IF_ID_stall;
 
-  // We stall anytime there is a branch or load to use hazard in the decode stage.
-  assign IF_ID_stall = load_to_use_hazard | B_hazard | BR_hazard;
+  // We stall anytime the ICACHE is busy or there is a branch or load to use hazard in the decode stage.
+  assign IF_ID_stall = ICACHE_busy | load_to_use_hazard | B_hazard | BR_hazard;
   /////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////

@@ -71,27 +71,6 @@ module IF_ID_pipe_reg_model (
       IF_ID_predicted_target <= 16'h0000;
     else if (wen)
       IF_ID_predicted_target <= predicted_target;
-
-  // Model register for storing the first LRU tag (clear on flush).
-  always_ff @(posedge clk)
-    if (clr)
-      IF_ID_first_tag_LRU <= 1'b0';
-    else if (wen)
-      IF_ID_first_tag_LRU <= first_tag_LRU;
-
-  // Model register for storing the first matched tag (clear on flush).
-  always_ff @(posedge clk)
-    if (clr)
-      IF_ID_first_match <= 16'h0000;
-    else if (wen)
-      IF_ID_first_match <= first_match;
-
-  // Model register for storing the I-Cache hit signal (clear on flush).
-  always_ff @(posedge clk)
-    if (clr)
-      IF_ID_ICACHE_hit <= 1'b0;
-    else if (wen)
-      IF_ID_ICACHE_hit <= hit;
   /////////////////////////////////////////////////////////////////////////////
 
 endmodule

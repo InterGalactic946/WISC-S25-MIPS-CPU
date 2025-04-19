@@ -32,7 +32,6 @@ module proc (
   /*ARBITRATOR SIGNALS */
   wire ICACHE_proceed;          // Signal to proceed with data memory access on an ICACHE miss
   wire DCACHE_proceed;          // Signal to proceed with data memory access on an DCACHE miss
-  wire mem_en_miss;             // Enables main memory on a cache miss
   
   /* FETCH stage signals */
   wire [15:0] PC_next;          // Next PC address
@@ -116,10 +115,6 @@ module proc (
   /* MEM/WB Pipeline Register signals */
   wire [15:0] MEM_WB_MemData; // Pipelined data read from memory from the memory stage
   wire [15:0] MEM_WB_ALU_out; // Pipelined arithemtic computation result computed from the execute stage
-  wire MEM_WB_MemEnable;      // Previous cycle's memory enable (for FSM bookkeeping)
-  wire MEM_WB_first_tag_LRU;  // Previous cycle's LRU result on the first "way"
-  wire MEM_WB_first_match;    // Previous cycle's tag match result on the first "way"
-  wire MEM_WB_DCACHE_hit;     // Previous cycle's cache hit signal
   wire [3:0] MEM_WB_reg_rd;   // Pipelined register ID of the destination register from the decode stage
   wire MEM_WB_RegWrite;       // Pipelined write enable to the register file from the decode stage
   wire MEM_WB_MemToReg;       // Pipelined select signal to write data read from memory or ALU result back to the register file
@@ -140,24 +135,20 @@ module proc (
   //////////////////////////////////////////////////////////
   // Arbitrate accesses to data memory between I/D caches //
   //////////////////////////////////////////////////////////
-  Cache_Arbiter iARBITER (
-    .clk(clk),        
-    .rst(rst),         
-    .ICACHE_busy(ICACHE_busy),   
-    .DCACHE_busy(DCACHE_busy),   
-    
-    .mem_en(mem_en_miss),
-    .i_grant(ICACHE_proceed),
-    .d_grant(DCACHE_proceed)        
-  );
+  // We grant priority to the ICACHE on a miss when both caches may miss on same cycle.
+  assign ICACHE_proceed = ICACHE_busy;
+  assign DCACHE_proceed = ~ICACHE_busy & DCACHE_busy;
 
   // We send out the main memory address as from the instruction cache or data cache based on which is granted.
   assign mem_addr = (ICACHE_proceed) ? I_MEM_addr :
                     (DCACHE_proceed) ? D_MEM_addr :
                     16'h0000;
+  
+  // The data output to be written to main memory is only from the DCACHE.
+  assign mem_data_out = MemWriteData;
 
-  // We enable main memory either on a cache miss or on a DCACHE write.
-  assign mem_en = mem_en_miss | (DCACHE_hit & EX_MEM_MemWrite & EX_MEM_MemEnable);
+  // We enable main memory either on a cache miss (when either caches are allowed to proceed) or on a DCACHE write.
+  assign mem_en = (ICACHE_proceed | DCACHE_proceed) | (DCACHE_hit & EX_MEM_MemWrite & EX_MEM_MemEnable);
 
   // We write to main memory on a DCACHE write hit as it is a write through cache.
   assign mem_wr = (DCACHE_hit & EX_MEM_MemWrite & EX_MEM_MemEnable);
@@ -426,19 +417,11 @@ module proc (
       .flush(MEM_flush),
       .EX_MEM_PC_next(EX_MEM_PC_next),
       .EX_MEM_ALU_out(EX_MEM_ALU_out),
-      .EX_MEM_MemEnable(EX_MEM_MemEnable),
-      .first_tag_LRU(first_tag_LRU),
-      .first_match(first_match),
-      .DCACHE_hit(DCACHE_hit),
       .MemData(MemData),
       .EX_MEM_WB_signals(EX_MEM_WB_signals),
       
       .MEM_WB_PC_next(MEM_WB_PC_next),
       .MEM_WB_ALU_out(MEM_WB_ALU_out),
-      .MEM_WB_MemEnable(MEM_WB_MemEnable),
-      .MEM_WB_first_tag_LRU(MEM_WB_first_tag_LRU),
-      .MEM_WB_first_match(MEM_WB_first_match),
-      .MEM_WB_DCACHE_hit(MEM_WB_DCACHE_hit),
       .MEM_WB_MemData(MEM_WB_MemData),
       .MEM_WB_WB_signals({MEM_WB_reg_rd, MEM_WB_RegWrite, MEM_WB_MemToReg, MEM_WB_HLT, MEM_WB_PCS})
   );

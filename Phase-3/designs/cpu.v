@@ -24,7 +24,7 @@ module cpu (clk, rst_n, hlt, pc);
   wire [15:0] mem_addr;     // Address to memory
   wire [15:0] mem_data_in;  // Data to write to memory
   wire [15:0] mem_data_out; // Data read from memory
-  wire mem_data_valid;      // Valid signal from memory\
+  wire mem_data_valid;      // Valid signal from memory
   /////////////////////////////////
 
   /////////////////////////////////////////
@@ -40,12 +40,12 @@ module cpu (clk, rst_n, hlt, pc);
     .rst(rst),
     
     .mem_data_valid(mem_data_valid),
-    .mem_data_out(mem_data_out),
+    .mem_data_in(mem_data_out),
     
     .mem_en(mem_en),
     .mem_addr(mem_addr),
     .mem_wr(mem_wr),
-    .mem_data_in(mem_data_in),
+    .mem_data_out(mem_data_in),
 
     .hlt(hlt),
     .pc(pc)

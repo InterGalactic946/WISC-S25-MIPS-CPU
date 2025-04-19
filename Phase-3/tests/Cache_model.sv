@@ -17,22 +17,21 @@ module Cache_model (
     input  logic        write_data_array,    // Write enable for data array
 
     // Meta data array control signals
+    input  logic [7:0]  tag_in,              // The new tag to be written to the cache on a miss
     input logic         write_tag_array,     // Write enable for tag array
-    input  logic [7:0]  TagIn,               // The new tag to be written to the cache on a miss
-    input  logic        evict_first_way,     // Indicates which line we are evicting on a cache miss
-    input  logic        Set_First_LRU,       // Signal to set the LRU bit of the first line
-    input  logic        hit_prev,            // Indicates a hit occurred on the previous cycle
 
     // Outputs
     output logic [15:0] data_out,            // Output data from cache (e.g., fetched instruction or memory word)
-    output logic        first_tag_LRU,       // LRU bit of the first tag
-    output logic        first_match,         // Indicates if the first "way" in the set caused a cache hit
     output logic        hit                  // Indicates cache hit or miss in this cycle
 );
 
   ///////////////////////////////////////////////////
   // Internal signal declarations (type: logic)    //
   ///////////////////////////////////////////////////
+  logic set_first_LRU;           // Sets the first LRU bit and clears the second.
+  logic first_tag_LRU;           // LRU bit of the first tag
+  logic evict_first_way;         // Indicates which line we are evicting on a cache miss.
+  logic WaySelect;               // The line to write data to either on a hit or a miss.
   logic [7:0]  first_tag_in;     // Input to the first line in metadata array
   logic [7:0]  second_tag_in;    // Input to the second line in metadata array
   ///////////////////////////////////////////////////
@@ -86,13 +85,25 @@ module Cache_model (
         end
     end
 
+  // We write to the second line if the second "way" had a hit, else "way" 0 on a hit, otherwise we write to the line that is evicted, if evict_first_way is high, we write to first line else second line.
+  assign WaySelect = (hit) ? second_match : ~evict_first_way;
+
   // Indicates the first line's LRU bit is set.
   assign first_tag_LRU = cache.cache_tag_array.tag_set[addr[9:4]].first_way.lru;
 
-  // If we had a hit on the previous cycle, we keep the same tag, but internally update the LRU bits for each line.
+  // If the second cache line's LRU is 1, evict second_way (1), else evict first_way (0). (TagOut[0] == LRU)
+  assign evict_first_way = first_tag_LRU;
+
+  // If we have a cache hit and the first line is a match, then we clear the first line's LRU bit. Otherwise, if the second line is a match
+  // on a hit, then we set the set the first line's LRU bit. If there is a cache miss and we are evicting the first way, then we clear the
+  // first cache line's LRU bit and set the second's, Otherwise, if the second way is evicted on a miss, then we set the first line's LRU bit 
+  // and clear the second line's.
+  assign set_first_LRU = (hit) ? ~first_match : ~evict_first_way;
+
+  // If we had a hit on the this cycle, we keep the same tag, but internally update the LRU bits for each line.
   // Else if it is an eviction, we take the new tag to write in the corresponding line.
-  assign first_tag_in = (hit_prev) ? cache.cache_tag_array.tag_set[addr[9:4]].first_way.tag : ((evict_first_way) ? TagIn : cache.cache_tag_array.tag_set[addr[9:4]].first_way.tag);
-  assign second_tag_in = (hit_prev) ? cache.cache_tag_array.tag_set[addr[9:4]].second_way.tag : ((~evict_first_way) ? TagIn : cache.cache_tag_array.tag_set[addr[9:4]].second_way.tag);
+  assign first_tag_in = (hit) ? cache.cache_tag_array.tag_set[addr[9:4]].first_way.tag : ((evict_first_way) ? tag_in : cache.cache_tag_array.tag_set[addr[9:4]].first_way.tag);
+  assign second_tag_in = (hit) ? cache.cache_tag_array.tag_set[addr[9:4]].second_way.tag : ((~evict_first_way) ? tag_in : cache.cache_tag_array.tag_set[addr[9:4]].second_way.tag);
 
   // Compare the tag stored in the cache currently at both "ways/lines" in parallel, checking for equality and valid bit set.
   assign first_match = (addr[15:10] == cache.cache_tag_array.tag_set[addr[9:4]].first_way.tag) & cache.cache_tag_array.tag_set[addr[9:4]].first_way.valid;

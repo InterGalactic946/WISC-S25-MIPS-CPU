@@ -38,14 +38,14 @@ module memory(data_out, data_in, addr, enable, wr, clk, rst, data_valid);
     logic loaded;
 
     // Instantiate the memory model structure
-    model_data_mem_t data_memory;
+    model_data_mem_t main_memory;
 
     /////////////////////////////////////////////////////////////////////////////
     // Combinational logic for reading from memory                             //
     // - Only when memory is enabled and not in write mode.                    //
     // - Data is read from memory and marked valid.                            //
     /////////////////////////////////////////////////////////////////////////////
-    assign data_out_4 = (enable && !wr) ? data_memory.data_mem[addr[ADDR_WIDTH-1:1]] : 16'h0000;
+    assign data_out_4 = (enable && !wr) ? main_memory.data_mem[addr[ADDR_WIDTH-1:1]] : 16'h0000;
     assign data_valid_4 = (enable && !wr);
 
     /////////////////////////////////////////////////////////////////////////////
@@ -63,14 +63,14 @@ module memory(data_out, data_in, addr, enable, wr, clk, rst, data_valid);
     always_ff @(posedge clk) begin
         if (rst) begin
             if (!loaded) begin
-                $readmemh("./tests/loadfile_all.img", data_memory.data_mem);  // Load memory contents
+                $readmemh("./tests/loadfile_all.img", main_memory.data_mem);  // Load memory contents
                 loaded = 1;
             end
-            data_memory.mem_addr <= '{default: 16'hxxxx};                     // Invalidate addresses
+            main_memory.mem_addr <= '{default: 16'hxxxx};                     // Invalidate addresses
         end else if (enable && wr) begin
-            // Store word operation (write to memory)
-            data_memory.mem_addr[addr[ADDR_WIDTH-1:1]] <= addr;
-            data_memory.data_mem[addr[ADDR_WIDTH-1:1]] <= data_in;
+            // Store word operation (write to data memory)
+            main_memory.mem_addr[addr[ADDR_WIDTH-1:1]] <= addr;
+            main_memory.data_mem[addr[ADDR_WIDTH-1:1]] <= data_in;
         end
     end
 

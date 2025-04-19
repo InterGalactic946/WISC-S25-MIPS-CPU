@@ -9,24 +9,20 @@
 module Cache_Control (
     input  wire        clk, rst,           // Clock signal and active high reset signal
     input  wire        proceed,            // Signal to proceed with memory filling on a cache miss
-    input  wire        miss_detected,      // High when tag match logic detects a cache miss from previous cycle         
+    input  wire        miss_detected,      // High when tag match logic detects a cache miss         
     input  wire [15:0] miss_address,       // Address that missed in the cache
     input  wire [15:0] memory_data,        // Data returned by memory after delay
     input  wire        memory_data_valid,  // Active high signal indicating valid data returning on memory bus
-    input  wire        first_tag_LRU,      // Pipelined first line tag's LRU from the cache
-    input  wire        first_match,        // Pipelined match signal for the first line of the cache set
 
     output reg        fsm_busy,            // High while FSM is busy handling the miss (used as a pipeline stall signal)
     
-    output wire [7:0] TagIn,               // Output tag to rewrite upon a miss
+    output wire [7:0] tag_out,             // Output tag to rewrite upon a miss
     output reg        write_tag_array,     // Write enable to cache tag array when all words are filled in to data array
-    output wire       Set_First_LRU,       // Sets the first LRU bit and clears the second
-    output wire       evict_first_way,     // Indicates which line we are evicting on a cache miss
 
     output reg        write_data_array,    // Write enable to cache data array to signal when filling with memory_data
 
     output wire [15:0] memory_address,     // Address to read from memory
-    output reg [15:0] memory_data_out      // Data to be written to memory
+    output reg [15:0] memory_data_out      // Data to be written to cache 
   );
   
   ////////////////////////////////////////
@@ -38,7 +34,6 @@ module Cache_Control (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire hit;                  // High when cache hit is detected from the previous cycle    
   reg clr_count;             // Clear the word count register.
   reg incr_cnt;              // Increment the word count register.
   wire [3:0] new_word_count; // Holds the new word count value.
@@ -52,24 +47,10 @@ module Cache_Control (
   reg error;                 // Error flag raised when state machine is in an invalid state.  
   ////////////////////////////////////////////////
 
-  // Indicates it is a hit if not a miss.
-  assign hit = ~miss_detected;
-
-  // If the second cache line's LRU is 1, evict second_way (1), else evict first_way (0). (TagOut[0] == LRU)
-  assign evict_first_way = first_tag_LRU;
-
-  // If we have a cache hit and the first line is a match, then we clear the first line's LRU bit. Otherwise, if the second line is a match
-  // on a hit, then we set the set the first line's LRU bit. If there is a cache miss and we are evicting the first way, then we clear the
-  // first cache line's LRU bit and set the second's, Otherwise, if the second way is evicted on a miss, then we set the first line's LRU bit 
-  // and clear the second line's.
-  // (((first_match) ? 1'b0 : 1'b1)) : (((evict_first_way) ? 1'b0 : 1'b1));
-  assign Set_First_LRU = (hit) ? ~first_match : ~evict_first_way;
-
-  //////////// Tag to write to the cache after we have detected a miss ////////////
   // On a cache hit on the first way, we update the tag with the new incoming tag, valid bit set, and LRU bit unset. Else if it did not hit on the first way, we set its LRU bit,
   // and keeping the content the same. Otherwise, if it is a cache miss, and we must evict the first "way", we update it with the new tag along with LRU bit unset. If
   // we don't have to evict the first "way", we set its LRU bit as the the second "way" that is evicted is now most recently used.
-  assign TagIn = {miss_address[15:10], 1'b1, 1'b0};
+  assign tag_out = {miss_address[15:10], 1'b1, 1'b0};
   
   ///////////////////////////////////////////////////////////////////////
   // Keep track of the number of words filled in the cache data array //
@@ -129,9 +110,9 @@ module Cache_Control (
       end
 
       IDLE : begin // IDLE state - waits for a cache miss to occur.
-        fsm_busy =  (miss_detected);            // Assert fsm_busy when a cache miss is detected.
-        clr_count = (miss_detected);            // Clear the counts and capture the new miss address.
-        nxt_state = (miss_detected & proceed);  // Go to the WAIT state to capture the address of the cache miss only when allowed to proceed, else stay in IDLE.
+        fsm_busy =  (miss_detected);                          // Assert fsm_busy when a cache miss is detected.
+        clr_count = (miss_detected);                          // Clear the counts and capture the new miss address.
+        nxt_state = (miss_detected & proceed) ? WAIT : IDLE;  // Go to the WAIT state to capture the address of the cache miss only when allowed to proceed, else stay in IDLE.
       end
 
       default : begin // ERROR state - invalid state.

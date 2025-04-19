@@ -16,26 +16,26 @@ module Cache (
   input  wire         write_data_array,    // Write enable for data array
 
   // Meta data array control signals
+  input wire [7:0] tag_in,                 // The new tag to be written to the cache on a miss
   input wire       write_tag_array,        // Write enable for tag array
-  input wire [7:0] TagIn,                  // The new tag to be written to the cache on a miss
-  input wire       evict_first_way,        // Indicates which line we are evicting on a cache miss
-  input wire       Set_First_LRU,          // Signal to set the LRU bit of the first line
-  input wire       hit_prev,               // Indicates a hit occured on the previous cycle
 
   // Outputs
   output wire [15:0] data_out,             // Output data from cache (e.g., fetched instruction or memory word)
-  output wire first_tag_LRU,               // LRU bit of the first tag
-  output wire first_match,                 // 1-bit signal indicating the first "way" in the set caused a cache hit.
   output wire hit                          // Indicates cache hit or miss in this cycle.
 );
 
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
+  wire set_first_LRU;          // Sets the first LRU bit and clears the second.
+  wire first_tag_LRU;          // LRU bit of the first tag
+  wire evict_first_way;        // Indicates which line we are evicting on a cache miss.
+  wire WaySelect;              // The line to write data to either on a hit or a miss.
   wire [63:0] set_enable;      // One hot set enable for the 64 sets in the cache.
   wire [7:0] word_enable;      // One hot word enable based on the b-bits of the address.
   wire [15:0] first_data_out;  // The data currently stored in the first line of the cache.
   wire [15:0] second_data_out; // The data currently stored in the second line of the cache.
+  wire first_match;            // 1-bit signal indicating the first "way" in the set caused a cache hit.
   wire second_match;           // 1-bit signal indicating the second "way" in the set caused a cache hit.
   wire [7:0] first_tag_in;     // Input to the first line in MDA.
   wire [7:0] second_tag_in;    // Input to the second line in MDA.
@@ -58,7 +58,7 @@ module Cache (
       .rst(rst),
       .Write(write_data_array),
       .DataIn(data_in),
-      .WaySelect(second_match),
+      .WaySelect(WaySelect),
       .SetEnable(set_enable),
       .WordEnable(word_enable),
       
@@ -66,13 +66,8 @@ module Cache (
       .DataOut_second_way(second_data_out)
   );
 
-  // Indicates the first line's LRU bit is set.
-  assign first_tag_LRU = first_tag_out[0];
-
-  // If we had a hit on the previous cycle, we keep the same tag, but internally update the LRU bits for each line.
-  // Else if it is an eviction, we take the new tag to write in the corresponding line.
-  assign first_tag_in = (hit_prev) ? first_tag_out : ((evict_first_way) ? TagIn : first_tag_out);
-  assign second_tag_in = (hit_prev) ? second_tag_out : ((~evict_first_way) ? TagIn : second_tag_out);
+  // We write to the second line if the second "way" had a hit, else "way" 0 on a hit, otherwise we write to the line that is evicted, if evict_first_way is high, we write to first line else second line.
+  assign WaySelect = (hit) ? second_match : ~evict_first_way;
 
   // Instantiate the meta data array for the cache.
   MetaDataArray iMDA (
@@ -82,11 +77,28 @@ module Cache (
       .DataIn_first_way(first_tag_in),
       .DataIn_second_way(second_tag_in),
       .SetEnable(set_enable),
-      .Set_First_LRU(Set_First_LRU),
+      .Set_First_LRU(set_first_LRU),
       
       .DataOut_first_way(first_tag_out),
       .DataOut_second_way(second_tag_out)
   );
+
+  // Indicates the first line's LRU bit is set.
+  assign first_tag_LRU = first_tag_out[0];
+
+  // If the second cache line's LRU is 1, evict second_way (1), else evict first_way (0). (TagOut[0] == LRU)
+  assign evict_first_way = first_tag_LRU;
+
+  // If we have a cache hit and the first line is a match, then we clear the first line's LRU bit. Otherwise, if the second line is a match
+  // on a hit, then we set the set the first line's LRU bit. If there is a cache miss and we are evicting the first way, then we clear the
+  // first cache line's LRU bit and set the second's, Otherwise, if the second way is evicted on a miss, then we set the first line's LRU bit 
+  // and clear the second line's.
+  assign set_first_LRU = (hit) ? ~first_match : ~evict_first_way;
+
+  // If we had a hit on the this cycle, we keep the same tag, but internally update the LRU bits for each line.
+  // Else if it is an eviction, we take the new tag to write in the corresponding line.
+  assign first_tag_in = (hit) ? first_tag_out : ((evict_first_way) ? tag_in : first_tag_out);
+  assign second_tag_in = (hit) ? second_tag_out : ((~evict_first_way) ? tag_in : second_tag_out);
 
   // Compare the tag stored in the cache currently at both "ways/lines" in parallel, checking for equality and valid bit set. (addr[16:8] == tag and TagOut[1] == valid)
   assign first_match = (addr[15:10] == first_tag_out[7:2]) & first_tag_out[1];

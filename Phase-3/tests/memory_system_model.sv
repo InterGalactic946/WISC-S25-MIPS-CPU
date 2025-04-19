@@ -14,11 +14,6 @@ module memory_system_model (
     input  logic [15:0] on_chip_memory_address, // Address from processor core
     input  logic [15:0] on_chip_memory_data,    // Data from processor core
 
-    input  logic        enable_prev,            // Enable value from previous cycle
-    input  logic        hit_prev,               // Hit result from previous cycle
-    input  logic        first_tag_LRU_prev,     // LRU bit from previous cycle
-    input  logic        first_match_prev,       // First tag match from previous cycle
-
     // Interface to external memory
     input  logic [15:0] off_chip_memory_data,   // Data from external memory
     input  logic        memory_data_valid,      // Valid signal from external memory
@@ -26,8 +21,6 @@ module memory_system_model (
     output logic [15:0] off_chip_memory_address, // Address to external memory
     output logic        fsm_busy,                // Busy signal to stall processor
 
-    output logic first_tag_LRU,                 // LRU metadata from cache
-    output logic        first_match,            // Indicates first way matched
     output logic [15:0] data_out,               // Data read from cache
     output logic        hit                     // Cache hit signal
 );
@@ -37,14 +30,14 @@ module memory_system_model (
     //////////////////////////////////////////////////////
     logic wr_data_enable;        // Enable to write data to cache
     logic wr_tag_enable;         // Enable to write tag to cache
-    logic [15:0] data_in;        // Data input to cache (from core or memory)
+    /******************** CACHE SIGNALS **************************************/
+    logic [15:0] addr;           // The address to read from/write to.
+    logic [15:0] data_in;        // Data input to the cache (on-chip or memory)
     logic [15:0] tag_in;         // Tag to be written to tag array
-
-    logic write_data_array;      // FSM signal to write cache data array
-    logic write_tag_array;       // FSM signal to write cache tag array
-    logic [15:0] main_mem_data;  // Data input from external memory
-    logic Set_First_LRU;         // Control signal to update LRU
-    logic evict_first_way;       // Flag for evicting the first way
+    /******************** CACHE CONTROLLER SIGNALS ***************************/
+    logic write_data_array;      // FSM signal to write data array
+    logic write_tag_array;       // FSM signal to write tag array
+    logic [15:0] main_mem_data;  // Data input from main memory
     /////////////////////////////////////////////////////////
 
     //////////////////////////
@@ -52,32 +45,32 @@ module memory_system_model (
     //////////////////////////
     Cache_model iL1_CACHE (
         .clk(clk),
-        .rst(rst),
-        .addr(on_chip_memory_address),
-
+        .rst(rst),  
+        .addr(addr),
+        
         .data_in(data_in),
         .write_data_array(wr_data_enable),
-        
-        .write_tag_array(wr_tag_enable),
-        .TagIn(tag_in),
-        .evict_first_way(evict_first_way),
-        .Set_First_LRU(Set_First_LRU),
-        .hit_prev(hit_prev),
 
+        .tag_in(tag_in),
+        .write_tag_array(wr_tag_enable),
+        
         .data_out(data_out),
-        .first_tag_LRU(first_tag_LRU),
-        .first_match(first_match),
         .hit(hit)
     );
-    //////////////////////////
 
-    /////////////////////////////////////////////////////////
-    // Cache write conditions based on hit or FSM control //
-    /////////////////////////////////////////////////////////
-    assign wr_data_enable = enable && ((hit) ? on_chip_wr : write_data_array);
-    assign wr_tag_enable  = enable_prev && (hit_prev || write_tag_array);
-    assign data_in        = (hit) ? on_chip_memory_data : main_mem_data;
-    /////////////////////////////////////////////////////////
+    // We write to / read from the cache at the address specified by the processor when stall is not active, else from the address specified by the controller.
+    assign addr = (fsm_busy) ? off_chip_memory_address : on_chip_memory_address;
+    
+    // We write to the cache either when we have a hit and we are writing from on-chip, or we 
+    // have a miss and writing from off chip.
+    assign wr_data_enable = (enable) & ((fsm_busy) ? write_data_array : on_chip_wr);
+
+    // We write to the tag array when we the cache is enabled and there is a hit this cycle or when we finish filling the cache on a miss.
+    assign wr_tag_enable = (enable) & (hit | write_tag_array);
+
+    // The data input to the cache is either the main memory data or the on-chip data based on cache miss.
+    assign data_in = (fsm_busy) ? main_mem_data : on_chip_memory_data;
+    /////////////////////////
 
     ////////////////////////////////
     // Instantiate Cache Control //
@@ -86,23 +79,20 @@ module memory_system_model (
         .clk(clk),
         .rst(rst),
         .proceed(proceed),
-        .miss_detected(~hit_prev),
+        .miss_detected(~hit),
         .miss_address(on_chip_memory_address),
         .memory_data(off_chip_memory_data),
         .memory_data_valid(memory_data_valid),
-        .first_tag_LRU(first_tag_LRU_prev),
-        .first_match(first_match_prev),
-
+        
         .fsm_busy(fsm_busy),
-
-        .TagIn(tag_in),
+                
+        .tag_out(tag_in),
         .write_tag_array(write_tag_array),
-        .Set_First_LRU(Set_First_LRU),
-        .evict_first_way(evict_first_way),
 
         .write_data_array(write_data_array),
+        
         .memory_address(off_chip_memory_address),
-        .memory_data_out(main_mem_data)
+        .memory_data_out(main_mem_data)  
     );
     ////////////////////////////////////
 

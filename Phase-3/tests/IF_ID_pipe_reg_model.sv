@@ -8,27 +8,18 @@ module IF_ID_pipe_reg_model (
     input logic rst,                     // Active high synchronous reset
     input logic stall,                   // Stall signal (prevents updates)
     input logic flush,                   // Flush pipeline register (clears the instruction word)
-
     input logic [15:0] PC_curr,          // Current PC from the fetch stage
     input logic [15:0] PC_next,          // Next PC from the fetch stage
     input logic [15:0] PC_inst,          // Current instruction word from the fetch stage
     input logic [1:0]  prediction,       // The 2-bit predicted value of the current branch instruction from the fetch stage
     input logic [15:0] predicted_target, // The predicted target from the BTB.
 
-    input logic first_tag_LRU,           // First tag in the LRU way of I-Cache from fetch stage
-    input logic first_match,             // First matched tag from I-Cache
-    input logic        hit,              // I-Cache hit signal
-
     output logic [15:0] IF_ID_PC_curr,           // Pipelined current instruction address passed to the decode stage
     output logic [15:0] IF_ID_PC_next,           // Pipelined next PC passed to the decode stage
     output logic [15:0] IF_ID_PC_inst,           // Pipelined current instruction word passed to the decode stage
     output logic [1:0]  IF_ID_prediction,        // Pipelined 2-bit branch prediction signal passed to the decode stage
     output logic [15:0] IF_ID_predicted_target,  // Pipelined predicted target passed to the decode stage
-
-    output logic IF_ID_first_tag_LRU,     // Pipelined LRU tag from I-Cache
-    output logic IF_ID_first_match,       // Pipelined matched tag from I-Cache
-    output logic IF_ID_ICACHE_hit         // Pipelined I-Cache hit signal
-);
+  );
 
   ///////////////////////////////////////////////
   // Declare any internal signals as type logic//

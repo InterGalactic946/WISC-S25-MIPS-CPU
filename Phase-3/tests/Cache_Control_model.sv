@@ -5,26 +5,22 @@
 // and tag arrays once the memory returns valid data.    //
 ///////////////////////////////////////////////////////////
 module Cache_Control_model (
-    input  wire        clk, rst,           // Clock signal and active high reset signal
-    input  wire        proceed,            // Signal to proceed with memory filling on a cache miss
-    input  wire        miss_detected,      // High when tag match logic detects a cache miss from previous cycle         
-    input  wire [15:0] miss_address,       // Address that missed in the cache
-    input  wire [15:0] memory_data,        // Data returned by memory after delay
-    input  wire        memory_data_valid,  // Active high signal indicating valid data returning on memory bus
-    input  wire        first_tag_LRU,      // Pipelined first line tag's LRU from the cache
-    input  wire        first_match,        // Pipelined match signal for the first line of the cache set
+    input  logic        clk, rst,           // Clock signal and active high reset signal
+    input  logic        proceed,            // Signal to proceed with memory filling on a cache miss
+    input  logic        miss_detected,      // High when tag match logic detects a cache miss from previous cycle         
+    input  logic [15:0] miss_address,       // Address that missed in the cache
+    input  logic [15:0] memory_data,        // Data returned by memory after delay
+    input  logic        memory_data_valid,  // Active high signal indicating valid data returning on memory bus
 
-    output reg        fsm_busy,            // High while FSM is busy handling the miss (used as a pipeline stall signal)
+    output logic        fsm_busy,           // High while FSM is busy handling the miss (used as a pipeline stall signal)
     
-    output wire [7:0] TagIn,               // Output tag to rewrite upon a miss
-    output reg        write_tag_array,     // Write enable to cache tag array when all words are filled in to data array
-    output wire       Set_First_LRU,       // Sets the first LRU bit and clears the second
-    output wire       evict_first_way,     // Indicates which line we are evicting on a cache miss
+    output logic [7:0] tag_out,             // Output tag to rewrite upon a miss
+    output logic        write_tag_array,    // Write enable to cache tag array when all words are filled in to data array
 
-    output reg        write_data_array,    // Write enable to cache data array to signal when filling with memory_data
+    output logic        write_data_array,   // Write enable to cache data array to signal when filling with memory_data
 
-    output wire [15:0] memory_address,     // Address to read from memory
-    output reg [15:0] memory_data_out      // Data to be written to memory
+    output logic [15:0] memory_address,     // Address to read from memory
+    output logic [15:0] memory_data_out     // Data to be written to memory
   );
   
   ///////////////////////////////////////
@@ -35,38 +31,23 @@ module Cache_Control_model (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  wire hit;                  // High when cache hit is detected from the previous cycle    
-  reg clr_count;             // Clear the word count register.
-  reg incr_cnt;              // Increment the word count register.
-  wire [3:0] new_word_count; // Holds the new word count value.
-  wire [3:0] nxt_word_count; // Holds the next word count value.
-  wire [3:0] word_count;     // Holds the number of words filled in the cache data array.
-  wire [15:0] nxt_mem_addr;  // Holds the next memory address to read from.
-  wire [15:0] new_mem_addr;  // Holds the new memory address to read from.
-  wire chunks_filled;        // Indicates if the cache data array is filled with all 8 words.
-  wire state;                // Holds the current state.
-  reg nxt_state;             // Holds the next state. 
-  reg error;                 // Error flag raised when state machine is in an invalid state.  
+  logic clr_count;             // Clear the word count register.
+  logic incr_cnt;              // Increment the word count register.
+  logic [3:0] new_word_count; // Holds the new word count value.
+  logic [3:0] nxt_word_count; // Holds the next word count value.
+  logic [3:0] word_count;     // Holds the number of words filled in the cache data array.
+  logic [15:0] nxt_mem_addr;  // Holds the next memory address to read from.
+  logic [15:0] new_mem_addr;  // Holds the new memory address to read from.
+  logic chunks_filled;        // Indicates if the cache data array is filled with all 8 words.
+  logic state;                // Holds the current state.
+  logic nxt_state;            // Holds the next state. 
+  logic error;                // Error flag raised when state machine is in an invalid state.  
   ////////////////////////////////////////////////
 
-  // Indicates it is a hit if not a miss.
-  assign hit = ~miss_detected;
-
-  // If the second cache line's LRU is 1, evict second_way (1), else evict first_way (0). (TagOut[0] == LRU)
-  assign evict_first_way = first_tag_LRU;
-
-  // If we have a cache hit and the first line is a match, then we clear the first line's LRU bit. Otherwise, if the second line is a match
-  // on a hit, then we set the set the first line's LRU bit. If there is a cache miss and we are evicting the first way, then we clear the
-  // first cache line's LRU bit and set the second's, Otherwise, if the second way is evicted on a miss, then we set the first line's LRU bit 
-  // and clear the second line's.
-  // (((first_match) ? 1'b0 : 1'b1)) : (((evict_first_way) ? 1'b0 : 1'b1));
-  assign Set_First_LRU = (hit) ? ~first_match : ~evict_first_way;
-
-  //////////// Tag to write to the cache after we have detected a miss ////////////
   // On a cache hit on the first way, we update the tag with the new incoming tag, valid bit set, and LRU bit unset. Else if it did not hit on the first way, we set its LRU bit,
   // and keeping the content the same. Otherwise, if it is a cache miss, and we must evict the first "way", we update it with the new tag along with LRU bit unset. If
   // we don't have to evict the first "way", we set its LRU bit as the the second "way" that is evicted is now most recently used.
-  assign TagIn = {miss_address[15:10], 1'b1, 1'b0};
+  assign tag_out = {miss_address[15:10], 1'b1, 1'b0};
 
   ///////////////////////////////////////////////////////////////////////
   // Keep track of the number of words filled in the cache data array //

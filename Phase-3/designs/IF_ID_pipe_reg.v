@@ -16,9 +16,6 @@ module IF_ID_pipe_reg (
     input wire flush,                   // Flush pipeline register (clears the instruction word)
     input wire [15:0] PC_curr,          // Current PC from the fetch stage
     input wire [15:0] PC_next,          // Next PC from the fetch stage
-    input wire [4:0] first_tag_LRU,     // LRU tag from instruction cache (used by BTB)
-    input wire first_match,             // Whether this tag matched a BTB entry
-    input wire hit,                     // Whether the instruction cache had a hit
     input wire [15:0] PC_inst,          // Current instruction word from the fetch stage
     input wire [1:0] prediction,        // The 2-bit predicted value of the current branch instruction from the fetch stage
     input wire [15:0] predicted_target, // The predicted target from the BTB.
@@ -26,9 +23,6 @@ module IF_ID_pipe_reg (
     output wire [15:0] IF_ID_PC_curr,           // Pipelined current instruction address passed to the decode stage
     output wire [15:0] IF_ID_PC_next,           // Pipelined next PC passed to the decode stage
     output wire [15:0] IF_ID_PC_inst,           // Pipelined current instruction word passed to the decode stage
-    output wire [4:0] IF_ID_first_tag_LRU,      // Pipelined LRU tag to the decode stage
-    output wire IF_ID_first_match,              // Pipelined BTB match signal to the decode stage
-    output wire IF_ID_ICACHE_hit,               // Pipelined instruction cache hit signal
     output wire [1:0] IF_ID_prediction,         // Pipelined 2-bit branch prediction signal passed to the decode stage
     output wire [15:0] IF_ID_predicted_target   // Pipelined branch prediction target passed to the decode stage
 );

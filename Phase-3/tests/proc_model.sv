@@ -42,16 +42,11 @@ module proc_model (
   logic hlt_fetched;             // Indicates if the fetched instruction is a halt instruction.
   logic [15:0] I_MEM_addr;       // The address to access in off chip memory on an ICACHE miss
   logic ICACHE_busy;             // Indicates ICACHE FSM is currently busy processing
-  logic PC_first_tag_LRU;        // LRU tag result for the current PC (used in caching decisions)
-  logic PC_first_match;          // Cache tag match result for the current PC on the first "way"
   logic ICACHE_hit;              // Indicates a cache hit for the current PC access
 
   /* IF/ID Pipeline Register signals */
   logic [15:0] IF_ID_PC_curr;            // Current PC value pipelined from the Fetch stage
   logic [15:0] IF_ID_PC_next;            // Next PC value pipelined from the Fetch stage
-  logic IF_ID_first_tag_LRU;             // LRU tag pipelined from the Fetch stage (used for ICACHE debug or forwarding)
-  logic IF_ID_first_match;               // Cache match flag pipelined from the Fetch stage
-  logic IF_ID_ICACHE_hit;                // Cache hit flag pipelined from the Fetch stage
   logic [15:0] IF_ID_PC_inst;            // Instruction word pipelined from the Fetch stage
   logic [1:0]  IF_ID_prediction;         // Branch prediction outcome pipelined from the Fetch stage
   logic [15:0] IF_ID_predicted_target;   // Predicted branch target address pipelined from the Fetch stage
@@ -114,8 +109,6 @@ module proc_model (
   logic [15:0] D_MEM_addr;          // The address to access in off chip memory on an DCACHE miss
   logic DCACHE_busy;                // Indicates the DCACHE FSM is busy processing
   logic [15:0] MemData;             // Data read from memory
-  logic first_tag_LRU;              // LRU tag result for current access
-  logic first_match;                // Tag match result for current access
   logic DCACHE_hit;                 // Indicates if current memory access was a cache hit
 
   /* MEM/WB Pipeline Register signals */
@@ -203,11 +196,6 @@ module proc_model (
       .on_chip_memory_address(pc),
       .on_chip_memory_data(16'h0000),
 
-      .enable_prev(1'b1),
-      .hit_prev(IF_ID_ICACHE_hit),
-      .first_tag_LRU_prev(IF_ID_first_tag_LRU),
-      .first_match_prev(IF_ID_first_match),
-
       .off_chip_memory_data(mem_data_in),
       .memory_data_valid(mem_data_valid),
 
@@ -215,9 +203,6 @@ module proc_model (
       
       .fsm_busy(ICACHE_busy),
     
-      .first_tag_LRU(PC_first_tag_LRU),
-      .first_match(PC_first_match),
-
       .data_out(PC_inst),
       .hit(ICACHE_hit)
   );
@@ -235,18 +220,12 @@ module proc_model (
     .flush(IF_flush),
     .PC_curr(pc),
     .PC_next(PC_next),
-    .first_tag_LRU(PC_first_tag_LRU),
-    .first_match(PC_first_match),
-    .hit(ICACHE_hit),
     .PC_inst(PC_inst),
     .prediction(prediction),
     .predicted_target(predicted_target),
     
     .IF_ID_PC_curr(IF_ID_PC_curr), 
     .IF_ID_PC_next(IF_ID_PC_next),
-    .IF_ID_first_tag_LRU(IF_ID_first_tag_LRU),
-    .IF_ID_first_match(IF_ID_first_match),
-    .IF_ID_ICACHE_hit(IF_ID_ICACHE_hit),
     .IF_ID_PC_inst(IF_ID_PC_inst),
     .IF_ID_prediction(IF_ID_prediction),
     .IF_ID_predicted_target(IF_ID_predicted_target)
@@ -425,20 +404,12 @@ module proc_model (
       .on_chip_memory_address(EX_MEM_ALU_out),
       .on_chip_memory_data(MemWriteData),
 
-      .enable_prev(MEM_WB_MemEnable),
-      .hit_prev(MEM_WB_DCACHE_hit),
-      .first_tag_LRU_prev(MEM_WB_first_tag_LRU),
-      .first_match_prev(MEM_WB_first_match),
-
       .off_chip_memory_data(mem_data_in),
       .memory_data_valid(mem_data_valid),
 
       .off_chip_memory_address(D_MEM_addr),
 
       .fsm_busy(DCACHE_busy),
-
-      .first_tag_LRU(first_tag_LRU),
-      .first_match(first_match),
       
       .data_out(MemData),
       .hit(DCACHE_hit)

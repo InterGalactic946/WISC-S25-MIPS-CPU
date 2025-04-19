@@ -72,9 +72,11 @@ module proc (
   wire [7:0] WB_signals;     // Write-back stage control signals
 
   /* HAZARD DETECTION UNIT signals */
-  wire PC_stall;             // Stall signal for the PC register
-  wire IF_ID_stall;          // Stall signal for the IF/ID pipeline register
-  wire IF_flush, ID_flush;   // Flush signals for each pipeline register
+  wire PC_stall;                        // Stall signal for the PC register
+  wire IF_ID_stall;                     // Stall signal for the IF/ID pipeline register
+  wire ID_EX_stall;                     // Stall signal for the ID/EX pipeline register
+  wire EX_MEM_stall;                    // Stall signal for the EX/MEM pipeline register
+  wire IF_flush, ID_flush, MEM_flush;   // Flush signals for each pipeline register
 
   /* ID/EX Pipeline Register signals */
   wire [3:0] ID_EX_SrcReg1;        // Pipelined first source register ID from the decode stage
@@ -306,10 +308,14 @@ module proc (
       .Branch(Branch),
       .BR(BR),
       .ICACHE_busy(ICACHE_busy),
+      .DCACHE_busy(DCACHE_busy),
       .update_PC(update_PC),
       
       .PC_stall(PC_stall),
       .IF_ID_stall(IF_ID_stall),
+      .ID_EX_stall(ID_EX_stall),
+      .EX_MEM_stall(EX_MEM_stall),
+      .MEM_flush(MEM_flush),
       .ID_flush(ID_flush),
       .IF_flush(IF_flush)
   );
@@ -320,6 +326,7 @@ module proc (
   ID_EX_pipe_reg iID_EX (
       .clk(clk),
       .rst(rst),
+      .stall(ID_EX_stall),
       .flush(ID_flush),
       .IF_ID_PC_next(IF_ID_PC_next),
       .EX_signals(EX_signals),
@@ -388,6 +395,7 @@ module proc (
   EX_MEM_pipe_reg iEX_MEM (
       .clk(clk),
       .rst(rst),
+      .stall(EX_MEM_stall),
       .ID_EX_PC_next(ID_EX_PC_next),
       .ALU_out(ALU_out),
       .ID_EX_SrcReg2(ID_EX_SrcReg2),
@@ -444,6 +452,7 @@ module proc (
   MEM_WB_pipe_reg iMEM_WB (
       .clk(clk),
       .rst(rst),
+      .flush(MEM_flush),
       .EX_MEM_PC_next(EX_MEM_PC_next),
       .EX_MEM_ALU_out(EX_MEM_ALU_out),
       .EX_MEM_MemEnable(EX_MEM_MemEnable),

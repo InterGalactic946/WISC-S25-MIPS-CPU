@@ -7,6 +7,7 @@
 module EX_MEM_pipe_reg_model (
     input logic clk,                        // System clock
     input logic rst,                        // Active high synchronous reset
+    input logic stall,                      // Stall signal (prevents updates)
     input logic [15:0] ID_EX_PC_next,       // Pipelined next PC from the fetch stage
     input logic [15:0] ALU_out,             // ALU output from the execute stage
     input logic [3:0] ID_EX_SrcReg2,        // Pipelined second source register ID pfrom the decode stage
@@ -20,13 +21,24 @@ module EX_MEM_pipe_reg_model (
     output logic [7:0] EX_MEM_WB_signals    // Pipelined write back stage signals passed to the memory stage
 );
 
+  ///////////////////////////////////////////////
+  // Declare any internal signals as type logic//
+  ///////////////////////////////////////////////
+  logic wen; // Register write enable signal.
+
+  ///////////////////////////////////////
+  // Model the EX/MEM Pipeline Register //
+  ///////////////////////////////////////
+  // We write to the register whenever we don't stall.
+  assign wen = ~stall;
+
   //////////////////////////////////////////////////////////////////////////////
   // Pipeline the next instruction's address to be passed to the memory stage //
   //////////////////////////////////////////////////////////////////////////////
   always @(posedge clk)
     if (rst)
       EX_MEM_PC_next <= 16'h0000;
-    else
+    else if (wen)
       EX_MEM_PC_next <= ID_EX_PC_next;
   //////////////////////////////////////////////////////////////////////////////
 
@@ -36,7 +48,7 @@ module EX_MEM_pipe_reg_model (
   always @(posedge clk)
     if (rst)
       EX_MEM_ALU_out <= 16'h0000;
-    else
+    else if (wen)
       EX_MEM_ALU_out <= ALU_out;
   //////////////////////////////////////////////////////////////
 
@@ -46,7 +58,7 @@ module EX_MEM_pipe_reg_model (
   always @(posedge clk)
     if (rst)
       EX_MEM_SrcReg2 <= 4'h0;
-    else
+    else if (wen)
       EX_MEM_SrcReg2 <= ID_EX_SrcReg2;
   //////////////////////////////////////////////////////////////
 
@@ -58,7 +70,7 @@ module EX_MEM_pipe_reg_model (
       EX_MEM_MEM_signals[17:2] <= 16'h0000;
       EX_MEM_MEM_signals[1]    <= 1'b0;
       EX_MEM_MEM_signals[0]    <= 1'b0;
-    end else begin
+    end else if (wen) begin
       EX_MEM_MEM_signals[17:2] <= ID_EX_MEM_signals[17:2];
       EX_MEM_MEM_signals[1] <= ID_EX_MEM_signals[1];
       EX_MEM_MEM_signals[0] <= ID_EX_MEM_signals[0];
@@ -75,7 +87,7 @@ module EX_MEM_pipe_reg_model (
       EX_MEM_WB_signals[2] <= 1'b0;
       EX_MEM_WB_signals[1] <= 1'b0;
       EX_MEM_WB_signals[0] <= 1'b0;
-    end else begin
+    end else if (wen) begin
       EX_MEM_WB_signals[7:4] <= ID_EX_WB_signals[7:4];
       EX_MEM_WB_signals[3] <= ID_EX_WB_signals[3];
       EX_MEM_WB_signals[2] <= ID_EX_WB_signals[2];

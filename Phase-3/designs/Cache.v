@@ -85,8 +85,8 @@ module Cache (
   );
 
   // Compare the tag stored in the cache currently at both "ways/lines" in parallel, checking for equality and valid bit set. (addr[16:8] == tag and TagOut[1] == valid)
-  assign first_match = (addr[16:8] == first_tag_out[7:2]) & first_tag_out[1];
-  assign second_match = (addr[16:8] == second_tag_out[7:2]) & second_tag_out[1];
+  assign first_match = (addr[15:10] == first_tag_out[7:2]) & first_tag_out[1];
+  assign second_match = (addr[15:10] == second_tag_out[7:2]) & second_tag_out[1];
   
   // It is a cache hit if either of the "ways" resulted in a match, else it is a miss.
   assign hit = first_match | second_match;

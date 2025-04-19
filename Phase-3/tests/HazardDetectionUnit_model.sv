@@ -20,12 +20,16 @@ module HazardDetectionUnit_model (
     input logic Branch,                 // Branch signal indicating a branch instruction
     input logic BR,                     // BR signal indicating a BR instruction
     input logic ICACHE_busy,            // Signal indicating that the instruction cache is busy so PC/IF_ID must stall
+    input logic DCACHE_busy,            // Signal indicating that the data cache is busy so whole pipeline must stall and NOP inserted into MEM_WB
     input logic update_PC,              // Signal that we need to update the PC
     
     output logic PC_stall,              // Stall signal for IF stage
     output logic IF_ID_stall,           // Stall signal for ID stage
+    output logic ID_EX_stall,           // Stall signal for EX stage
+    output logic EX_MEM_stall,          // Stall signal for MEM stage
+    output logic MEM_flush,             // Flush signal for EX/MEM register
     output logic ID_flush,              // Flush signal for ID/EX register
-    output logic IF_flush               // Flush signal for IF/ID register
+    output logic IF_flush,              // Flush signal for IF/ID register
 );
 
   /////////////////////////////////////////////////
@@ -40,24 +44,33 @@ module HazardDetectionUnit_model (
   logic BR_hazard;          // Detects a hazard for BR type branch instructions
   ////////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////
-  // Stall conditions for LW, B, and BR instructions //
-  /////////////////////////////////////////////////////
-  // We stall PC whenever we stall the IF_ID pipeline register.
-  assign PC_stall = IF_ID_stall;
+  ////////////////////////////////////////////////////////
+  // Stall conditions for LW/SW, B, and BR instructions //
+  ////////////////////////////////////////////////////////
+  // We stall PC whenever we stall the IF_ID pipeline register or when the ICACHE is busy.
+  assign PC_stall = ICACHE_busy | IF_ID_stall;
 
-  // We stall anytime the ICACHE is busy or there is a branch or load to use hazard in the decode stage.
-  assign IF_ID_stall = ICACHE_busy | load_to_use_hazard | B_hazard | BR_hazard;
+  // We stall anytime we stall on EX_MEM or when there is a branch or load to use hazard in the decode stage.
+  assign IF_ID_stall = EX_MEM_stall | load_to_use_hazard | B_hazard | BR_hazard;
+
+  // We stall anytime we stall the EX_MEM pipeline register.
+  assign ID_EX_stall = EX_MEM_stall;
+
+  // We stall anytime the DCACHE is busy.
+  assign EX_MEM_stall = DCACHE_busy;
   /////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////
-  // Flush the pipeline on load to use or branch misprediction //
-  ///////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  // Flush the pipeline on memory accesses or branch misprediction //
+  ///////////////////////////////////////////////////////////////////
+  // We flush the MEM_WB pipeline register whenever the DCACHE is busy.
+  assign MEM_flush = DCACHE_busy;
+  
   // We flush the ID_EX pipeline register whenever there is a branch or load to use hazard, i.e. send nops to execute onward.
   assign ID_flush = load_to_use_hazard | B_hazard | BR_hazard;
 
-  // We flush the IF_ID pipeline instruction word whenever we are not stalling on decode and need to update the PC, i.e. on an incorrect branch fetch.
-  assign IF_flush = ~IF_ID_stall & update_PC;
+  // We flush the IF_ID pipeline instruction word whenever we are stalling on PC, i.e. on an ICACHE miss, or when not stalling on decode and need to update the PC, i.e. on an incorrect branch fetch.
+  assign IF_flush = (ICACHE_busy) | (~IF_ID_stall & update_PC);
   /////////////////////////////////////////////////////////////
 
   //////////////////////////////////

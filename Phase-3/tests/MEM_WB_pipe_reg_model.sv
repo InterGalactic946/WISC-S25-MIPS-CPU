@@ -7,6 +7,7 @@
 module MEM_WB_pipe_reg_model (
     input logic clk,                        // System clock
     input logic rst,                        // Active high synchronous reset
+    input logic flush,                      // Flush pipeline register
 
     input logic [15:0] EX_MEM_PC_next,      // Pipelined next PC from the fetch stage
     input logic [15:0] EX_MEM_ALU_out,      // Pipelined ALU output from the execute stage
@@ -29,6 +30,16 @@ module MEM_WB_pipe_reg_model (
     output logic        MEM_WB_DCACHE_hit      // Pipelined DCACHE hit flag
 );
 
+  ///////////////////////////////////////////////
+  // Declare any internal signals as type logic//
+  ///////////////////////////////////////////////
+  logic clr; // Clear signal for instruction word register
+
+  /////////////////////////////////////////////////////////////////
+  // Clear the pipeline register whenever we flush or during rst //
+  /////////////////////////////////////////////////////////////////
+  assign clr = flush | rst;
+
   //////////////////////////////////////////////////////////////////////////////////
   // Pipeline the next instruction's address to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +53,7 @@ module MEM_WB_pipe_reg_model (
   // Pipeline the ALU output to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////
   always @(posedge clk)
-    if (rst)
+    if (clr)
       MEM_WB_ALU_out <= 16'h0000;
     else
       MEM_WB_ALU_out <= EX_MEM_ALU_out;
@@ -51,7 +62,7 @@ module MEM_WB_pipe_reg_model (
   // Pipeline the MemData output to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////////
   always @(posedge clk)
-    if (rst)
+    if (clr)
       MEM_WB_MemData <= 16'h0000;
     else
       MEM_WB_MemData <= MemData;
@@ -60,7 +71,7 @@ module MEM_WB_pipe_reg_model (
   // Pipeline the WRITE-BACK control signals to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////////////////////
   always @(posedge clk) begin
-    if (rst) begin
+    if (clr) begin
       MEM_WB_WB_signals[7:4] <= 4'b0000;
       MEM_WB_WB_signals[3]   <= 1'b0;
       MEM_WB_WB_signals[2]   <= 1'b0;

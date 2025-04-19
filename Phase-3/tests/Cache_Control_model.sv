@@ -140,9 +140,9 @@ module Cache_Control_model (
         if (miss_detected) begin
           fsm_busy = 1'b1;    // Assert fsm_busy when a cache miss is detected. 
           clr_count = 1'b1;   // Clear the counts and capture the new miss address.
-
+          
           if (proceed)
-            nxt_state = WAIT; // If a cache miss is detected, go to the WAIT state only if allowed to proceed else stay in IDLE.
+            nxt_state = WAIT;   // If a cache miss is detected, go to the WAIT state only if allowed to proceed else stay in IDLE.
         end
       end
 

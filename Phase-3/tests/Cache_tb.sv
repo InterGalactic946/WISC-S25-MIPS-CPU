@@ -46,10 +46,10 @@ module Cache_tb();
         .addr(EX_MEM_ALU_out),
         
         .data_in(MemWriteData),
-        .write_data_array(EX_MEM_MemEnable & EX_MEM_MemWrite),
+        .write_data_array(wr_data_enable),
 
         .tag_in(tag_in),
-        .write_tag_array(hit & enable),
+        .write_tag_array(wr_tag_enable),
         
         .data_out(MemData),
         .hit(hit)
@@ -62,10 +62,10 @@ module Cache_tb();
       .addr(EX_MEM_ALU_out),
         
       .data_in(MemWriteData),
-      .write_data_array(EX_MEM_MemEnable & EX_MEM_MemWrite),
+      .write_data_array(wr_data_enable),
 
       .tag_in(tag_in),
-      .write_tag_array(hit & enable),
+      .write_tag_array(wr_tag_enable),
         
       .data_out(expected_MemData),
       .hit(expected_hit)
@@ -77,6 +77,8 @@ module Cache_tb();
   assign EX_MEM_MemEnable = EX_MEM_out[1];
   assign EX_MEM_MemWrite = EX_MEM_out[0];
   assign tag_in = {EX_MEM_ALU_out[15:10], 1'b1, 1'b0};
+  assign wr_data_enable = EX_MEM_MemEnable & EX_MEM_MemWrite;
+  assign wr_tag_enable = hit & EX_MEM_MemEnable;
 
   // A task to verify the cache.
   task verify_cache();

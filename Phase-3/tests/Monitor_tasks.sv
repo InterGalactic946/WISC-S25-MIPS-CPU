@@ -24,9 +24,7 @@ package Monitor_tasks;
 
   // Tag block each entry holds LRU, valid and 6-bit tag along with full address for debugging
   typedef struct {
-    logic [5:0] tag;   // Tag bits
-    logic valid;       // Valid bit
-    logic lru;         // LRU bit
+    logic [7:0] tag;   // Tag, Valid, LRU bits
   } tag_block_t;
 
   // Tag set each entry holds two instances of a tag block

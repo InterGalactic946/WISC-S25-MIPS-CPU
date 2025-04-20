@@ -133,7 +133,7 @@ module memory_system_tb();
       @(posedge clk);
       
       // Assert reset
-      @(negedge clk) rst = 1'b1;
+      repeat(2) @(negedge clk) rst = 1'b1;
 
       // Deassert reset and start testing.
       @(negedge clk) rst = 1'b0;

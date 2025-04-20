@@ -4,7 +4,7 @@
 //BlockEnable and WordEnable are one-hot
 //WriteEnable is one on writes and zero on reads
 module DataArray(input clk, input rst, input [15:0] DataIn, input Write, input WaySelect, input [63:0] SetEnable, input [7:0] WordEnable, output [15:0] DataOut_first_way, output [15:0] DataOut_second_way);
-	DataSet set[63:0] (.clk(clk), .rst(rst), .DataIn(DataIn), .Write(Write), .WaySelect(WaySelect), .SetEnable(SetEnable), .WordEnable(WordEnable), .DataOut_first_way(DataOut_first_way), .DataOut_second_way(DataOut_second_way));
+	DataSet set[63:0] (.clk({64{clk}}), .rst({64{rst}}), .DataIn(DataIn), .Write(Write), .WaySelect(WaySelect), .SetEnable(SetEnable), .WordEnable(WordEnable), .DataOut_first_way(DataOut_first_way), .DataOut_second_way(DataOut_second_way));
 endmodule
 
 // Each set has 2 "ways" or cache lines

@@ -9,7 +9,7 @@ module MetaDataArray(input clk, input rst, input [7:0] DataIn_first_way, input [
 	assign DataIn_first = {DataIn_first_way[7:1], Set_First_LRU};
 	assign DataIn_second = {DataIn_second_way[7:1], ~Set_First_LRU};
 	
-	MetaDataSet set[63:0] (.clk(clk), .rst(rst), .DataIn_first_way(DataIn_first), .DataIn_second_way(DataIn_second), .Write(Write), .SetEnable(SetEnable), .DataOut_first_way(DataOut_first_way), .DataOut_second_way(DataOut_second_way));
+	MetaDataSet set[63:0] (.clk({64{clk}}), .rst({64{rst}}), .DataIn_first_way(DataIn_first), .DataIn_second_way(DataIn_second), .Write(Write), .SetEnable(SetEnable), .DataOut_first_way(DataOut_first_way), .DataOut_second_way(DataOut_second_way));
 endmodule
 
 // Each set has 2 "ways" or cache lines

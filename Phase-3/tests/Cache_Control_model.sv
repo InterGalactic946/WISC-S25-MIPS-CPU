@@ -51,7 +51,7 @@ module Cache_Control_model (
   // On a cache hit on the first way, we update the tag with the new incoming tag, valid bit set, and LRU bit unset. Else if it did not hit on the first way, we set its LRU bit,
   // and keeping the content the same. Otherwise, if it is a cache miss, and we must evict the first "way", we update it with the new tag along with LRU bit unset. If
   // we don't have to evict the first "way", we set its LRU bit as the the second "way" that is evicted is now most recently used.
-  assign tag_out = {miss_address[15:10], 1'b1, 1'b0};
+  assign  tag_out= {miss_address[15:10], 1'b1, 1'b0};
 
   ///////////////////////////////////////////////////////////////////////
   // Keep track of the number of words filled in the cache data array //

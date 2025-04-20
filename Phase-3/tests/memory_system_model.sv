@@ -33,8 +33,9 @@ module memory_system_model (
     /******************** CACHE SIGNALS **************************************/
     logic [15:0] addr;           // The address to read from/write to.
     logic [15:0] data_in;        // Data input to the cache (on-chip or memory)
-    logic [15:0] tag_in;         // Tag to be written to tag array
+    logic [7:0] tag_in;          // Tag to be written to tag array
     /******************** CACHE CONTROLLER SIGNALS ***************************/
+    logic miss_detected;         // A miss is detected when cache is enabled and it is not a hit.
     logic [15:0] controller_memory_address; // The address to write to the cache on a miss.
     logic write_data_array;      // FSM signal to write data array
     logic write_tag_array;       // FSM signal to write tag array
@@ -80,7 +81,7 @@ module memory_system_model (
         .clk(clk),
         .rst(rst),
         .proceed(proceed),
-        .miss_detected(~hit),
+        .miss_detected(miss_detected),
         .miss_address(on_chip_memory_address),
         .memory_data(off_chip_memory_data),
         .memory_data_valid(memory_data_valid),
@@ -96,6 +97,8 @@ module memory_system_model (
         .cache_memory_address(controller_memory_address),
         .memory_data_out(main_mem_data)  
     );
+
+    assign miss_detected = (enable & ~hit);
     ////////////////////////////////////
 
 endmodule

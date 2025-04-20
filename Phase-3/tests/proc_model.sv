@@ -386,7 +386,7 @@ module proc_model (
   assign MemWriteData = (ForwardSW_MEM) ? RegWriteData : EX_MEM_MemWriteData;
 
   // Instantiate data memory cache along with control.
-  memory_system_mdoel iDATA_MEM_CACHE (
+  memory_system_model iDATA_MEM_CACHE (
       .clk(clk),
       .rst(rst),
       .enable(EX_MEM_MemEnable),

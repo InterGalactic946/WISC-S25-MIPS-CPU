@@ -11,8 +11,6 @@
 // 4 cycles.                                     //
 //////////////////////////////////////////////////
 
-import Monitor_tasks::*;
-
 module memory(data_out, data_in, addr, enable, wr, clk, rst, data_valid);
 
     // Parameter for memory address width
@@ -34,26 +32,18 @@ module memory(data_out, data_in, addr, enable, wr, clk, rst, data_valid);
     logic data_valid_4;
     logic data_valid_3, data_valid_2, data_valid_1;
 
-    // Flag to ensure memory is loaded only once
-    logic loaded;
-
     // Instantiate the memory model structure
-    model_data_mem_t main_memory;
+    logic [15:0] mem_addr [0:65535]; 
+    logic [15:0] data_mem [0:65535];
+
 
     /////////////////////////////////////////////////////////////////////////////
     // Combinational logic for reading from memory                             //
     // - Only when memory is enabled and not in write mode.                    //
     // - Data is read from memory and marked valid.                            //
     /////////////////////////////////////////////////////////////////////////////
-    assign data_out_4 = (enable && !wr) ? main_memory.data_mem[addr[ADDR_WIDTH-1:1]] : 16'h0000;
+    assign data_out_4 = (enable && !wr) ? data_mem[addr[ADDR_WIDTH-1:1]] : 16'h0000;
     assign data_valid_4 = (enable && !wr);
-
-    /////////////////////////////////////////////////////////////////////////////
-    // Initial block to set the loaded flag on simulation start                //
-    /////////////////////////////////////////////////////////////////////////////
-    initial begin
-        loaded = 0;
-    end
 
     /////////////////////////////////////////////////////////////////////////////
     // Memory write and initialization logic                                   //
@@ -62,15 +52,12 @@ module memory(data_out, data_in, addr, enable, wr, clk, rst, data_valid);
     /////////////////////////////////////////////////////////////////////////////
     always_ff @(posedge clk) begin
         if (rst) begin
-            if (!loaded) begin
-                $readmemh("./tests/loadfile_all.img", main_memory.data_mem);  // Load memory contents
-                loaded = 1;
-            end
-            main_memory.mem_addr <= '{default: 16'hxxxx};                     // Invalidate addresses
+            $readmemh("./tests/loadfile_all.img", data_mem);  // Load memory contents
+            mem_addr <= '{default: 16'hxxxx};                 // Invalidate addresses
         end else if (enable && wr) begin
             // Store word operation (write to data memory)
-            main_memory.mem_addr[addr[ADDR_WIDTH-1:1]] <= addr;
-            main_memory.data_mem[addr[ADDR_WIDTH-1:1]] <= data_in;
+            mem_addr[addr[ADDR_WIDTH-1:1]] <= addr;
+            data_mem[addr[ADDR_WIDTH-1:1]] <= data_in;
         end
     end
 

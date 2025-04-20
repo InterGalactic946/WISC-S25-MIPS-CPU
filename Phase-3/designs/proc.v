@@ -179,12 +179,12 @@ module proc (
   ///////////////////////////////////
 
   ////////////////////////////////////////
-  // Instantiate instruction memory cache along with control.
+  // Instantiate instruction memory cache along with control (let ICACHE proceed first in case both caches collide)
   memory_system iINSTR_MEM_CACHE (
       .clk(clk),
       .rst(rst),
       .enable(1'b1),
-      .proceed(ICACHE_proceed),
+      .proceed(1'b1), 
       .on_chip_wr(1'b0),
       .on_chip_memory_address(pc),
       .on_chip_memory_data(16'h0000),

@@ -59,7 +59,9 @@ module Cache_model (
                     }}
                 }
             };
-        end else if (write_data_array) begin // Cache write
+        end 
+        
+        if (write_data_array) begin // Cache write
                 // Check if it’s a hit on "way" 1.
                 if (first_way_match) begin
                     // Add the data and address to the first line.
@@ -80,7 +82,9 @@ module Cache_model (
                         model_cache.cache_data_array.data_set[addr[9:4]].second_way[addr[3:1]].data <= data_in;
                     end
                 end
-        end else if (write_tag_array) begin // Update the both tag lines accordingly.
+        end 
+        
+        if (write_tag_array) begin // Update the both tag lines accordingly.
             model_cache.cache_tag_array.tag_set[addr[9:4]].first_way.tag <= first_tag_in[7:2];
             model_cache.cache_tag_array.tag_set[addr[9:4]].first_way.valid <= first_tag_in[1];
             model_cache.cache_tag_array.tag_set[addr[9:4]].first_way.lru <= set_first_LRU;

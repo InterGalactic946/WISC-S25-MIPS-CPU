@@ -127,7 +127,7 @@ module Cache_Control_model (
     case (state)
       WAIT : begin // WAIT state - waiting for memory data to be valid and all 8 words to be filled in the cache data array.
         fsm_busy = 1'b1; // Assert fsm_busy when waiting for all 8 words to be filled in the cache data array.
-        incr_cnt = 1'b1; // Increment the word count every cycle to send out a new address.
+        incr_cnt = 1'b1; // Increment the every cycle to send out a new address.
         if (chunks_filled) begin // If all 8 words are filled in the cache data array, go to IDLE state. (8 memory_data_valid pulses)
           nxt_state = IDLE; // Go to IDLE state.
           fsm_busy = 1'b0; // Deassert fsm_busy when the cache data array is filled with all 8 words.

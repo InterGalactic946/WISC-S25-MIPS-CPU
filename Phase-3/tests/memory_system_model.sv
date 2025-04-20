@@ -25,7 +25,7 @@ module memory_system_model (
     output logic        hit                     // Cache hit signal
 );
 
-    //////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     // Internal logic declarations for Cache and Control //
     //////////////////////////////////////////////////////
     logic wr_data_enable;        // Enable to write data to cache
@@ -35,6 +35,7 @@ module memory_system_model (
     logic [15:0] data_in;        // Data input to the cache (on-chip or memory)
     logic [15:0] tag_in;         // Tag to be written to tag array
     /******************** CACHE CONTROLLER SIGNALS ***************************/
+    logic [15:0] controller_memory_address; // The address to write to the cache on a miss.
     logic write_data_array;      // FSM signal to write data array
     logic write_tag_array;       // FSM signal to write tag array
     logic [15:0] main_mem_data;  // Data input from main memory
@@ -59,7 +60,7 @@ module memory_system_model (
     );
 
     // We write to / read from the cache at the address specified by the processor when stall is not active, else from the address specified by the controller.
-    assign addr = (fsm_busy) ? off_chip_memory_address : on_chip_memory_address;
+    assign addr = (fsm_busy) ? controller_memory_address : on_chip_memory_address;
     
     // We write to the cache either when we have a hit and we are writing from on-chip, or we 
     // have a miss and writing from off chip.
@@ -91,7 +92,8 @@ module memory_system_model (
 
         .write_data_array(write_data_array),
         
-        .memory_address(off_chip_memory_address),
+        .main_memory_address(off_chip_memory_address),
+        .cache_memory_address(controller_memory_address),
         .memory_data_out(main_mem_data)  
     );
     ////////////////////////////////////

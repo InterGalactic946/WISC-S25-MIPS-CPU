@@ -19,8 +19,9 @@ module Cache_Control_model (
 
     output logic        write_data_array,   // Write enable to cache data array to signal when filling with memory_data
 
-    output logic [15:0] memory_address,     // Address to read from memory
-    output logic [15:0] memory_data_out     // Data to be written to memory
+    output logic [15:0] main_memory_address,  // Address to read from memory
+    output logic [15:0] cache_memory_address, // Address to write to cache
+    output logic [15:0] memory_data_out       // Data to be written to memory
   );
   
   ///////////////////////////////////////
@@ -31,11 +32,14 @@ module Cache_Control_model (
   /////////////////////////////////////////////////
   // Declare any internal signals as type wire  //
   ///////////////////////////////////////////////
-  logic clr_count;             // Clear the word count register.
-  logic incr_cnt;              // Increment the word count register.
-  logic [3:0] new_word_count; // Holds the new word count value.
-  logic [3:0] nxt_word_count; // Holds the next word count value.
-  logic [3:0] word_count;     // Holds the number of words filled in the cache data array.
+  /********** Delayed/Pipelined memory addresses ********/
+  logic [15:0] memory_address_3; 
+  logic [15:0] memory_address_2;
+  logic [15:0] memory_address_1;
+  /*****************************************************/
+  logic clr_count;            // Clear the word count register.
+  logic incr_cnt;             // Increment the word count register.
+  logic [3:0] valid_count;    // Holds the number of words filled in the cache data array.
   logic [15:0] nxt_mem_addr;  // Holds the next memory address to read from.
   logic [15:0] new_mem_addr;  // Holds the new memory address to read from.
   logic chunks_filled;        // Indicates if the cache data array is filled with all 8 words.
@@ -54,11 +58,11 @@ module Cache_Control_model (
   /////////////////////////////////////////////////////////////////////
   always_ff @(posedge clk) begin
     if (rst) begin                 
-      word_count <= 4'h0;              // Reset the word count to zero.
-    end else if (clr_count) begin      // Clear the word count register when we get a cache miss.
-      word_count <= 4'h0;              // Reset the word count to zero.
-    end else if (incr_cnt) begin       // Increment the word count register when we get valid data from memory.
-      word_count <= word_count + 1'b1; // Update the word count with the new value.
+      valid_count <= 4'h0;                // Reset the valid count to zero.
+    end else if (clr_count) begin         // Clear the valid count register when we get a cache miss.
+      valid_count <= 4'h0;                // Reset the valid count to zero.
+    end else if (memory_data_valid) begin // Increment the valid count register when we get valid data from memory.
+      valid_count <= valid_count + 1'b1;  // Update the valid count with the new value.
     end
   end
 
@@ -67,11 +71,28 @@ module Cache_Control_model (
   //////////////////////////////////////////////////
   always_ff @(posedge clk) begin
     if (rst) begin             
-      memory_address <= 16'h0000;                  // Clear the memory address register on reset.
-    end else if (clr_count) begin                  // On a cache miss, set the memory address to the miss address.
-      memory_address <= {miss_address[15:4], 4'h0};// Set the memory address to the first address of the block.
-    end else if (incr_cnt) begin                   // Increment the memory address register when we get valid data from memory.
-      memory_address <= memory_address + 16'h0002; // Update the memory address with the new value.
+      main_memory_address <= 16'h0000;                       // Clear the memory address register on reset.
+    end else if (clr_count) begin                            // On a cache miss, set the memory address to the miss address.
+      main_memory_address <= {miss_address[15:4], 4'h0};     // Set the memory address to the first address of the block.
+    end else if (incr_cnt) begin                             // Increment the memory address register when we get valid data from memory.
+      main_memory_address <= main_memory_address + 16'h0002; // Update the memory address with the new value.
+    end
+  end
+
+  //////////////////////////////////////////////////////
+  // Pipeline the miss address to write to the cache //
+  ////////////////////////////////////////////////////
+  always_ff @(posedge clk) begin
+    if (rst) begin             
+      memory_address_3 <= 16'h0000;          // Clear the memory address 3 register on reset.
+      memory_address_2 <= 16'h0000;          // Clear the memory address 2 register on reset.
+      memory_address_1 <= 16'h0000;          // Clear the memory address 1 register on reset.
+      cache_memory_address <= 16'h0000;      // Clear the cache memory address register on reset.
+    end else begin
+      memory_address_3 <= main_memory_address; 
+      memory_address_2 <= memory_address_3;
+      memory_address_1 <= memory_address_2;
+      cache_memory_address <= memory_address_1; // This is the address we write to in the cache once we get the valid signal.
     end
   end
 
@@ -87,7 +108,7 @@ module Cache_Control_model (
   end
 
   // We are done filling the cache data array when we have filled all 8 words.
-  assign chunks_filled = word_count == 4'h8;
+  assign chunks_filled = valid_count == 4'h8;
   
   //////////////////////////////////////////////////////////////////////////////////////////
   // Implements the combinational state transition and output logic of the state machine.//
@@ -106,12 +127,14 @@ module Cache_Control_model (
     case (state)
       WAIT : begin // WAIT state - waiting for memory data to be valid and all 8 words to be filled in the cache data array.
         fsm_busy = 1'b1; // Assert fsm_busy when waiting for all 8 words to be filled in the cache data array.
-        if (chunks_filled) begin // If all 8 words are filled in the cache data array, go to IDLE state.
+        incr_cnt = 1'b1; // Increment the word count every cycle to send out a new address.
+        if (chunks_filled) begin // If all 8 words are filled in the cache data array, go to IDLE state. (8 memory_data_valid pulses)
           nxt_state = IDLE; // Go to IDLE state.
           fsm_busy = 1'b0; // Deassert fsm_busy when the cache data array is filled with all 8 words.
+          write_data_array = 1'b1; // Write to the cache data array one last time.
           write_tag_array = 1'b1; // Write to the tag array when all 8 words are filled in the cache data array.
+          memory_data_out = memory_data; // Write the memory data to the cache data array one last time.
         end else if (memory_data_valid) begin // If memory data is valid, increment the word count and write to the cache data array.
-          incr_cnt = 1'b1; // Increment the word count when memory data is valid.
           write_data_array = 1'b1; // Write to the cache data array when memory data is valid.
           memory_data_out = memory_data; // Write the memory data to the cache data array.
         end

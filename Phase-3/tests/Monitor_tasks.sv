@@ -40,10 +40,16 @@ package Monitor_tasks;
     tag_set_t tag_set[0:63];
   } tag_array_t;
 
-  // Data entry each entry holds two blocks of 2B each storing 8 words, overall 16B per cache line and 32B per cache set.
+  // Each block holds an address and a data word (2B + 2B = 4B)
   typedef struct {
-    logic [15:0] first_way[0:7];
-    logic [15:0] second_way[0:7];
+    logic [15:0] addr;
+    logic [15:0] data;
+  } data_block_t;
+
+  // A set has two ways, each storing 8 blocks (16B per way, 32B total)
+  typedef struct {
+    data_block_t first_way[0:7];
+    data_block_t second_way[0:7];
   } data_set_t;
 
   // Infer the data array as 64 data sets = 2048B (2KB) cache.

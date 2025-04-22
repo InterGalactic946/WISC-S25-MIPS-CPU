@@ -72,7 +72,7 @@ module CLA_4bit(Sum, Ovfl, pos_Ovfl, neg_Ovfl, Cout, P_group, G_group, A, B, Cin
   // // Get the group's generate signal as a whole.
   // assign G_group = G[3] | (P[3] & G[2]) | (P[3] & P[2] & G[1]) | (P[3] & P[2] & P[1] & G[0]);
 
-  assign {Cout, Sum} = A + ((sub) ? -B : B);
+  assign {Cout, Sum} = (A + Cin) + ((sub) ? -B : B);
 
   assign pos_Ovfl = ~A[3] & (B[3] == sub) & Sum[3]; // Positive overflow condition
   assign neg_Ovfl = A[3] & (B[3] == ~sub) & ~Sum[3]; // Negative overflow condition

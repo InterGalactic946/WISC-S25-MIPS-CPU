@@ -18,38 +18,45 @@ module CLA_8bit(Sum, Cout, Ovfl, pos_Ovfl, neg_Ovfl, A, B, sub);
   output wire [7:0] Sum;                      // 8-bit sum output
   output wire Cout, Ovfl, pos_Ovfl, neg_Ovfl; // carry out and overflow indicators
 
-  /////////////////////////////////////////////////
-  // Declare any internal signals as type wire  //
-  ///////////////////////////////////////////////
-  wire [7:0] B_operand;        // Operand B or its complement.
-	wire [1:0] Carries;	         // Carry chain logic of the 8-bit CLA.
-  wire [1:0] P_group, G_group; // 2-bit propagate and generate signals of each CLA_4bit adder.
-  ///////////////////////////////////////////////
+  // /////////////////////////////////////////////////
+  // // Declare any internal signals as type wire  //
+  // ///////////////////////////////////////////////
+  // wire [7:0] B_operand;        // Operand B or its complement.
+	// wire [1:0] Carries;	         // Carry chain logic of the 8-bit CLA.
+  // wire [1:0] P_group, G_group; // 2-bit propagate and generate signals of each CLA_4bit adder.
+  // ///////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////////
-  // Implement CLA Adder as structural/dataflow verilog //
-  ///////////////////////////////////////////////////////
-  // Negate B if subtracting.
-  assign B_operand = (sub) ? ~B : B;
+  // /////////////////////////////////////////////////////////
+  // // Implement CLA Adder as structural/dataflow verilog //
+  // ///////////////////////////////////////////////////////
+  // // Negate B if subtracting.
+  // assign B_operand = (sub) ? ~B : B;
 
-  // Form the carry chain based on the group propagate and generates of each 4-bit nibble.
-  assign Carries[0] = G_group[0] | (P_group[0] & sub);
-  assign Carries[1] = G_group[1] | (P_group[1] & G_group[0]) | (P_group[1] & P_group[0] & sub);
+  // // Form the carry chain based on the group propagate and generates of each 4-bit nibble.
+  // assign Carries[0] = G_group[0] | (P_group[0] & sub);
+  // assign Carries[1] = G_group[1] | (P_group[1] & G_group[0]) | (P_group[1] & P_group[0] & sub);
 
-  // Vector instantiate 2 4-bit CLA blocks.
-  CLA_4bit iCLA [1:0] (.A(A),.B(B_operand), .sub(2'h0), .Cin({Carries[0], sub}), .Sum(Sum), .P_group(P_group), .G_group(G_group), .neg_Ovfl(), .pos_Ovfl(), .Ovfl(), .Cout());
+  // // Vector instantiate 2 4-bit CLA blocks.
+  // CLA_4bit iCLA [1:0] (.A(A),.B(B_operand), .sub(2'h0), .Cin({Carries[0], sub}), .Sum(Sum), .P_group(P_group), .G_group(G_group), .neg_Ovfl(), .pos_Ovfl(), .Ovfl(), .Cout());
 
-  // Used to know if it is positive overflow.
-  assign pos_Ovfl = ~A[7] & ~B_operand[7] & Sum[7];
+  // // Used to know if it is positive overflow.
+  // assign pos_Ovfl = ~A[7] & ~B_operand[7] & Sum[7];
 
-  // Used to know if it is negative overflow.
-  assign neg_Ovfl = A[7] & B_operand[7] & ~Sum[7];
+  // // Used to know if it is negative overflow.
+  // assign neg_Ovfl = A[7] & B_operand[7] & ~Sum[7];
 
-  // Output the carry out signal.
-  assign Cout = Carries[1];
+  // // Output the carry out signal.
+  // assign Cout = Carries[1];
 
-  // Overflow when either positive or negative overflow occurs.
-  assign Ovfl = pos_Ovfl | neg_Ovfl;
+  // // Overflow when either positive or negative overflow occurs.
+  // assign Ovfl = pos_Ovfl | neg_Ovfl;
+
+  assign {Cout, Sum} = A + ((sub) ? -B : B);
+
+  assign pos_Ovfl = ~A[7] & (B[7] == sub) & Sum[7]; // Positive overflow condition
+  assign neg_Ovfl = A[7] & (B[7] == ~sub) & ~Sum[7]; // Negative overflow condition
+
+  assign Ovfl = pos_Ovfl | neg_Ovfl; // Overflow when either positive or negative overflow occurs.
 
 endmodule
 

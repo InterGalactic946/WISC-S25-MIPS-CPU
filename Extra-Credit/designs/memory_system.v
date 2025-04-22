@@ -22,7 +22,7 @@ module memory_system (
     output wire [15:0]  off_chip_memory_address, // Address used to index into the off chip DRAM to grab data not in cache
     
     output wire         fsm_busy,                // Stalls the processor in the case of a cache miss
-    output wire [15:0]  data_out,                // Data output read from the cache
+    output wire [15:0]  data_out                // Data output read from the cache
 );
 
     /////////////////////////////////////////////////

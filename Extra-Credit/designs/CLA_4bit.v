@@ -12,10 +12,10 @@
 ////////////////////////////////////////////////////////////
 module CLA_4bit(Sum, Ovfl, pos_Ovfl, neg_Ovfl, Cout, P_group, G_group, A, B, Cin, sub);
 
-  input wire [3:0] A,B;                  // 4-bit input bits to be added
+  input wire signed [3:0] A,B;                  // 4-bit input bits to be added
   input wire sub;	                       // add-sub indicator
   input wire Cin;	                       // carry-in to the CLA
-  output wire [3:0]	Sum;                 // 4-bit sum output
+  output wire signed [3:0]	Sum;                 // 4-bit sum output
   output wire Ovfl, pos_Ovfl, neg_Ovfl;  // overflow indicators
   output wire Cout, P_group, G_group;    // carry-out, group propagate and generate signals
 

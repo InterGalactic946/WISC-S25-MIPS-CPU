@@ -13,9 +13,9 @@
 ////////////////////////////////////////////////////////////
 module CLA_8bit(Sum, Cout, Ovfl, pos_Ovfl, neg_Ovfl, A, B, sub);
 
-  input wire [7:0] A,B;                       // 8-bit input bits to be added
+  input wire signed [7:0] A,B;                       // 8-bit input bits to be added
   input wire sub;	                            // add-sub indicator
-  output wire [7:0] Sum;                      // 8-bit sum output
+  output wire signed [7:0] Sum;                      // 8-bit sum output
   output wire Cout, Ovfl, pos_Ovfl, neg_Ovfl; // carry out and overflow indicators
 
   // /////////////////////////////////////////////////

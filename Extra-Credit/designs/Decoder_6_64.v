@@ -34,7 +34,7 @@ module Decoder_6_64(RegId, Wordline);
   // // Concatenate all outputs.
   // assign Wordline = {Wordline_first, Wordline_second, Wordline_third, Wordline_fourth};
 
-  assign Wordline = en << RegId; // Shift the enable signal to the left by RegId bits to get the one-hot output.
+  assign Wordline = 1'b1 << RegId; // Shift the enable signal to the left by RegId bits to get the one-hot output.
 
 endmodule
 

@@ -18,19 +18,21 @@ module Decoder_3_8(RegId, en, Wordline);
   ////////////////////////////////////////////////
   // Declare any internal signals as type wire //
   //////////////////////////////////////////////
-  wire [3:0] Wordline_first;  // The first 2:4 decoder output.
-  wire [3:0] Wordline_second; // The second 2:4 decoder output.
-  /////////////////////////////////////////////
+  // wire [3:0] Wordline_first;  // The first 2:4 decoder output.
+  // wire [3:0] Wordline_second; // The second 2:4 decoder output.
+  // /////////////////////////////////////////////
 
-  //////////////////////////////////////////////////
-  // Implement 3:8 Decoder as structural verilog //
-  ////////////////////////////////////////////////
-  // Instantiate two 2:4 decoders using the lower 2 bits of RegId, and MSB dictating the enable.
-  Decoder_2_4 iDECODER_first (.RegId(RegId[1:0]), .en(RegId[2]), .Wordline(Wordline_first));
-  Decoder_2_4 iDECODER_second (.RegId(RegId[1:0]), .en(~RegId[2]), .Wordline(Wordline_second));
+  // //////////////////////////////////////////////////
+  // // Implement 3:8 Decoder as structural verilog //
+  // ////////////////////////////////////////////////
+  // // Instantiate two 2:4 decoders using the lower 2 bits of RegId, and MSB dictating the enable.
+  // Decoder_2_4 iDECODER_first (.RegId(RegId[1:0]), .en(RegId[2]), .Wordline(Wordline_first));
+  // Decoder_2_4 iDECODER_second (.RegId(RegId[1:0]), .en(~RegId[2]), .Wordline(Wordline_second));
 
-  // Concatenate both outputs and only output it if enabled, else 0.
-  assign Wordline = (en) ? {Wordline_first, Wordline_second} : 8'h00;
+  // // Concatenate both outputs and only output it if enabled, else 0.
+  // assign Wordline = (en) ? {Wordline_first, Wordline_second} : 8'h00;
+
+  assign Wordline = en << RegId; // Shift the enable signal to the left by RegId bits to get the one-hot output.
 
 endmodule
 

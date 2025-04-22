@@ -41,7 +41,7 @@ module memory_system (
     ///////////////////////////////////////////////
 
     // Instantiate a 3:8 decoder to get which word of the 8 words to write to.
-    Decoder_3_8 iWORD_DECODER (.RegId(on_chip_memory_address[3:1]), en(1'b1), .Wordline(word_enable));
+    Decoder_3_8 iWORD_DECODER (.RegId(on_chip_memory_address[3:1]), .en(1'b1), .Wordline(word_enable));
 
     // Instantiate a 6:64 read decoder to get which set of the 64 sets to enable.
     Decoder_6_64 iSET_DECODER (.RegId(on_chip_memory_address[9:4]), .Wordline(set_enable));

@@ -98,7 +98,6 @@ synthesis: $(VG_FILE)
 $(VG_FILE): $(DC_SCRIPT) $(V_FILES)
 	@echo "Synthesizing proc to Synopsys 32-nm Cell Library..."
 	@mkdir -p ./Extra-Credit/synthesis
-	@cp V_FILES ./Extra-Credit/synthesis
 	@mkdir -p $(OUTPUT_LOG_DIR)
 	@mkdir -p $(OUTPUT_LOG_DIR)/compilation/
 	@mkdir -p $(OUTPUT_LOG_DIR)/transcript/

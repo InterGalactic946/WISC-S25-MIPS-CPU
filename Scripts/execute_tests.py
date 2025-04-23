@@ -17,6 +17,7 @@ EXTRA_CREDIT_DIR = os.path.join(ROOT_DIR, "Extra-Credit")
 TEST_PROGRAMS_DIR = os.path.join(ROOT_DIR, "TestPrograms")
 
 TEST_DIR = None
+CELL_LIBRARY_PATH = None
 TESTS_DIR = None
 DESIGNS_DIR = None
 TEST_FILE = None
@@ -65,6 +66,9 @@ def parse_arguments():
 
     # Flag to assemble a file and output the image file in the tests directory.
     parser.add_argument("-as", "--asm", action="store_true", help="Assemble a file and output the image file in the test directory.")
+
+    # Flag to run the post synthesis test.
+    parser.add_argument("-ps", "--synth", action="store_true", help="Run the post synthesis testbench in the directory.")
 
     # Option to check all verilog files within a directory.
     parser.add_argument("-c", "--check", action="store_true", help="Check all Verilog design files in the directory.")
@@ -143,7 +147,7 @@ def setup_directories(name):
               and ready for use.
     """
     # Modifying the global directory variables declared above.
-    global TEST_DIR, OUTPUTS_DIR, TESTS_DIR, DESIGNS_DIR, TEST_PROGRAMS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR
+    global TEST_DIR, OUTPUTS_DIR, TESTS_DIR, CELL_LIBRARY_PATH, DESIGNS_DIR, TEST_PROGRAMS_DIR, WAVE_CMD_DIR, OUTPUT_DIR, WAVES_DIR, LOGS_DIR, TRANSCRIPT_DIR, COMPILATION_DIR, WORK_DIR
 
     # Set the path for the main test directory using the provided 'name'.
     TEST_DIR = os.path.join(ROOT_DIR, name)
@@ -156,6 +160,9 @@ def setup_directories(name):
 
     # Set the path for the directory containing testbench files.
     TESTS_DIR = os.path.join(TEST_DIR, "tests")
+
+    # Set the cell library path for post synthesis simulation.
+    CELL_LIBRARY_PATH = os.path.join(TESTS_DIR, "SAED32_lib")
 
     # Verify that the provided test directory exists.
     if not os.path.exists(TEST_DIR):
@@ -568,6 +575,10 @@ def compile_files(test_name, dependencies, args):
     # Determine the files that need recompilation.
     files_to_compile = get_files_to_compile(dependencies, log_file)
 
+    # If post synthesis is requested ignore the found list.
+    if args.synth:
+        files_to_compile = f"-timescale=1ns/1ps {TEST_DIR}/designs/proc.vg {TEST_DIR}/designs/memory4c.v {TEST_DIR}/designs/cpu.v {TESTS_DIR}/Monitor_tasks.sv {TESTS_DIR}/Verification_tasks.sv {TESTS_DIR}/post_synth_tb.sv"
+
     # If no files need recompilation, exit without performing compilation.
     if not files_to_compile:
         return
@@ -843,11 +854,19 @@ def get_gui_command(test_name, log_file, args):
     # Get the waveform commands for signal addition.
     add_wave_command = get_wave_command(test_name, args)
 
-    # Construct the base simulation command.
+    # Construct the simulation command based on post-synthesis.
     sim_command = (
         f"vsim -wlf {wave_file} ./tests/WORK/{test_name}.{test_name} -logfile {log_file} -voptargs='+acc' "
         f"-do '{add_wave_command} run -all; write format wave -window .main_pane.wave.interior.cs.body.pw.wf {wave_format_file}; log -flush /*;'"
     )
+
+    if args.synth:
+        sim_command = (
+            f"vsim -wlf {wave_file} ./tests/WORK/{test_name}.{test_name} -logfile {log_file} -t ns "
+            f"-Lf {CELL_LIBRARY_PATH} -voptargs='+acc' -do '{add_wave_command} run -all; "
+            f"write format wave -window .main_pane.wave.interior.cs.body.pw.wf {wave_format_file}; "
+            f"log -flush /*;'"
+        )
 
     # Ensure the simulation quits after completion for certain modes.
     if args.mode in (0, 1):
@@ -882,6 +901,11 @@ def run_simulation(test_name, log_file, args):
         if not args.all:
             print(f"{test_name}: Running in command-line mode...")
         sim_command = f"vsim -c ./tests/WORK/{test_name}.{test_name} -wlf {wave_file} -logfile {log_file} -do 'run -all; log -flush /*; quit -f;'"
+
+        # Modify the command for post synthesis.
+        if args.synth:
+            sim_command = f"vsim -c ./tests/WORK/{test_name}.{test_name} -wlf {wave_file} -logfile {log_file} -t ns " \
+                    f"-Lf {CELL_LIBRARY_PATH} -do 'run -all; log -flush /*; quit -f;'"        
     else:
         if args.mode == 1:
             if not args.all:

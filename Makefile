@@ -135,6 +135,8 @@ run:
 			cd Scripts && python3 execute_tests.py -m $$mode -as; \
 		elif [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "a" ]; then \
 			cd Scripts && python3 execute_tests.py -m $$mode -a; \
+		elif [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "ps" ]; then \
+			cd Scripts && python3 execute_tests.py -m $$mode -ps; \
 		else \
 			cd Scripts && python3 execute_tests.py -m $$mode; \
 		fi; \

@@ -137,7 +137,7 @@ module proc (
   //////////////////////////////////////////////////////////
   // Miss detected when not a hit.
   assign ICACHE_miss = ~ICACHE_hit;
-  assign DCACHE_miss = ~DCACHE_hit;
+  assign DCACHE_miss = EX_MEM_MemEnable & ~DCACHE_hit;
 
   // We grant priority to the DCACHE only if ICACHE is not a miss as well, i.e., ICACHE_hit, but not DCACHE hit.
   assign DCACHE_proceed = ICACHE_hit & DCACHE_miss;

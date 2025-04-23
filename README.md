@@ -15,9 +15,8 @@ This repository serves as a complete reference for the CPU architecture, testben
 ```text
 /WISC-S25-MIPS-CPU
 ├── Extra-Credit/              # Directory containing extra-credit design and synthesis related files
-│   ├── designs/               # Directory containing pre-synthesis design files
+│   ├── designs/               # Directory containing pre-synthesis design files + .vg file
 │   ├── outputs/               # Directory containing top level generated test output files
-│   ├── Synthesis/             # Directory containing synthesis related files
 │   └── tests/                 # Directory containing all related testbench files used for testing
 ├── Phase-1/                   # Directory containing Phase-1 files for a single cycle implementation of the CPU
 │   ├── designs/               # Directory containing pre-synthesis design files
@@ -94,6 +93,7 @@ make synthesis
 ### Output Files:
 - `cpu_area.syn.txt`(Area Report)
 - `cpu_power.syn.txt` (Power Report)
+-  `cpu_min_delay.syn.txt` (Min Delay Report)
 - `cpu_max_delay.syn.txt` (Max Delay Report)
 - `cpu.vg` (Netlist)
 - `cpu.sdc` (Timing Constraints)
@@ -149,8 +149,10 @@ make log <type> <sub_type> <args>
 ### Log Types:
 1. **Synthesis Reports (`s`)**
    - `a`: Area report
+   - `c`: Compilation log
    - `p`: Power report
    - `x`: Max delay report
+   - `n`: Min delay report
    - Example:
       ```bash
       make log s a

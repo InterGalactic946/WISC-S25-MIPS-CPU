@@ -28,8 +28,8 @@ module proc_model (
   // Declare any internal signals //
   /////////////////////////////////
   /*ARBITRATOR SIGNALS */
-  logic ICACHE_proceed;          // Signal to proceed with data memory access on an ICACHE miss
-  logic DCACHE_proceed;          // Signal to proceed with data memory access on an DCACHE miss
+  logic ICACHE_miss, DCACHE_miss; // Indicates an ICACHE, DCACHE miss
+  logic DCACHE_proceed;           // Signal to proceed with data memory access on an DCACHE miss
   
   /* FETCH stage signals */
   logic [15:0] PC_next;          // Next PC address
@@ -40,7 +40,7 @@ module proc_model (
   logic [15:0] PC_inst;          // Instruction fetched from memory at the current PC address
   logic hlt_fetched;             // Indicates if the fetched instruction is a halt instruction.
   logic [15:0] I_MEM_addr;       // The address to access in off chip memory on an ICACHE miss
-  logic ICACHE_busy;             // Indicates ICACHE FSM is currently busy processing
+  logic ICACHE_miss_mem_en;      // Miss memory enable for ICACHE
   logic ICACHE_hit;              // Indicates a cache hit for the current PC access
 
   /* IF/ID Pipeline Register signals */
@@ -106,7 +106,7 @@ module proc_model (
   /* MEMORY stage signals */
   logic [15:0] MemWriteData;        // Data written to memory
   logic [15:0] D_MEM_addr;          // The address to access in off chip memory on an DCACHE miss
-  logic DCACHE_busy;                // Indicates the DCACHE FSM is busy processing
+  logic DCACHE_miss_mem_en;         // Miss memory enable for DCACHE
   logic [15:0] MemData;             // Data read from memory
   logic DCACHE_hit;                 // Indicates if current memory access was a cache hit
 
@@ -133,23 +133,28 @@ module proc_model (
   //////////////////////////////////////////////////////////
   // Arbitrate accesses to data memory between I/D caches //
   //////////////////////////////////////////////////////////
-  // We grant priority to the ICACHE on a miss when both caches may miss on same cycle.
-  assign ICACHE_proceed = ICACHE_busy;
-  assign DCACHE_proceed = ~ICACHE_busy & DCACHE_busy;
+  // Miss detected when not a hit.
+  assign ICACHE_miss = ~ICACHE_hit;
+  assign DCACHE_miss = EX_MEM_MemEnable & ~DCACHE_hit;
+
+  // We grant priority to the DCACHE only if ICACHE is not a miss as well, i.e., ICACHE_hit, but not DCACHE hit.
+  assign DCACHE_proceed = ICACHE_hit & DCACHE_miss;
 
   // We send out the main memory address as from the instruction cache or data cache based on which is granted.
-  assign mem_addr = (ICACHE_proceed) ? I_MEM_addr :
-                    (DCACHE_proceed) ? D_MEM_addr :
+  assign mem_addr = (ICACHE_miss) ? I_MEM_addr :
+                    (DCACHE_miss) ? D_MEM_addr :
                     16'h0000;
 
   // The data output to be written to main memory is only from the DCACHE.
   assign mem_data_out = MemWriteData;
 
-  // We enable main memory either on a cache miss (when either caches are allowed to proceed) or on a DCACHE write.
-  assign mem_en = (ICACHE_proceed | DCACHE_proceed) | (DCACHE_hit & EX_MEM_MemWrite & EX_MEM_MemEnable);
+  // We enable main memory either on a cache miss (when either caches are allowed to proceed) or on a DCACHE write hit.
+  assign mem_en = (ICACHE_miss) ? ICACHE_miss_mem_en :
+                  (DCACHE_miss) ? DCACHE_miss_mem_en :
+                  DCACHE_hit & EX_MEM_MemEnable & EX_MEM_MemWrite;
 
   // We write to main memory on a DCACHE write hit as it is a write through cache.
-  assign mem_wr = (DCACHE_hit & EX_MEM_MemWrite & EX_MEM_MemEnable);
+  assign mem_wr = DCACHE_hit & EX_MEM_MemEnable & EX_MEM_MemWrite;
   /////////////////////////////////////////////////////////////
 
   ////////////////////////////////
@@ -190,10 +195,9 @@ module proc_model (
       .off_chip_memory_data(mem_data_in),
       .memory_data_valid(mem_data_valid),
 
-      .off_chip_memory_address(I_MEM_addr),
-      
-      .fsm_busy(ICACHE_busy),
-    
+      .off_chip_memory_address(I_MEM_addr),      
+      .miss_mem_en(ICACHE_miss_mem_en),
+
       .data_out(PC_inst),
       .hit(ICACHE_hit)
   );
@@ -275,8 +279,8 @@ module proc_model (
       .ID_EX_NV_en(ID_EX_NV_en),
       .Branch(Branch),
       .BR(BR),
-      .ICACHE_busy(ICACHE_busy),
-      .DCACHE_busy(DCACHE_busy),
+      .ICACHE_miss(ICACHE_miss),
+      .DCACHE_miss(DCACHE_miss),
       .update_PC(update_PC),
       
       .PC_stall(PC_stall),
@@ -398,10 +402,9 @@ module proc_model (
       .off_chip_memory_data(mem_data_in),
       .memory_data_valid(mem_data_valid),
 
-      .off_chip_memory_address(D_MEM_addr),
+      .off_chip_memory_address(D_MEM_addr),      
+      .miss_mem_en(DCACHE_miss_mem_en),
 
-      .fsm_busy(DCACHE_busy),
-      
       .data_out(MemData),
       .hit(DCACHE_hit)
   );

@@ -35,8 +35,8 @@ module Cache (
   wire [7:0] word_enable;      // One hot word enable based on the b-bits of the address.
   wire [15:0] first_data_out;  // The data currently stored in the first line of the cache.
   wire [15:0] second_data_out; // The data currently stored in the second line of the cache.
-  wire first_match;            // 1-bit signal indicating the first "way" in the set caused a cache hit.
-  wire second_match;           // 1-bit signal indicating the second "way" in the set caused a cache hit.
+  wire first_way_match;        // 1-bit signal indicating the first "way" in the set caused a cache hit.
+  wire second_way_match;       // 1-bit signal indicating the second "way" in the set caused a cache hit.
   wire [7:0] first_tag_in;     // Input to the first line in MDA.
   wire [7:0] second_tag_in;    // Input to the second line in MDA.
   wire [7:0] first_tag_out;    // The tag currently stored in the first line of the cache to compare to.
@@ -67,7 +67,7 @@ module Cache (
   );
 
   // We write to the second line if the second "way" had a hit, else "way" 0 on a hit, otherwise we write to the line that is evicted, if evict_first_way is high, we write to first line else second line.
-  assign WaySelect = (hit) ? second_match : ~evict_first_way;
+  assign WaySelect = (hit) ? second_way_match : ~evict_first_way;
 
   // Instantiate the meta data array for the cache.
   MetaDataArray iMDA (
@@ -93,7 +93,7 @@ module Cache (
   // on a hit, then we set the set the first line's LRU bit. If there is a cache miss and we are evicting the first way, then we clear the
   // first cache line's LRU bit and set the second's, Otherwise, if the second way is evicted on a miss, then we set the first line's LRU bit 
   // and clear the second line's.
-  assign set_first_LRU = (hit) ? ~first_match : ~evict_first_way;
+  assign set_first_LRU = (hit) ? ~first_way_match : ~evict_first_way;
 
   // If we had a hit on the this cycle, we keep the same tag, but internally update the LRU bits for each line.
   // Else if it is an eviction, we take the new tag to write in the corresponding line.
@@ -101,14 +101,14 @@ module Cache (
   assign second_tag_in = (hit) ? second_tag_out : ((~evict_first_way) ? tag_in : second_tag_out);
 
   // Compare the tag stored in the cache currently at both "ways/lines" in parallel, checking for equality and valid bit set. (addr[16:8] == tag and TagOut[1] == valid)
-  assign first_match = (addr[15:10] == first_tag_out[7:2]) & first_tag_out[1];
-  assign second_match = (addr[15:10] == second_tag_out[7:2]) & second_tag_out[1];
+  assign first_way_match = (addr[15:10] == first_tag_out[7:2]) & first_tag_out[1];
+  assign second_way_match = (addr[15:10] == second_tag_out[7:2]) & second_tag_out[1];
   
   // It is a cache hit if either of the "ways" resulted in a match, else it is a miss.
-  assign hit = first_match | second_match;
+  assign hit = first_way_match | second_way_match;
 
   // Grab the data to be output based on which way had a read hit, else if not a read hit, just output 0s.
-  assign data_out = (hit & ~write_data_array) ? ((second_match) ? second_data_out : first_data_out) : 16'h0000;
+  assign data_out = (hit & ~write_data_array) ? ((second_way_match) ? second_data_out : first_data_out) : 16'h0000;
 
 endmodule
 

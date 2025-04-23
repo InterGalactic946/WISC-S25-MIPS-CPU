@@ -1,0 +1,68 @@
+###################################
+# Read in the verilog files first #
+###################################
+read_file -format verilog { \
+  ../designs/proc.v \
+}
+
+###################################
+# Set Current Design to top level #
+###################################
+set current_design cpu
+link
+set_max_area 5000
+
+#####################################
+# Constrain and assign assign clock #
+#####################################
+create_clock -name "clk" -period 3 -waveform {0 1.5} {clk}
+set_dont_touch_network [find port clk]
+set_clock_uncertainty 0.15 [get_clocks]
+set_dont_touch_network [get_net iRST/rst_n]
+
+##############################################
+# Constrain input timings and Drive strength #
+##############################################
+set prim_inputs [remove_from_collection [all_inputs] [find port clk]]
+set_input_delay -clock clk 0.4 $prim_inputs
+set_driving_cell -lib_cell NAND2X2_LVT -library saed32lvt_tt0p85v25c $prim_inputs
+
+#####################################
+# Constrain output timings and load #
+#####################################
+set_output_delay -clock clk 0.4 [all_outputs]
+set_load 0.1 [all_outputs]
+
+##################################
+# Set wireload & transition time #
+##################################
+set_wire_load_model -name 16000 -library saed32lvt_tt0p85v25c
+set_max_transition 0.15 [current_design]
+
+# Compile the design
+compile -map_effort medium -area_effort high
+
+# Flatten to generate no hierarchy
+ungroup -all -flatten
+
+# Second compile
+compile -map_effort medium -area_effort high
+
+# Fix hold time issues
+set_fix_hold clk
+
+# Final compile
+compile -map_effort medium -incremental_mapping -only_hold_time -area_effort high
+####################################################
+# Take a look at max & min timings as well as area #
+####################################################
+report_timing -delay min > ../tests/output/logs/transcript/proc_min_delay.syn.txt
+report_timing -delay max > ../tests/output/logs/transcript/proc_max_delay.syn.txt
+report_power > ../tests/output/logs/transcript/proc_power.syn.txt
+report_area > ../tests/output/logs/transcript/proc_area.syn.txt
+
+########################################################
+# Write out resulting synthesized netlist and SDC file #
+########################################################
+write -format verilog proc -output ../designs/proc.vg
+write_sdc ../Scripts/proc.sdc

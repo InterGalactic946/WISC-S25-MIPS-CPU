@@ -12,8 +12,8 @@
 # - make check                  - Checks if Verilog design files are compliant.
 # - make kill           	    - Closes all started vsim instances from the script.
 # - make synthesis              - Synthesizes design to Synopsys 32-nm Cell Library.
-# - make run <mode> (as) (a)    - Assemble and run tests in a specified directory with a selected mode (optionally all tests in the directory).
-# - make log <log_type> (a|p|x) - Display logs for a specified directory and log type.
+# - make run <mode> (as) (ps|a)    - Assemble and run tests in a specified directory with a selected mode (optionally all tests in the directory).
+# - make log <log_type> (c|a|p|x) - Display logs for a specified directory and log type.
 # - make clean                  - Clean up generated files in a specified directory.
 #
 # Example:
@@ -31,8 +31,8 @@ default:
 	@echo "  make check 	              - Checks all .v design files for compliancy within a selected directory."
 	@echo "  make kill 	              - Closes all started vsim instances from the script."
 	@echo "  make synthesis              - Synthesizes design to Synopsys 32-nm Cell Library."
-	@echo "  make run <mode> [as] [a]    - Run tests in a specified directory with a selected mode (c,s,g,v) and optionally assembles files."
-	@echo "  make log <log_type> [a|p|x] - Display logs for a specified directory and log type."
+	@echo "  make run <mode> [as] [ps|a]    - Run tests in a specified directory with a selected mode (c,s,g,v) and optionally assembles files."
+	@echo "  make log <log_type> [c|a|p|n|x] - Display logs for a specified directory and log type."
 	@echo "  make clean 	              - Clean up generated files in a specified directory."
 
 # Handle different goals (run, log, clean) by parsing arguments passed to make.
@@ -70,16 +70,41 @@ kill:
 	@echo "Closing all started vsim instances..."
 	@ pkill vish -9
 
-
-##################################################
-# Target: synthesis
-# This target runs the synthesis script and produces log files.
+#--------------------------------------------------------
+# Default Synthesis Target
+# Runs the Design Compiler script to perform RTL-to-Gate 
+# synthesis, generating a .vg file (Verilog netlist) and
+# a .sdc file (timing constraints). The synthesis process
+# will only run if the .dc script changes or if any .sv 
+# files are modified, ensuring efficient execution.
+#
 # Usage:
-#   make synthesis
-##################################################
-synthesis:
-	@cd Extra-Credit/Synthesis && bash ./auto_syn.sh
+#   make synthesis - Executes synthesis if the .vg
+#                    file is missing or out of date.
+#--------------------------------------------------------
+# Variables for directories and file patterns
+DC_SCRIPT := ./Scripts/proc.dc
+PRE_SYNTH_DIR := ./Extra-Credit/designs
+OUTPUT_LOG_DIR := ./Extra-Credit/tests/output/logs/
+VG_FILE := $(PRE_SYNTH_DIR)/proc.vg
 
+# Find all .v files in the pre-synthesis directories
+V_FILES := $(wildcard $(PRE_SYNTH_DIR)/*.v)
+
+# Top-level synthesis target
+synthesis: $(VG_FILE)
+
+# Dependency rule for generating the .vg file
+$(VG_FILE): $(DC_SCRIPT) $(V_FILES)
+	@echo "Synthesizing proc to Synopsys 32-nm Cell Library..."
+	@mkdir -p ./Extra-Credit/synthesis
+	@mkdir -p $(OUTPUT_LOG_DIR)
+	@mkdir -p $(OUTPUT_LOG_DIR)/compilation/
+	@mkdir -p $(OUTPUT_LOG_DIR)/transcript/
+	@cd ./Extra-Credit/synthesis && \
+	echo "source ../../Scripts/proc.dc; report_register -level_sensitive; check_design; exit;" | \
+	dc_shell -no_gui > ../../$(OUTPUT_LOG_DIR)/synth_compilation.log 2>&1
+	@echo "Synthesis complete. Run 'make log s c' for details."
 
 ##################################################
 # Target: run
@@ -88,7 +113,7 @@ synthesis:
 # - <as>: Optional flag for assembling an input file.
 # - <a>: Optional flag for additional arguments (e.g., 'a' to run all tests in a specific mode).
 # Usage:
-#   make run <mode> [as] [a]
+#   make run <mode> [as] [ps|a]
 ##################################################
 run:
 	@if [ "$(words $(runargs))" -eq 0 ]; then \
@@ -110,6 +135,8 @@ run:
 			cd Scripts && python3 execute_tests.py -m $$mode -as; \
 		elif [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "a" ]; then \
 			cd Scripts && python3 execute_tests.py -m $$mode -a; \
+		elif [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "ps" ]; then \
+			cd Scripts && python3 execute_tests.py -m $$mode -ps; \
 		else \
 			cd Scripts && python3 execute_tests.py -m $$mode; \
 		fi; \
@@ -126,24 +153,30 @@ run:
 # This target displays logs based on the provided log mode:
 # - <log_type>: Type of log (either `s` for synthesis along with <report_type>, `c` for compilation logs, or `t` for transcript logs).
 # Usage:
-#   make log <log_type> [a|p|x]
+#   make log <log_type> [c|a|p|n|x]
 ##################################################
 log:
 	@if [ $(words $(logargs)) -ge 1 ]; then \
 		case "$(word 1, $(logargs))" in \
 		s) \
 			case "$(word 2, $(logargs))" in \
+			c) \
+				echo "Displaying area report:"; \
+				cat ./Extra-Credit/tests/output/logs/compilation/synth_compilation.log ;; \
 			a) \
 				echo "Displaying area report:"; \
-				cat ./Synthesis/32nm_rvt/cpu/cpu_area.syn.txt ;; \
+				cat ./Extra-Credit/tests/output/logs/transcript/proc_area.syn.txt ;; \
 			p) \
 				echo "Displaying power report:"; \
-				cat ./Synthesis/32nm_rvt/cpu/cpu_power.syn.txt ;; \
+				cat ./Extra-Credit/tests/output/logs/transcript/proc_power.syn.txt ;; \
+			n) \
+				echo "Displaying min delay report:"; \
+				cat ./Extra-Credit/tests/output/logs/transcript/proc_min_delay.syn.txt ;; \
 			x) \
 				echo "Displaying max delay report:"; \
-				cat ./Synthesis/32nm_rvt/cpu/cpu_max_delay.syn.txt ;; \
+				cat ./Extra-Credit/tests/output/logs/transcript/proc_max_delay.syn.txt ;; \
 			*) \
-				echo "Error: Invalid sub-argument for 's'. Use one of: a, p, x."; \
+				echo "Error: Invalid sub-argument for 's'. Use one of: c, a, p, n, x."; \
 				exit 1 ;; \
 			esac ;; \
 		c) \
@@ -152,14 +185,14 @@ log:
 			cd Scripts && python3 execute_tests.py -l t ;; \
 		*) \
 			echo "Error: Invalid log type. Usage:"; \
-			echo "  make log s <a|p|x>"; \
+			echo "  make log s <c|a|p|n|x>"; \
 			echo "  make log c"; \
 			echo "  make log t"; \
 			exit 1 ;; \
 		esac; \
 	else \
 		echo "Error: Missing or invalid arguments for 'log' target. Usage:"; \
-		echo "  make log s <a|p|x>"; \
+		echo "  make log s <c|a|p|x>"; \
 		echo "  make log c"; \
 		echo "  make log t"; \
 		exit 1; \
@@ -184,7 +217,7 @@ clean:
 	select top_level_dir in $$top_level_dirs; do \
 		if [ -n "$$top_level_dir" ] && [ -d "$$top_level_dir" ]; then \
 			echo "Cleaning up generated files in $$top_level_dir..."; \
-			rm -rf "$$top_level_dir/dump.vcd" "$$top_level_dir/tests/output/" "$$top_level_dir/outputs/verilogsim.log" "$$top_level_dir/outputs/verilogsim.trace" "$$top_level_dir/tests/WORK/"; \
+			rm -rf "$$top_level_dir/synthesis" "$$top_level_dir/dump.vcd" "$$top_level_dir/tests/output/" "$$top_level_dir/outputs/verilogsim.log" "$$top_level_dir/outputs/verilogsim.trace" "$$top_level_dir/tests/WORK/"; \
 			echo "Cleanup complete."; \
 			break; \
 		else \

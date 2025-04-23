@@ -22,7 +22,7 @@ module memory_system (
 
     output wire [15:0]  off_chip_memory_address, // Address used to index into the off chip DRAM to grab data not in cache
 
-    output wire         fsm_busy,                // Stalls the processor in the case of a cache miss
+    output wire         miss_mem_en,             // Enables main memory on a cache miss
     
     output wire [15:0]  data_out,                // Data output read from the cache
     output wire         hit                      // Indicates a cache hit
@@ -38,11 +38,11 @@ module memory_system (
     wire [15:0] data_in;             // Data input to the cache (on-chip or memory)
     wire [7:0] tag_in;               // Tag to be written to tag array
     /******************** CACHE CONTROLLER SIGNALS ***************************/
+    wire fsm_busy;                   // Indicates the cache it is busy filling it with data on a miss.
     wire miss_detected;              // A miss is detected when cache is enabled and it is not a hit.
     wire [15:0] controller_memory_address; // The address to write to the cache on a miss.
     wire write_data_array;           // FSM signal to write data array
     wire write_tag_array;            // FSM signal to write tag array
-    wire [15:0] main_mem_data;       // Data input from main memory
     ///////////////////////////////////////////////
 
     ///////////////////////////
@@ -74,7 +74,7 @@ module memory_system (
     assign wr_tag_enable = (enable) & (hit | write_tag_array);
 
     // The data input to the cache is either the main memory data or the on-chip data based on cache miss.
-    assign data_in = (fsm_busy) ? main_mem_data : on_chip_memory_data;
+    assign data_in = (fsm_busy) ? off_chip_memory_data : on_chip_memory_data;
     /////////////////////////
 
     ///////////////////////////////////////
@@ -86,10 +86,10 @@ module memory_system (
         .proceed(proceed),
         .miss_detected(miss_detected),
         .miss_address(on_chip_memory_address),
-        .memory_data(off_chip_memory_data),
         .memory_data_valid(memory_data_valid),
         
         .fsm_busy(fsm_busy),
+        .mem_en(miss_mem_en),
                 
         .tag_out(tag_in),
         .write_tag_array(write_tag_array),
@@ -97,8 +97,7 @@ module memory_system (
         .write_data_array(write_data_array),
         
         .main_memory_address(off_chip_memory_address),
-        .cache_memory_address(controller_memory_address),
-        .memory_data_out(main_mem_data)               
+        .cache_memory_address(controller_memory_address)
     );
 
     assign miss_detected = (enable & ~hit);

@@ -406,13 +406,8 @@ def assemble():
     with open(assembler_out, 'r') as f:
         assembled_lines = [line.strip()[:4] for line in f.readlines()]
 
-    """
     # Generate full memory image (65536 lines).
     full_memory = assembled_lines + ["0000"] * (65536 - len(assembled_lines))
-    """
-
-    # Assume assembled_lines is already defined and contains hex strings like "1234", "ABCD", etc.
-    full_memory = assembled_lines + [f"{random.randint(0, 0xFFFF):04X}" for _ in range(65536 - len(assembled_lines))]
 
     # Write to final output file.
     with open(outfile, "w") as f:

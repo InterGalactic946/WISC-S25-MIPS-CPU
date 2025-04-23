@@ -38,6 +38,7 @@ module Cache_Control_tb();
   logic memory_data_valid;               // Active high signal indicating valid data returning on memory bus  
     
   logic fsm_busy;                        // High while FSM is busy handling the miss (used as a pipeline stall signal)
+  logic miss_mem_en;                     // miss memory enable
   logic [7:0] tag_out;                   // The tag to write into the cache
   logic write_tag_array;                 // Write enable to cache tag array when all words are filled in to data array
   logic write_data_array;                // Write enable to cache data array to signal when filling with memory_data
@@ -46,6 +47,7 @@ module Cache_Control_tb();
   logic [15:0] memory_data_out;          // Data to be written to the cache data array
   
   logic expected_fsm_busy;                    // Expected value of fsm_busy
+  logic expected_miss_mem_en;                 // Expected value of memory enable
   logic [7:0] expected_tag_out;               // Expected tag to write into the cache
   logic expected_write_tag_array;             // Expected value of write_tag_array
   logic expected_write_data_array;            // Expected value of write_data_array
@@ -61,10 +63,10 @@ module Cache_Control_tb();
     .proceed(proceed),
     .miss_detected(miss_detected),
     .miss_address(miss_address),
-    .memory_data(memory_data),
     .memory_data_valid(memory_data_valid),
        
     .fsm_busy(fsm_busy),
+    .mem_en(miss_mem_en),
                 
     .tag_out(tag_out),
     .write_tag_array(write_tag_array),
@@ -72,8 +74,7 @@ module Cache_Control_tb();
     .write_data_array(write_data_array),
         
     .main_memory_address(memory_address),
-    .cache_memory_address(cache_memory_address),
-    .memory_data_out(memory_data_out)       
+    .cache_memory_address(cache_memory_address)
   );
 
   // Instantiate the model Cache_Control.
@@ -83,10 +84,10 @@ module Cache_Control_tb();
     .proceed(proceed),
     .miss_detected(miss_detected),
     .miss_address(miss_address),
-    .memory_data(memory_data),
     .memory_data_valid(memory_data_valid),
        
     .fsm_busy(expected_fsm_busy),
+    .mem_en(expected_miss_mem_en),
                 
     .tag_out(expected_tag_out),
     .write_tag_array(expected_write_tag_array),
@@ -94,14 +95,13 @@ module Cache_Control_tb();
     .write_data_array(expected_write_data_array),
       
     .main_memory_address(expected_memory_address),
-    .cache_memory_address(expected_cache_memory_address),
-    .memory_data_out(expected_memory_data_out)               
+    .cache_memory_address(expected_cache_memory_address)
   );
 
     /* Model the memory */
     /////////////////////////////////////////////////////////
-    assign data_out_4 = (fsm_busy) ? mem[memory_address[15:1]] : 16'h0000;
-    assign data_valid_4 = fsm_busy;
+    assign data_out_4 = (miss_mem_en) ? mem[memory_address[15:1]] : 16'h0000;
+    assign data_valid_4 = miss_mem_en;
     
     always_ff @(posedge clk) begin
         if (rst) begin
@@ -145,6 +145,11 @@ module Cache_Control_tb();
             $stop();
         end
 
+        if (miss_mem_en !== expected_miss_mem_en) begin
+            $display("ERROR: DUT miss_mem_en = %b, Model miss_mem_en = %b", miss_mem_en, expected_miss_mem_en);
+            $stop();
+        end
+
         if (tag_out !== expected_tag_out) begin
             $display("ERROR: DUT tag_out = 0x%h, Model tag_out = 0x%h", tag_out, expected_tag_out);
             $stop();
@@ -167,11 +172,6 @@ module Cache_Control_tb();
 
         if (cache_memory_address !== expected_cache_memory_address) begin
             $display("ERROR: DUT cache_memory_address = 0x%h, Model cache_memory_address = 0x%h", cache_memory_address, expected_cache_memory_address);
-            $stop();
-        end
-
-        if (memory_data_out !== expected_memory_data_out) begin
-            $display("ERROR: DUT memory_data_out = 0x%h, Model memory_data_out = 0x%h", memory_data_out, expected_memory_data_out);
             $stop();
         end
     endtask
@@ -299,7 +299,7 @@ module Cache_Control_tb();
     end 
     
     if (write_data_array) begin
-        cache_block.data[cache_memory_address[3:1]] <= memory_data_out; // Write the memory data to the cache_block at index word_count.
+        cache_block.data[cache_memory_address[3:1]] <= memory_data; // Write the memory data to the cache_block at index word_count.
         cache_block.mem_addr[cache_memory_address[3:1]] <= cache_memory_address; // Write the memory address to the cache_block at index word_count.
         cache_block.cycle_time[cache_memory_address[3:1]] <=  $time/10; // Write the cycle time to the cache_block at index word_count.
     end 

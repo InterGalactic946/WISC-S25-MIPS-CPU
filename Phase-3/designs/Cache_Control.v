@@ -11,7 +11,6 @@ module Cache_Control (
     input  wire        proceed,            // Signal to proceed with memory filling on a cache miss
     input  wire        miss_detected,      // High when tag match logic detects a cache miss         
     input  wire [15:0] miss_address,       // Address that missed in the cache
-    input  wire [15:0] memory_data,        // Data returned by memory after delay
     input  wire        memory_data_valid,  // Active high signal indicating valid data returning on memory bus
 
     output wire        fsm_busy,           // High while FSM is busy handling the miss
@@ -23,8 +22,7 @@ module Cache_Control (
     output reg        write_data_array,     // Write enable to cache data array to signal when filling with memory_data
 
     output wire [15:0] main_memory_address,  // Address to read from memory
-    output wire [15:0] cache_memory_address, // Address to write to cache
-    output reg [15:0] memory_data_out        // Data to be written to cache 
+    output wire [15:0] cache_memory_address  // Address to write to cache
   );
   
   ////////////////////////////////////////
@@ -53,9 +51,11 @@ module Cache_Control (
   wire [15:0] new_mem_addr;  // Holds the new memory address to read from.
   wire chunks_filled;        // Indicates if the cache data array is filled with all 8 words.
   wire chunk7;               // Indicates if the cache data array is filled with 7 words.
+  wire eight_cycles;           // Indicates if we sent out the enable signal for 6 cycles.
   reg set_fsm_busy;          // Indicates we need to stall.
   reg set_mem_en;            // Indicates we enable main memory on a miss.
-  reg clr_en;                // Clears the signal after processing the miss.
+  reg clr_mem_en;            // Clears the signal after 6 cycles.
+  reg clr_fsm_busy;          // Clears the signal after processing the miss.
   wire new_mem_en;           // The new mem enable signal.
   wire new_fsm_busy;         // The new fsm_busy signal.
   wire [1:0] state;          // Holds the current state.
@@ -77,8 +77,8 @@ module Cache_Control (
   // We increment the valid count register once we get valid data from memory.
   CLA_4bit iVALID_COUNT (.A(valid_count), .B(4'h1), .sub(1'b0), .Cin(1'b0), .Sum(nxt_valid_count), .Cout(), .Ovfl());
 
-  // We clear the valid count register when we get a cache miss and increment on the valid signal.
-  assign new_valid_count = (clr_count) ? 4'h0 : ((memory_data_valid) ? nxt_valid_count : valid_count);
+  // We clear the valid count register when we get a cache miss and increment on the valid signal only when allowed to proceed.
+  assign new_valid_count = (clr_count) ? 4'h0 : ((memory_data_valid & proceed) ? nxt_valid_count : valid_count);
 
   // Get a counter to keep track of the number of words filled in the cache data array.
   CPU_Register #(.WIDTH(4)) iVALID_COUNT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(new_valid_count), .data_out(valid_count));
@@ -127,16 +127,19 @@ module Cache_Control (
   CPU_Register #(.WIDTH(2)) iSTATE_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(nxt_state), .data_out(state));
 
   // Sets the fsm_busy signal to assert stall to the processor.
-  assign new_fsm_busy = (set_fsm_busy) ? 1'b1 : ((clr_en) ? 1'b0 : fsm_busy);
+  assign new_fsm_busy = (set_fsm_busy) ? 1'b1 : ((clr_fsm_busy) ? 1'b0 : fsm_busy);
 
   // Used as an SR flop to set the busy signal.
   CPU_Register #(.WIDTH(1)) iFSM_BUSY_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(new_fsm_busy), .data_out(fsm_busy));
 
   // Sets the memory enable signal to begin processing the miss.
-  assign new_mem_en = (set_mem_en) ? 1'b1 : ((clr_en) ? 1'b0 : mem_en);
+  assign new_mem_en = (set_mem_en) ? 1'b1 : ((clr_mem_en) ? 1'b0 : mem_en);
 
   // Used as an SR flop to enable main memory.
   CPU_Register #(.WIDTH(1)) iMEM_EN_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(new_mem_en), .data_out(mem_en));
+
+  // We are done setting the memory enable for 6 cycles when the LSBs of main memory address is 0xE.
+  assign eight_cycles = main_memory_address[3:0] == 4'hE;
 
   // We are done filling 7 words in the cache.
   assign chunk7 = valid_count == 4'h7;
@@ -152,26 +155,26 @@ module Cache_Control (
     /* Default all SM outputs & nxt_state */
     nxt_state = state;       // By default, assume we are in the current state.
     set_mem_en = 1'b0;       // By default assume we are not enabling main memory.
-    clr_en = 1'b0;           // By default, assume we are not clearing the signal.
+    clr_fsm_busy = 1'b0;     // By default, assume we are not clearing the signal.
+    clr_mem_en = 1'b0;       // By default, assume we are not clearing the signal.
     clr_count = 1'b0;        // By default, assume we are not clearing the counts.
     set_fsm_busy = 1'b0;     // By default, assume the FSM is not busy.
     incr_cnt = 1'b0;         // By default, assume we are not incrementing the word count.
-    memory_data_out = 16'h0000; // By default, assume we are not writing to memory.
     write_data_array = 1'b0; // By default, assume we are not writing to the cache data array.
     write_tag_array = 1'b0;  // By default, assume we are not writing to the tag array.
     error = 1'b0;            // Default no error state.
 
     case (state)
-      SEND : begin // WAIT state - waiting for memory data to be valid and all 8 words to be filled in the cache data array.
+      SEND : begin // SEND state - Fill the cache from main memory data
         incr_cnt = 1'b1; // Increment every cycle to send out a new address.
         write_data_array = (memory_data_valid & ~chunks_filled); // Write to the cache data array when memory data is valid or all 8 words are filled.
-        memory_data_out = (memory_data_valid & ~chunks_filled) ? memory_data : 16'h0000; // Write the memory data to the cache data array when memory data is valid or all 8 words are filled.
-        clr_en = memory_data_valid & chunk7;          // Clear the busy and enab;e signals when the cache data array is filled with all 8 words.
+        clr_fsm_busy = memory_data_valid & chunk7;    // Clear the busy and enab;e signals when the cache data array is filled with all 8 words.
+        clr_mem_en = eight_cycles;                    // Clear it after 8 cycles
         write_tag_array = memory_data_valid & chunk7; // Write to the tag array when 7 words are filled in the cache data array and we get one more valid signal.
         nxt_state = ~(chunks_filled) ? SEND : IDLE;   // Go back to IDLE state if all 8 words are filled in the cache data array.
       end
 
-      WAIT : begin  // WAIT stae - waiting for grant to proceed to access memory.
+      WAIT : begin  // WAIT state - waiting for grant to proceed to access memory.
         set_mem_en = proceed;                // Enable main memory when allowed to proceed.
         nxt_state = (proceed) ? SEND : WAIT; // Go to the send state once allowed to proceed.
       end
@@ -185,11 +188,11 @@ module Cache_Control (
       default : begin // ERROR state - invalid state.
         nxt_state = IDLE;        // Go to IDLE state on error.
         set_mem_en = 1'b0;       // By default assume we are not enabling main memory.
-        clr_en = 1'b0;           // By default, assume we are not clearing the signal.
+        clr_fsm_busy = 1'b0;     // By default, assume we are not clearing the signal.
+        clr_mem_en = 1'b0;       // By default, assume we are not clearing the signal.
         clr_count = 1'b0;        // By default, assume we are not clearing the counts.
         set_fsm_busy = 1'b0;     // By default, assume the FSM is not busy.
         incr_cnt = 1'b0;         // By default, assume we are not incrementing the word count.
-        memory_data_out = 16'h0000; // By default, assume we are not writing to memory.
         write_data_array = 1'b0; // By default, assume we are not writing to the cache data array.
         write_tag_array = 1'b0;  // By default, assume we are not writing to the tag array.
         error = 1'b1;            // Default error state.

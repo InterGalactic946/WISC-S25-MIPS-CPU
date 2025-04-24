@@ -7,6 +7,7 @@
 module ID_EX_pipe_reg_model (
     input logic clk,                       // System clock
     input logic rst,                       // Active high synchronous reset
+    input logic stall,                     // Stall signal (prevents updates)
     input logic flush,                     // Flush pipeline register
     input logic [15:0] IF_ID_PC_next,      // Pipelined next PC from the fetch stage
     input logic [62:0] EX_signals,         // Execute stage control signals from the decode stage
@@ -18,11 +19,19 @@ module ID_EX_pipe_reg_model (
     output logic [17:0] ID_EX_MEM_signals, // Pipelined memory stage signals passed to the execute stage
     output logic [7:0] ID_EX_WB_signals    // Pipelined write back stage signals passed to the execute stage
 );
-
-  /////////////////////////////////////////////////
-  // Declare any internal signals as type wire  //
+  
   ///////////////////////////////////////////////
-  logic clr; // Clear signal for all registers
+  // Declare any internal signals as type logic//
+  ///////////////////////////////////////////////
+  logic wen; // Register write enable signal.
+  logic clr; // Clear signal for instruction word register
+  ///////////////////////////////////////////////
+
+  ///////////////////////////////////////
+  // Model the ID/EX Pipeline Register //
+  ///////////////////////////////////////
+  // We write to the register whenever we don't stall.
+  assign wen = ~stall;
 
   /////////////////////////////////////////////////////////////////
   // Clear the pipeline register whenever we flush or during rst //
@@ -35,7 +44,7 @@ module ID_EX_pipe_reg_model (
   always @(posedge clk)
     if (rst)
       ID_EX_PC_next <= 16'h0000;
-    else
+    else if (wen)
       ID_EX_PC_next <= IF_ID_PC_next;
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +62,7 @@ module ID_EX_pipe_reg_model (
       ID_EX_EX_signals[2] <= 1'b0;
       ID_EX_EX_signals[1] <= 1'b0;
       ID_EX_EX_signals[0] <= 1'b0;
-    end else begin
+    end else if (wen) begin
       ID_EX_EX_signals[62:59] <= EX_signals[62:59];
       ID_EX_EX_signals[58:55] <= EX_signals[58:55];
       ID_EX_EX_signals[54:39] <= EX_signals[54:39];
@@ -74,7 +83,7 @@ module ID_EX_pipe_reg_model (
       ID_EX_MEM_signals[17:2] <= 16'h0000;
       ID_EX_MEM_signals[1] <= 1'b0;
       ID_EX_MEM_signals[0] <= 1'b0;
-    end else begin
+    end else if (wen) begin
       ID_EX_MEM_signals[17:2] <= MEM_signals[17:2];
       ID_EX_MEM_signals[1] <= MEM_signals[1];
       ID_EX_MEM_signals[0] <= MEM_signals[0];
@@ -91,7 +100,7 @@ module ID_EX_pipe_reg_model (
       ID_EX_WB_signals[2] <= 1'b0;
       ID_EX_WB_signals[1] <= 1'b0;
       ID_EX_WB_signals[0] <= 1'b0;
-    end else begin
+    end else if (wen) begin
       ID_EX_WB_signals[7:4] <= WB_signals[7:4];
       ID_EX_WB_signals[3] <= WB_signals[3];
       ID_EX_WB_signals[2] <= WB_signals[2];

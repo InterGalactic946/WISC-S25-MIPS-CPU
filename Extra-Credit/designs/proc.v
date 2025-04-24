@@ -14,12 +14,12 @@ module proc (
 
   // Memory interface
   input  wire        mem_data_valid,    // Indicates valid data on read
-  input  wire [15:0] mem_data_out,      // Data read from memory
+  input  wire [15:0] mem_data_in,       // Data read from memory
 
   output wire        mem_en,            // Memory enable signal
   output wire [15:0] mem_addr,          // Address to read/write
   output wire        mem_wr,            // Memory write enable
-  output wire [15:0] mem_data_in,       // Data to be written to memory
+  output wire [15:0] mem_data_out,      // Data to be written to memory
 
   // Top-level outputs
   output wire        hlt,               // Processor halt signal
@@ -28,19 +28,29 @@ module proc (
 
   ///////////////////////////////////
   // Declare any internal signals //
-  /////////////////////////////////  
+  /////////////////////////////////
+  /*ARBITRATOR SIGNALS */
+  wire ICACHE_miss, DCACHE_miss; // Indicates an ICACHE, DCACHE miss
+  wire DCACHE_proceed;           // Signal to proceed with data memory access on an DCACHE miss
+  
   /* FETCH stage signals */
   wire [15:0] PC_next;          // Next PC address
-  wire [15:0] PC_inst;          // Instruction at the current PC address
   wire [1:0] prediction;        // 2-bit Prediction from the branch history table
   wire [15:0] predicted_target; // Predicted target address of the branch instruction
 
+  /* ICACHE signals */
+  wire [15:0] PC_inst;          // Instruction fetched from memory at the current PC address
+  wire hlt_fetched;             // Indicates if the fetched instruction is a halt instruction.
+  wire [15:0] I_MEM_addr;       // The address to access in off chip memory on an ICACHE miss
+  wire ICACHE_miss_mem_en;      // Miss memory enable for ICACHE
+  wire ICACHE_hit;              // Indicates a cache hit for the current PC access
+
   /* IF/ID Pipeline Register signals */
-  wire [15:0] IF_ID_PC_curr;          // Pipelined current instruction (previous PC) address from the fetch stage
-  wire [15:0] IF_ID_PC_next;          // Pipelined next instruction (previous PC_next) address from the fetch stage
-  wire [15:0] IF_ID_PC_inst;          // Pipelined instruction word (previous PC_inst) from the fetch stage
-  wire [1:0] IF_ID_prediction;        // Pipelined branch prediction (previous predicted_taken) from the fetch stage
-  wire [15:0] IF_ID_predicted_target; // Pipelined branch predicted target address (previous predicted_target) from the fetch stage
+  wire [15:0] IF_ID_PC_curr;            // Current PC value pipelined from the Fetch stage
+  wire [15:0] IF_ID_PC_next;            // Next PC value pipelined from the Fetch stage
+  wire [15:0] IF_ID_PC_inst;            // Instruction word pipelined from the Fetch stage
+  wire [1:0]  IF_ID_prediction;         // Branch prediction outcome pipelined from the Fetch stage
+  wire [15:0] IF_ID_predicted_target;   // Predicted branch target address pipelined from the Fetch stage
 
   /* DECODE stage signals */
   wire Branch;               // Indicates it is a branch instruction
@@ -56,9 +66,11 @@ module proc (
   wire [7:0] WB_signals;     // Write-back stage control signals
 
   /* HAZARD DETECTION UNIT signals */
-  wire PC_stall;             // Stall signal for the PC register
-  wire IF_ID_stall;          // Stall signal for the IF/ID pipeline register
-  wire IF_flush, ID_flush;   // Flush signals for each pipeline register
+  wire PC_stall;                        // Stall signal for the PC register
+  wire IF_ID_stall;                     // Stall signal for the IF/ID pipeline register
+  wire ID_EX_stall;                     // Stall signal for the ID/EX pipeline register
+  wire EX_MEM_stall;                    // Stall signal for the EX/MEM pipeline register
+  wire IF_flush, ID_flush, MEM_flush;   // Flush signals for each pipeline register
 
   /* ID/EX Pipeline Register signals */
   wire [3:0] ID_EX_SrcReg1;        // Pipelined first source register ID from the decode stage
@@ -94,8 +106,11 @@ module proc (
   wire [15:0] EX_MEM_PC_next;      // Pipelined next instruction (previous PC_next) address from the fetch stage
 
   /* MEMORY stage signals */
-  wire [15:0] MemData;             // Data read from memory
   wire [15:0] MemWriteData;        // Data written to memory
+  wire [15:0] D_MEM_addr;          // The address to access in off chip memory on an DCACHE miss
+  wire DCACHE_miss_mem_en;         // Miss memory enable for DCACHE
+  wire [15:0] MemData;             // Data read from memory
+  wire DCACHE_hit;                 // Indicates if current memory access was a cache hit
 
   /* MEM/WB Pipeline Register signals */
   wire [15:0] MEM_WB_MemData; // Pipelined data read from memory from the memory stage
@@ -117,6 +132,33 @@ module proc (
   // Halts the processor if a HLT instruction is encountered and is in the WB stage.
   assign hlt = MEM_WB_HLT;
 
+  //////////////////////////////////////////////////////////
+  // Arbitrate accesses to data memory between I/D caches //
+  //////////////////////////////////////////////////////////
+  // Miss detected when not a hit.
+  assign ICACHE_miss = ~ICACHE_hit;
+  assign DCACHE_miss = EX_MEM_MemEnable & ~DCACHE_hit;
+
+  // We grant priority to the DCACHE only if ICACHE is not a miss as well, i.e., ICACHE_hit, but not DCACHE hit.
+  assign DCACHE_proceed = ICACHE_hit & DCACHE_miss;
+
+  // We send out the main memory address as from the instruction cache or data cache based on which is granted.
+  assign mem_addr = (ICACHE_miss) ? I_MEM_addr :
+                    (DCACHE_miss) ? D_MEM_addr :
+                    16'h0000;
+
+  // The data output to be written to main memory is only from the DCACHE.
+  assign mem_data_out = MemWriteData;
+
+  // We enable main memory either on a cache miss (when either caches are allowed to proceed) or on a DCACHE write hit.
+  assign mem_en = (ICACHE_miss) ? ICACHE_miss_mem_en :
+                  (DCACHE_miss) ? DCACHE_miss_mem_en :
+                  DCACHE_hit & EX_MEM_MemEnable & EX_MEM_MemWrite;
+
+  // We write to main memory on a DCACHE write hit as it is a write through cache.
+  assign mem_wr = DCACHE_hit & EX_MEM_MemEnable & EX_MEM_MemWrite;
+  /////////////////////////////////////////////////////////////
+
   ////////////////////////////////
   // FETCH instruction from PC  //
   ////////////////////////////////
@@ -124,6 +166,7 @@ module proc (
     .clk(clk), 
     .rst(rst), 
     .stall(PC_stall), 
+    .hlt_fetched(hlt_fetched),
     .actual_taken(actual_taken),
     .wen_BHT(wen_BHT),
     .branch_target(branch_target),
@@ -134,12 +177,36 @@ module proc (
     .IF_ID_prediction(IF_ID_prediction), 
       
     .PC_next(PC_next), 
-    .PC_inst(PC_inst), 
     .PC_curr(pc),
     .prediction(prediction),
     .predicted_target(predicted_target)
   );
   ///////////////////////////////////
+
+  ////////////////////////////////////////
+  // Instantiate instruction memory cache along with control (let ICACHE proceed first in case both caches collide)
+  memory_system iINSTR_MEM_CACHE (
+      .clk(clk),
+      .rst(rst),
+      .enable(1'b1),
+      .proceed(1'b1),
+      .on_chip_wr(1'b0),
+      .on_chip_memory_address(pc),
+      .on_chip_memory_data(16'h0000),
+
+      .off_chip_memory_data(mem_data_in),
+      .memory_data_valid(mem_data_valid),
+
+      .off_chip_memory_address(I_MEM_addr),      
+      .miss_mem_en(ICACHE_miss_mem_en),
+
+      .data_out(PC_inst),
+      .hit(ICACHE_hit)
+  );
+
+  // Get the condition that we fetched a halt instruction.
+  assign hlt_fetched = &PC_inst[15:12];
+  //////////////////////////////////////////
 
   /////////////////////////////////////////////////
   // Pass the instruction word, current PC, prediction & target, and the next PC address to the IF/ID pipeline register.
@@ -214,10 +281,15 @@ module proc (
       .ID_EX_NV_en(ID_EX_NV_en),
       .Branch(Branch),
       .BR(BR),
+      .ICACHE_miss(ICACHE_miss),
+      .DCACHE_miss(DCACHE_miss),
       .update_PC(update_PC),
       
       .PC_stall(PC_stall),
       .IF_ID_stall(IF_ID_stall),
+      .ID_EX_stall(ID_EX_stall),
+      .EX_MEM_stall(EX_MEM_stall),
+      .MEM_flush(MEM_flush),
       .ID_flush(ID_flush),
       .IF_flush(IF_flush)
   );
@@ -228,6 +300,7 @@ module proc (
   ID_EX_pipe_reg iID_EX (
       .clk(clk),
       .rst(rst),
+      .stall(ID_EX_stall),
       .flush(ID_flush),
       .IF_ID_PC_next(IF_ID_PC_next),
       .EX_signals(EX_signals),
@@ -296,6 +369,7 @@ module proc (
   EX_MEM_pipe_reg iEX_MEM (
       .clk(clk),
       .rst(rst),
+      .stall(EX_MEM_stall),
       .ID_EX_PC_next(ID_EX_PC_next),
       .ALU_out(ALU_out),
       .ID_EX_SrcReg2(ID_EX_SrcReg2),
@@ -317,16 +391,25 @@ module proc (
   // or previous ALU result if forwarded otherwise the current value. 
   assign MemWriteData = (ForwardSW_MEM) ? RegWriteData : EX_MEM_MemWriteData;
 
-  // Access data memory.
-  memory1c iDATA_MEM (.data_out(MemData),
-                      .data_in(MemWriteData),
-                      .addr(EX_MEM_ALU_out),
-                      .data(1'b1),
-                      .enable(EX_MEM_MemEnable),
-                      .wr(EX_MEM_MemWrite),
-                      .clk(clk),
-                      .rst(rst)
-                    );
+  // Instantiate data memory cache along with control.
+  memory_system iDATA_MEM_CACHE (
+      .clk(clk),
+      .rst(rst),
+      .enable(EX_MEM_MemEnable),
+      .proceed(DCACHE_proceed),
+      .on_chip_wr(EX_MEM_MemWrite),
+      .on_chip_memory_address(EX_MEM_ALU_out),
+      .on_chip_memory_data(MemWriteData),
+
+      .off_chip_memory_data(mem_data_in),
+      .memory_data_valid(mem_data_valid),
+
+      .off_chip_memory_address(D_MEM_addr),      
+      .miss_mem_en(DCACHE_miss_mem_en),
+
+      .data_out(MemData),
+      .hit(DCACHE_hit)
+  );
   //////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////////////
@@ -334,6 +417,7 @@ module proc (
   MEM_WB_pipe_reg iMEM_WB (
       .clk(clk),
       .rst(rst),
+      .flush(MEM_flush),
       .EX_MEM_PC_next(EX_MEM_PC_next),
       .EX_MEM_ALU_out(EX_MEM_ALU_out),
       .MemData(MemData),

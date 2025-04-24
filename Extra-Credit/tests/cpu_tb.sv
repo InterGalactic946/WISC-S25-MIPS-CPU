@@ -21,7 +21,10 @@ module cpu_tb();
   logic hlt, expected_hlt;           // Halt signals for execution stop for each DUT and model
   logic [15:0] expected_pc;          // Expected program counter value for verification
   logic [15:0] pc;                   // Current program counter value
-  logic stall;                       // Indicates a stall in the pipeline.
+
+  logic I_cache_stall;               // Indicates a stall in the pipeline due to I_cache miss
+  logic D_cache_stall;               // Indicates a stall in the pipeline due to D_cache miss
+  logic normal_stall;                // Indicates a stall in the pipeline due to LW/SW/B/BR
   
   logic wen_BHT;                     // Write enable for BHT
   logic wen_BTB;                     // Write enable for BTB
@@ -84,10 +87,12 @@ module cpu_tb();
     .execute_msg(execute_msg),
     .mem_msg(mem_msg),
     .wb_msg(wb_msg),
-    .stall(stall), .hlt(hlt)
+    .I_cache_stall(I_cache_stall), .D_cache_stall(D_cache_stall), .normal_stall(normal_stall), .hlt(hlt)
   );
 
-  assign stall = iDUT.PC_stall && iDUT.IF_ID_stall;
+  assign I_cache_stall = iDUT.iPROC.ICACHE_miss;
+  assign D_cache_stall = iDUT.iPROC.DCACHE_miss;
+  assign normal_stall = !iDUT.iPROC.ICACHE_miss && !iDUT.iPROC.DCACHE_miss && iDUT.iPROC.IF_ID_stall;
 
   // Test procedure to apply stimulus and check responses.
   initial begin
@@ -117,22 +122,23 @@ module cpu_tb();
         // Dump the contents of memory whenever we write to the BTB or BHT.
         if (wen_BHT || wen_BTB || HLT) begin
           log_BTB_BHT_dump (
-            .model_BHT(iMODEL.iFETCH.iDBP_model.BHT),
-            .model_BTB(iMODEL.iFETCH.iDBP_model.BTB)
+            .model_BHT(iMODEL.iPROC.iFETCH.iDBP_model.BHT),
+            .model_BTB(iMODEL.iPROC.iFETCH.iDBP_model.BTB)
           );
         end
 
         // Log data memory contents.
         if (MemEnable || HLT) begin
           log_data_dump(
-              .model_data_mem(iMODEL.iDATA_MEM.data_memory),     
-              .dut_data_mem(iDUT.iDATA_MEM.mem)          
+              .model_data_mem(iMODEL.iMAIN_MEM.data_mem),     
+              .model_data_addr(iMODEL.iMAIN_MEM.mem_addr),     
+              .dut_data_mem(iDUT.iMAIN_MEM.mem)          
           );
         end
         
         // Log the regfile contents.
         if (RegWrite || HLT) begin
-          log_regfile_dump(.regfile(iMODEL.iDECODE.iRF.regfile));
+          log_regfile_dump(.regfile(iMODEL.iPROC.iDECODE.iRF.regfile));
         end
       end
   end
@@ -146,10 +152,10 @@ module cpu_tb();
       RegWrite <= 1'b0;
       HLT <= 1'b0;
     end else begin
-      wen_BHT <= iDUT.wen_BHT;
-      wen_BTB <= iDUT.wen_BTB;
-      MemEnable <= iDUT.EX_MEM_MemEnable;
-      RegWrite <= iDUT.MEM_WB_RegWrite;
+      wen_BHT <= iDUT.iPROC.wen_BHT;
+      wen_BTB <= iDUT.iPROC.wen_BTB;
+      MemEnable <= iDUT.iPROC.mem_en;
+      RegWrite <= iDUT.iPROC.MEM_WB_RegWrite;
       HLT <= hlt;
     end
   end
@@ -160,8 +166,8 @@ module cpu_tb();
       IF_flush <= 1'b0;
       expected_IF_flush <= 1'b0;
     end else begin
-      IF_flush <= iDUT.IF_flush;
-      expected_IF_flush <= iMODEL.IF_flush;
+      IF_flush <= iDUT.iPROC.IF_flush;
+      expected_IF_flush <= iMODEL.iPROC.IF_flush;
     end
   end
 
@@ -173,9 +179,9 @@ module cpu_tb();
       B_hazard <= 1'b0;
       BR_hazard <= 1'b0;
     end else begin
-      load_to_use_hazard <= iDUT.iHDU.load_to_use_hazard;
-      B_hazard <= iDUT.iHDU.B_hazard;
-      BR_hazard <= iDUT.iHDU.BR_hazard;
+      load_to_use_hazard <= iDUT.iPROC.iHDU.load_to_use_hazard;
+      B_hazard <= iDUT.iPROC.iHDU.B_hazard;
+      BR_hazard <= iDUT.iPROC.iHDU.BR_hazard;
     end
   end
 
@@ -186,8 +192,8 @@ module cpu_tb();
       ID_flush <= 1'b0;
       expected_ID_flush <= 1'b0;
     end else begin
-      ID_flush <= iDUT.ID_flush;
-      expected_ID_flush <= iMODEL.ID_flush;
+      ID_flush <= iDUT.iPROC.ID_flush;
+      expected_ID_flush <= iMODEL.iPROC.ID_flush;
     end
   end
 
@@ -200,21 +206,25 @@ module cpu_tb();
 
         // Verify FETCH stage logic.
         verify_FETCH(
-              .PC_stall(iDUT.PC_stall),
-              .expected_PC_stall(iMODEL.PC_stall),
-              .HLT(iDUT.iDECODE.HLT),
-              .PC_next(iDUT.PC_next), 
-              .expected_PC_next(iMODEL.PC_next), 
-              .PC_inst(iDUT.PC_inst), 
-              .expected_PC_inst(iMODEL.PC_inst), 
+              .PC_stall(iDUT.iPROC.PC_stall),
+              .expected_PC_stall(iMODEL.iPROC.PC_stall),
+              .I_cache_stall(I_cache_stall),
+              .set(iDUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE.addr[9:4]),
+              .WaySelect(iDUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE.WaySelect),
+              .cache_addr(iDUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE.addr),
+              .cache_data(iDUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE.data_in),
+              .PC_next(iDUT.iPROC.PC_next), 
+              .expected_PC_next(iMODEL.iPROC.PC_next), 
+              .PC_inst(iDUT.iPROC.PC_inst), 
+              .expected_PC_inst(iMODEL.iPROC.PC_inst), 
               .PC_curr(pc), 
               .expected_PC_curr(expected_pc), 
-              .prediction(iDUT.prediction), 
-              .expected_prediction(iMODEL.prediction),
-              .predicted_taken(iDUT.iFETCH.predicted_taken),
-              .expected_predicted_taken(iMODEL.iFETCH.predicted_taken), 
-              .predicted_target(iDUT.predicted_target), 
-              .expected_predicted_target(iMODEL.predicted_target),
+              .prediction(iDUT.iPROC.prediction), 
+              .expected_prediction(iMODEL.iPROC.prediction),
+              .predicted_taken(iDUT.iPROC.iFETCH.predicted_taken),
+              .expected_predicted_taken(iMODEL.iPROC.iFETCH.predicted_taken), 
+              .predicted_target(iDUT.iPROC.predicted_target), 
+              .expected_predicted_target(iMODEL.iPROC.predicted_target),
               .fetch_msg(ftch_msg)
         );
 
@@ -232,35 +242,36 @@ module cpu_tb();
 
         // Call the verify_DECODE task and get the decode message and full instruction message.
         verify_DECODE(
-            .IF_ID_stall(iDUT.IF_ID_stall),
-            .expected_IF_ID_stall(iMODEL.IF_ID_stall),
+            .IF_ID_stall(iDUT.iPROC.IF_ID_stall),
+            .expected_IF_ID_stall(iMODEL.iPROC.IF_ID_stall),
             .IF_flush(IF_flush),
             .expected_IF_flush(expected_IF_flush),
-            .br_hazard(iMODEL.iHDU.BR_hazard),
-            .b_hazard(iMODEL.iHDU.B_hazard),
-            .load_use_hazard(iMODEL.iHDU.load_to_use_hazard),
-            .EX_signals(iDUT.EX_signals),
-            .expected_EX_signals(iMODEL.EX_signals),
-            .MEM_signals(iDUT.MEM_signals),
-            .expected_MEM_signals(iMODEL.MEM_signals),
-            .WB_signals(iDUT.WB_signals),
-            .expected_WB_signals(iMODEL.WB_signals),
-            .cc(iDUT.iDECODE.c_codes),
-            .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
-            .is_branch(iDUT.Branch),
-            .expected_is_branch(iMODEL.Branch),
-            .is_BR(iDUT.BR),
-            .expected_is_BR(iMODEL.BR),
-            .actual_target(iDUT.actual_target),
-            .expected_actual_target(iMODEL.actual_target),
-            .actual_taken(iDUT.actual_taken),
-            .expected_actual_taken(iMODEL.actual_taken),
-            .wen_BTB(iDUT.wen_BTB),
-            .expected_wen_BTB(iMODEL.wen_BTB),
-            .wen_BHT(iDUT.wen_BHT),
-            .expected_wen_BHT(iMODEL.wen_BHT),
-            .update_PC(iDUT.update_PC),
-            .expected_update_PC(iMODEL.update_PC),
+            .br_hazard(iMODEL.iPROC.iHDU.BR_hazard),
+            .b_hazard(iMODEL.iPROC.iHDU.B_hazard),
+            .DCACHE_miss(iMODEL.iPROC.DCACHE_miss),
+            .load_use_hazard(iMODEL.iPROC.iHDU.load_to_use_hazard),
+            .EX_signals(iDUT.iPROC.EX_signals),
+            .expected_EX_signals(iMODEL.iPROC.EX_signals),
+            .MEM_signals(iDUT.iPROC.MEM_signals),
+            .expected_MEM_signals(iMODEL.iPROC.MEM_signals),
+            .WB_signals(iDUT.iPROC.WB_signals),
+            .expected_WB_signals(iMODEL.iPROC.WB_signals),
+            .cc(iDUT.iPROC.iDECODE.c_codes),
+            .flag_reg({iDUT.iPROC.ZF, iDUT.iPROC.VF, iDUT.iPROC.NF}),
+            .is_branch(iDUT.iPROC.Branch),
+            .expected_is_branch(iMODEL.iPROC.Branch),
+            .is_BR(iDUT.iPROC.BR),
+            .expected_is_BR(iMODEL.iPROC.BR),
+            .actual_target(iDUT.iPROC.actual_target),
+            .expected_actual_target(iMODEL.iPROC.actual_target),
+            .actual_taken(iDUT.iPROC.actual_taken),
+            .expected_actual_taken(iMODEL.iPROC.actual_taken),
+            .wen_BTB(iDUT.iPROC.wen_BTB),
+            .expected_wen_BTB(iMODEL.iPROC.wen_BTB),
+            .wen_BHT(iDUT.iPROC.wen_BHT),
+            .expected_wen_BHT(iMODEL.iPROC.wen_BHT),
+            .update_PC(iDUT.iPROC.update_PC),
+            .expected_update_PC(iMODEL.iPROC.update_PC),
             
             .decode_msg(dcode_msg),
             .instruction_full(instruction_full_msg)
@@ -279,26 +290,24 @@ module cpu_tb();
         string ex_msg;
 
         verify_EXECUTE(
-          .Input_A(iDUT.iEXECUTE.iALU.Input_A),
-          .Input_B(iDUT.iEXECUTE.iALU.Input_B),
-          .expected_Input_A(iMODEL.iEXECUTE.iALU_model.Input_A),
-          .expected_Input_B(iMODEL.iEXECUTE.iALU_model.Input_B),
-          .ALU_out(iDUT.ALU_out),
+          .Input_A(iDUT.iPROC.iEXECUTE.iALU.Input_A),
+          .Input_B(iDUT.iPROC.iEXECUTE.iALU.Input_B),
+          .expected_Input_A(iMODEL.iPROC.iEXECUTE.iALU_model.Input_A),
+          .expected_Input_B(iMODEL.iPROC.iEXECUTE.iALU_model.Input_B),
+          .ALU_out(iDUT.iPROC.ALU_out),
           .ID_flush(ID_flush),
           .expected_ID_flush(expected_ID_flush),
-          .br_hazard(BR_hazard),
-          .b_hazard(B_hazard),
-          .load_use_hazard(load_to_use_hazard),
-          .Z_set(iDUT.iEXECUTE.iALU.Z_set),
-          .V_set(iDUT.iEXECUTE.iALU.V_set),
-          .N_set(iDUT.iEXECUTE.iALU.N_set),
-          .expected_ALU_out(iMODEL.ALU_out),
-          .ZF(iDUT.ZF),
-          .NF(iDUT.NF),
-          .VF(iDUT.VF),
-          .expected_ZF(iMODEL.ZF),
-          .expected_VF(iMODEL.VF),
-          .expected_NF(iMODEL.NF),
+          .EX_MEM_stall(iDUT.iPROC.EX_MEM_stall),
+          .Z_set(iDUT.iPROC.iEXECUTE.iALU.Z_set),
+          .V_set(iDUT.iPROC.iEXECUTE.iALU.V_set),
+          .N_set(iDUT.iPROC.iEXECUTE.iALU.N_set),
+          .expected_ALU_out(iMODEL.iPROC.ALU_out),
+          .ZF(iDUT.iPROC.ZF),
+          .NF(iDUT.iPROC.NF),
+          .VF(iDUT.iPROC.VF),
+          .expected_ZF(iMODEL.iPROC.ZF),
+          .expected_VF(iMODEL.iPROC.VF),
+          .expected_NF(iMODEL.iPROC.NF),
           
           .execute_msg(ex_msg)
         );
@@ -316,13 +325,18 @@ module cpu_tb();
       string mem_verify_msg;
 
       verify_MEMORY(
-        .EX_MEM_ALU_out(iDUT.EX_MEM_ALU_out),
-        .MemData(iDUT.MemData),
-        .expected_MemData(iMODEL.MemData),
-        .MemWriteData(iDUT.MemWriteData),
-        .expected_MemWriteData(iMODEL.MemWriteData),
-        .EX_MEM_MemEnable(iDUT.EX_MEM_MemEnable),
-        .EX_MEM_MemWrite(iDUT.EX_MEM_MemWrite),
+        .D_cache_stall(D_cache_stall),
+        .set(iDUT.iPROC.iDATA_MEM_CACHE.iL1_CACHE.addr[9:4]),
+        .WaySelect(iDUT.iPROC.iDATA_MEM_CACHE.iL1_CACHE.WaySelect),
+        .cache_addr(iDUT.iPROC.iDATA_MEM_CACHE.iL1_CACHE.addr),
+        .cache_data(iDUT.iPROC.iDATA_MEM_CACHE.iL1_CACHE.data_in),
+        .EX_MEM_ALU_out(iDUT.iPROC.EX_MEM_ALU_out),
+        .MemData(iDUT.iPROC.MemData),
+        .expected_MemData(iMODEL.iPROC.MemData),
+        .MemWriteData(iDUT.iPROC.MemWriteData),
+        .expected_MemWriteData(iMODEL.iPROC.MemWriteData),
+        .EX_MEM_MemEnable(iDUT.iPROC.EX_MEM_MemEnable),
+        .EX_MEM_MemWrite(iDUT.iPROC.EX_MEM_MemWrite),
         
         .mem_verify_msg(mem_verify_msg)
       );
@@ -340,10 +354,10 @@ module cpu_tb();
       string wbb_msg;
 
       verify_WRITEBACK(
-        .MEM_WB_DstReg(iDUT.MEM_WB_reg_rd),
-        .MEM_WB_RegWrite(iDUT.MEM_WB_RegWrite),
-        .RegWriteData(iDUT.RegWriteData),
-        .expected_RegWriteData(iMODEL.RegWriteData),
+        .MEM_WB_DstReg(iDUT.iPROC.MEM_WB_reg_rd),
+        .MEM_WB_RegWrite(iDUT.iPROC.MEM_WB_RegWrite),
+        .RegWriteData(iDUT.iPROC.RegWriteData),
+        .expected_RegWriteData(iMODEL.iPROC.RegWriteData),
         
         .wb_verify_msg(wbb_msg)
       );

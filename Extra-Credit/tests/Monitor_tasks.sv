@@ -10,7 +10,7 @@ package Monitor_tasks;
   ///////////////////////////////////////
   typedef enum logic [1:0] {STRONG_NOT_TAKEN, WEAK_NOT_TAKEN, WEAK_TAKEN, STRONG_TAKEN} state_t;
 
-  // Struct Definitions for BTB, BHT, and data memory models.
+  // Struct Definitions for BTB, BHT, cache, and data memory models.
   typedef struct {
     logic [15:0] PC_addr;
     state_t prediction;
@@ -22,6 +22,45 @@ package Monitor_tasks;
     logic [15:0] target;
   } model_BTB_t;
 
+  // Tag block each entry holds LRU, valid and 6-bit tag along with full address for debugging
+  typedef struct {
+    logic [7:0] tag;   // Tag, Valid, LRU bits
+  } tag_block_t;
+
+  // Tag set each entry holds two instances of a tag block
+  typedef struct {
+    tag_block_t first_way;
+    tag_block_t second_way;
+  } tag_set_t;
+
+  // Tag array each entry holds 64 instances of tag set.
+  typedef struct {
+    tag_set_t tag_set[0:63];
+  } tag_array_t;
+
+  // Each block holds an address and a data word (2B + 2B = 4B)
+  typedef struct {
+    logic [15:0] addr;
+    logic [15:0] data;
+  } data_block_t;
+
+  // A set has two ways, each storing 8 blocks (16B per way, 32B total)
+  typedef struct {
+    data_block_t first_way[0:7];
+    data_block_t second_way[0:7];
+  } data_set_t;
+
+  // Infer the data array as 64 data sets = 2048B (2KB) cache.
+  typedef struct {
+    data_set_t data_set[0:63];
+  } data_array_t;
+
+  // Infer the cache as a data array and tag array.
+  typedef struct {
+    data_array_t cache_data_array;
+    tag_array_t cache_tag_array;
+  } model_cache_t;
+
   typedef struct {
     logic [15:0] mem_addr [0:65535]; 
     logic [15:0] data_mem [0:65535];
@@ -29,14 +68,14 @@ package Monitor_tasks;
 
   // Structure to store debug information for each pipeline stage
   typedef struct {
-    string fetch_msgs[0:4];
+    string fetch_msgs[0:49];
 
-    string decode_msgs[0:4];
+    string decode_msgs[0:49];
     string instr_full_msg;
 
-    string execute_msg;
+    string execute_msgs[0:49];
 
-    string memory_msg;
+    string memory_msgs[0:49];
 
     string wb_msg;
   } debug_info_t;
@@ -97,7 +136,8 @@ package Monitor_tasks;
 
 
   // Task: Prints data memory to a file with the current clock cycle.
-  task automatic log_data_dump(input model_data_mem_t model_data_mem, 
+  task automatic log_data_dump(input logic [15:0] model_data_mem [0:65535], 
+                              input logic [15:0] model_data_addr [0:65535], 
                               input logic [15:0] dut_data_mem [0:65535]);
       integer addr;
       integer file;  // File handle
@@ -126,8 +166,8 @@ package Monitor_tasks;
 
       // Iterate through the memory locations
       for (addr = 0; addr < 65536; addr++) begin
-          model_addr = model_data_mem.mem_addr[addr];
-          model_val = model_data_mem.data_mem[addr];
+          model_addr = model_data_addr[addr];
+          model_val = model_data_mem[addr];
           dut_val = dut_data_mem[addr];
 
           // Only write values where model memory was accessed (not 'x')

@@ -1,0 +1,750 @@
+/////////////////////////////////////////////////////////////
+// Created by: Synopsys DC Expert(TM) in wire load mode
+// Version   : V-2023.12-SP5
+// Date      : Thu Apr 24 11:30:14 2025
+/////////////////////////////////////////////////////////////
+
+
+module DataArray ( clk, rst, DataIn, Write, WaySelect, SetEnable, WordEnable, 
+        DataOut_first_way, DataOut_second_way );
+  input [15:0] DataIn;
+  input [63:0] SetEnable;
+  input [7:0] WordEnable;
+  output [15:0] DataOut_first_way;
+  output [15:0] DataOut_second_way;
+  input clk, rst, Write, WaySelect;
+  wire   \set[0]/WriteEnable_second_way , \set[0]/WriteEnable_first_way ,
+         \set[1]/WriteEnable_second_way , \set[1]/WriteEnable_first_way ,
+         \set[2]/WriteEnable_second_way , \set[2]/WriteEnable_first_way ,
+         \set[3]/WriteEnable_second_way , \set[3]/WriteEnable_first_way ,
+         \set[4]/WriteEnable_second_way , \set[4]/WriteEnable_first_way ,
+         \set[5]/WriteEnable_second_way , \set[5]/WriteEnable_first_way ,
+         \set[6]/WriteEnable_second_way , \set[6]/WriteEnable_first_way ,
+         \set[7]/WriteEnable_second_way , \set[7]/WriteEnable_first_way ,
+         \set[8]/WriteEnable_second_way , \set[8]/WriteEnable_first_way ,
+         \set[9]/WriteEnable_second_way , \set[9]/WriteEnable_first_way ,
+         \set[10]/WriteEnable_second_way , \set[10]/WriteEnable_first_way ,
+         \set[11]/WriteEnable_second_way , \set[11]/WriteEnable_first_way ,
+         \set[12]/WriteEnable_second_way , \set[12]/WriteEnable_first_way ,
+         \set[13]/WriteEnable_second_way , \set[13]/WriteEnable_first_way ,
+         \set[14]/WriteEnable_second_way , \set[14]/WriteEnable_first_way ,
+         \set[15]/WriteEnable_second_way , \set[15]/WriteEnable_first_way ,
+         \set[16]/WriteEnable_second_way , \set[16]/WriteEnable_first_way ,
+         \set[17]/WriteEnable_second_way , \set[17]/WriteEnable_first_way ,
+         \set[18]/WriteEnable_second_way , \set[18]/WriteEnable_first_way ,
+         \set[19]/WriteEnable_second_way , \set[19]/WriteEnable_first_way ,
+         \set[20]/WriteEnable_second_way , \set[20]/WriteEnable_first_way ,
+         \set[21]/WriteEnable_second_way , \set[21]/WriteEnable_first_way ,
+         \set[22]/WriteEnable_second_way , \set[22]/WriteEnable_first_way ,
+         \set[23]/WriteEnable_second_way , \set[23]/WriteEnable_first_way ,
+         \set[24]/WriteEnable_second_way , \set[24]/WriteEnable_first_way ,
+         \set[25]/WriteEnable_second_way , \set[25]/WriteEnable_first_way ,
+         \set[26]/WriteEnable_second_way , \set[26]/WriteEnable_first_way ,
+         \set[27]/WriteEnable_second_way , \set[27]/WriteEnable_first_way ,
+         \set[28]/WriteEnable_second_way , \set[28]/WriteEnable_first_way ,
+         \set[29]/WriteEnable_second_way , \set[29]/WriteEnable_first_way ,
+         \set[30]/WriteEnable_second_way , \set[30]/WriteEnable_first_way ,
+         \set[31]/WriteEnable_second_way , \set[31]/WriteEnable_first_way ,
+         \set[32]/WriteEnable_second_way , \set[32]/WriteEnable_first_way ,
+         \set[33]/WriteEnable_second_way , \set[33]/WriteEnable_first_way ,
+         \set[34]/WriteEnable_second_way , \set[34]/WriteEnable_first_way ,
+         \set[35]/WriteEnable_second_way , \set[35]/WriteEnable_first_way ,
+         \set[36]/WriteEnable_second_way , \set[36]/WriteEnable_first_way ,
+         \set[37]/WriteEnable_second_way , \set[37]/WriteEnable_first_way ,
+         \set[38]/WriteEnable_second_way , \set[38]/WriteEnable_first_way ,
+         \set[39]/WriteEnable_second_way , \set[39]/WriteEnable_first_way ,
+         \set[40]/WriteEnable_second_way , \set[40]/WriteEnable_first_way ,
+         \set[41]/WriteEnable_second_way , \set[41]/WriteEnable_first_way ,
+         \set[42]/WriteEnable_second_way , \set[42]/WriteEnable_first_way ,
+         \set[43]/WriteEnable_second_way , \set[43]/WriteEnable_first_way ,
+         \set[44]/WriteEnable_second_way , \set[44]/WriteEnable_first_way ,
+         \set[45]/WriteEnable_second_way , \set[45]/WriteEnable_first_way ,
+         \set[46]/WriteEnable_second_way , \set[46]/WriteEnable_first_way ,
+         \set[47]/WriteEnable_second_way , \set[47]/WriteEnable_first_way ,
+         \set[48]/WriteEnable_second_way , \set[48]/WriteEnable_first_way ,
+         \set[49]/WriteEnable_second_way , \set[49]/WriteEnable_first_way ,
+         \set[50]/WriteEnable_second_way , \set[50]/WriteEnable_first_way ,
+         \set[51]/WriteEnable_second_way , \set[51]/WriteEnable_first_way ,
+         \set[52]/WriteEnable_second_way , \set[52]/WriteEnable_first_way ,
+         \set[53]/WriteEnable_second_way , \set[53]/WriteEnable_first_way ,
+         \set[54]/WriteEnable_second_way , \set[54]/WriteEnable_first_way ,
+         \set[55]/WriteEnable_second_way , \set[55]/WriteEnable_first_way ,
+         \set[56]/WriteEnable_second_way , \set[56]/WriteEnable_first_way ,
+         \set[57]/WriteEnable_second_way , \set[57]/WriteEnable_first_way ,
+         \set[58]/WriteEnable_second_way , \set[58]/WriteEnable_first_way ,
+         \set[59]/WriteEnable_second_way , \set[59]/WriteEnable_first_way ,
+         \set[60]/WriteEnable_second_way , \set[60]/WriteEnable_first_way ,
+         \set[61]/WriteEnable_second_way , \set[61]/WriteEnable_first_way ,
+         \set[62]/WriteEnable_second_way , \set[62]/WriteEnable_first_way ,
+         \set[63]/WriteEnable_second_way , \set[63]/WriteEnable_first_way ,
+         n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27, n28, n29,
+         n30, n31, n32, n33, n34, n35, n36, n37, n38, n39, n40, n41;
+
+  AND2X1_LVT \set[0]/U6  ( .A1(n39), .A2(n19), .Y(
+        \set[0]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[0]/U5  ( .A1(n39), .A2(n23), .Y(
+        \set[0]/WriteEnable_second_way ) );
+  Block_3 \set[0]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[0]/WriteEnable_second_way ), .Enable(SetEnable[0]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[0]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[0]/WriteEnable_first_way ), .Enable(SetEnable[0]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[1]/U6  ( .A1(n30), .A2(n18), .Y(
+        \set[1]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[1]/U5  ( .A1(n30), .A2(n24), .Y(
+        \set[1]/WriteEnable_second_way ) );
+  Block_3 \set[1]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[1]/WriteEnable_second_way ), .Enable(SetEnable[1]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[1]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[1]/WriteEnable_first_way ), .Enable(SetEnable[1]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[2]/U6  ( .A1(n30), .A2(n18), .Y(
+        \set[2]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[2]/U5  ( .A1(n30), .A2(n24), .Y(
+        \set[2]/WriteEnable_second_way ) );
+  Block_3 \set[2]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[2]/WriteEnable_second_way ), .Enable(SetEnable[2]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[2]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[2]/WriteEnable_first_way ), .Enable(SetEnable[2]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[3]/U6  ( .A1(n30), .A2(n18), .Y(
+        \set[3]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[3]/U5  ( .A1(n30), .A2(n24), .Y(
+        \set[3]/WriteEnable_second_way ) );
+  Block_3 \set[3]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[3]/WriteEnable_second_way ), .Enable(SetEnable[3]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[3]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[3]/WriteEnable_first_way ), .Enable(SetEnable[3]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[4]/U6  ( .A1(n30), .A2(n18), .Y(
+        \set[4]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[4]/U5  ( .A1(n30), .A2(n24), .Y(
+        \set[4]/WriteEnable_second_way ) );
+  Block_3 \set[4]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[4]/WriteEnable_second_way ), .Enable(SetEnable[4]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[4]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[4]/WriteEnable_first_way ), .Enable(SetEnable[4]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[5]/U6  ( .A1(n30), .A2(n18), .Y(
+        \set[5]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[5]/U5  ( .A1(n30), .A2(n24), .Y(
+        \set[5]/WriteEnable_second_way ) );
+  Block_3 \set[5]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[5]/WriteEnable_second_way ), .Enable(SetEnable[5]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[5]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[5]/WriteEnable_first_way ), .Enable(SetEnable[5]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[6]/U6  ( .A1(n30), .A2(n18), .Y(
+        \set[6]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[6]/U5  ( .A1(n30), .A2(n24), .Y(
+        \set[6]/WriteEnable_second_way ) );
+  Block_3 \set[6]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[6]/WriteEnable_second_way ), .Enable(SetEnable[6]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[6]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[6]/WriteEnable_first_way ), .Enable(SetEnable[6]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[7]/U6  ( .A1(n31), .A2(n18), .Y(
+        \set[7]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[7]/U5  ( .A1(n31), .A2(n25), .Y(
+        \set[7]/WriteEnable_second_way ) );
+  Block_3 \set[7]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[7]/WriteEnable_second_way ), .Enable(SetEnable[7]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[7]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[7]/WriteEnable_first_way ), .Enable(SetEnable[7]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[8]/U6  ( .A1(n31), .A2(n18), .Y(
+        \set[8]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[8]/U5  ( .A1(n31), .A2(n25), .Y(
+        \set[8]/WriteEnable_second_way ) );
+  Block_3 \set[8]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[8]/WriteEnable_second_way ), .Enable(SetEnable[8]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[8]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[8]/WriteEnable_first_way ), .Enable(SetEnable[8]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[9]/U6  ( .A1(n31), .A2(n18), .Y(
+        \set[9]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[9]/U5  ( .A1(n31), .A2(n25), .Y(
+        \set[9]/WriteEnable_second_way ) );
+  Block_3 \set[9]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[9]/WriteEnable_second_way ), .Enable(SetEnable[9]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[9]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[9]/WriteEnable_first_way ), .Enable(SetEnable[9]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[10]/U6  ( .A1(n31), .A2(n18), .Y(
+        \set[10]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[10]/U5  ( .A1(n31), .A2(n25), .Y(
+        \set[10]/WriteEnable_second_way ) );
+  Block_3 \set[10]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[10]/WriteEnable_second_way ), .Enable(SetEnable[10]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[10]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[10]/WriteEnable_first_way ), .Enable(SetEnable[10]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[11]/U6  ( .A1(n31), .A2(n18), .Y(
+        \set[11]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[11]/U5  ( .A1(n31), .A2(n25), .Y(
+        \set[11]/WriteEnable_second_way ) );
+  Block_3 \set[11]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[11]/WriteEnable_second_way ), .Enable(SetEnable[11]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[11]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[11]/WriteEnable_first_way ), .Enable(SetEnable[11]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[12]/U6  ( .A1(n31), .A2(n18), .Y(
+        \set[12]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[12]/U5  ( .A1(n31), .A2(n25), .Y(
+        \set[12]/WriteEnable_second_way ) );
+  Block_3 \set[12]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[12]/WriteEnable_second_way ), .Enable(SetEnable[12]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[12]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[12]/WriteEnable_first_way ), .Enable(SetEnable[12]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[13]/U6  ( .A1(n32), .A2(n17), .Y(
+        \set[13]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[13]/U5  ( .A1(n32), .A2(n25), .Y(
+        \set[13]/WriteEnable_second_way ) );
+  Block_3 \set[13]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[13]/WriteEnable_second_way ), .Enable(SetEnable[13]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[13]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[13]/WriteEnable_first_way ), .Enable(SetEnable[13]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[14]/U6  ( .A1(n32), .A2(n17), .Y(
+        \set[14]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[14]/U5  ( .A1(n32), .A2(n25), .Y(
+        \set[14]/WriteEnable_second_way ) );
+  Block_3 \set[14]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[14]/WriteEnable_second_way ), .Enable(SetEnable[14]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[14]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[14]/WriteEnable_first_way ), .Enable(SetEnable[14]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[15]/U6  ( .A1(n32), .A2(n17), .Y(
+        \set[15]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[15]/U5  ( .A1(n32), .A2(n26), .Y(
+        \set[15]/WriteEnable_second_way ) );
+  Block_3 \set[15]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[15]/WriteEnable_second_way ), .Enable(SetEnable[15]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[15]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[15]/WriteEnable_first_way ), .Enable(SetEnable[15]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[16]/U6  ( .A1(n32), .A2(n17), .Y(
+        \set[16]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[16]/U5  ( .A1(n32), .A2(n26), .Y(
+        \set[16]/WriteEnable_second_way ) );
+  Block_3 \set[16]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[16]/WriteEnable_second_way ), .Enable(SetEnable[16]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[16]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[16]/WriteEnable_first_way ), .Enable(SetEnable[16]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[17]/U6  ( .A1(n32), .A2(n17), .Y(
+        \set[17]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[17]/U5  ( .A1(n32), .A2(n26), .Y(
+        \set[17]/WriteEnable_second_way ) );
+  Block_3 \set[17]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[17]/WriteEnable_second_way ), .Enable(SetEnable[17]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[17]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[17]/WriteEnable_first_way ), .Enable(SetEnable[17]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[18]/U6  ( .A1(n32), .A2(n17), .Y(
+        \set[18]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[18]/U5  ( .A1(n32), .A2(n26), .Y(
+        \set[18]/WriteEnable_second_way ) );
+  Block_3 \set[18]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[18]/WriteEnable_second_way ), .Enable(SetEnable[18]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[18]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[18]/WriteEnable_first_way ), .Enable(SetEnable[18]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[19]/U6  ( .A1(n33), .A2(n17), .Y(
+        \set[19]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[19]/U5  ( .A1(n33), .A2(n26), .Y(
+        \set[19]/WriteEnable_second_way ) );
+  Block_3 \set[19]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[19]/WriteEnable_second_way ), .Enable(SetEnable[19]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[19]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[19]/WriteEnable_first_way ), .Enable(SetEnable[19]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[20]/U6  ( .A1(n33), .A2(n17), .Y(
+        \set[20]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[20]/U5  ( .A1(n33), .A2(n26), .Y(
+        \set[20]/WriteEnable_second_way ) );
+  Block_3 \set[20]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[20]/WriteEnable_second_way ), .Enable(SetEnable[20]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[20]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[20]/WriteEnable_first_way ), .Enable(SetEnable[20]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[21]/U6  ( .A1(n33), .A2(n17), .Y(
+        \set[21]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[21]/U5  ( .A1(n33), .A2(n26), .Y(
+        \set[21]/WriteEnable_second_way ) );
+  Block_3 \set[21]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[21]/WriteEnable_second_way ), .Enable(SetEnable[21]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[21]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[21]/WriteEnable_first_way ), .Enable(SetEnable[21]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[22]/U6  ( .A1(n33), .A2(n17), .Y(
+        \set[22]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[22]/U5  ( .A1(n33), .A2(n26), .Y(
+        \set[22]/WriteEnable_second_way ) );
+  Block_3 \set[22]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[22]/WriteEnable_second_way ), .Enable(SetEnable[22]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[22]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[22]/WriteEnable_first_way ), .Enable(SetEnable[22]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[23]/U6  ( .A1(n33), .A2(n17), .Y(
+        \set[23]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[23]/U5  ( .A1(n33), .A2(n27), .Y(
+        \set[23]/WriteEnable_second_way ) );
+  Block_3 \set[23]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[23]/WriteEnable_second_way ), .Enable(SetEnable[23]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[23]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[23]/WriteEnable_first_way ), .Enable(SetEnable[23]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[24]/U6  ( .A1(n33), .A2(n17), .Y(
+        \set[24]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[24]/U5  ( .A1(n33), .A2(n27), .Y(
+        \set[24]/WriteEnable_second_way ) );
+  Block_3 \set[24]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[24]/WriteEnable_second_way ), .Enable(SetEnable[24]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[24]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[24]/WriteEnable_first_way ), .Enable(SetEnable[24]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[25]/U6  ( .A1(n34), .A2(n16), .Y(
+        \set[25]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[25]/U5  ( .A1(n34), .A2(n27), .Y(
+        \set[25]/WriteEnable_second_way ) );
+  Block_3 \set[25]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[25]/WriteEnable_second_way ), .Enable(SetEnable[25]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[25]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[25]/WriteEnable_first_way ), .Enable(SetEnable[25]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[26]/U6  ( .A1(n34), .A2(n16), .Y(
+        \set[26]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[26]/U5  ( .A1(n34), .A2(n27), .Y(
+        \set[26]/WriteEnable_second_way ) );
+  Block_3 \set[26]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[26]/WriteEnable_second_way ), .Enable(SetEnable[26]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[26]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[26]/WriteEnable_first_way ), .Enable(SetEnable[26]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[27]/U6  ( .A1(n34), .A2(n16), .Y(
+        \set[27]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[27]/U5  ( .A1(n34), .A2(n27), .Y(
+        \set[27]/WriteEnable_second_way ) );
+  Block_3 \set[27]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[27]/WriteEnable_second_way ), .Enable(SetEnable[27]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[27]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[27]/WriteEnable_first_way ), .Enable(SetEnable[27]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[28]/U6  ( .A1(n34), .A2(n16), .Y(
+        \set[28]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[28]/U5  ( .A1(n34), .A2(n27), .Y(
+        \set[28]/WriteEnable_second_way ) );
+  Block_3 \set[28]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[28]/WriteEnable_second_way ), .Enable(SetEnable[28]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[28]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[28]/WriteEnable_first_way ), .Enable(SetEnable[28]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[29]/U6  ( .A1(n34), .A2(n16), .Y(
+        \set[29]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[29]/U5  ( .A1(n34), .A2(n27), .Y(
+        \set[29]/WriteEnable_second_way ) );
+  Block_3 \set[29]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[29]/WriteEnable_second_way ), .Enable(SetEnable[29]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[29]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[29]/WriteEnable_first_way ), .Enable(SetEnable[29]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[30]/U6  ( .A1(n34), .A2(n16), .Y(
+        \set[30]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[30]/U5  ( .A1(n34), .A2(n27), .Y(
+        \set[30]/WriteEnable_second_way ) );
+  Block_3 \set[30]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[30]/WriteEnable_second_way ), .Enable(SetEnable[30]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[30]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[30]/WriteEnable_first_way ), .Enable(SetEnable[30]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[31]/U6  ( .A1(n35), .A2(n16), .Y(
+        \set[31]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[31]/U5  ( .A1(n35), .A2(n28), .Y(
+        \set[31]/WriteEnable_second_way ) );
+  Block_3 \set[31]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[31]/WriteEnable_second_way ), .Enable(SetEnable[31]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[31]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[31]/WriteEnable_first_way ), .Enable(SetEnable[31]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[32]/U6  ( .A1(n35), .A2(n16), .Y(
+        \set[32]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[32]/U5  ( .A1(n35), .A2(n28), .Y(
+        \set[32]/WriteEnable_second_way ) );
+  Block_3 \set[32]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[32]/WriteEnable_second_way ), .Enable(SetEnable[32]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[32]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[32]/WriteEnable_first_way ), .Enable(SetEnable[32]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[33]/U6  ( .A1(n35), .A2(n16), .Y(
+        \set[33]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[33]/U5  ( .A1(n35), .A2(n28), .Y(
+        \set[33]/WriteEnable_second_way ) );
+  Block_3 \set[33]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[33]/WriteEnable_second_way ), .Enable(SetEnable[33]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[33]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[33]/WriteEnable_first_way ), .Enable(SetEnable[33]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[34]/U6  ( .A1(n35), .A2(n16), .Y(
+        \set[34]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[34]/U5  ( .A1(n35), .A2(n28), .Y(
+        \set[34]/WriteEnable_second_way ) );
+  Block_3 \set[34]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[34]/WriteEnable_second_way ), .Enable(SetEnable[34]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[34]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[34]/WriteEnable_first_way ), .Enable(SetEnable[34]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[35]/U6  ( .A1(n35), .A2(n16), .Y(
+        \set[35]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[35]/U5  ( .A1(n35), .A2(n28), .Y(
+        \set[35]/WriteEnable_second_way ) );
+  Block_3 \set[35]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[35]/WriteEnable_second_way ), .Enable(SetEnable[35]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[35]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[35]/WriteEnable_first_way ), .Enable(SetEnable[35]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[36]/U6  ( .A1(n35), .A2(n16), .Y(
+        \set[36]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[36]/U5  ( .A1(n35), .A2(n28), .Y(
+        \set[36]/WriteEnable_second_way ) );
+  Block_3 \set[36]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[36]/WriteEnable_second_way ), .Enable(SetEnable[36]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[36]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[36]/WriteEnable_first_way ), .Enable(SetEnable[36]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[37]/U6  ( .A1(n36), .A2(n19), .Y(
+        \set[37]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[37]/U5  ( .A1(n36), .A2(n22), .Y(
+        \set[37]/WriteEnable_second_way ) );
+  Block_3 \set[37]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[37]/WriteEnable_second_way ), .Enable(SetEnable[37]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[37]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[37]/WriteEnable_first_way ), .Enable(SetEnable[37]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[38]/U6  ( .A1(n36), .A2(n19), .Y(
+        \set[38]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[38]/U5  ( .A1(n36), .A2(n22), .Y(
+        \set[38]/WriteEnable_second_way ) );
+  Block_3 \set[38]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[38]/WriteEnable_second_way ), .Enable(SetEnable[38]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[38]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[38]/WriteEnable_first_way ), .Enable(SetEnable[38]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[39]/U6  ( .A1(n36), .A2(n19), .Y(
+        \set[39]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[39]/U5  ( .A1(n36), .A2(n22), .Y(
+        \set[39]/WriteEnable_second_way ) );
+  Block_3 \set[39]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[39]/WriteEnable_second_way ), .Enable(SetEnable[39]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[39]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[39]/WriteEnable_first_way ), .Enable(SetEnable[39]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[40]/U6  ( .A1(n36), .A2(n19), .Y(
+        \set[40]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[40]/U5  ( .A1(n36), .A2(n22), .Y(
+        \set[40]/WriteEnable_second_way ) );
+  Block_3 \set[40]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[40]/WriteEnable_second_way ), .Enable(SetEnable[40]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[40]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[40]/WriteEnable_first_way ), .Enable(SetEnable[40]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[41]/U6  ( .A1(n36), .A2(n19), .Y(
+        \set[41]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[41]/U5  ( .A1(n36), .A2(n22), .Y(
+        \set[41]/WriteEnable_second_way ) );
+  Block_3 \set[41]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[41]/WriteEnable_second_way ), .Enable(SetEnable[41]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[41]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[41]/WriteEnable_first_way ), .Enable(SetEnable[41]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[42]/U6  ( .A1(n36), .A2(n19), .Y(
+        \set[42]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[42]/U5  ( .A1(n36), .A2(n22), .Y(
+        \set[42]/WriteEnable_second_way ) );
+  Block_3 \set[42]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[42]/WriteEnable_second_way ), .Enable(SetEnable[42]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[42]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[42]/WriteEnable_first_way ), .Enable(SetEnable[42]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[43]/U6  ( .A1(n37), .A2(n20), .Y(
+        \set[43]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[43]/U5  ( .A1(n37), .A2(n22), .Y(
+        \set[43]/WriteEnable_second_way ) );
+  Block_3 \set[43]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[43]/WriteEnable_second_way ), .Enable(SetEnable[43]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[43]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[43]/WriteEnable_first_way ), .Enable(SetEnable[43]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[44]/U6  ( .A1(n37), .A2(n20), .Y(
+        \set[44]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[44]/U5  ( .A1(n37), .A2(n22), .Y(
+        \set[44]/WriteEnable_second_way ) );
+  Block_3 \set[44]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[44]/WriteEnable_second_way ), .Enable(SetEnable[44]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[44]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[44]/WriteEnable_first_way ), .Enable(SetEnable[44]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[45]/U6  ( .A1(n37), .A2(n20), .Y(
+        \set[45]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[45]/U5  ( .A1(n37), .A2(n23), .Y(
+        \set[45]/WriteEnable_second_way ) );
+  Block_3 \set[45]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[45]/WriteEnable_second_way ), .Enable(SetEnable[45]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[45]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[45]/WriteEnable_first_way ), .Enable(SetEnable[45]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[46]/U6  ( .A1(n37), .A2(n20), .Y(
+        \set[46]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[46]/U5  ( .A1(n37), .A2(n23), .Y(
+        \set[46]/WriteEnable_second_way ) );
+  Block_3 \set[46]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[46]/WriteEnable_second_way ), .Enable(SetEnable[46]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[46]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[46]/WriteEnable_first_way ), .Enable(SetEnable[46]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[47]/U6  ( .A1(n37), .A2(n20), .Y(
+        \set[47]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[47]/U5  ( .A1(n37), .A2(n23), .Y(
+        \set[47]/WriteEnable_second_way ) );
+  Block_3 \set[47]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[47]/WriteEnable_second_way ), .Enable(SetEnable[47]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[47]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[47]/WriteEnable_first_way ), .Enable(SetEnable[47]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[48]/U6  ( .A1(n37), .A2(n20), .Y(
+        \set[48]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[48]/U5  ( .A1(n37), .A2(n23), .Y(
+        \set[48]/WriteEnable_second_way ) );
+  Block_3 \set[48]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[48]/WriteEnable_second_way ), .Enable(SetEnable[48]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[48]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[48]/WriteEnable_first_way ), .Enable(SetEnable[48]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[49]/U6  ( .A1(n38), .A2(n20), .Y(
+        \set[49]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[49]/U5  ( .A1(n38), .A2(n29), .Y(
+        \set[49]/WriteEnable_second_way ) );
+  Block_3 \set[49]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[49]/WriteEnable_second_way ), .Enable(SetEnable[49]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[49]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[49]/WriteEnable_first_way ), .Enable(SetEnable[49]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[50]/U6  ( .A1(n38), .A2(n20), .Y(
+        \set[50]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[50]/U5  ( .A1(n38), .A2(n29), .Y(
+        \set[50]/WriteEnable_second_way ) );
+  Block_3 \set[50]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[50]/WriteEnable_second_way ), .Enable(SetEnable[50]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[50]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[50]/WriteEnable_first_way ), .Enable(SetEnable[50]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[51]/U6  ( .A1(n38), .A2(n20), .Y(
+        \set[51]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[51]/U5  ( .A1(n38), .A2(n29), .Y(
+        \set[51]/WriteEnable_second_way ) );
+  Block_3 \set[51]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[51]/WriteEnable_second_way ), .Enable(SetEnable[51]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[51]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[51]/WriteEnable_first_way ), .Enable(SetEnable[51]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[52]/U6  ( .A1(n38), .A2(n20), .Y(
+        \set[52]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[52]/U5  ( .A1(n38), .A2(n29), .Y(
+        \set[52]/WriteEnable_second_way ) );
+  Block_3 \set[52]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[52]/WriteEnable_second_way ), .Enable(SetEnable[52]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[52]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[52]/WriteEnable_first_way ), .Enable(SetEnable[52]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[53]/U6  ( .A1(n38), .A2(n20), .Y(
+        \set[53]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[53]/U5  ( .A1(n38), .A2(n29), .Y(
+        \set[53]/WriteEnable_second_way ) );
+  Block_3 \set[53]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[53]/WriteEnable_second_way ), .Enable(SetEnable[53]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[53]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[53]/WriteEnable_first_way ), .Enable(SetEnable[53]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[54]/U6  ( .A1(n38), .A2(n19), .Y(
+        \set[54]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[54]/U5  ( .A1(n38), .A2(n23), .Y(
+        \set[54]/WriteEnable_second_way ) );
+  Block_3 \set[54]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[54]/WriteEnable_second_way ), .Enable(SetEnable[54]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[54]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[54]/WriteEnable_first_way ), .Enable(SetEnable[54]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[55]/U6  ( .A1(n39), .A2(n20), .Y(
+        \set[55]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[55]/U5  ( .A1(n39), .A2(n29), .Y(
+        \set[55]/WriteEnable_second_way ) );
+  Block_3 \set[55]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[55]/WriteEnable_second_way ), .Enable(SetEnable[55]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[55]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[55]/WriteEnable_first_way ), .Enable(SetEnable[55]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[56]/U6  ( .A1(n39), .A2(n19), .Y(
+        \set[56]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[56]/U5  ( .A1(n39), .A2(n23), .Y(
+        \set[56]/WriteEnable_second_way ) );
+  Block_3 \set[56]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[56]/WriteEnable_second_way ), .Enable(SetEnable[56]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[56]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[56]/WriteEnable_first_way ), .Enable(SetEnable[56]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[57]/U6  ( .A1(n39), .A2(n21), .Y(
+        \set[57]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[57]/U5  ( .A1(n39), .A2(n29), .Y(
+        \set[57]/WriteEnable_second_way ) );
+  Block_3 \set[57]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[57]/WriteEnable_second_way ), .Enable(SetEnable[57]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[57]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[57]/WriteEnable_first_way ), .Enable(SetEnable[57]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[58]/U6  ( .A1(n39), .A2(n21), .Y(
+        \set[58]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[58]/U5  ( .A1(n39), .A2(n29), .Y(
+        \set[58]/WriteEnable_second_way ) );
+  Block_3 \set[58]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[58]/WriteEnable_second_way ), .Enable(SetEnable[58]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[58]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[58]/WriteEnable_first_way ), .Enable(SetEnable[58]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[59]/U6  ( .A1(n39), .A2(n21), .Y(
+        \set[59]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[59]/U5  ( .A1(n39), .A2(n28), .Y(
+        \set[59]/WriteEnable_second_way ) );
+  Block_3 \set[59]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[59]/WriteEnable_second_way ), .Enable(SetEnable[59]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[59]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[59]/WriteEnable_first_way ), .Enable(SetEnable[59]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[60]/U6  ( .A1(Write), .A2(n21), .Y(
+        \set[60]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[60]/U5  ( .A1(Write), .A2(n28), .Y(
+        \set[60]/WriteEnable_second_way ) );
+  Block_3 \set[60]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[60]/WriteEnable_second_way ), .Enable(SetEnable[60]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[60]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[60]/WriteEnable_first_way ), .Enable(SetEnable[60]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[61]/U6  ( .A1(Write), .A2(n19), .Y(
+        \set[61]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[61]/U5  ( .A1(Write), .A2(n23), .Y(
+        \set[61]/WriteEnable_second_way ) );
+  Block_3 \set[61]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[61]/WriteEnable_second_way ), .Enable(SetEnable[61]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[61]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[61]/WriteEnable_first_way ), .Enable(SetEnable[61]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[62]/U6  ( .A1(Write), .A2(n19), .Y(
+        \set[62]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[62]/U5  ( .A1(Write), .A2(n24), .Y(
+        \set[62]/WriteEnable_second_way ) );
+  Block_3 \set[62]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[62]/WriteEnable_second_way ), .Enable(SetEnable[62]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[62]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[62]/WriteEnable_first_way ), .Enable(SetEnable[62]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  AND2X1_LVT \set[63]/U6  ( .A1(Write), .A2(n19), .Y(
+        \set[63]/WriteEnable_first_way ) );
+  AND2X1_LVT \set[63]/U5  ( .A1(Write), .A2(n24), .Y(
+        \set[63]/WriteEnable_second_way ) );
+  Block_3 \set[63]/blk_second_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[63]/WriteEnable_second_way ), .Enable(SetEnable[63]), 
+        .WordEnable(WordEnable), .Dout(DataOut_second_way) );
+  Block_2 \set[63]/blk_first_way  ( .clk(clk), .rst(rst), .Din(DataIn), 
+        .WriteEnable(\set[63]/WriteEnable_first_way ), .Enable(SetEnable[63]), 
+        .WordEnable(WordEnable), .Dout(DataOut_first_way) );
+  INVX1_LVT U2 ( .A(WaySelect), .Y(n16) );
+  INVX1_LVT U3 ( .A(WaySelect), .Y(n17) );
+  INVX1_LVT U4 ( .A(n24), .Y(n18) );
+  INVX1_LVT U5 ( .A(n40), .Y(n38) );
+  INVX1_LVT U6 ( .A(n40), .Y(n37) );
+  INVX1_LVT U7 ( .A(n40), .Y(n36) );
+  INVX1_LVT U8 ( .A(n40), .Y(n35) );
+  INVX1_LVT U9 ( .A(n41), .Y(n34) );
+  INVX1_LVT U10 ( .A(n41), .Y(n33) );
+  INVX1_LVT U11 ( .A(n41), .Y(n32) );
+  INVX1_LVT U12 ( .A(n40), .Y(n31) );
+  INVX1_LVT U13 ( .A(n41), .Y(n30) );
+  INVX1_LVT U14 ( .A(n41), .Y(n39) );
+  INVX1_LVT U15 ( .A(WaySelect), .Y(n20) );
+  INVX1_LVT U16 ( .A(WaySelect), .Y(n19) );
+  INVX1_LVT U17 ( .A(n21), .Y(n29) );
+  INVX1_LVT U18 ( .A(n21), .Y(n22) );
+  INVX1_LVT U19 ( .A(n20), .Y(n28) );
+  INVX1_LVT U20 ( .A(n16), .Y(n27) );
+  INVX1_LVT U21 ( .A(n21), .Y(n26) );
+  INVX1_LVT U22 ( .A(n21), .Y(n25) );
+  INVX1_LVT U23 ( .A(n21), .Y(n24) );
+  INVX1_LVT U24 ( .A(n21), .Y(n23) );
+  INVX1_LVT U25 ( .A(WaySelect), .Y(n21) );
+  INVX1_LVT U26 ( .A(Write), .Y(n40) );
+  INVX1_LVT U27 ( .A(Write), .Y(n41) );
+endmodule
+

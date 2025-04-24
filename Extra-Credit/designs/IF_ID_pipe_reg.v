@@ -1,5 +1,5 @@
 `default_nettype none // Set the default as none to avoid errors
- 
+
 ///////////////////////////////////////////////////////////////
 // IF_ID_pipe_reg.v: Instruction Fetch to Decode Pipeline    //
 //                                                           //
@@ -19,44 +19,61 @@ module IF_ID_pipe_reg (
     input wire [15:0] PC_inst,          // Current instruction word from the fetch stage
     input wire [1:0] prediction,        // The 2-bit predicted value of the current branch instruction from the fetch stage
     input wire [15:0] predicted_target, // The predicted target from the BTB.
-    
+
     output wire [15:0] IF_ID_PC_curr,           // Pipelined current instruction address passed to the decode stage
     output wire [15:0] IF_ID_PC_next,           // Pipelined next PC passed to the decode stage
     output wire [15:0] IF_ID_PC_inst,           // Pipelined current instruction word passed to the decode stage
     output wire [1:0] IF_ID_prediction,         // Pipelined 2-bit branch prediction signal passed to the decode stage
-    output wire [15:0] IF_ID_predicted_target   // Pipelined 2-bit branch prediction signal passed to the decode stage
+    output wire [15:0] IF_ID_predicted_target   // Pipelined branch prediction target passed to the decode stage
 );
 
   /////////////////////////////////////////////////
-  // Declare any internal signals as type wire  //
-  ///////////////////////////////////////////////
-  wire wen; // Register write enable signal.
-  wire clr; // Clear signal for instruction word register
-  ///////////////////////////////////////////////
+  // Declare any internal control signals        //
+  /////////////////////////////////////////////////
+  wire wen; // Register write enable signal
+  wire clr; // Clear signal for flush or reset
+  /////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Implement the IF/ID Pipeline Register as structural/dataflow verilog //
-  /////////////////////////////////////////////////////////////////////////
-  // We write to the register whenever we don't stall.
+  ///////////////////////////////////////////////////////////////
+  // Write to the register only if there is no stall           //
+  ///////////////////////////////////////////////////////////////
   assign wen = ~stall;
- 
-  // We clear the instruction word register whenever we flush or during rst.
+
+  ///////////////////////////////////////////////////////////////
+  // Clear the instruction and metadata on flush or reset      //
+  ///////////////////////////////////////////////////////////////
   assign clr = flush | rst;
 
-  // Register for storing the current instruction's address.
+  //////////////////////////////////////////////////////////////////
+  // Pipeline current PC from IF stage to ID stage                //
+  //////////////////////////////////////////////////////////////////
   CPU_Register iPC_CURR_REG (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_curr), .data_out(IF_ID_PC_curr));
+  //////////////////////////////////////////////////////////////////
 
-  // Register for storing the next instruction's address.
+  //////////////////////////////////////////////////////////////////
+  // Pipeline next PC address from IF stage to ID stage           //
+  //////////////////////////////////////////////////////////////////
   CPU_Register iPC_NEXT_REG (.clk(clk), .rst(rst), .wen(wen), .data_in(PC_next), .data_out(IF_ID_PC_next));
+  //////////////////////////////////////////////////////////////////
 
-  // Register for storing the fetched instruction word (clear the instruction on flush).
+  //////////////////////////////////////////////////////////////////
+  // Pipeline instruction word from IF stage to ID stage          //
+  //////////////////////////////////////////////////////////////////
   CPU_Register iPC_INST_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(PC_inst), .data_out(IF_ID_PC_inst));
+  //////////////////////////////////////////////////////////////////
 
-  // Register for storing the 2-bit prediction taken signal (clear the signal on flush).
+  //////////////////////////////////////////////////////////////////
+  // Pipeline branch prediction bits to the decode stage          //
+  //////////////////////////////////////////////////////////////////
   CPU_Register #(.WIDTH(2)) iPREDICTION_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(prediction), .data_out(IF_ID_prediction));
+  //////////////////////////////////////////////////////////////////
 
-  // Register for storing the previous prediction's target address (clear the data on flush).
+  //////////////////////////////////////////////////////////////////
+  // Pipeline predicted target address to the decode stage        //
+  //////////////////////////////////////////////////////////////////
   CPU_Register iPREDICTED_TARGET_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(predicted_target), .data_out(IF_ID_predicted_target));
+  //////////////////////////////////////////////////////////////////
+
 
 endmodule
 

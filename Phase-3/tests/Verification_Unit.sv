@@ -70,74 +70,245 @@
             valid_memory  <= 0;
             valid_wb      <= 0;
 
-        end else if (hlt) begin
-            valid_wb <= 1;
+        end else if (!I_cache_stall) begin  // No ICACHE stall (normal operation).
+            valid_fetch   <= 1;              // Fetch can proceed.
+            valid_decode  <= valid_fetch;    // Decode can proceed, since fetch was valid last cycle.
+            valid_execute <= valid_decode;   // Execute propagates from decode.
+            valid_memory  <= valid_execute;  // Memory propagates from execute.
+            valid_wb      <= valid_memory;   // WB propagates from memory.
 
-        end else begin
-            // Default propagation from previous stage.
-            valid_decode  <= valid_fetch;
-            valid_execute <= valid_decode;
-            valid_memory  <= valid_execute;
-            valid_wb      <= valid_memory;
+            // No I_CACHE miss and no normal stall.
+            if (!normal_stall) begin
+                if (!cap_normal_stall) begin
+                    // Case 1: No stall (normal operation).
+                    valid_fetch   <= 1;
+                    valid_decode  <= valid_fetch;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Case 2: No stall in current cycle, but previous cycle was stalled.
+                    valid_fetch   <= 1;
+                    valid_decode  <= 1;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end
+            end else begin
+                // We have a normal stall.
+                if (!cap_normal_stall) begin
+                    // First stall: freeze fetch and decode, propagate others.
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Continued stall (previous cycle was stalled).
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= 0;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end
+            end
 
-            // Stall priority: D-cache > normal > I-cache > normal flow
-            if (D_cache_stall) begin
+            // No I_CACHE miss and no D_CACHE miss.
+            if (!D_cache_stall) begin
                 if (!cap_D_cache_stall) begin
-                    // First cycle of D-cache stall: stall all but WB
+                    // Case 1: No stall (normal operation).
+                    valid_fetch   <= 1;
+                    valid_decode  <= valid_fetch;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Case 2: No stall in current cycle, but previous cycle was stalled, so activate all.
+                    valid_fetch   <= 1;
+                    valid_decode  <= 1;
+                    valid_execute <= 1;
+                    valid_memory  <= 1;
+                    valid_wb      <= valid_memory;
+                end
+            end else begin
+                // We have a D_CACHE_stall.
+                if (!cap_D_cache_stall) begin
+                    // First stall: freeze all but write back.
                     valid_fetch   <= 0;
                     valid_decode  <= 0;
                     valid_execute <= 0;
                     valid_memory  <= 0;
-                end
-
-                if (!cap_I_cache_stall) begin
-                    // First I-cache stall: freeze fetch
-                    valid_fetch <= 0;
+                    valid_wb      <= valid_memory;
                 end else begin
-
-                if (!cap_normal_stall) begin
-                    // First normal stall: freeze fetch and decode
-                    valid_fetch  <= 0;
-                    valid_decode <= 0;
-                end else begin
-                    // Continued normal stall: freeze fetch, decode, execute
-                    valid_fetch   <= 0;
-                    valid_decode  <= 0;
-                    valid_execute <= 0;
-                end
-                end else begin
-                    // Continued D-cache stall: stall all
+                    // Continued stall (previous cycle was stalled) freeze all.
                     valid_fetch   <= 0;
                     valid_decode  <= 0;
                     valid_execute <= 0;
                     valid_memory  <= 0;
                     valid_wb      <= 0;
                 end
-            end else if (normal_stall) begin
-                if (!cap_normal_stall) begin
-                    // First normal stall: freeze fetch and decode
-                    valid_fetch  <= 0;
-                    valid_decode <= 0;
+            end
+
+        end else if (I_cache_stall) begin
+            // Case 3: Stall condition (current cycle stalled).
+            if (!cap_I_cache_stall) begin
+                // First stall: freeze fetch and propagate others.
+                valid_fetch   <= 0;
+                valid_decode  <= valid_fetch;
+                valid_execute <= valid_decode;
+                valid_memory  <= valid_execute;
+                valid_wb      <= valid_memory;
+            end else begin
+                // Freeze fetch and decode, propagate execute, memory and wb.
+                valid_fetch   <= 0;
+                valid_decode  <= 0;
+                valid_execute <= valid_decode;
+                valid_memory  <= valid_execute;
+                valid_wb      <= valid_memory;
+            end
+
+            if (!normal_stall) begin
+                 if (!cap_normal_stall) begin
+                    // Case 1: No stall (normal operation).
+                    valid_fetch   <= 1;
+                    valid_decode  <= valid_fetch;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
                 end else begin
-                    // Continued normal stall: freeze fetch, decode, execute
+                    // Case 2: No stall in current cycle, but previous cycle was stalled.
+                    valid_fetch   <= 1;
+                    valid_decode  <= 1;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end
+
+                // Case 3: Stall condition (current cycle stalled).
+                if (!cap_I_cache_stall) begin
+                    // First stall: freeze fetch and propagate others.
+                    valid_fetch   <= 0;
+                    valid_decode  <= valid_fetch;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Freeze fetch and decode, propagate execute, memory and wb.
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end
+            end else begin
+                // Case 3: Stall condition (current cycle stalled).
+                if (!cap_I_cache_stall) begin
+                    // First stall: freeze fetch and propagate others.
+                    valid_fetch   <= 0;
+                    valid_decode  <= valid_fetch;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Freeze fetch and decode, propagate execute, memory and wb.
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end
+
+                if (!cap_normal_stall) begin
+                    // First stall: freeze fetch and decode, propagate others.
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Continued stall (previous cycle was stalled).
                     valid_fetch   <= 0;
                     valid_decode  <= 0;
                     valid_execute <= 0;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
                 end
-            end else if (I_cache_stall) begin
-                if (!cap_I_cache_stall) begin
-                    // First I-cache stall: freeze fetch
-                    valid_fetch <= 0;
+            end
+            
+            // I_CACHE miss and no D_CACHE miss.
+            if (!D_cache_stall) begin
+                if (!cap_D_cache_stall) begin
+                    // Case 1: No stall (normal operation).
+                    valid_fetch   <= 1;
+                    valid_decode  <= valid_fetch;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
                 end else begin
-                    // Continued I-cache stall: freeze fetch and decode
-                    valid_fetch  <= 0;
-                    valid_decode <= 0;
+                    // Case 2: No stall in current cycle, but previous cycle was stalled, so activate all.
+                    valid_fetch   <= 1;
+                    valid_decode  <= 1;
+                    valid_execute <= 1;
+                    valid_memory  <= 1;
+                    valid_wb      <= valid_memory;
                 end
 
+                // Case 3: Stall condition (current cycle stalled).
+                if (!cap_I_cache_stall) begin
+                    // First stall: freeze fetch and propagate others.
+                    valid_fetch   <= 0;
+                    valid_decode  <= valid_fetch;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Freeze fetch and decode, propagate execute, memory and wb.
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end
             end else begin
-                // Normal operation
-                valid_fetch <= 1;
+
+                    // Case 3: Stall condition (current cycle stalled).
+                if (!cap_I_cache_stall) begin
+                    // First stall: freeze fetch and propagate others.
+                    valid_fetch   <= 0;
+                    valid_decode  <= valid_fetch;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Freeze fetch and decode, propagate execute, memory and wb.
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= valid_decode;
+                    valid_memory  <= valid_execute;
+                    valid_wb      <= valid_memory;
+                end
+                // We have a D_CACHE_stall.
+                if (!cap_D_cache_stall) begin
+                    // First stall: freeze all but write back.
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= 0;
+                    valid_memory  <= 0;
+                    valid_wb      <= valid_memory;
+                end else begin
+                    // Continued stall (previous cycle was stalled) freeze all.
+                    valid_fetch   <= 0;
+                    valid_decode  <= 0;
+                    valid_execute <= 0;
+                    valid_memory  <= 0;
+                    valid_wb      <= 0;
+                end
             end
+        end
+
+        // If hlt is set, we make sure to set the valid_wb signal to 1.
+        if (hlt) begin
+            valid_wb <= 1;
         end
     end
 

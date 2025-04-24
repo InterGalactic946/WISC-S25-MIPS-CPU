@@ -1,0 +1,61 @@
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : proc
+Version: V-2023.12-SP5
+Date   : Thu Apr 24 06:25:39 2025
+****************************************
+
+
+Library(s) Used:
+
+    saed32rvt_tt0p85v25c (File: /cae/apps/data/saed32_edk-2022/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.db)
+
+
+Operating Conditions: tt0p85v25c   Library: saed32rvt_tt0p85v25c
+Wire Load Model Mode: enclosed
+
+Design        Wire Load Model            Library
+------------------------------------------------
+proc                   1000000           saed32rvt_tt0p85v25c
+
+
+Global Operating Voltage = 0.85 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000ff
+    Time Units = 1ns
+    Dynamic Power Units = 1uW    (derived from V,C,T units)
+    Leakage Power Units = 1pW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+
+  Cell Internal Power  =  62.0505 mW  (100%)
+  Net Switching Power  = 218.7657 uW    (0%)
+                         ---------
+Total Dynamic Power    =  62.2692 mW  (100%)
+
+Cell Leakage Power     =  23.0956 mW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network  6.1847e+04            0.0000            0.0000        6.1847e+04  (  72.47%)  i
+register          32.3984           11.7509        9.0066e+09        9.0480e+03  (  10.60%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational    152.0350          207.2479        1.4089e+10        1.4448e+04  (  16.93%)
+--------------------------------------------------------------------------------------------------
+Total          6.2032e+04 uW       218.9987 uW     2.3096e+10 pW     8.5343e+04 uW
+1

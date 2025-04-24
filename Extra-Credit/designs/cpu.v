@@ -68,4 +68,4 @@ module cpu (clk, rst_n, hlt, pc);
 
 endmodule
 
-`default_nettype wire  // Reset default behavior at the end
+`default_nettype wire   // Reset default behavior at the end

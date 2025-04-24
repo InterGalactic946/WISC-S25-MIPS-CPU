@@ -6,7 +6,7 @@
 
 // Initialize registers and array base address
 LLB R1, 0x05      // Loop counter (R1 = 5 elements)
-LLB R2, 0x00      // Base address of the array (R2 = 0x0000)
+LLB R2, 0x8A      // Base address of the array (R2 = 0x0000)
 LLB R3, 0x00      // Sum accumulator (R3 = 0x0000)
 LLB R4, 0x04      // Constant: 5 (for averaging)
 LLB R5, 0x06      //  Value (R5 = 6)
@@ -17,7 +17,7 @@ LLB R10, 0x10     // Increment value (R9 = 16)
 
 // Load array values into memory (initialization)
 LLB R6, 0x1A      // Array element 1
-SW R6, R2, 0      // Store 0x001A at memory[0x0000]
+SW R6, R2, 0      // Store 0x001A at memory[0x008A]
 
 // Test Register Hazard with LW (load word instruction)
 TEST_LW_HAZARD:

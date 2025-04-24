@@ -3,30 +3,30 @@
     ////////////////////////////////////////////////////////
     LLB R1, 0x05      // R1 = 0x0005
     LLB R2, 0x03      // R2 = 0x0003
-    LLB R3, 0x02      // R3 = 0x0002
+    LLB R3, 0x5C      // R3 = 0x005C
     LLB R4, 0x01      // R4 = 0x0001
 
     ////////////////////////////////////////////////////////
     // Back-to-Back ADD Instructions (Forwarding Test)      //
     ////////////////////////////////////////////////////////
     ADD R1, R1, R2    // R1 = R1 + R2 (0x0005 + 0x0003 = 0x0008)
-    ADD R1, R1, R3    // R1 = R1 + R3 (0x0008 + 0x0002 = 0x000A)
-    ADD R1, R1, R4    // R1 = R1 + R4 (0x000A + 0x0001 = 0x000B)
+    ADD R1, R1, R3    // R1 = R1 + R3 (0x0008 + 0x005C= 0x)
+    ADD R1, R1, R4    // R1 = R1 + R4 (0x+ 0x0001 = 0x000B)
 
     ////////////////////////////////////////////////////////
     // Data Hazard Test (Forwarding)                        //
     ////////////////////////////////////////////////////////
-    ADD R3, R1, R2    // R3 = R1 + R2 (0x000B + 0x0003 = 0x000E)
-    SUB R4, R3, R1    // R4 = R3 - R1 (0x000E - 0x000B = 0x0003)
-    XOR R5, R4, R2    // R5 = R4 ^ R2 (0x0003 ^ 0x0003 = 0x0000)
+    ADD R7, R1, R2    // R7 = R1 + R2 (0x + 0x0003 = 0x000E)
+    SUB R4, R7, R1    // R4 = R7 - R1 (0x000E - 0x = 0x)
+    XOR R5, R4, R2    // R5 = R4 ^ R2 (0x ^ 0x0003 = 0x)
 
     ////////////////////////////////////////////////////////
     // Load-Use Hazard                                      //
     ////////////////////////////////////////////////////////
-    LLB R6, 0x20      // R6 = 0x0020 (Memory address)
-    SW R3, R6, 0      // Store R3 (0x000E) at memory[0x0020]
-    LW R7, R6, 0      // Load R7 from memory[0x0020] (expected: 0x000E)
-    ADD R8, R7, R1    // R8 = R7 + R1 (0x000E + 0x000B = 0x0019)
+    LLB R6, 0x8A      // R6 = 0x008A (Memory address)
+    SW R3, R6, 0      // Store R3 (0x005C) at memory[0x008A]
+    LW R7, R6, 0      // Load R7 from memory[0x008A] (expected: 0x005C)
+    ADD R8, R7, R1    // R8 = R7 + R1 (0x005C + 0x000B = x)
 
     ////////////////////////////////////////////////////////
     // Branching Hazard (Control Hazard)                    //
@@ -56,15 +56,15 @@ BRANCH2:
     ////////////////////////////////////////////////////////
     // Memory-to-Memory Forwarding (LW followed by SW)       //
     ////////////////////////////////////////////////////////
-    LW R12, R6, 0     // Load R12 from memory[0x0020] (expected: 0x000E)
+    LW R12, R6, 0     // Load R12 from memory[0x008A] (expected: 0x000E)
     SW R12, R8, 0     // Store R12 (loaded value) at memory[0x0019] (address from R8)
 
 
     ////////////////////////////////////////////////////////
     // Store Stall with Data Dependency                     //
     ////////////////////////////////////////////////////////
-    LW R7, R6, 0     // Load R7 from memory[0x0020] (expected: 0x000E)
-    SW R11, R7, 0    // Store R11 (0x000E) at memory[0x000E] (address from R7)
+    LW R7, R6, 0     // Load R7 from memory[0x005C] (expected: 0x000E)
+    SW R12, R7, 0    // Store R11 (0x005C) at memory[0x] (address from R7)
 
 END:
     PCS R15           // Store PC in R15 to verify correctness

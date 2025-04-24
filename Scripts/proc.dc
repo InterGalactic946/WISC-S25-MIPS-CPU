@@ -42,6 +42,8 @@ read_file -format verilog { \
   ../designs/BitCell.v \
   ../designs/Branch_Cache.v \
   ../designs/CPU_Register.v \
+  ../designs/memory_system.v \
+  ../designs/Decoder_5_32.v \
 }
 
 ###################################

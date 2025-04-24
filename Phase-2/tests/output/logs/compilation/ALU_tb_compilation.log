@@ -1,0 +1,15 @@
+# vlib ./tests/WORK/ALU_tb
+#  vlog +acc -work ./tests/WORK/ALU_tb -stats=none /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/PSA_16bit.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_16bit.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_4bit.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_8bit.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RED_Unit.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Shifter.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ALU.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_tb.sv 
+# QuestaSim vlog 2023.2_1 Compiler 2023.05 May 12 2023
+# -- Compiling module PSA_16bit
+# -- Compiling module CLA_16bit
+# -- Compiling module CLA_4bit
+# -- Compiling module CLA_8bit
+# -- Compiling module RED_Unit
+# -- Compiling module Shifter
+# -- Compiling module ALU
+# -- Compiling module ALU_tb
+# 
+# Top level modules:
+# 	ALU_tb
+#  quit -f

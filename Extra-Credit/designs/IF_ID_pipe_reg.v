@@ -53,7 +53,7 @@ module IF_ID_pipe_reg (
   CPU_Register iPC_INST_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(PC_inst), .data_out(IF_ID_PC_inst));
 
   // Register for storing the 2-bit prediction taken signal (clear the signal on flush).
-  CPU_Register #(.WIDTH(2)) iPREDICTION_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(prediction), .data_out(IF_ID_prediction));
+  CPU_Register #(2) iPREDICTION_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(prediction), .data_out(IF_ID_prediction));
 
   // Register for storing the previous prediction's target address (clear the data on flush).
   CPU_Register iPREDICTED_TARGET_REG (.clk(clk), .rst(clr), .wen(wen), .data_in(predicted_target), .data_out(IF_ID_predicted_target));

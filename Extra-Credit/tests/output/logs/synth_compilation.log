@@ -1,0 +1,622 @@
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid this.
+
+                           Design Compiler Graphical 
+                                 DC Ultra (TM)
+                                  DFTMAX (TM)
+                              Power Compiler (TM)
+                                 DesignWare (R)
+                                 DC Expert (TM)
+                               Design Vision (TM)
+                               HDL Compiler (TM)
+                               VHDL Compiler (TM)
+                                  DFT Compiler
+                               Design Compiler(R)
+
+               Version V-2023.12-SP5 for linux64 - Jul 16, 2024 
+
+                    Copyright (c) 1988 - 2024 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+Initializing...
+Current time:       Wed Apr 23 19:44:31 2025
+Hostname:           tux-118
+CPU Model:          11th Gen Intel(R) Core(TM) i5-11600 @ 2.80GHz
+CPU Details:        Cores = 12 : Sockets = 1 : Cache Size = 12288 KB : Freq = 4.68 GHz
+OS:                 Linux 5.10.0-34-amd64
+RAM:                 31 GB (Free   8 GB)
+Swap:                 1 GB (Free   1 GB)
+Work Filesystem:    /filespace/j mounted to files.cae.wisc.edu:/j
+Tmp Filesystem:     / mounted to /dev/mapper/tux--118--vg-root
+Work Disk:           27 GB (Free  26 GB)
+Tmp Disk:           820 GB (Free 819 GB)
+
+CPU Load: 8%, Ram Free: 8 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Information: Term was not able to be set up using xterm-256color . Using "xterm" by default instead. (CLE-10)
+Warning: Cannot use command line editor for terminal type 'xterm-256color'.  (UI-74)
+dc_shell> Loading db file '/cae/apps/data/synopsys-2024/syn/V-2023.12-SP5/libraries/syn/gtech.db'
+Loading db file '/cae/apps/data/synopsys-2024/syn/V-2023.12-SP5/libraries/syn/standard.sldb'
+  Loading link library 'gtech'
+Loading verilog files: '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Fetch.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ALU.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_control.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_4bit.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_8bit.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_16bit.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ControlUnit.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CPU_Register.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DataArray.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decode.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_2_4.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_6_64.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/EX_MEM_pipe_reg.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Execute.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Flag_Register.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ForwardingUnit.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/HazardDetectionUnit.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ID_EX_pipe_reg.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/IF_ID_pipe_reg.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MEM_WB_pipe_reg.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MetaDataArray.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/PSA_16bit.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Shifter.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v' '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v' 
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Warning: Can't read link_library file 'your_library.db'. (UID-3)
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Fetch.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ALU.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_control.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_4bit.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_8bit.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_16bit.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ControlUnit.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CPU_Register.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DataArray.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decode.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_2_4.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_6_64.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/EX_MEM_pipe_reg.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Execute.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Flag_Register.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ForwardingUnit.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/HazardDetectionUnit.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ID_EX_pipe_reg.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/IF_ID_pipe_reg.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MEM_WB_pipe_reg.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MetaDataArray.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/PSA_16bit.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Shifter.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v:14: Overwriting existing design element 'Branch_Cache' with newer version. (VER-64)
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CPU_Register.v
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CPU_Register.v:13: Overwriting existing design element 'CPU_Register' with newer version. (VER-64)
+
+Statistics for case statements in always block at line 91 in file
+	'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ALU.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            94            |    auto/auto     |
+===============================================
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v:98: DEFAULT branch of CASE statement cannot be reached. (ELAB-311)
+
+Statistics for case statements in always block at line 73 in file
+	'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            76            |    auto/auto     |
+===============================================
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_4bit.v:75: signed to unsigned conversion occurs. (VER-318)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_8bit.v:54: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_16bit.v:56: signed to unsigned assignment occurs. (VER-318)
+
+Inferred tri-state devices in process
+	in routine DCell line 41 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DataArray.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+|   Dout_tri    | Tri-State Buffer |   1   |
+============================================
+
+Inferred memory devices in process
+	in routine dff line 15 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|      state_reg      | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred tri-state devices in process
+	in routine MCell line 25 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MetaDataArray.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+|   Dout_tri    | Tri-State Buffer |   1   |
+============================================
+
+Inferred tri-state devices in process
+	in routine BitCell line 36 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+| Bitline1_tri  | Tri-State Buffer |   1   |
+============================================
+
+Inferred tri-state devices in process
+	in routine BitCell line 39 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+| Bitline2_tri  | Tri-State Buffer |   1   |
+============================================
+Presto compilation completed successfully.
+Current design is now '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.db:proc'
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/Branch_Cache-verilog.pvl not found, or does not contain a usable description of Branch_Cache. (ELAB-320)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Loaded 45 designs.
+Current design is 'proc'.
+Warning: Can't read link_library file 'your_library.db'. (UID-3)
+
+  Linking design 'proc'
+  Using the following designs and libraries:
+  --------------------------------------------------------------------------
+  * (45 designs)              /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.db, etc
+
+Information: Building the design 'memory1c'. (HDL-193)
+Warning:  Little argument or return value checking implemented for system task or function '$readmemh'. (VER-209)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory1c.v:49: The statements in initial blocks are ignored. (VER-281)
+
+Inferred memory devices in process
+	in routine memory1c line 52 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory1c.v'.
+================================================================================
+|    Register Name    |   Type    | Width  | Bus | MB | AR | AS | SR | SS | ST |
+================================================================================
+|       mem_reg       | Flip-flop | 524288 |  Y  | N  | N  | N  | N  | N  | N  |
+================================================================================
+Statistics for MUX_OPs
+======================================================
+| block name/line  | Inputs | Outputs | # sel inputs |
+======================================================
+|   memory1c/47    | 65536  |   16    |      16      |
+======================================================
+Presto compilation completed successfully. (memory1c)
+Module: memory1c, Elapsed Time: 00:00:45, CPU Time: 00:00:45, Total Mem: 4.20 GB, Mem: 4.08 GB, Time: Wed Apr 23 19:45:17 2025
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Information: Building the design 'CPU_Register' instantiated from design 'IF_ID_pipe_reg' with
+	the parameters "2". (HDL-193)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Presto compilation completed successfully.
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Information: Building the design 'CPU_Register' instantiated from design 'ID_EX_pipe_reg' with
+	the parameters "4". (HDL-193)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Presto compilation completed successfully.
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Information: Building the design 'CPU_Register' instantiated from design 'ID_EX_pipe_reg' with
+	the parameters "1". (HDL-193)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Presto compilation completed successfully.
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Information: Building the design 'CPU_Register' instantiated from design 'ID_EX_pipe_reg' with
+	the parameters "16". (HDL-193)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/CPU_Register-verilog.pvl not found, or does not contain a usable description of CPU_Register. (ELAB-320)
+Presto compilation completed successfully.
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/Branch_Cache-verilog.pvl not found, or does not contain a usable description of Branch_Cache. (ELAB-320)
+Information: Building the design 'Branch_Cache' instantiated from design 'BHT' with
+	the parameters "15". (HDL-193)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/Branch_Cache-verilog.pvl not found, or does not contain a usable description of Branch_Cache. (ELAB-320)
+Presto compilation completed successfully.
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/Register-verilog.pvl not found, or does not contain a usable description of Register. (ELAB-320)
+Information: Building the design 'Register' instantiated from design 'Branch_Cache' with
+	the parameters "16". (HDL-193)
+Warning:  File /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/Register-verilog.pvl not found, or does not contain a usable description of Register. (ELAB-320)
+Presto compilation completed successfully.
+Warning: Unable to resolve reference 'CPU_Register' in 'IF_ID_pipe_reg'. (LINK-5)
+Warning: Unable to resolve reference 'CPU_Register' in 'ID_EX_pipe_reg'. (LINK-5)
+Warning: Unable to resolve reference 'CPU_Register' in 'EX_MEM_pipe_reg'. (LINK-5)
+Warning: Unable to resolve reference 'CPU_Register' in 'MEM_WB_pipe_reg'. (LINK-5)
+Warning: Unable to resolve reference 'CPU_Register' in 'Flag_Register'. (LINK-5)
+Warning: Unable to resolve reference 'Branch_Cache' in 'BHT'. (LINK-5)
+Warning: Unable to resolve reference 'Register' in 'Branch_Cache'. (LINK-5)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Can't find net 'iRST/rst_n' in design 'proc'. (UID-95)
+Error: Value for list '<object_list>' must have 1 elements. (CMD-036)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Error: Can't find the specified library 'saed32lvt_tt0p85v25c' in memory. (UID-131)
+Error: Wire load '16000' not found. (UID-40)
+Current design is 'proc'.
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+CPU Load: 15%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Error: Could not read the following target libraries:
+your_library.db 
+ (UIO-3)
+CPU Load: 15%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Updating graph... (UID-83)
+Warning: Design 'proc' contains 21 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+CPU Load: 17%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Error: Could not read the following target libraries:
+your_library.db 
+ (UIO-3)
+CPU Load: 17%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+CPU Load: 17%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Error: Could not read the following target libraries:
+your_library.db 
+ (UIO-3)
+CPU Load: 17%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Writing verilog file '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.vg'.
+Warning: Module proc contains unmapped components.  The output netlist might not be read back into the system. (VO-12)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Error: Cannot write the '../Scripts/proc.sdc' script file. (UID-270)
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : register
+Design : proc
+Version: V-2023.12-SP5
+Date   : Wed Apr 23 19:52:35 2025
+****************************************
+
+Attributes:
+    b - black box (unknown)
+    h - hierarchical
+    n - noncombinational
+    r - removable
+    u - contains unmapped logic
+
+Cell                      Reference       Library             Area  Attributes
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Total 0 cells                                             0.000000
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5
+Date:        Wed Apr 23 19:52:36 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                     53
+    Multiply driven inputs (LINT-6)                                 2
+    Unconnected ports (LINT-28)                                    51
+
+Cells                                                              14
+    Cells do not drive (LINT-1)                                    14
+
+Nets                                                               38
+    Unloaded nets (LINT-2)                                         34
+    Multiply driven net with constant driver (LINT-54)              4
+
+Tristate                                                          131
+    A tristate bus has a non tri-state driver (LINT-34)           131
+--------------------------------------------------------------------------------
+
+Warning: In design 'proc', cell 'iFETCH/iCLA_next/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iDECODE/iBC/iCLA_branch/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iCLA/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iPSA/iCLA[0]/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iPSA/iCLA[1]/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iPSA/iCLA[2]/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iPSA/iCLA[3]/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iRED/iCLA_first_level_1/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iRED/iCLA_first_level_2/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iRED/iCLA_first_level_3/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iRED/iCLA_first_level_4/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iRED/iCLA_second_level_1/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iRED/iCLA_second_level_2/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', cell 'iEXECUTE/iALU/iRED/iCLA_third_level/B_2' does not drive any nets. (LINT-1)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iRED/iCLA_third_level/Cout' driven by pin 'iEXECUTE/iALU/iRED/iCLA_third_level/add_54/Z_8' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iRED/iCLA_third_level/Ovfl' driven by pin 'iEXECUTE/iALU/iRED/iCLA_third_level/C38/Z' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iRED/iCLA_second_level_2/Cout' driven by pin 'iEXECUTE/iALU/iRED/iCLA_second_level_2/add_54/Z_8' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iRED/iCLA_second_level_2/Ovfl' driven by pin 'iEXECUTE/iALU/iRED/iCLA_second_level_2/C38/Z' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iRED/iCLA_second_level_1/Cout' driven by pin 'iEXECUTE/iALU/iRED/iCLA_second_level_1/add_54/Z_8' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iRED/iCLA_second_level_1/Ovfl' driven by pin 'iEXECUTE/iALU/iRED/iCLA_second_level_1/C38/Z' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iPSA/iCLA[3]/Cout' driven by pin 'iEXECUTE/iALU/iPSA/iCLA[3]/add_75_2/Z_4' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iPSA/iCLA[2]/Cout' driven by pin 'iEXECUTE/iALU/iPSA/iCLA[2]/add_75_2/Z_4' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iPSA/iCLA[1]/Cout' driven by pin 'iEXECUTE/iALU/iPSA/iCLA[1]/add_75_2/Z_4' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iPSA/iCLA[0]/Cout' driven by pin 'iEXECUTE/iALU/iPSA/iCLA[0]/add_75_2/Z_4' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iPSA/Error' driven by pin 'iEXECUTE/iALU/iPSA/C100/Z' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iEXECUTE/iALU/iCLA/Cout' driven by pin 'iEXECUTE/iALU/iCLA/add_56/Z_16' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iDECODE/iBC/iCLA_branch/Cout' driven by pin 'iDECODE/iBC/iCLA_branch/add_56/Z_16' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iDECODE/iBC/iCLA_branch/Ovfl' driven by pin 'iDECODE/iBC/iCLA_branch/C46/Z' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iCLA_next/Cout' driven by pin 'iFETCH/iCLA_next/add_56/Z_16' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iCLA_next/Ovfl' driven by pin 'iFETCH/iCLA_next/C46/Z' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[15]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_15' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[14]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_14' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[13]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_13' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[12]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_12' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[11]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_11' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[10]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_10' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[9]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_9' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[8]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_8' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[7]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_7' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[6]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_6' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[5]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_5' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[4]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_4' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[3]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_3' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[2]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_2' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[1]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_1' has no loads. (LINT-2)
+Warning: In design 'proc', net 'iFETCH/iDBP/iBTB/iMEM_BTB/SrcDataPrev[0]' driven by pin 'iFETCH/iDBP/iBTB/iMEM_BTB/C49/Z_0' has no loads. (LINT-2)
+Warning: In design 'proc', net 'IF_ID_PC_curr[0]' driven by pin 'iIF_ID/iPC_CURR_REG/iREG[0]/state_reg/Q' has no loads. (LINT-2)
+Warning: In design 'proc', net '*Logic1*' driven by pin 'U1/**logic_1**' has no loads. (LINT-2)
+Warning: In design 'proc', input port 'clk' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'proc', input port 'rst' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'proc', port 'mem_data_valid' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_out[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_en' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_addr[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_wr' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', port 'mem_data_in[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'proc', three-state bus 'iMEM_WB/*Logic1*' has non three-state driver 'iMEM_WB/U1/**logic_1**'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iEX_MEM/*Logic1*' has non three-state driver 'iEX_MEM/U1/**logic_1**'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iEXECUTE/Z_set' has non three-state driver 'iEXECUTE/iALU/I_0/Z'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iEXECUTE/V_set' has non three-state driver 'iEXECUTE/iALU/iCLA/C46/Z'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iID_EX/*Logic1*' has non three-state driver 'iID_EX/U1/**logic_1**'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iID_EX/clr' has non three-state driver 'iID_EX/C7/Z'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iIF_ID/wen' has non three-state driver 'iIF_ID/I_0/Z'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iIF_ID/clr' has non three-state driver 'iIF_ID/C9/Z'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBHT/*Logic1*' has non three-state driver 'iFETCH/iDBP/iBHT/U1/**logic_1**'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBHT/updated_prediction[1]' has non three-state driver 'iFETCH/iDBP/iBHT/C80/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBHT/updated_prediction[0]' has non three-state driver 'iFETCH/iDBP/iBHT/C80/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_curr[7]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35/Z_7'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_curr[6]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35/Z_6'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_curr[5]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35/Z_5'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_curr[4]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35/Z_4'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_curr[3]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35/Z_3'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_curr[2]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35/Z_2'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_curr[1]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_curr[0]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_prev[7]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35/Z_7'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_prev[6]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35/Z_6'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_prev[5]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35/Z_5'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_prev[4]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35/Z_4'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_prev[3]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35/Z_3'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_prev[2]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35/Z_2'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_prev[1]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_prev[0]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_dst[7]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18/Z_7'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_dst[6]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18/Z_6'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_dst[5]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18/Z_5'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_dst[4]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18/Z_4'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_dst[3]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18/Z_3'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_dst[2]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18/Z_2'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_dst[1]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/iDBP/iBTB/iMEM_BTB/Wordline_dst[0]' has non three-state driver 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/enable' has non three-state driver 'iFETCH/I_0/Z'. (LINT-34)
+Warning: In design 'proc', three-state bus 'iFETCH/predicted_taken' has non three-state driver 'iFETCH/iDBP/iBHT/C76/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[0]' has non three-state driver 'C75/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[1]' has non three-state driver 'C75/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[2]' has non three-state driver 'C75/Z_2'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[3]' has non three-state driver 'C75/Z_3'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[4]' has non three-state driver 'C75/Z_4'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[5]' has non three-state driver 'C75/Z_5'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[6]' has non three-state driver 'C75/Z_6'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[7]' has non three-state driver 'C75/Z_7'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[8]' has non three-state driver 'C75/Z_8'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[9]' has non three-state driver 'C75/Z_9'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[10]' has non three-state driver 'C75/Z_10'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[11]' has non three-state driver 'C75/Z_11'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[12]' has non three-state driver 'C75/Z_12'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[13]' has non three-state driver 'C75/Z_13'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[14]' has non three-state driver 'C75/Z_14'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ID_EX_MemWriteData[15]' has non three-state driver 'C75/Z_15'. (LINT-34)
+Warning: In design 'proc', three-state bus 'ALU_out[15]' has non three-state driver 'iEXECUTE/iALU/C290/Z_15'. (LINT-34)
+Warning: In design 'proc', three-state bus 'WB_signals[0]' has non three-state driver 'iDECODE/C184/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'WB_signals[1]' has non three-state driver 'iDECODE/C184/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'WB_signals[2]' has non three-state driver 'iDECODE/C184/Z_2'. (LINT-34)
+Warning: In design 'proc', three-state bus 'WB_signals[3]' has non three-state driver 'iDECODE/C184/Z_3'. (LINT-34)
+Warning: In design 'proc', three-state bus 'WB_signals[4]' has non three-state driver 'iDECODE/C184/Z_4'. (LINT-34)
+Warning: In design 'proc', three-state bus 'WB_signals[5]' has non three-state driver 'iDECODE/C184/Z_5'. (LINT-34)
+Warning: In design 'proc', three-state bus 'WB_signals[6]' has non three-state driver 'iDECODE/C184/Z_6'. (LINT-34)
+Warning: In design 'proc', three-state bus 'WB_signals[7]' has non three-state driver 'iDECODE/C184/Z_7'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[0]' has non three-state driver 'iDECODE/C183/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[1]' has non three-state driver 'iDECODE/C183/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[2]' has non three-state driver 'iDECODE/C183/Z_2'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[3]' has non three-state driver 'iDECODE/C183/Z_3'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[4]' has non three-state driver 'iDECODE/C183/Z_4'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[5]' has non three-state driver 'iDECODE/C183/Z_5'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[6]' has non three-state driver 'iDECODE/C183/Z_6'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[7]' has non three-state driver 'iDECODE/C183/Z_7'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[8]' has non three-state driver 'iDECODE/C183/Z_8'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[9]' has non three-state driver 'iDECODE/C183/Z_9'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[10]' has non three-state driver 'iDECODE/C183/Z_10'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[11]' has non three-state driver 'iDECODE/C183/Z_11'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[12]' has non three-state driver 'iDECODE/C183/Z_12'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[13]' has non three-state driver 'iDECODE/C183/Z_13'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[14]' has non three-state driver 'iDECODE/C183/Z_14'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[15]' has non three-state driver 'iDECODE/C183/Z_15'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[16]' has non three-state driver 'iDECODE/C183/Z_16'. (LINT-34)
+Warning: In design 'proc', three-state bus 'MEM_signals[17]' has non three-state driver 'iDECODE/C183/Z_17'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[0]' has non three-state driver 'iDECODE/C182/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[1]' has non three-state driver 'iDECODE/C182/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[2]' has non three-state driver 'iDECODE/C182/Z_2'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[3]' has non three-state driver 'iDECODE/C182/Z_3'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[4]' has non three-state driver 'iDECODE/C182/Z_4'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[5]' has non three-state driver 'iDECODE/C182/Z_5'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[6]' has non three-state driver 'iDECODE/C182/Z_6'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[55]' has non three-state driver 'iDECODE/C182/Z_55'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[56]' has non three-state driver 'iDECODE/C182/Z_56'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[57]' has non three-state driver 'iDECODE/C182/Z_57'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[58]' has non three-state driver 'iDECODE/C182/Z_58'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[59]' has non three-state driver 'iDECODE/C182/Z_59'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[60]' has non three-state driver 'iDECODE/C182/Z_60'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[61]' has non three-state driver 'iDECODE/C182/Z_61'. (LINT-34)
+Warning: In design 'proc', three-state bus 'EX_signals[62]' has non three-state driver 'iDECODE/C182/Z_62'. (LINT-34)
+Warning: In design 'proc', three-state bus 'prediction[0]' has non three-state driver 'iFETCH/iDBP/iBHT/C76/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[1]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[1]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[2]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[2]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[3]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[3]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[4]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[4]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[5]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[5]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[6]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[6]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[7]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[7]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[8]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[8]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[9]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[9]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[10]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[10]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[11]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[11]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[12]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[12]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[13]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[13]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[14]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[14]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'IF_ID_PC_curr[15]' has non three-state driver 'iIF_ID/iPC_CURR_REG/iREG[15]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[0]' has non three-state driver 'iDECODE/iBC/C111/Z_0'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[1]' has non three-state driver 'iDECODE/iBC/C111/Z_1'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[2]' has non three-state driver 'iDECODE/iBC/C111/Z_2'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[3]' has non three-state driver 'iDECODE/iBC/C111/Z_3'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[4]' has non three-state driver 'iDECODE/iBC/C111/Z_4'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[5]' has non three-state driver 'iDECODE/iBC/C111/Z_5'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[6]' has non three-state driver 'iDECODE/iBC/C111/Z_6'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[7]' has non three-state driver 'iDECODE/iBC/C111/Z_7'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[8]' has non three-state driver 'iDECODE/iBC/C111/Z_8'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[9]' has non three-state driver 'iDECODE/iBC/C111/Z_9'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[10]' has non three-state driver 'iDECODE/iBC/C111/Z_10'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[11]' has non three-state driver 'iDECODE/iBC/C111/Z_11'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[12]' has non three-state driver 'iDECODE/iBC/C111/Z_12'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[13]' has non three-state driver 'iDECODE/iBC/C111/Z_13'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[14]' has non three-state driver 'iDECODE/iBC/C111/Z_14'. (LINT-34)
+Warning: In design 'proc', three-state bus 'branch_target[15]' has non three-state driver 'iDECODE/iBC/C111/Z_15'. (LINT-34)
+Warning: In design 'proc', three-state bus 'wen_BHT' has non three-state driver 'iDECODE/iCC/C19/Z'. (LINT-34)
+Warning: In design 'proc', three-state bus 'pc[1]' has non three-state driver 'iFETCH/iPC/iREG[1]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'pc[2]' has non three-state driver 'iFETCH/iPC/iREG[2]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', three-state bus 'pc[3]' has non three-state driver 'iFETCH/iPC/iREG[3]/state_reg/Q'. (LINT-34)
+Warning: In design 'proc', multiply-driven net 'iMEM_WB/*Logic1*' is driven by constant 1. (LINT-54)
+Warning: In design 'proc', multiply-driven net 'iEX_MEM/*Logic1*' is driven by constant 1. (LINT-54)
+Warning: In design 'proc', multiply-driven net 'iID_EX/*Logic1*' is driven by constant 1. (LINT-54)
+Warning: In design 'proc', multiply-driven net 'iFETCH/iDBP/iBHT/*Logic1*' is driven by constant 1. (LINT-54)
+
+Memory usage for this session 7938 Mbytes.
+Memory usage for this session including child processes 7938 Mbytes.
+CPU usage for this session 481 seconds ( 0.13 hours ).
+Elapsed time for this session 487 seconds ( 0.14 hours ).
+
+Thank you...

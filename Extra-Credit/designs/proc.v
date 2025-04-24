@@ -344,7 +344,7 @@ module proc (
       .MEM_WB_MemData(MEM_WB_MemData),
       .MEM_WB_WB_signals({MEM_WB_reg_rd, MEM_WB_RegWrite, MEM_WB_MemToReg, MEM_WB_HLT, MEM_WB_PCS})
   );
-  /////////////////////////////////////////////////
+  //////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////////////
   // WRITE_BACK data to the register file based on PCS/LW/ALU as applicable //

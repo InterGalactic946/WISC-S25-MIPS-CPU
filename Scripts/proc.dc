@@ -3,12 +3,51 @@
 ###################################
 read_file -format verilog { \
   ../designs/proc.v \
+  ../designs/Fetch.v \
+  ../designs/ALU.v \
+  ../designs/BHT.v \
+  ../designs/Branch_Cache.v \
+  ../designs/Branch_control.v \
+  ../designs/BTB.v \
+  ../designs/Cache.v \
+  ../designs/CLA_4bit.v \
+  ../designs/CLA_8bit.v \
+  ../designs/CLA_16bit.v \
+  ../designs/ControlUnit.v \
+  ../designs/CPU_Register.v \
+  ../designs/DataArray.v \
+  ../designs/Decode.v \
+  ../designs/Decoder_2_4.v \
+  ../designs/Decoder_3_8.v \
+  ../designs/Decoder_4_16.v \
+  ../designs/Decoder_6_64.v \
+  ../designs/dff.v \
+  ../designs/DynamicBranchPredictor.v \
+  ../designs/EX_MEM_pipe_reg.v \
+  ../designs/Execute.v \
+  ../designs/Flag_Register.v \
+  ../designs/ForwardingUnit.v \
+  ../designs/HazardDetectionUnit.v \
+  ../designs/ID_EX_pipe_reg.v \
+  ../designs/IF_ID_pipe_reg.v \
+  ../designs/MEM_WB_pipe_reg.v \
+  ../designs/MetaDataArray.v \
+  ../designs/PSA_16bit.v \
+  ../designs/RED_Unit.v \
+  ../designs/Register.v \
+  ../designs/RegisterFile.v \
+  ../designs/Shifter.v \
+  ../designs/WriteDecoder_3_8.v \
+  ../designs/WriteDecoder_4_16.v \
+  ../designs/BitCell.v \
+  ../designs/Branch_Cache.v \
+  ../designs/CPU_Register.v \
 }
 
 ###################################
 # Set Current Design to top level #
 ###################################
-set current_design cpu
+set current_design proc
 link
 set_max_area 5000
 

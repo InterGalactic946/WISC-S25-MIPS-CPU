@@ -1,0 +1,514 @@
+m255
+K4
+z2
+Z0 !s12c _opt
+Z1 !s99 nomlopt
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+!s11f vlog 2023.2_1 2023.05, May 12 2023
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z2 d/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1
+T_opt
+!s110 1741030868
+VJ>GQ[j0E[Q^M2a=M@<Tan0
+04 17 4 work project_phase1_tb fast 0
+=1-000ae431a4f1-67c605d3-ecf1e-12edbf
+R1
+!s12b OEM100
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work project_phase1_tb
+Z3 tCvgOpt 0
+n@_opt
+OE;O;2023.2_1;77
+vALU
+Z4 2/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/flag_register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ControlUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_8bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RED_Unit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PSA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ALU.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/memory.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ReadDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Shifter.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_4bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_control.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/project_phase1_tb.v
+Z5 !s110 1741022452
+!i10b 1
+!s100 EndRQldi8XaaZT?>oJhcB0
+I1oE7Xnz9>bm2Ti`KGiki22
+R2
+Z6 w1741022278
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ALU.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ALU.v
+!i122 0
+L0 8 116
+Z7 VDg1SIo80bB@j0V0VzS_@n1
+Z8 OE;L;2023.2_1;77
+r1
+!s85 0
+31
+Z9 !s108 1741022452.000000
+Z10 !s107 /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/project_phase1_tb.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_control.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_4bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Shifter.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ReadDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/memory.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ALU.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PSA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RED_Unit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_8bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ControlUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/flag_register.v|
+Z11 !s90 +acc|-work|./work/project_phase1_tb|-stats=none|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/flag_register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ControlUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_8bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RED_Unit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PSA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ALU.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/memory.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ReadDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Shifter.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_4bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_control.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/project_phase1_tb.v|
+!i113 0
+Z12 o+acc -work ./work/project_phase1_tb -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R3
+n@a@l@u
+vBitCell
+R4
+R5
+!i10b 1
+!s100 0YQidVA=fclSFGTbUH>8[3
+I47YEBXZaf>:U9GGo`5X3D1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/BitCell.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/BitCell.v
+!i122 0
+L0 15 27
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@bit@cell
+vCLA_16bit
+R4
+R5
+!i10b 1
+!s100 eg?l^540JeF7g`F<`nj1X0
+IWL;KCgad5fZ;?SSmI?U6Q3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_16bit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_16bit.v
+!i122 0
+L0 14 43
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@c@l@a_16bit
+vCLA_4bit
+R4
+R5
+!i10b 1
+!s100 `fLTM>n<3YgMI`_0[:CRT0
+II9<SfRlHg^_?;XZn>X1<C1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_4bit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_4bit.v
+!i122 0
+L0 13 63
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@c@l@a_4bit
+vCLA_8bit
+R4
+R5
+!i10b 1
+!s100 fNTG7c7]XbOQg__oGPjKl2
+I[o<MSe65z9@i82Q`GPV7@3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_8bit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/CLA_8bit.v
+!i122 0
+L0 14 41
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@c@l@a_8bit
+vControlUnit
+R4
+R5
+!i10b 1
+!s100 _mh5U^hFUjkj;?lmPg^:B1
+IkNMNY?<lCG7Nb2JQm>CWG2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ControlUnit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ControlUnit.v
+!i122 0
+L0 12 57
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@control@unit
+vcpu
+R4
+R5
+!i10b 1
+!s100 QPBiYX:z00V@]^^]zgnQf1
+Ifjkg_IeTJcae]nC<On8Ua1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/cpu.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/cpu.v
+!i122 0
+L0 12 205
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vdff
+R4
+R5
+!i10b 1
+!s100 Z9V@F2c50oH6kZfdURZd60
+IA>I7QbiJoOMSPDodMVQ4X1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/dff.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/dff.v
+!i122 0
+L0 3 17
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vflag_register
+R4
+R5
+!i10b 1
+!s100 91@YiK;RhA58:W<4e9<g71
+IYA>LLD[JSgR4hGPF_R=?z3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/flag_register.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/flag_register.v
+!i122 0
+L0 8 24
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vmemory1c
+2/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/memory.v
+!s110 1741030867
+!i10b 1
+!s100 X`=2k37EN7WLbK57bjK:^3
+Il>0ddacfYV_`QG[cC0?Lc3
+R2
+w1741030863
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/memory.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/memory.v
+!i122 7
+L0 31 42
+R7
+R8
+r1
+!s85 0
+31
+!s108 1741030867.000000
+!s107 /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/memory.v|
+!s90 +acc|-logfile|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/output/logs/compilation/project_phase1_tb_compilation.log|-work|./work/project_phase1_tb|-stats=none|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/memory.v|
+!i113 0
+R12
+R3
+vPC_control
+R4
+R5
+!i10b 1
+!s100 gjXKda9K41gLW=]D10z;K0
+IIP@JW_C6gzjdN]l5kDMkV3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_control.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_control.v
+!i122 0
+L0 16 51
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@p@c_control
+vPC_Register
+R4
+R5
+!i10b 1
+!s100 P<HoJz4z8ZW>YD63_0z1@0
+I@ziEVImXG;57B3znV3f7d3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_Register.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PC_Register.v
+!i122 0
+L0 9 13
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@p@c_@register
+vproject_phase1_tb
+R4
+R5
+!i10b 1
+!s100 Tccg^doFci5hgzCRLLI3_3
+I;mPoEAP99cf2F^hYJ4MeU1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/project_phase1_tb.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/project_phase1_tb.v
+!i122 0
+L0 1 186
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vPSA_16bit
+R4
+R5
+!i10b 1
+!s100 3S[8OXaZGM<9XK0ck16C03
+Ifi@?R6Nzm:hnB[J>>P`m]2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PSA_16bit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/PSA_16bit.v
+!i122 0
+L0 15 33
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@p@s@a_16bit
+vReadDecoder_4_16
+R4
+R5
+!i10b 1
+!s100 m6h2B@Gh>Wa_9<`8^?EXz3
+I9oldRL5D[>W=KGIWFNgKz0
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ReadDecoder_4_16.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/ReadDecoder_4_16.v
+!i122 0
+L0 10 12
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@read@decoder_4_16
+vRED_Unit
+R4
+R5
+!i10b 1
+!s100 >U6RVnA:3K>KR1a3ENYBV2
+I[jTz9D61S<jWWbeVE4FDJ2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RED_Unit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RED_Unit.v
+!i122 0
+L0 21 62
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@r@e@d_@unit
+vRegister
+R4
+R5
+!i10b 1
+!s100 ]=jZ:TmNZYia844:gi?d]3
+I@:52=0bA9VllaHNFK_Ce=0
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Register.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Register.v
+!i122 0
+L0 12 15
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@register
+vRegisterFile
+R4
+R5
+!i10b 1
+!s100 ^JjDlf<`zdJTYAF]n>3E13
+I`D>j[`BhcSXi[4Hk@hB@C3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RegisterFile.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/RegisterFile.v
+!i122 0
+L0 14 35
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@register@file
+vShifter
+R4
+R5
+!i10b 1
+!s100 CSj;VC<6GXGZED:2;2ZaE1
+IM]<05g[3;cTVTf94ClkbQ2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Shifter.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/Shifter.v
+!i122 0
+L0 12 54
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@shifter
+vWriteDecoder_4_16
+R4
+R5
+!i10b 1
+!s100 j>Og7881i[Q5g;@GoSPLC1
+IS^4?IO;5A:?A3_6BW5IzP3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/WriteDecoder_4_16.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-1/WriteDecoder_4_16.v
+!i122 0
+L0 10 22
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@write@decoder_4_16

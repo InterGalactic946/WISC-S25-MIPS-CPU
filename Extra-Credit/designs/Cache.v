@@ -33,6 +33,9 @@ module Cache (
   wire [7:0] TagIn_second_way; // Second "way" tag info (6-bit tag, 1-bit valid, 1-bit LRU)
   wire [7:0] TagOut_first_way; // The tag currently stored in the first line of the cache to compare to.
   wire [7:0] TagOut_second_way;// The tag currently stored in the second line of the cache to compare to.
+  wire [15:0] DataOut_first_way;
+  wire [15:0] DataOut_second_way;
+  wire [7:0] TagIn;
   wire first_match;            // 1-bit signal indicating the first "way" in the set caused a cache hit.
   wire second_match;           // 1-bit signal indicating the second "way" in the set caused a cache hit.
   wire evict_way;              // 1-bit signal indicating which "way" has LRU bit set.

@@ -1,0 +1,1445 @@
+m255
+K4
+z2
+Z0 !s12c _opt
+Z1 !s99 nomlopt
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+!s11f MIXED_VERSIONS
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z2 d/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2
+T_opt
+!s110 1744079314
+VVj`D7PfE`o0>WfmRXYQ981
+04 6 4 work cpu_tb fast 0
+=1-000ae431a4f1-67f489d0-a5bfc-a611f
+R1
+!s12b OEM100
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work ./tests/WORK/cpu_tb
+Z3 tCvgOpt 0
+n@_opt
+OE;O;2023.2_1;77
+vALU
+Z4 2/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/memory.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/DynamicBranchPredictor_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Fetch_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ForwardingUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/IF_ID_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Execute_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/MEM_WB_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/RegisterFile_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Branch_Control_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ControlUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Decode_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/EX_MEM_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/HazardDetectionUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ID_EX_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_Unit.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/HazardDetectionUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/EX_MEM_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ID_EX_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/MEM_WB_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/flag_register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_8bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RED_Unit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/PSA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ALU.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Execute.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ControlUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Branch_control.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ReadDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Shifter.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Decode.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BTB.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BHT.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/DynamicBranchPredictor.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/memory.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_4bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Fetch.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ForwardingUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CPU_Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/IF_ID_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_tb.sv
+Z5 !s110 1743647714
+!i10b 1
+!s100 EndRQldi8XaaZT?>oJhcB0
+IDa5S0iiSj[POzj4DKTS1<3
+R2
+Z6 w1743647596
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ALU.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ALU.v
+!i122 1
+L0 8 116
+Z7 VDg1SIo80bB@j0V0VzS_@n1
+Z8 OE;L;2023.2_1;77
+r1
+!s85 0
+31
+Z9 !s108 1743647714.000000
+Z10 !s107 /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_tb.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/IF_ID_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CPU_Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ForwardingUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Fetch.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_4bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/memory.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/DynamicBranchPredictor.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BHT.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BTB.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Decode.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Shifter.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ReadDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Branch_control.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ControlUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Execute.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ALU.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/PSA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RED_Unit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_8bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/flag_register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/MEM_WB_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ID_EX_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/EX_MEM_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/HazardDetectionUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_Unit.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ID_EX_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/HazardDetectionUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/EX_MEM_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Decode_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ControlUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Branch_Control_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/RegisterFile_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/MEM_WB_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Execute_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/IF_ID_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ForwardingUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Fetch_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/DynamicBranchPredictor_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/memory.sv|
+Z11 !s90 +acc|-logfile|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/output/logs/compilation/cpu_tb_compilation.log|-work|./tests/WORK/cpu_tb|-stats=none|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/memory.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/DynamicBranchPredictor_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Fetch_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ForwardingUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/IF_ID_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Execute_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/MEM_WB_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/RegisterFile_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Branch_Control_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ControlUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Decode_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/EX_MEM_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/HazardDetectionUnit_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ID_EX_pipe_reg_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_Unit.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/HazardDetectionUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/EX_MEM_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ID_EX_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/MEM_WB_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/flag_register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_8bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RED_Unit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/PSA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ALU.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Execute.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ControlUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Branch_control.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ReadDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Shifter.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Decode.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BTB.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BHT.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/DynamicBranchPredictor.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/memory.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_4bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_16bit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Fetch.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ForwardingUnit.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CPU_Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/IF_ID_pipe_reg.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_tb.sv|
+!i113 0
+Z12 o+acc -work ./tests/WORK/cpu_tb -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R3
+n@a@l@u
+vALU_model
+R4
+Z13 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z14 DXx4 work 9 ALU_tasks 0 22 FUc]FSn[zNbjAHLz2XLJ@1
+DXx4 work 17 ALU_model_sv_unit 0 22 5_cQ[@LbN>VI4oKPcz62[1
+R5
+R7
+r1
+!s85 0
+!i10b 1
+!s100 Na3f761S5ac5>OGlK6<kW3
+I[e=Oo3kE[cY_AB:a5<BD@0
+!s105 ALU_model_sv_unit
+S1
+R2
+R6
+Z15 8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_model.sv
+Z16 F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_model.sv
+!i122 1
+L0 9 83
+R8
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@a@l@u_model
+XALU_model_sv_unit
+R4
+R13
+R14
+R5
+V5_cQ[@LbN>VI4oKPcz62[1
+r1
+!s85 0
+!i10b 1
+!s100 hU`6z49EX66eb1[d=AO4g1
+I5_cQ[@LbN>VI4oKPcz62[1
+!i103 1
+S1
+R2
+R6
+R15
+R16
+!i122 1
+Z17 L0 7 0
+R8
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@a@l@u_model_sv_unit
+XALU_tasks
+R4
+R13
+R5
+!i10b 1
+!s100 z41D6kDicfF[h9NOVb1jz1
+IFUc]FSn[zNbjAHLz2XLJ@1
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_tasks.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ALU_tasks.sv
+!i122 1
+L0 8 0
+VFUc]FSn[zNbjAHLz2XLJ@1
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@a@l@u_tasks
+vBHT
+R4
+R5
+!i10b 1
+!s100 EjLanD<:P8bYcVN=XTOOn2
+I7nYzA`XA2V=5oM]`oAbmP1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BHT.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BHT.v
+!i122 1
+L0 10 87
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@b@h@t
+vBitCell
+R4
+R5
+!i10b 1
+!s100 0YQidVA=fclSFGTbUH>8[3
+IZN^E9U<:ScfRInZZeRo1M1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BitCell.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BitCell.v
+!i122 1
+L0 15 27
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@bit@cell
+vBranch_Control
+R4
+R5
+!i10b 1
+!s100 dW6AP<;[BI7IihD;jXmog0
+I2E]=POW_VJiH>lML=G<Bk2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Branch_control.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Branch_control.v
+!i122 1
+L0 18 74
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@branch_@control
+vBranch_Control_model
+R4
+R13
+R5
+!i10b 1
+!s100 ZmzBDgH]`]90h4=:kJ1Bi0
+If?]ziMAL_c9lz4UmL[<n62
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Branch_Control_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Branch_Control_model.sv
+!i122 1
+L0 10 71
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@branch_@control_model
+vBTB
+R4
+R5
+!i10b 1
+!s100 AcQaSV<R@Mg5a5U8n^O0J3
+I81MB72P9lO?hl2;ZU[Zh[2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BTB.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/BTB.v
+!i122 1
+L0 11 35
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@b@t@b
+vCLA_16bit
+R4
+R5
+!i10b 1
+!s100 eg?l^540JeF7g`F<`nj1X0
+Ijm94g2[25dGh>XmEcnMOG1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_16bit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_16bit.v
+!i122 1
+L0 14 43
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@c@l@a_16bit
+vCLA_4bit
+R4
+R5
+!i10b 1
+!s100 `fLTM>n<3YgMI`_0[:CRT0
+I2eM0XJ1ZR]A1;aEkPCXAA2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_4bit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_4bit.v
+!i122 1
+L0 13 63
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@c@l@a_4bit
+vCLA_8bit
+R4
+R5
+!i10b 1
+!s100 fNTG7c7]XbOQg__oGPjKl2
+Ih9:<[gLB`m2HSBm>NR`G62
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_8bit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CLA_8bit.v
+!i122 1
+L0 14 41
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@c@l@a_8bit
+vControlUnit
+R4
+R5
+!i10b 1
+!s100 aZ_Pzj]ARfjSWf?dC?8M:0
+INBY08T?8zD4;b2CZQF@6F0
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ControlUnit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ControlUnit.v
+!i122 1
+L0 12 78
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@control@unit
+vControlUnit_model
+R4
+R13
+R5
+!i10b 1
+!s100 In^k@UgQ:LI^JF5lc>a0l3
+Io^C0Gk8J5HgI70S<aD>3k3
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ControlUnit_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ControlUnit_model.sv
+!i122 1
+L0 11 102
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@control@unit_model
+vcpu
+R4
+R5
+!i10b 1
+!s100 `RaX<eJj8i4goUIWn;PgV1
+IaFFD6z`z5m^:?mA`nVUC[3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/cpu.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/cpu.v
+!i122 1
+L0 12 340
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vcpu_model
+R4
+R13
+R5
+!i10b 1
+!s100 YXN4I?CD]^Qa=jbk9<RVj3
+I;0^PRVXG[oS?CN96h0:LB2
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_model.sv
+!i122 1
+L0 10 339
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vCPU_Register
+R4
+R5
+!i10b 1
+!s100 ]VKXfK9>=ZNcHz=j;S]C>1
+Im@<a7nV>P:^2YDj3;FRkS1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CPU_Register.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/CPU_Register.v
+!i122 1
+L0 13 16
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@c@p@u_@register
+vcpu_tb
+R4
+R13
+Z18 DXx4 work 13 Monitor_tasks 0 22 BaeMd0e9GZ`Da9M]TQ4dn1
+DXx4 work 18 Verification_tasks 0 22 aBZDBX>LTJAI859ki1TOG3
+R5
+!i10b 1
+!s100 YK_mb]>_:NgQ4UZ0z]4JN2
+I1g=M8ThY96BLe;Ln[gPjQ0
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_tb.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_tb.sv
+!i122 1
+L0 11 330
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vDecode
+R4
+R5
+!i10b 1
+!s100 mHjih`ML5DUQ`F_JFQK^m3
+ImccD]7Te8fi82@hjS8=[U1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Decode.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Decode.v
+!i122 1
+L0 13 197
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@decode
+vDecode_model
+R4
+R13
+R5
+!i10b 1
+!s100 @ajLY:LYZ0h1bk49VkU;A3
+IKBFS0?5>]MGX1I;2f6kec1
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Decode_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Decode_model.sv
+!i122 1
+L0 7 197
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@decode_model
+vdff
+R4
+R5
+!i10b 1
+!s100 Z9V@F2c50oH6kZfdURZd60
+I3Tg5G?]nM?;2E7fK`ifz73
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/dff.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/dff.v
+!i122 1
+L0 3 17
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vDynamicBranchPredictor
+R4
+R5
+!i10b 1
+!s100 GRWd4QhbP^SU0l4aZ<Von1
+IQF]Ibo8>f^`IBDQECdN;z2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/DynamicBranchPredictor.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/DynamicBranchPredictor.v
+!i122 1
+L0 12 53
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@dynamic@branch@predictor
+vDynamicBranchPredictor_model
+R4
+R13
+R18
+DXx4 work 36 DynamicBranchPredictor_model_sv_unit 0 22 l@VRh]lncL>gG?Qd:;5d>3
+R5
+R7
+r1
+!s85 0
+!i10b 1
+!s100 QK;ZFm0Lm8b:QoPHoW89k1
+IlXHdM;AnUYke7f7O79ElR1
+!s105 DynamicBranchPredictor_model_sv_unit
+S1
+R2
+R6
+Z19 8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/DynamicBranchPredictor_model.sv
+Z20 F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/DynamicBranchPredictor_model.sv
+!i122 1
+L0 9 86
+R8
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@dynamic@branch@predictor_model
+XDynamicBranchPredictor_model_sv_unit
+R4
+R13
+R18
+R5
+Vl@VRh]lncL>gG?Qd:;5d>3
+r1
+!s85 0
+!i10b 1
+!s100 1U]`=[j@Pf6_QgH6XGzzF3
+Il@VRh]lncL>gG?Qd:;5d>3
+!i103 1
+S1
+R2
+R6
+R19
+R20
+!i122 1
+R17
+R8
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@dynamic@branch@predictor_model_sv_unit
+vEX_MEM_pipe_reg
+R4
+R5
+!i10b 1
+!s100 0GD6gZP946E=c2j0XV2Nl2
+IL_oK:]EQfdU1z_@8VLNKK1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/EX_MEM_pipe_reg.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/EX_MEM_pipe_reg.v
+!i122 1
+L0 11 85
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@e@x_@m@e@m_pipe_reg
+vEX_MEM_pipe_reg_model
+R4
+R13
+R5
+!i10b 1
+!s100 b^N=DdW>Lg:hT];XN9RgB3
+IU@mln<LONHJUU8:kb5W^O3
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/EX_MEM_pipe_reg_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/EX_MEM_pipe_reg_model.sv
+!i122 1
+L0 7 82
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@e@x_@m@e@m_pipe_reg_model
+vExecute
+R4
+R5
+!i10b 1
+!s100 Eo5ndLH3hC>OM8o4Sm7fk0
+IiccNb[8e]_RS1<@]3g31e2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Execute.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Execute.v
+!i122 1
+L0 12 76
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@execute
+vExecute_model
+R4
+R13
+R5
+!i10b 1
+!s100 cZLWYCZBV4h;`H>zhRPE`0
+I=n^P:zV<`=Ul9<RV?VoGg3
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Execute_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Execute_model.sv
+!i122 1
+L0 7 81
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@execute_model
+vFetch
+2/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Fetch.v
+!s110 1744079312
+!i10b 1
+!s100 De`dFH0Fg>FOb5]O^25Cc2
+IEn5ViZ:koekOC[X94kCZb2
+R2
+w1744079303
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Fetch.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Fetch.v
+!i122 6
+L0 13 74
+R7
+R8
+r1
+!s85 0
+31
+!s108 1744079311.000000
+!s107 /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Fetch.v|
+!s90 +acc|-logfile|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/output/logs/compilation/cpu_tb_compilation.log|-work|./tests/WORK/cpu_tb|-stats=none|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Fetch.v|
+!i113 0
+R12
+R3
+n@fetch
+vFetch_model
+R4
+R13
+R5
+!i10b 1
+!s100 ;Ez`KK<S[ZL_J<55jzKMJ1
+IQ5Ki9JWWhDL_A?9@1J7m80
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Fetch_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Fetch_model.sv
+!i122 1
+L0 6 80
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@fetch_model
+vFlag_Register
+R4
+R5
+!i10b 1
+!s100 WRLSQ@;7hcLQ?;k01FoLS0
+I08`dR8zMiLAc@Y?9R@6Pk1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/flag_register.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/flag_register.v
+!i122 1
+L0 8 21
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@flag_@register
+vForwardingUnit
+R4
+R5
+!i10b 1
+!s100 ]?o]YRi5]<eMSR=ZS5>N;3
+IAJ3fd]IPRfazRhI?N6@5X3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ForwardingUnit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ForwardingUnit.v
+!i122 1
+L0 13 76
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@forwarding@unit
+vForwardingUnit_model
+R4
+R13
+R5
+!i10b 1
+!s100 fODKkL46FMN49]fbcBh;o1
+INU2^P^g0YQO;NY@bF4<=M2
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ForwardingUnit_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ForwardingUnit_model.sv
+!i122 1
+L0 11 76
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@forwarding@unit_model
+vHazardDetectionUnit
+R4
+R5
+!i10b 1
+!s100 :U03@CTZ1=Y3@F1zJ;;Yo1
+IiMBM<o2;WWGl2_S2fUPNj0
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/HazardDetectionUnit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/HazardDetectionUnit.v
+!i122 1
+L0 10 90
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@hazard@detection@unit
+vHazardDetectionUnit_model
+R4
+R13
+R5
+!i10b 1
+!s100 e^4`2Ebo0P`f08AQmT]j^0
+I4>R`VU7cLO_Ik::i8g3nn1
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/HazardDetectionUnit_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/HazardDetectionUnit_model.sv
+!i122 1
+L0 8 90
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@hazard@detection@unit_model
+vID_EX_pipe_reg
+R4
+R5
+!i10b 1
+!s100 BT<[@f;MhiI2XbhPX>;i;3
+IBFlNI972Jk[elNQ32;>PI3
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ID_EX_pipe_reg.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ID_EX_pipe_reg.v
+!i122 1
+L0 11 124
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@i@d_@e@x_pipe_reg
+vID_EX_pipe_reg_model
+R4
+R13
+R5
+!i10b 1
+!s100 A69CeTP_K@3TX=7jmfLTf1
+I8S@0=7:n4[AAJ>n7KKJ5N0
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ID_EX_pipe_reg_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/ID_EX_pipe_reg_model.sv
+!i122 1
+L0 7 98
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@i@d_@e@x_pipe_reg_model
+vIF_ID_pipe_reg
+R4
+R5
+!i10b 1
+!s100 kcj>F1mmTnJaQzI@I;?J71
+IiHzY60E8_69agonY<e1Rg0
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/IF_ID_pipe_reg.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/IF_ID_pipe_reg.v
+!i122 1
+L0 12 50
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@i@f_@i@d_pipe_reg
+vIF_ID_pipe_reg_model
+R4
+R13
+R5
+!i10b 1
+!s100 RhS1H:o6XkQZVaToTDZW62
+IX=nd7??hfH<GXzhKN]8^82
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/IF_ID_pipe_reg_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/IF_ID_pipe_reg_model.sv
+!i122 1
+L0 6 71
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@i@f_@i@d_pipe_reg_model
+vMEM_WB_pipe_reg
+R4
+R5
+!i10b 1
+!s100 LUSa[fRQOY3mX78a^JoO=0
+IjlH7VT9XfX`JDTPzAalfT2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/MEM_WB_pipe_reg.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/MEM_WB_pipe_reg.v
+!i122 1
+L0 11 66
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@m@e@m_@w@b_pipe_reg
+vMEM_WB_pipe_reg_model
+R4
+R13
+R5
+!i10b 1
+!s100 GO;SQN50AmI6^0o@KzZY50
+IN:fKebY7`5XA<m0O]:fgS0
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/MEM_WB_pipe_reg_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/MEM_WB_pipe_reg_model.sv
+!i122 1
+L0 7 65
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@m@e@m_@w@b_pipe_reg_model
+vmemory
+R4
+R13
+R18
+DXx4 work 14 memory_sv_unit 0 22 ]aSQzSGOhiB7a1FkECNje3
+R5
+R7
+r1
+!s85 0
+!i10b 1
+!s100 Me5?OP]4Rcm:?olE5RZbB0
+I4l0NAb^6<fS60hIV`F^7`0
+!s105 memory_sv_unit
+S1
+R2
+R6
+Z21 8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/memory.sv
+Z22 F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/memory.sv
+!i122 1
+L0 14 37
+R8
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+vmemory1c
+R4
+R5
+!i10b 1
+!s100 aQ:WLaHH^F4_`8DhH0;=Y0
+IeGfjfVl9<BJK3SXmig2M32
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/memory.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/memory.v
+!i122 1
+L0 31 42
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+Xmemory_sv_unit
+R4
+R13
+R18
+R5
+V]aSQzSGOhiB7a1FkECNje3
+r1
+!s85 0
+!i10b 1
+!s100 We]T3?^P;T7nH1i1PkPaJ0
+I]aSQzSGOhiB7a1FkECNje3
+!i103 1
+S1
+R2
+R6
+R21
+R22
+!i122 1
+L0 12 0
+R8
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+XMonitor_tasks
+R4
+R13
+R5
+!i10b 1
+!s100 ABA[K[Ob3mQJKj`5aJLU`1
+IBaeMd0e9GZ`Da9M]TQ4dn1
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Monitor_tasks.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Monitor_tasks.sv
+!i122 1
+L0 6 0
+VBaeMd0e9GZ`Da9M]TQ4dn1
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@monitor_tasks
+vPSA_16bit
+R4
+R5
+!i10b 1
+!s100 3S[8OXaZGM<9XK0ck16C03
+IHOL60007;W1Xkg`PK:0i32
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/PSA_16bit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/PSA_16bit.v
+!i122 1
+L0 15 33
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@p@s@a_16bit
+vReadDecoder_4_16
+R4
+R5
+!i10b 1
+!s100 m6h2B@Gh>Wa_9<`8^?EXz3
+I;oT1ZYmM=I_aSQUhjdkR<2
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ReadDecoder_4_16.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/ReadDecoder_4_16.v
+!i122 1
+L0 10 12
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@read@decoder_4_16
+vRED_Unit
+R4
+R5
+!i10b 1
+!s100 >U6RVnA:3K>KR1a3ENYBV2
+Ia;IoZMHPJORTPCV4W`boR0
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RED_Unit.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RED_Unit.v
+!i122 1
+L0 21 62
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@r@e@d_@unit
+vRegister
+R4
+R5
+!i10b 1
+!s100 K[WhTFhAhh[mY74O@Q_UC3
+IDdHiWIm:DZlKAjn@eQga11
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Register.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Register.v
+!i122 1
+L0 12 17
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@register
+vRegisterFile
+R4
+R5
+!i10b 1
+!s100 i9l4POBjAeDM1IAcSh5ig2
+I37k:>XmbH:RZj9Bz:ChaX1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RegisterFile.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/RegisterFile.v
+!i122 1
+L0 14 42
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@register@file
+vRegisterFile_model
+R4
+R13
+R5
+!i10b 1
+!s100 @W:BVFa12;JTzc6ocaLfJ0
+IKGjBP4h@QG^Q;1HkF2H8C0
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/RegisterFile_model.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/RegisterFile_model.sv
+!i122 1
+L0 7 38
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@register@file_model
+vShifter
+R4
+R5
+!i10b 1
+!s100 CSj;VC<6GXGZED:2;2ZaE1
+I7_VgQ@QK:i6XOZg]D2QCP1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Shifter.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/Shifter.v
+!i122 1
+L0 12 54
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@shifter
+XVerification_tasks
+R4
+R13
+R18
+R5
+!i10b 1
+!s100 SJ]:BI;^e8PhM<NN>_d^?2
+IaBZDBX>LTJAI859ki1TOG3
+S1
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_tasks.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_tasks.sv
+!i122 1
+L0 11 0
+VaBZDBX>LTJAI859ki1TOG3
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@verification_tasks
+vVerification_Unit
+R4
+R13
+R18
+DXx4 work 25 Verification_Unit_sv_unit 0 22 0ZjijQnonL9I^`?6J2bHn0
+R5
+R7
+r1
+!s85 0
+!i10b 1
+!s100 NnnK5=Oiz@ePCQ]KY@m=@1
+Izd4BcJVn4WBAjJA<OGB7S1
+!s105 Verification_Unit_sv_unit
+S1
+R2
+R6
+Z23 8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_Unit.sv
+Z24 F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/Verification_Unit.sv
+!i122 1
+L0 18 203
+R8
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@verification_@unit
+XVerification_Unit_sv_unit
+R4
+R13
+R18
+R5
+V0ZjijQnonL9I^`?6J2bHn0
+r1
+!s85 0
+!i10b 1
+!s100 dP8<D>iLabOj8MUQk_DGB1
+I0ZjijQnonL9I^`?6J2bHn0
+!i103 1
+S1
+R2
+R6
+R23
+R24
+!i122 1
+L0 16 0
+R8
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@verification_@unit_sv_unit
+vWriteDecoder_4_16
+R4
+R5
+!i10b 1
+!s100 j>Og7881i[Q5g;@GoSPLC1
+I4?1ZKIf7L?e>;FjY_ki<A0
+R2
+R6
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/WriteDecoder_4_16.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/designs/WriteDecoder_4_16.v
+!i122 1
+L0 10 22
+R7
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 0
+R12
+R3
+n@write@decoder_4_16

@@ -17,13 +17,13 @@ module Flag_Register(
 );
 
   // Infer the (Z) zero flag register.
-  CPU_Register #(.WIDTH(1)) iZF_REG (.clk(clk), .rst(rst), .wen(Z_en), .data_in(Z_set), .data_out(ZF));
+  CPU_Register #(1) iZF_REG (.clk(clk), .rst(rst), .wen(Z_en), .data_in(Z_set), .data_out(ZF));
 
   // Infer the (V) overflow flag register.
-  CPU_Register #(.WIDTH(1)) iVF_REG (.clk(clk), .rst(rst), .wen(V_en), .data_in(V_set), .data_out(VF));
+  CPU_Register #(1) iVF_REG (.clk(clk), .rst(rst), .wen(V_en), .data_in(V_set), .data_out(VF));
 
   // Infer the (N) signed flag register.
-  CPU_Register #(.WIDTH(1)) iNF_REG (.clk(clk), .rst(rst), .wen(N_en), .data_in(N_set), .data_out(NF));
+  CPU_Register #(1) iNF_REG (.clk(clk), .rst(rst), .wen(N_en), .data_in(N_set), .data_out(NF));
 
 endmodule
 

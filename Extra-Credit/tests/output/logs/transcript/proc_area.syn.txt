@@ -1,0 +1,34 @@
+Warning: Design 'proc' has '7' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : area
+Design : proc
+Version: V-2023.12-SP5
+Date   : Wed Apr 23 19:51:57 2025
+****************************************
+
+Library(s) Used:
+
+    gtech (File: /cae/apps/data/synopsys-2024/syn/V-2023.12-SP5/libraries/syn/gtech.db)
+
+Number of ports:                         2811
+Number of nets:                       1191558
+Number of cells:                      1123063
+Number of combinational cells:          72182
+Number of sequential cells:           1050152
+Number of macros/black boxes:               0
+Number of buf/inv:                       2127
+Number of references:                      52
+
+Combinational area:                  0.000000
+Buf/Inv area:                        0.000000
+Noncombinational area:               0.000000
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (No wire load specified)
+
+Total cell area:                     0.000000
+Total area:                 undefined
+
+Information: This design contains unmapped logic. (RPT-7)
+Information: This design contains black box (unknown) components. (RPT-8)
+1

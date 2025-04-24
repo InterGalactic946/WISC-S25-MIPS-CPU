@@ -55,19 +55,19 @@ module MEM_WB_pipe_reg (
   // Pipeline the WRITE-BACK control signals to be passed to the write-back stage //
   //////////////////////////////////////////////////////////////////////////////////
   // Register for storing Destination register address (EX_MEM_WB_signals[7:4] == reg_rd).
-  CPU_Register #(.WIDTH(4)) iReg_rd_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[7:4]), .data_out(MEM_WB_reg_rd));
+  CPU_Register #(4) iReg_rd_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[7:4]), .data_out(MEM_WB_reg_rd));
 
   // Register for storing Register write enable signal (EX_MEM_WB_signals[3] == RegWrite).
-  CPU_Register #(.WIDTH(1)) iRegWrite_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[3]), .data_out(MEM_WB_RegWrite));
+  CPU_Register #(1) iRegWrite_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[3]), .data_out(MEM_WB_RegWrite));
 
   // Register for storing Memory to Register signal (EX_MEM_WB_signals[2] == MemtoReg).
-  CPU_Register #(.WIDTH(1)) iMemtoReg_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[2]), .data_out(MEM_WB_MemtoReg));
+  CPU_Register #(1) iMemtoReg_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[2]), .data_out(MEM_WB_MemtoReg));
 
   // Register for storing Halt signal (EX_MEM_WB_signals[1] == HLT).
-  CPU_Register #(.WIDTH(1)) iHLT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[1]), .data_out(MEM_WB_HLT));
+  CPU_Register #(1) iHLT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[1]), .data_out(MEM_WB_HLT));
 
   // Register for storing PCS signal (EX_MEM_WB_signals[0] == PCS).
-  CPU_Register #(.WIDTH(1)) iPCS_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[0]), .data_out(MEM_WB_PCS));
+  CPU_Register #(1) iPCS_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(EX_MEM_WB_signals[0]), .data_out(MEM_WB_PCS));
 
   // Concatenate all pipelined write back stage signals.
   assign MEM_WB_WB_signals = {MEM_WB_reg_rd, MEM_WB_RegWrite, MEM_WB_MemtoReg, MEM_WB_HLT, MEM_WB_PCS};

@@ -1,0 +1,7 @@
+# vsim -c project_phase1_tb.project_phase1_tb 
+# Start time: 13:38:18 on Mar 03,2025
+# ** Error (suppressible): (vsim-19) Failed to access library 'project_phase1_tb' at "project_phase1_tb".
+# No such file or directory. (errno = ENOENT)
+# Error loading design
+# End time: 13:38:18 on Mar 03,2025, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0

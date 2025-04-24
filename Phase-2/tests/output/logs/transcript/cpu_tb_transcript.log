@@ -1,0 +1,317 @@
+# vsim -c ./tests/WORK/cpu_tb.cpu_tb -wlf /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/output/waves/cpu_tb.wlf -logfile /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/output/logs/transcript/cpu_tb_transcript.log -do "run -all; log -flush /*; quit -f;" 
+# Start time: 21:28:32 on Apr 07,2025
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# //  Questa Sim
+# //  Version 2023.2_1 linux May 12 2023
+# //
+# //  Copyright 1991-2023 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.Monitor_tasks(fast)
+# Loading work.Verification_tasks(fast)
+# Loading work.cpu_tb(fast)
+# Loading work.cpu(fast)
+# Loading work.Fetch(fast)
+# Loading work.DynamicBranchPredictor(fast)
+# Loading work.BTB(fast)
+# Loading work.memory1c(fast)
+# Loading work.BHT(fast)
+# Loading work.CPU_Register(fast)
+# Loading work.memory1c(fast__1)
+# Loading work.CLA_16bit(fast)
+# Loading work.IF_ID_pipe_reg(fast)
+# Loading work.CPU_Register(fast__1)
+# Loading work.Decode(fast)
+# Loading work.ControlUnit(fast)
+# Loading work.Branch_Control(fast)
+# Loading work.RegisterFile(fast)
+# Loading work.ReadDecoder_4_16(fast)
+# Loading work.Shifter(fast)
+# Loading work.WriteDecoder_4_16(fast)
+# Loading work.HazardDetectionUnit(fast)
+# Loading work.ID_EX_pipe_reg(fast)
+# Loading work.CPU_Register(fast__2)
+# Loading work.CPU_Register(fast__3)
+# Loading work.Execute(fast)
+# Loading work.ALU(fast)
+# Loading work.PSA_16bit(fast)
+# Loading work.RED_Unit(fast)
+# Loading work.CLA_4bit(fast)
+# Loading work.CLA_8bit(fast)
+# Loading work.Flag_Register(fast)
+# Loading work.ForwardingUnit(fast)
+# Loading work.EX_MEM_pipe_reg(fast)
+# Loading work.memory1c(fast__2)
+# Loading work.MEM_WB_pipe_reg(fast)
+# Loading work.cpu_model(fast)
+# Loading work.Fetch_model(fast)
+# Loading work.DynamicBranchPredictor_model_sv_unit(fast)
+# Loading work.DynamicBranchPredictor_model(fast)
+# Loading work.IF_ID_pipe_reg_model(fast)
+# Loading work.Decode_model(fast)
+# Loading work.ControlUnit_model(fast)
+# Loading work.Branch_Control_model(fast)
+# Loading work.RegisterFile_model(fast)
+# Loading work.HazardDetectionUnit_model(fast)
+# Loading work.ID_EX_pipe_reg_model(fast)
+# Loading work.Execute_model(fast)
+# Loading work.ALU_tasks(fast)
+# Loading work.ALU_model_sv_unit(fast)
+# Loading work.ALU_model(fast)
+# Loading work.ForwardingUnit_model(fast)
+# Loading work.EX_MEM_pipe_reg_model(fast)
+# Loading work.memory_sv_unit(fast)
+# Loading work.memory(fast)
+# Loading work.MEM_WB_pipe_reg_model(fast)
+# Loading work.Verification_Unit_sv_unit(fast)
+# Loading work.Verification_Unit(fast)
+# Loading work.dff(fast)
+# Loading work.Register(fast)
+# Loading work.BitCell(fast)
+# run -all
+# 
+# 
+# ==========================================================
+# | Instruction: LLB R1, 0x0002 | Completed At Cycle: 7 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0xa102 | Branch Predicted NOT Taken. @ Cycle: 3
+# |[DECODE] SUCCESS: Opcode = 0b1010, Instr: LLB, rd = 0x1, imm = 0x0002. @ Cycle: 4
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0002, ALU_out = 0x0002, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 5
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 6
+# |[WRITE-BACK] SUCCESS: Register R1 written with data: 0x0002. @ Cycle: 7
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LHB R1, 0x0000 | Completed At Cycle: 8 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0002, PC_next: 0x0004, Instruction: 0xb100 | Branch Predicted NOT Taken. @ Cycle: 4
+# |[DECODE] SUCCESS: Opcode = 0b1011, Instr: LHB, rd = 0x1, imm = 0x0000. @ Cycle: 5
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0002, Input_B = 0x0000, ALU_out = 0x0002, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 6
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 7
+# |[WRITE-BACK] SUCCESS: Register R1 written with data: 0x0002. @ Cycle: 8
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LLB R2, 0x0001 | Completed At Cycle: 9 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0004, PC_next: 0x0006, Instruction: 0xa201 | Branch Predicted NOT Taken. @ Cycle: 5
+# |[DECODE] SUCCESS: Opcode = 0b1010, Instr: LLB, rd = 0x2, imm = 0x0001. @ Cycle: 6
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0001, ALU_out = 0x0001, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 7
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 8
+# |[WRITE-BACK] SUCCESS: Register R2 written with data: 0x0001. @ Cycle: 9
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LHB R2, 0x0000 | Completed At Cycle: 10 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0006, PC_next: 0x0008, Instruction: 0xb200 | Branch Predicted NOT Taken. @ Cycle: 6
+# |[DECODE] SUCCESS: Opcode = 0b1011, Instr: LHB, rd = 0x2, imm = 0x0000. @ Cycle: 7
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0001, Input_B = 0x0000, ALU_out = 0x0001, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 8
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 9
+# |[WRITE-BACK] SUCCESS: Register R2 written with data: 0x0001. @ Cycle: 10
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LLB R6, 0x0004 | Completed At Cycle: 11 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0008, PC_next: 0x000a, Instruction: 0xa604 | Branch Predicted NOT Taken. @ Cycle: 7
+# |[DECODE] SUCCESS: Opcode = 0b1010, Instr: LLB, rd = 0x6, imm = 0x0004. @ Cycle: 8
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0004, ALU_out = 0x0004, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 9
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 10
+# |[WRITE-BACK] SUCCESS: Register R6 written with data: 0x0004. @ Cycle: 11
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LHB R6, 0x0000 | Completed At Cycle: 12 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x000a, PC_next: 0x000c, Instruction: 0xb600 | Branch Predicted NOT Taken. @ Cycle: 8
+# |[DECODE] SUCCESS: Opcode = 0b1011, Instr: LHB, rd = 0x6, imm = 0x0000. @ Cycle: 9
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0004, Input_B = 0x0000, ALU_out = 0x0004, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 10
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 11
+# |[WRITE-BACK] SUCCESS: Register R6 written with data: 0x0004. @ Cycle: 12
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: SUB R1, R1, R2 | Completed At Cycle: 13 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x000c, PC_next: 0x000e, Instruction: 0x1112 | Branch Predicted NOT Taken. @ Cycle: 9
+# |[DECODE] SUCCESS: Opcode = 0b0001, Instr: SUB, rs = 0x1, rt = 0x2, rd = 0x1. @ Cycle: 10
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0002, Input_B = 0x0001, ALU_out = 0x0001, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 11
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 12
+# |[WRITE-BACK] SUCCESS: Register R1 written with data: 0x0001. @ Cycle: 13
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: PCS R5 | Completed At Cycle: 14 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x000e, PC_next: 0x0010, Instruction: 0xe500 | Branch Predicted NOT Taken. @ Cycle: 10
+# |[DECODE] SUCCESS: Opcode = 0b1110, Instr: PCS, rd = 0x5. @ Cycle: 11
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0000, ALU_out = 0x0000, Z_set = 1, V_set = 0, N_set = 0. @ Cycle: 12
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 13
+# |[WRITE-BACK] SUCCESS: Register R5 written with data: 0x0010. @ Cycle: 14
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: B 001, TARGET: 0x0012 | Completed At Cycle: 15 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0xc202 | Branch Predicted NOT Taken. @ Cycle: 11
+# |[DECODE] SUCCESS: Flag state: ZF = 0, VF = 0, NF = 0. Branch (B) is actually NOT taken. The actual target is: 0x0012. @ Cycle: 12
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0002, ALU_out = 0x0000, Z_set = 1, V_set = 0, N_set = 0. @ Cycle: 13
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 14
+# |[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: 15
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: BR 111, R6 | Completed At Cycle: 16 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0012, PC_next: 0x0014, Instruction: 0xde60 | Branch Predicted NOT Taken. @ Cycle: 12
+# |[DECODE] SUCCESS: Flag state: ZF = 0, VF = 0, NF = 0. Branch (BR) is actually taken. The actual target is: 0x0004. @ Cycle: 13
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0004, Input_B = 0x0000, ALU_out = 0x0000, Z_set = 1, V_set = 0, N_set = 0. @ Cycle: 14
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 15
+# |[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: 16
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: NOP | Completed At Cycle: 17 |
+# ==========================================================
+# |[FETCH] ERROR: PC_next: 0x0014, expected_PC_next: 0x0016. @ Cycle: 13
+# |[DECODE] ERROR: actual_target: 0x0014, expected_actual_target: 0x0016. @ Cycle: 14
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0000, ALU_out = 0x0000, Z_set = 1, V_set = 0, N_set = 0. @ Cycle: 15
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 16
+# |[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: 17
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LLB R2, 0x0001 | Completed At Cycle: 18 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0004, PC_next: 0x0006, Instruction: 0xa201 | Branch Predicted NOT Taken. @ Cycle: 14
+# |[DECODE] SUCCESS: Opcode = 0b1010, Instr: LLB, rd = 0x2, imm = 0x0001. @ Cycle: 15
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0001, Input_B = 0x0001, ALU_out = 0x0001, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 16
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 17
+# |[WRITE-BACK] SUCCESS: Register R2 written with data: 0x0001. @ Cycle: 18
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LHB R2, 0x0000 | Completed At Cycle: 19 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0006, PC_next: 0x0008, Instruction: 0xb200 | Branch Predicted NOT Taken. @ Cycle: 15
+# |[DECODE] SUCCESS: Opcode = 0b1011, Instr: LHB, rd = 0x2, imm = 0x0000. @ Cycle: 16
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0001, Input_B = 0x0000, ALU_out = 0x0001, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 17
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 18
+# |[WRITE-BACK] SUCCESS: Register R2 written with data: 0x0001. @ Cycle: 19
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LLB R6, 0x0004 | Completed At Cycle: 20 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0008, PC_next: 0x000a, Instruction: 0xa604 | Branch Predicted NOT Taken. @ Cycle: 16
+# |[DECODE] SUCCESS: Opcode = 0b1010, Instr: LLB, rd = 0x6, imm = 0x0004. @ Cycle: 17
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0004, Input_B = 0x0004, ALU_out = 0x0004, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 18
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 19
+# |[WRITE-BACK] SUCCESS: Register R6 written with data: 0x0004. @ Cycle: 20
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LHB R6, 0x0000 | Completed At Cycle: 21 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x000a, PC_next: 0x000c, Instruction: 0xb600 | Branch Predicted NOT Taken. @ Cycle: 17
+# |[DECODE] SUCCESS: Opcode = 0b1011, Instr: LHB, rd = 0x6, imm = 0x0000. @ Cycle: 18
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0004, Input_B = 0x0000, ALU_out = 0x0004, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 19
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 20
+# |[WRITE-BACK] SUCCESS: Register R6 written with data: 0x0004. @ Cycle: 21
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: SUB R1, R1, R2 | Completed At Cycle: 22 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x000c, PC_next: 0x000e, Instruction: 0x1112 | Branch Predicted NOT Taken. @ Cycle: 18
+# |[DECODE] SUCCESS: Opcode = 0b0001, Instr: SUB, rs = 0x1, rt = 0x2, rd = 0x1. @ Cycle: 19
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0001, Input_B = 0x0001, ALU_out = 0x0000, Z_set = 1, V_set = 0, N_set = 0. @ Cycle: 20
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 21
+# |[WRITE-BACK] SUCCESS: Register R1 written with data: 0x0000. @ Cycle: 22
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: PCS R5 | Completed At Cycle: 23 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x000e, PC_next: 0x0010, Instruction: 0xe500 | Branch Predicted NOT Taken. @ Cycle: 19
+# |[DECODE] SUCCESS: Opcode = 0b1110, Instr: PCS, rd = 0x5. @ Cycle: 20
+# |[EXECUTE] SUCCESS: ZF = 1, VF = 0, NF = 0. Input_A = 0x0010, Input_B = 0x0000, ALU_out = 0x0000, Z_set = 1, V_set = 0, N_set = 0. @ Cycle: 21
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 22
+# |[WRITE-BACK] SUCCESS: Register R5 written with data: 0x0010. @ Cycle: 23
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: B 001, TARGET: 0x0016 | Completed At Cycle: 24 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0xc202 | Branch Predicted NOT Taken. @ Cycle: 20
+# |[DECODE] SUCCESS: Flag state: ZF = 1, VF = 0, NF = 0. Branch (B) is actually taken. The actual target is: 0x0016. @ Cycle: 21
+# |[EXECUTE] SUCCESS: ZF = 1, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0002, ALU_out = 0x0000, Z_set = 1, V_set = 0, N_set = 0. @ Cycle: 22
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 23
+# |[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: 24
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: NOP | Completed At Cycle: 25 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0012, PC_next: 0x0014, Instruction: 0xde60 | Branch Predicted NOT Taken. @ Cycle: 21
+# |[DECODE] FLUSH: Instruction flushed at decode due to mispredicted branch. @ Cycle: 22
+# |[EXECUTE] SUCCESS: ZF = 1, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0000, ALU_out = 0x0000, Z_set = 1, V_set = 0, N_set = 0. @ Cycle: 23
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 24
+# |[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: 25
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: ADD R4, R6, R2 | Completed At Cycle: 26 |
+# ==========================================================
+# |[FETCH] SUCCESS: PC_curr: 0x0016, PC_next: 0x0018, Instruction: 0x0462 | Branch Predicted NOT Taken. @ Cycle: 22
+# |[DECODE] SUCCESS: Opcode = 0b0000, Instr: ADD, rs = 0x6, rt = 0x2, rd = 0x4. @ Cycle: 23
+# |[EXECUTE] SUCCESS: ZF = 1, VF = 0, NF = 0. Input_A = 0x0004, Input_B = 0x0001, ALU_out = 0x0005, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 24
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 25
+# |[WRITE-BACK] SUCCESS: Register R4 written with data: 0x0005. @ Cycle: 26
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: HLT | Completed At Cycle: 27 |
+# ==========================================================
+# |[FETCH] ERROR: PC_next: 0x0018, expected_PC_next: 0x001a. @ Cycle: 23
+# |[DECODE] ERROR: actual_target: 0x0018, expected_actual_target: 0x001a. @ Cycle: 24
+# |[DECODE] ERROR: actual_target: 0x0018, expected_actual_target: 0x001a. @ Cycle: 25
+# |[DECODE] ERROR: actual_target: 0x0018, expected_actual_target: 0x001a. @ Cycle: 26
+# |[DECODE] ERROR: actual_target: 0x0018, expected_actual_target: 0x001a. @ Cycle: 27
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: UNKNOWN | Completed At Cycle: 28 |
+# ==========================================================
+# |[FETCH] ERROR: PC_next: 0x001a, expected_PC_next: 0x001c. @ Cycle: 24
+# |[FETCH] ERROR: PC_next: 0x001a, expected_PC_next: 0x001c. @ Cycle: 25
+# |[FETCH] ERROR: PC_next: 0x001a, expected_PC_next: 0x001c. @ Cycle: 26
+# |[FETCH] ERROR: PC_next: 0x001a, expected_PC_next: 0x001c. @ Cycle: 27
+# |[FETCH] ERROR: PC_next: 0x001a, expected_PC_next: 0x001c. @ Cycle: 28
+# ==========================================================
+# 
+# CPU halted due to HLT instruction.
+# 
+# YAHOO!! All tests passed.
+# ** Note: $stop    : /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_tb.sv(104)
+#    Time: 295 ns  Iteration: 1  Instance: /cpu_tb
+# Break in Module cpu_tb at /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_tb.sv line 104
+# Stopped at /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/cpu_tb.sv line 104
+#  log -flush /*
+#  quit -f
+# End time: 21:28:34 on Apr 07,2025, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 1
+0:02
+# Errors: 0, Warnings: 1

@@ -1,0 +1,51 @@
+# vsim -c ./tests/WORK/DynamicBranchPredictor_tb.DynamicBranchPredictor_tb -wlf /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/output/waves/DynamicBranchPredictor_tb.wlf -logfile /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/output/logs/transcript/DynamicBranchPredictor_tb_transcript.log -do "run -all; log -flush /*; quit -f;" 
+# Start time: 21:33:25 on Apr 02,2025
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# //  Questa Sim
+# //  Version 2023.2_1 linux May 12 2023
+# //
+# //  Copyright 1991-2023 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.Monitor_tasks(fast)
+# Loading work.DynamicBranchPredictor_tb_sv_unit(fast)
+# Loading work.DynamicBranchPredictor_tb(fast)
+# Loading work.DynamicBranchPredictor(fast)
+# Loading work.BTB(fast)
+# Loading work.memory1c(fast)
+# Loading work.BHT(fast)
+# Loading work.DynamicBranchPredictor_model_sv_unit(fast)
+# Loading work.DynamicBranchPredictor_model(fast)
+# run -all
+# 
+# Number of PC stall cycles: 15059.
+# Number of branches predicted to be taken: 160.
+# Number of branches predicted to be not taken: 7441.
+# Number of penalty cycles for misprediction: 4217.
+# Number of branches actually taken: 3859.
+# Number of branch instructions executed: 7601.
+# Number of instructions executed: 30000.
+# Accuracy of predictor: 44.520458%.
+# 
+# YAHOO!! All tests passed.
+# ** Note: $stop    : /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/DynamicBranchPredictor_tb.sv(173)
+#    Time: 300015 ns  Iteration: 1  Instance: /DynamicBranchPredictor_tb
+# Break in Module DynamicBranchPredictor_tb at /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/DynamicBranchPredictor_tb.sv line 173
+# Stopped at /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Phase-2/tests/DynamicBranchPredictor_tb.sv line 173
+#  log -flush /*
+#  quit -f
+# End time: 21:33:27 on Apr 02,2025, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 1
+0:02
+# Errors: 0, Warnings: 1

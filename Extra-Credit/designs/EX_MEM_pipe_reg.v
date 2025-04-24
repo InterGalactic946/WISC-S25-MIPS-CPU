@@ -55,16 +55,16 @@ module EX_MEM_pipe_reg (
   // Pipeline the MEMORY control signals to be passed to the memory stage  //
   ///////////////////////////////////////////////////////////////////////////
   // Register for storing second source register ID.
-  CPU_Register #(.WIDTH(4)) iSrcReg2_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_SrcReg2), .data_out(EX_MEM_SrcReg2));
+  CPU_Register #(4) iSrcReg2_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_SrcReg2), .data_out(EX_MEM_SrcReg2));
 
   // Register for storing Memory write data (ID_EX_MEM_signals[17:2] == MemWriteData).
-  CPU_Register #(.WIDTH(16)) iMemWriteData_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[17:2]), .data_out(EX_MEM_MemWriteData));
+  CPU_Register #(16) iMemWriteData_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[17:2]), .data_out(EX_MEM_MemWriteData));
 
   // Register for storing Memory enable signal (ID_EX_MEM_signals[1] == MemEnable).
-  CPU_Register #(.WIDTH(1)) iMemEnable_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[1]), .data_out(EX_MEM_MemEnable));
+  CPU_Register #(1) iMemEnable_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[1]), .data_out(EX_MEM_MemEnable));
 
   // Register for storing Memory write signal (ID_EX_MEM_signals[0] == MemWrite).
-  CPU_Register #(.WIDTH(1)) iMemWrite_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[0]), .data_out(EX_MEM_MemWrite));
+  CPU_Register #(1) iMemWrite_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_MEM_signals[0]), .data_out(EX_MEM_MemWrite));
 
   // Concatenate all pipelined memory stage signals.
   assign EX_MEM_MEM_signals = {EX_MEM_MemWriteData, EX_MEM_MemEnable, EX_MEM_MemWrite};
@@ -74,19 +74,19 @@ module EX_MEM_pipe_reg (
   // Pipeline the WRITE-BACK control signals to be passed to the memory stage //
   //////////////////////////////////////////////////////////////////////////////
   // Register for storing Destination register address (ID_EX_WB_signals[7:4] == reg_rd).
-  CPU_Register #(.WIDTH(4)) iReg_rd_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[7:4]), .data_out(EX_MEM_reg_rd));
+  CPU_Register #(4) iReg_rd_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[7:4]), .data_out(EX_MEM_reg_rd));
 
   // Register for storing Register write enable signal (ID_EX_WB_signals[3] == RegWrite).
-  CPU_Register #(.WIDTH(1)) iRegWrite_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[3]), .data_out(EX_MEM_RegWrite));
+  CPU_Register #(1) iRegWrite_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[3]), .data_out(EX_MEM_RegWrite));
 
   // Register for storing Memory to Register signal (ID_EX_WB_signals[2] == MemtoReg).
-  CPU_Register #(.WIDTH(1)) iMemtoReg_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[2]), .data_out(EX_MEM_MemtoReg));
+  CPU_Register #(1) iMemtoReg_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[2]), .data_out(EX_MEM_MemtoReg));
 
   // Register for storing Halt signal (ID_EX_WB_signals[1] == HLT).
-  CPU_Register #(.WIDTH(1)) iHLT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[1]), .data_out(EX_MEM_HLT));
+  CPU_Register #(1) iHLT_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[1]), .data_out(EX_MEM_HLT));
 
   // Register for storing PCS signal (ID_EX_WB_signals[0] == PCS).
-  CPU_Register #(.WIDTH(1)) iPCS_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[0]), .data_out(EX_MEM_PCS));
+  CPU_Register #(1) iPCS_REG (.clk(clk), .rst(rst), .wen(1'b1), .data_in(ID_EX_WB_signals[0]), .data_out(EX_MEM_PCS));
 
   // Concatenate all pipelined write back stage signals.
   assign EX_MEM_WB_signals = {EX_MEM_reg_rd, EX_MEM_RegWrite, EX_MEM_MemtoReg, EX_MEM_HLT, EX_MEM_PCS};

@@ -7,7 +7,7 @@
 
 // Initialize registers and array base address
 LLB R1, 0x05      // Loop counter (R1 = 5 elements)
-LLB R2, 0x20      // Base address of the array (R2 = 0x0020)
+LLB R2, 0X8A      // Base address of the array (R2 = 0x008A)
 LLB R3, 0x00      // Sum accumulator (R3 = 0x0000)
 LLB R4, 0x05      // Constant: 5 (for averaging)
 LLB R5, 0x01      // Increment value (R5 = 1)

@@ -68,14 +68,14 @@ package Monitor_tasks;
 
   // Structure to store debug information for each pipeline stage
   typedef struct {
-    string fetch_msgs[0:4];
+    string fetch_msgs[0:49];
 
-    string decode_msgs[0:4];
+    string decode_msgs[0:49];
     string instr_full_msg;
 
-    string execute_msg;
+    string execute_msgs[0:49];
 
-    string memory_msg;
+    string memory_msgs[0:49];
 
     string wb_msg;
   } debug_info_t;
@@ -136,7 +136,8 @@ package Monitor_tasks;
 
 
   // Task: Prints data memory to a file with the current clock cycle.
-  task automatic log_data_dump(input model_data_mem_t model_data_mem, 
+  task automatic log_data_dump(input logic [15:0] model_data_mem [0:65535], 
+                              input logic [15:0] model_data_addr [0:65535], 
                               input logic [15:0] dut_data_mem [0:65535]);
       integer addr;
       integer file;  // File handle
@@ -165,8 +166,8 @@ package Monitor_tasks;
 
       // Iterate through the memory locations
       for (addr = 0; addr < 65536; addr++) begin
-          model_addr = model_data_mem.mem_addr[addr];
-          model_val = model_data_mem.data_mem[addr];
+          model_addr = model_data_addr[addr];
+          model_val = model_data_mem[addr];
           dut_val = dut_data_mem[addr];
 
           // Only write values where model memory was accessed (not 'x')

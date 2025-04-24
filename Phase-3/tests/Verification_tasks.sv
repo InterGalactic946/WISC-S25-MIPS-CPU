@@ -41,9 +41,10 @@ package Verification_tasks;
 
   // Task: A task to verify the FETCH stage.
   task automatic verify_FETCH(
-      input logic PC_stall, expected_PC_stall, HLT,
+      input logic PC_stall, expected_PC_stall, I_cache_stall, WaySelect,
+      input logic [5:0] set,
       input logic [15:0] PC_next, expected_PC_next,
-      input logic [15:0] PC_inst, expected_PC_inst,
+      input logic [15:0] PC_inst, expected_PC_inst, cache_addr, cache_data,
       input logic [15:0] PC_curr, expected_PC_curr,
       input logic [1:0]  prediction, expected_prediction,
       input logic predicted_taken, expected_predicted_taken,
@@ -110,25 +111,25 @@ package Verification_tasks;
           endcase
           
           // If all checks pass, store success message.
-          if (PC_stall && !HLT) // If the stall is not due to HLT.
+          if (PC_stall && !I_cache_stall) // If the stall is not due to HLT.
             fetch_msg = $sformatf("[FETCH] STALL: PC stalled due to propagated stall. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.",  PC_curr, PC_next, PC_inst);
-          else if (PC_stall && HLT)
-            fetch_msg = $sformatf("[FETCH] STALL: PC stalled due to HLT instruction. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", PC_curr, PC_next, PC_inst);
+          else if (PC_stall && I_cache_stall)
+            fetch_msg = $sformatf("[FETCH] MISS: Evicting \"way\" %b in set 0x%h at address 0x%h with data 0x%h. PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h.", WaySelect, set, cache_addr, cache_data, PC_curr, PC_next, PC_inst);
           else if (predicted_taken)
             // Branch is predicted taken.
-            fetch_msg = $sformatf("[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted %s | Predicted Target: 0x%h.",
-                                    PC_curr, PC_next, PC_inst, pred_str, predicted_target);
+            fetch_msg = $sformatf("[FETCH] HIT: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Set: 0x%h, Way: %b | Branch Predicted %s | Predicted Target: 0x%h.",
+                                    PC_curr, PC_next, PC_inst, set, WaySelect, pred_str, predicted_target);
           else
             // Branch is not predicted taken.
-            fetch_msg = $sformatf("[FETCH] SUCCESS: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Branch Predicted %s.",
-                                    PC_curr, PC_next, PC_inst, pred_str);
+            fetch_msg = $sformatf("[FETCH] HIT: PC_curr: 0x%h, PC_next: 0x%h, Instruction: 0x%h | Set: 0x%h, Way: %b | Branch Predicted %s.",
+                                    PC_curr, PC_next, PC_inst, set, WaySelect, pred_str);
     end
   endtask
 
 
   // Task: Verify the DECODE stage.
   task automatic verify_DECODE(
-      input logic IF_ID_stall, expected_IF_ID_stall,
+      input logic IF_ID_stall, expected_IF_ID_stall, DCACHE_miss,
       input logic IF_flush, expected_IF_flush,
       input logic br_hazard, b_hazard, load_use_hazard,
       input logic [62:0] EX_signals, expected_EX_signals,
@@ -157,7 +158,9 @@ package Verification_tasks;
           hazard_type = "";
           
           // Determine the type of hazard and generate the appropriate message.
-          if (load_use_hazard) begin
+          if (DCACHE_miss)
+            hazard_type = "propagated stall";
+         else if (load_use_hazard) begin
             hazard_type = "load-to-use hazard";
           end else if (br_hazard) begin
             hazard_type = "Branch (BR) hazard";
@@ -405,7 +408,7 @@ package Verification_tasks;
       input logic Z_set, V_set, N_set,
       input logic [15:0] expected_ALU_out,
       input logic ID_flush, expected_ID_flush,
-      input logic br_hazard, b_hazard, load_use_hazard,          
+      input logic EX_MEM_stall,          
       input logic ZF,                 
       input  logic NF,               
       input  logic VF,               
@@ -421,13 +424,8 @@ package Verification_tasks;
      hazard_type = "";
 
     // Determine the type of hazard and generate the appropriate message.
-    if (load_use_hazard) begin
-        hazard_type = "load-to-use hazard";
-    end else if (br_hazard) begin
-        hazard_type = "Branch (BR) hazard";
-    end else if (b_hazard) begin
-        hazard_type = "Branch (B) hazard";
-    end
+    if (EX_MEM_stall) 
+        hazard_type = "propagated stall";
       
       // Verify ALU result.
       if (ALU_out !== expected_ALU_out) begin
@@ -457,9 +455,9 @@ package Verification_tasks;
           return;  // Exit task on error
        end
 
-       // If there is a flush at the execute stage, print out the flush along with reason.
-       if (ID_flush) // If the instruction is flushed.
-        execute_msg = $sformatf("[EXECUTE] FLUSH: Instruction flushed at execute due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
+       // If there is a stall at the execute stage, print out the stall along with reason.
+       if (EX_MEM_stall) // If the instruction is stalled.
+        execute_msg = $sformatf("[EXECUTE] STALL: Instruction stalled at execute due to %s. ZF = %b, VF = %b, NF = %b.", hazard_type, ZF, VF, NF);
        else
         // Display the execution result if no errors are found.
         execute_msg = $sformatf("[EXECUTE] SUCCESS: ZF = %b, VF = %b, NF = %b. Input_A = 0x%h, Input_B = 0x%h, ALU_out = 0x%h, Z_set = %b, V_set = %b, N_set = %b.", ZF, VF, NF, Input_A, Input_B, ALU_out, Z_set, V_set, N_set);
@@ -474,6 +472,9 @@ package Verification_tasks;
       input logic [15:0] MemWriteData, expected_MemWriteData, 
       input logic EX_MEM_MemEnable,
       input logic EX_MEM_MemWrite,
+      input logic D_cache_stall, WaySelect,
+      input logic [5:0] set,
+      input logic [15:0] cache_addr, cache_data,
       output string mem_verify_msg
   );
       // Initialize output message
@@ -497,11 +498,17 @@ package Verification_tasks;
 
       // If all checks pass, print success message.
       if (EX_MEM_MemEnable && EX_MEM_MemWrite) begin
-          // Memory write operation
-          mem_verify_msg = $sformatf("[MEMORY] SUCCESS: Writing 0x%h to Address: 0x%h.", MemWriteData, EX_MEM_ALU_out);
+          // Memory write hit:
+          if (!D_cache_stall)
+            mem_verify_msg = $sformatf("[MEMORY] HIT: | Set: 0x%h, Way: %b | Writing 0x%h to Address: 0x%h.", set, WaySelect, MemWriteData, EX_MEM_ALU_out);
+          else
+            mem_verify_msg = $sformatf("[MEMORY] MISS: Evicting \"way\" %b in set 0x%h at address 0x%h with data 0x%h.", WaySelect, set, cache_addr, cache_data);
       end else if (EX_MEM_MemEnable && !EX_MEM_MemWrite) begin
-          // Memory read operation
-          mem_verify_msg = $sformatf("[MEMORY] SUCCESS: Read 0x%h from Address: 0x%h.", MemData, EX_MEM_ALU_out);
+          // Memory read hit
+          if (!D_cache_stall)
+            mem_verify_msg = $sformatf("[MEMORY] HIT: | Set: 0x%h, Way: %b | Read 0x%h from Address: 0x%h.", set, WaySelect, MemData, EX_MEM_ALU_out);
+          else
+            mem_verify_msg = $sformatf("[MEMORY] MISS: Evicting \"way\" %b in set 0x%h at address 0x%h with data 0x%h.", WaySelect, set, cache_addr, cache_data);
       end else begin
           // No memory operation
           mem_verify_msg = "[MEMORY] SUCCESS: No memory access in this cycle.";

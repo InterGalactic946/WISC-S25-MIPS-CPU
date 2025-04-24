@@ -21,7 +21,10 @@ module cpu_tb();
   logic hlt, expected_hlt;           // Halt signals for execution stop for each DUT and model
   logic [15:0] expected_pc;          // Expected program counter value for verification
   logic [15:0] pc;                   // Current program counter value
-  logic stall;                       // Indicates a stall in the pipeline.
+
+  logic I_cache_stall;               // Indicates a stall in the pipeline due to I_cache miss
+  logic D_cache_stall;               // Indicates a stall in the pipeline due to D_cache miss
+  logic normal_stall;                // Indicates a stall in the pipeline due to LW/SW/B/BR
   
   logic wen_BHT;                     // Write enable for BHT
   logic wen_BTB;                     // Write enable for BTB
@@ -84,10 +87,12 @@ module cpu_tb();
     .execute_msg(execute_msg),
     .mem_msg(mem_msg),
     .wb_msg(wb_msg),
-    .stall(stall), .hlt(hlt)
+    .I_cache_stall(I_cache_stall), .D_cache_stall(D_cache_stall), .normal_stall(normal_stall), .hlt(hlt)
   );
 
-  assign stall = iDUT.iPROC.PC_stall && iDUT.iPROC.IF_ID_stall;
+  assign I_cache_stall = iDUT.iPROC.ICACHE_miss;
+  assign D_cache_stall = iDUT.iPROC.DCACHE_miss;
+  assign normal_stall = !iDUT.iPROC.ICACHE_miss && !iDUT.iPROC.DCACHE_miss && iDUT.iPROC.IF_ID_stall;
 
   // Test procedure to apply stimulus and check responses.
   initial begin
@@ -122,13 +127,14 @@ module cpu_tb();
           );
         end
 
-        // // Log data memory contents.
-        // if (MemEnable || HLT) begin
-        //   log_data_dump(
-        //       .model_data_mem(iMODEL.iPROC.iDATA_MEM.data_memory),     
-        //       .dut_data_mem(iDUT.iPROC.iDATA_MEM.mem)          
-        //   );
-        // end
+        // Log data memory contents.
+        if (MemEnable || HLT) begin
+          log_data_dump(
+              .model_data_mem(iMODEL.iMAIN_MEM.data_mem),     
+              .model_data_addr(iMODEL.iMAIN_MEM.mem_addr),     
+              .dut_data_mem(iDUT.iMAIN_MEM.mem)          
+          );
+        end
         
         // Log the regfile contents.
         if (RegWrite || HLT) begin
@@ -148,7 +154,7 @@ module cpu_tb();
     end else begin
       wen_BHT <= iDUT.iPROC.wen_BHT;
       wen_BTB <= iDUT.iPROC.wen_BTB;
-      MemEnable <= iDUT.iPROC.EX_MEM_MemEnable;
+      MemEnable <= iDUT.iPROC.mem_en;
       RegWrite <= iDUT.iPROC.MEM_WB_RegWrite;
       HLT <= hlt;
     end
@@ -202,7 +208,11 @@ module cpu_tb();
         verify_FETCH(
               .PC_stall(iDUT.iPROC.PC_stall),
               .expected_PC_stall(iMODEL.iPROC.PC_stall),
-              .HLT(iDUT.iPROC.iDECODE.HLT),
+              .I_cache_stall(I_cache_stall),
+              .set(iDUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE.addr[9:4]),
+              .WaySelect(iDUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE.WaySelect),
+              .cache_addr(iDUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE.addr),
+              .cache_data(iDUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE.data_in),
               .PC_next(iDUT.iPROC.PC_next), 
               .expected_PC_next(iMODEL.iPROC.PC_next), 
               .PC_inst(iDUT.iPROC.PC_inst), 
@@ -238,6 +248,7 @@ module cpu_tb();
             .expected_IF_flush(expected_IF_flush),
             .br_hazard(iMODEL.iPROC.iHDU.BR_hazard),
             .b_hazard(iMODEL.iPROC.iHDU.B_hazard),
+            .DCACHE_miss(iMODEL.iPROC.DCACHE_miss),
             .load_use_hazard(iMODEL.iPROC.iHDU.load_to_use_hazard),
             .EX_signals(iDUT.iPROC.EX_signals),
             .expected_EX_signals(iMODEL.iPROC.EX_signals),
@@ -286,9 +297,7 @@ module cpu_tb();
           .ALU_out(iDUT.iPROC.ALU_out),
           .ID_flush(ID_flush),
           .expected_ID_flush(expected_ID_flush),
-          .br_hazard(BR_hazard),
-          .b_hazard(B_hazard),
-          .load_use_hazard(load_to_use_hazard),
+          .EX_MEM_stall(iDUT.iPROC.EX_MEM_stall),
           .Z_set(iDUT.iPROC.iEXECUTE.iALU.Z_set),
           .V_set(iDUT.iPROC.iEXECUTE.iALU.V_set),
           .N_set(iDUT.iPROC.iEXECUTE.iALU.N_set),
@@ -316,6 +325,11 @@ module cpu_tb();
       string mem_verify_msg;
 
       verify_MEMORY(
+        .D_cache_stall(D_cache_stall),
+        .set(iDUT.iPROC.iDATA_MEM_CACHE.iL1_CACHE.addr[9:4]),
+        .WaySelect(iDUT.iPROC.iDATA_MEM_CACHE.iL1_CACHE.WaySelect),
+        .cache_addr(iDUT.iPROC.iDATA_MEM_CACHE.iL1_CACHE.addr),
+        .cache_data(iDUT.iPROC.iDATA_MEM_CACHE.iL1_CACHE.data_in),
         .EX_MEM_ALU_out(iDUT.iPROC.EX_MEM_ALU_out),
         .MemData(iDUT.iPROC.MemData),
         .expected_MemData(iMODEL.iPROC.MemData),

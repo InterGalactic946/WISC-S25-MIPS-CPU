@@ -3,46 +3,46 @@
 ###################################
 read_file -format verilog { \
   ../designs/proc.v \
-  ../designs/Fetch.v \
-  ../designs/Decode.v \
-  ../designs/IF_ID_pipe_reg.v \
-  ../designs/HazardDetectionUnit.v \
-  ../designs/ID_EX_pipe_reg.v \
-  ../designs/Execute.v \
-  ../designs/ForwardingUnit.v \
-  ../designs/EX_MEM_pipe_reg.v \
-  ../designs/memory_system.v \
-  ../designs/MEM_WB_pipe_reg.v \
-  ../designs/DynamicBranchPredictor.v \
-  ../designs/CPU_Register.v \
-  ../designs/ControlUnit.v \
+  ../designs/ALU.v \
+  ../designs/BHT.v \
+  ../designs/BitCell.v \
   ../designs/Branch_Cache.v \
   ../designs/Branch_control.v \
-  ../designs/RegisterFile.v \
-  ../designs/ALU.v \
+  ../designs/BTB.v \
+  ../designs/Cache_Control.v \
+  ../designs/Cache.v \
+  ../designs/CLA_4bit.v \
+  ../designs/CLA_8bit.v \
+  ../designs/CLA_16bit.v \
+  ../designs/ControlUnit.v \
+  ../designs/CPU_Register.v \
+  ../designs/DataArray.v \
+  ../designs/Decode.v \
+  ../designs/Decoder_2_4.v \
+  ../designs/Decoder_3_8.v \
+  ../designs/Decoder_4_16.v \
+  ../designs/Decoder_5_32.v \
+  ../designs/Decoder_6_64.v \
+  ../designs/dff.v \
+  ../designs/DynamicBranchPredictor.v \
+  ../designs/EX_MEM_pipe_reg.v \
+  ../designs/Execute.v \
+  ../designs/Fetch.v \
+  ../designs/Flag_Register.v \
+  ../designs/ForwardingUnit.v \
+  ../designs/HazardDetectionUnit.v \
+  ../designs/ID_EX_pipe_reg.v \
+  ../designs/IF_ID_pipe_reg.v \
+  ../designs/MEM_WB_pipe_reg.v \
+  ../designs/memory_system.v \
+  ../designs/MetaDataArray.v \
   ../designs/PSA_16bit.v \
   ../designs/RED_Unit.v \
-  ../designs/Shifter.v \
-  ../designs/Flag_Register.v \
-  ../designs/Cache.v \
-  ../designs/Cache_Control.v \
-  ../designs/BTB.v \
-  ../designs/BHT.v \
   ../designs/Register.v \
-  ../designs/Decoder_6_64.v \
-  ../designs/Decoder_5_32.v \
-  ../designs/Decoder_4_16.v \
-  ../designs/WriteDecoder_4_16.v \
-  ../designs/Decoder_3_8.v \
+  ../designs/RegisterFile.v \
+  ../designs/Shifter.v \
   ../designs/WriteDecoder_3_8.v \
-  ../designs/Decoder_2_4.v \
-  ../designs/DataArray.v \
-  ../designs/MetaDataArray.v \
-  ../designs/CLA_16bit.v \
-  ../designs/CLA_8bit.v \
-  ../designs/CLA_4bit.v \
-  ../designs/BitCell.v \
-  ../designs/dff.v \
+  ../designs/WriteDecoder_4_16.v \
 }
 
 ###################################
@@ -50,49 +50,62 @@ read_file -format verilog { \
 ###################################
 set current_design proc
 link
-set_max_area 5000
+# set_max_area 5000
 
-#####################################
-# Constrain and assign assign clock #
-#####################################
-create_clock -name "clk" -period 3 -waveform {0 1.5} {clk}
+###########################################
+# Define clock and set don't mess with it #
+###########################################
+# clk with frequency of 400 MHz
+create_clock -name "clk" -period 2.5 -waveform { 0 1.25 } { clk }
+set_false_path -from [get_ports rst]
+set compile_delete_unloaded_sequential_cells false
+set compile_seqmap_propagate_constants false
 set_dont_touch_network [find port clk]
-set_clock_uncertainty 0.15 [get_clocks]
-set_dont_touch_network [get_net iRST/rst_n]
+# Set clk uncertainty (skew)
+set_clock_uncertainty 0.15 clk
 
-##############################################
-# Constrain input timings and Drive strength #
-##############################################
+#########################################
+# Set input delay & drive on all inputs #
+#########################################
 set prim_inputs [remove_from_collection [all_inputs] [find port clk]]
 set_input_delay -clock clk 0.4 $prim_inputs
 set_driving_cell -lib_cell NAND2X2_LVT -library saed32lvt_tt0p85v25c $prim_inputs
+# rst goes to many places so don't touch
+set_dont_touch_network [find port rst]
 
-#####################################
-# Constrain output timings and load #
-#####################################
-set_output_delay -clock clk 0.4 [all_outputs]
+##########################################
+# Set output delay & load on all outputs #
+##########################################
+set_output_delay -clock clk 0.5 [all_outputs]
 set_load 0.1 [all_outputs]
 
-##################################
-# Set wireload & transition time #
-##################################
+#############################################################
+# Wire load model allows it to estimate internal parasitics #
+#############################################################
 set_wire_load_model -name 16000 -library saed32lvt_tt0p85v25c
-set_max_transition 0.15 [current_design]
 
-# Compile the design
-compile -map_effort medium -area_effort high
+######################################################
+# Max transition time is important for Hot-E reasons #
+######################################################
+set_max_transition 0.1 [current_design]
 
-# Flatten to generate no hierarchy
+########################################
+# Now actually synthesize for 1st time #
+########################################
+compile -map_effort medium
+check_design
+
+# Unflatten design now that its compiled
+set_flatten true
+uniquify -force
 ungroup -all -flatten
-
-# Second compile
-compile -map_effort medium -area_effort high
-
-# Fix hold time issues
+# force hold time to be met for all flops
 set_fix_hold clk
 
-# Final compile
-compile -map_effort medium -incremental_mapping -only_hold_time -area_effort high
+# Compile again with higher effort
+compile -map_effort high
+check_design
+
 ####################################################
 # Take a look at max & min timings as well as area #
 ####################################################

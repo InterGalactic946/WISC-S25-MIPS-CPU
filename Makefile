@@ -162,7 +162,7 @@ log:
 			case "$(word 2, $(logargs))" in \
 			c) \
 				echo "Displaying area report:"; \
-				cat ./Extra-Credit/tests/output/logs/compilation/synth_compilation.log ;; \
+				cat ./Extra-Credit/tests/output/logs/synth_compilation.log ;; \
 			a) \
 				echo "Displaying area report:"; \
 				cat ./Extra-Credit/tests/output/logs/transcript/proc_area.syn.txt ;; \

@@ -45,7 +45,7 @@
      // Wait for 2 cycles to print last actual instruction and HLT.
      repeat (2) @(posedge clk);
      
-     $display("CPU halted due to HLT instruction.\n");
+     $display("\nCPU halted due to HLT instruction.\n");
  
      // If we reached here, that means all test cases were successful.
      $display("YAHOO!! All tests passed.");

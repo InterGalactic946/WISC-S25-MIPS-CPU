@@ -53,5 +53,5 @@ SIMLOG:: icachehit_count          15
 
 SIMLOG:: dcachereq_count           0
 
-SIMLOG:: icachereq_count          43
+SIMLOG:: icachereq_count          15
 

@@ -69,7 +69,8 @@ set_clock_uncertainty 0.15 clk
 #########################################
 set prim_inputs [remove_from_collection [all_inputs] [find port clk]]
 set_input_delay -clock clk 0.4 $prim_inputs
-# set_driving_cell -lib_cell NAND2X2_LVT -library saed32lvt_tt0p85v25c $prim_inputs
+set_driving_cell -lib_cell NAND2X2_LVT -library saed32lvt_tt0p85v25c $prim_inputs
+set_max_fanout 16 [get_cells -hier *]
 # rst goes to many places so don't touch
 set_dont_touch_network [find port rst]
 
@@ -82,7 +83,7 @@ set_load 0.1 [all_outputs]
 #############################################################
 # Wire load model allows it to estimate internal parasitics #
 #############################################################
-# set_wire_load_model -name 16000 -library saed32lvt_tt0p85v25c
+set_wire_load_model -name 16000 -library saed32lvt_tt0p85v25c
 
 ######################################################
 # Max transition time is important for Hot-E reasons #

@@ -12,65 +12,72 @@
 ////////////////////////////////////////////////////////////
 module CLA_4bit(Sum, Ovfl, pos_Ovfl, neg_Ovfl, Cout, P_group, G_group, A, B, Cin, sub);
 
-  input wire [3:0] A,B;                  // 4-bit input bits to be added
+  input wire signed [3:0] A,B;                  // 4-bit input bits to be added
   input wire sub;	                       // add-sub indicator
   input wire Cin;	                       // carry-in to the CLA
-  output wire [3:0]	Sum;                 // 4-bit sum output
+  output wire signed [3:0]	Sum;                 // 4-bit sum output
   output wire Ovfl, pos_Ovfl, neg_Ovfl;  // overflow indicators
   output wire Cout, P_group, G_group;    // carry-out, group propagate and generate signals
 
-  /////////////////////////////////////////////////
-  // Declare any internal signals as type wire  //
-  ///////////////////////////////////////////////
-  wire [3:0] B_operand;     // Operand B or its complement.
-  wire Cin_operand;         // Carry in modified to the CLA.
-  wire [3:0] C, P, G;       // 4-bit carry, propagate and generate signals of 4-bit nibble.
-  ///////////////////////////////////////////////
+  // /////////////////////////////////////////////////
+  // // Declare any internal signals as type wire  //
+  // ///////////////////////////////////////////////
+  // wire [3:0] B_operand;     // Operand B or its complement.
+  // wire Cin_operand;         // Carry in modified to the CLA.
+  // wire [3:0] C, P, G;       // 4-bit carry, propagate and generate signals of 4-bit nibble.
+  // ///////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////
-  // Implement CLA_4bit Adder as dataflow verilog //
-  /////////////////////////////////////////////////
-  // Negate B if subtracting.
-  assign B_operand = (sub) ? ~B : B; 
+  // ///////////////////////////////////////////////////
+  // // Implement CLA_4bit Adder as dataflow verilog //
+  // /////////////////////////////////////////////////
+  // // Negate B if subtracting.
+  // assign B_operand = (sub) ? ~B : B; 
 
-  // Make Cin as 1'b1 when subtracting.
-  assign Cin_operand = (sub) ? 1'b1 : Cin;
+  // // Make Cin as 1'b1 when subtracting.
+  // assign Cin_operand = (sub) ? 1'b1 : Cin;
 
-  // Form the propagate signal of the operation.
-  assign P = A | B_operand;
+  // // Form the propagate signal of the operation.
+  // assign P = A | B_operand;
 
-  // Form the generate signal of the operation.
-  assign G = A & B_operand;
+  // // Form the generate signal of the operation.
+  // assign G = A & B_operand;
 
-  // Form the carry chain logic
-  assign C[0] = G[0] | (P[0] & Cin_operand);
-  assign C[1] = G[1] | (P[1] & G[0]) | (P[1] & P[0] & Cin_operand);
-  assign C[2] = G[2] | (P[2] & G[1]) | (P[2] & P[1] & G[0]) | (P[2] & P[1] & P[0] & Cin_operand);
-  assign C[3] = G[3] | (P[3] & G[2]) | (P[3] & P[2] & G[1]) | (P[3] & P[2] & P[1] & G[0]) | (P[3] & P[2] & P[1] & P[0] & Cin_operand);
+  // // Form the carry chain logic
+  // assign C[0] = G[0] | (P[0] & Cin_operand);
+  // assign C[1] = G[1] | (P[1] & G[0]) | (P[1] & P[0] & Cin_operand);
+  // assign C[2] = G[2] | (P[2] & G[1]) | (P[2] & P[1] & G[0]) | (P[2] & P[1] & P[0] & Cin_operand);
+  // assign C[3] = G[3] | (P[3] & G[2]) | (P[3] & P[2] & G[1]) | (P[3] & P[2] & P[1] & G[0]) | (P[3] & P[2] & P[1] & P[0] & Cin_operand);
 
-  // Form the sum of the CLA adder.
-  assign Sum[0] = A[0] ^ B_operand[0] ^ Cin_operand;
-  assign Sum[1] = A[1] ^ B_operand[1] ^ C[0];
-  assign Sum[2] = A[2] ^ B_operand[2] ^ C[1];
-  assign Sum[3] = A[3] ^ B_operand[3] ^ C[2];
+  // // Form the sum of the CLA adder.
+  // assign Sum[0] = A[0] ^ B_operand[0] ^ Cin_operand;
+  // assign Sum[1] = A[1] ^ B_operand[1] ^ C[0];
+  // assign Sum[2] = A[2] ^ B_operand[2] ^ C[1];
+  // assign Sum[3] = A[3] ^ B_operand[3] ^ C[2];
 
-  // Used to know if it is positive overflow.
-  assign pos_Ovfl = ~A[3] & ~B_operand[3] & Sum[3];
+  // // Used to know if it is positive overflow.
+  // assign pos_Ovfl = ~A[3] & ~B_operand[3] & Sum[3];
 
-  // Used to know if it is negative overflow.
-  assign neg_Ovfl = A[3] & B_operand[3] & ~Sum[3];
+  // // Used to know if it is negative overflow.
+  // assign neg_Ovfl = A[3] & B_operand[3] & ~Sum[3];
 
-  // Overflow when either positive or negative overflow occurs.
-  assign Ovfl = pos_Ovfl | neg_Ovfl;
+  // // Overflow when either positive or negative overflow occurs.
+  // assign Ovfl = pos_Ovfl | neg_Ovfl;
 
-  // Output the carry out signal.
-  assign Cout = C[3];
+  // // Output the carry out signal.
+  // assign Cout = C[3];
 
-  // Get the group's propagate signal as a whole.
-  assign P_group = &P;
+  // // Get the group's propagate signal as a whole.
+  // assign P_group = &P;
 
-  // Get the group's generate signal as a whole.
-  assign G_group = G[3] | (P[3] & G[2]) | (P[3] & P[2] & G[1]) | (P[3] & P[2] & P[1] & G[0]);
+  // // Get the group's generate signal as a whole.
+  // assign G_group = G[3] | (P[3] & G[2]) | (P[3] & P[2] & G[1]) | (P[3] & P[2] & P[1] & G[0]);
+
+  assign {Cout, Sum} = (A + Cin) + ((sub) ? -B : B);
+
+  assign pos_Ovfl = ~A[3] & (B[3] == sub) & Sum[3]; // Positive overflow condition
+  assign neg_Ovfl = A[3] & (B[3] == ~sub) & ~Sum[3]; // Negative overflow condition
+
+  assign Ovfl = pos_Ovfl | neg_Ovfl; // Overflow when either positive or negative overflow occurs.
 
 endmodule
 

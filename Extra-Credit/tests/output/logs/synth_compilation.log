@@ -1,0 +1,628 @@
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid this.
+
+                           Design Compiler Graphical 
+                                 DC Ultra (TM)
+                                  DFTMAX (TM)
+                              Power Compiler (TM)
+                                 DesignWare (R)
+                                 DC Expert (TM)
+                               Design Vision (TM)
+                               HDL Compiler (TM)
+                               VHDL Compiler (TM)
+                                  DFT Compiler
+                               Design Compiler(R)
+
+               Version V-2023.12-SP5 for linux64 - Jul 16, 2024 
+
+                    Copyright (c) 1988 - 2024 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+Initializing...
+Current time:       Thu Apr 24 21:23:39 2025
+Hostname:           tux-131
+CPU Model:          11th Gen Intel(R) Core(TM) i5-11600 @ 2.80GHz
+CPU Details:        Cores = 12 : Sockets = 1 : Cache Size = 12288 KB : Freq = 4.31 GHz
+OS:                 Linux 5.10.0-34-amd64
+RAM:                 31 GB (Free   1 GB)
+Swap:                 1 GB (Free   1 GB)
+Work Filesystem:    /filespace/j mounted to files.cae.wisc.edu:/j
+Tmp Filesystem:     / mounted to /dev/mapper/tux--131--vg-root
+Work Disk:           27 GB (Free  26 GB)
+Tmp Disk:           820 GB (Free 819 GB)
+
+CPU Load: 17%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Information: Term was not able to be set up using xterm-256color . Using "xterm" by default instead. (CLE-10)
+Warning: Cannot use command line editor for terminal type 'xterm-256color'.  (UI-74)
+dc_shell> == READ_FILE autoread for top design 'proc' ==
+
+Starting READ_FILE autoread mode...
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ALU.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_control.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_4bit.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_8bit.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_16bit.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ControlUnit.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CPU_Register.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DataArray.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decode.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_2_4.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_5_32.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_6_64.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/EX_MEM_pipe_reg.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Execute.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Fetch.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Flag_Register.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ForwardingUnit.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/HazardDetectionUnit.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ID_EX_pipe_reg.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/IF_ID_pipe_reg.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MEM_WB_pipe_reg.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory_system.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MetaDataArray.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/PSA_16bit.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Shifter.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v'.  (AUTOREAD-100)
+Information: Adding '/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v'.  (AUTOREAD-100)
+Information: Scanning file { proc.v }. (AUTOREAD-303)
+Information: Scanning file { ALU.v }. (AUTOREAD-303)
+Information: Scanning file { BHT.v }. (AUTOREAD-303)
+Information: Scanning file { BitCell.v }. (AUTOREAD-303)
+Information: Scanning file { Branch_Cache.v }. (AUTOREAD-303)
+Information: Scanning file { Branch_control.v }. (AUTOREAD-303)
+Information: Scanning file { BTB.v }. (AUTOREAD-303)
+Information: Scanning file { Cache_Control.v }. (AUTOREAD-303)
+Information: Scanning file { Cache.v }. (AUTOREAD-303)
+Information: Scanning file { CLA_4bit.v }. (AUTOREAD-303)
+Information: Scanning file { CLA_8bit.v }. (AUTOREAD-303)
+Information: Scanning file { CLA_16bit.v }. (AUTOREAD-303)
+Information: Scanning file { ControlUnit.v }. (AUTOREAD-303)
+Information: Scanning file { CPU_Register.v }. (AUTOREAD-303)
+Information: Scanning file { DataArray.v }. (AUTOREAD-303)
+Information: Scanning file { Decode.v }. (AUTOREAD-303)
+Information: Scanning file { Decoder_2_4.v }. (AUTOREAD-303)
+Information: Scanning file { Decoder_3_8.v }. (AUTOREAD-303)
+Information: Scanning file { Decoder_4_16.v }. (AUTOREAD-303)
+Information: Scanning file { Decoder_5_32.v }. (AUTOREAD-303)
+Information: Scanning file { Decoder_6_64.v }. (AUTOREAD-303)
+Information: Scanning file { dff.v }. (AUTOREAD-303)
+Information: Scanning file { DynamicBranchPredictor.v }. (AUTOREAD-303)
+Information: Scanning file { EX_MEM_pipe_reg.v }. (AUTOREAD-303)
+Information: Scanning file { Execute.v }. (AUTOREAD-303)
+Information: Scanning file { Fetch.v }. (AUTOREAD-303)
+Information: Scanning file { Flag_Register.v }. (AUTOREAD-303)
+Information: Scanning file { ForwardingUnit.v }. (AUTOREAD-303)
+Information: Scanning file { HazardDetectionUnit.v }. (AUTOREAD-303)
+Information: Scanning file { ID_EX_pipe_reg.v }. (AUTOREAD-303)
+Information: Scanning file { IF_ID_pipe_reg.v }. (AUTOREAD-303)
+Information: Scanning file { MEM_WB_pipe_reg.v }. (AUTOREAD-303)
+Information: Scanning file { memory_system.v }. (AUTOREAD-303)
+Information: Scanning file { MetaDataArray.v }. (AUTOREAD-303)
+Information: Scanning file { PSA_16bit.v }. (AUTOREAD-303)
+Information: Scanning file { RED_Unit.v }. (AUTOREAD-303)
+Information: Scanning file { Register.v }. (AUTOREAD-303)
+Information: Scanning file { RegisterFile.v }. (AUTOREAD-303)
+Information: Scanning file { Shifter.v }. (AUTOREAD-303)
+Information: Scanning file { WriteDecoder_3_8.v }. (AUTOREAD-303)
+Information: Scanning file { WriteDecoder_4_16.v }. (AUTOREAD-303)
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CPU_Register.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_16bit.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Fetch.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_6_64.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DataArray.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MetaDataArray.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_4bit.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory_system.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/IF_ID_pipe_reg.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ControlUnit.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_control.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decode.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/HazardDetectionUnit.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ID_EX_pipe_reg.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/PSA_16bit.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Shifter.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ALU.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Flag_Register.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Execute.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ForwardingUnit.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/EX_MEM_pipe_reg.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MEM_WB_pipe_reg.v
+Presto compilation completed successfully.
+Compiling source file /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.v
+Presto compilation completed successfully.
+Elaborating top design proc
+Loading db file '/cae/apps/data/saed32_edk-2022/lib/stdcell_lvt/db_nldm/saed32lvt_tt0p85v25c.db'
+Loading db file '/cae/apps/data/saed32_edk-2022/lib/io_std/db_nldm/saed32io_wb_tt1p05v25c_2p5v.db'
+Loading db file '/cae/apps/data/synopsys-2024/syn/V-2023.12-SP5/libraries/syn/gtech.db'
+Loading db file '/cae/apps/data/synopsys-2024/syn/V-2023.12-SP5/libraries/syn/standard.sldb'
+  Loading link library 'saed32lvt_tt0p85v25c'
+  Loading link library 'saed32io_wb_tt1p05v25c_2p5v'
+  Loading link library 'gtech'
+Running PRESTO HDLC
+Presto compilation completed successfully. (proc)
+Elaborated 1 design.
+Current design is now 'proc'.
+Information: Building the design 'Fetch'. (HDL-193)
+Presto compilation completed successfully. (Fetch)
+Information: Building the design 'memory_system'. (HDL-193)
+Presto compilation completed successfully. (memory_system)
+Information: Building the design 'IF_ID_pipe_reg'. (HDL-193)
+Presto compilation completed successfully. (IF_ID_pipe_reg)
+Information: Building the design 'Decode'. (HDL-193)
+Presto compilation completed successfully. (Decode)
+Information: Building the design 'HazardDetectionUnit'. (HDL-193)
+Presto compilation completed successfully. (HazardDetectionUnit)
+Information: Building the design 'ID_EX_pipe_reg'. (HDL-193)
+Presto compilation completed successfully. (ID_EX_pipe_reg)
+Information: Building the design 'Execute'. (HDL-193)
+Presto compilation completed successfully. (Execute)
+Information: Building the design 'ForwardingUnit'. (HDL-193)
+Presto compilation completed successfully. (ForwardingUnit)
+Information: Building the design 'EX_MEM_pipe_reg'. (HDL-193)
+Presto compilation completed successfully. (EX_MEM_pipe_reg)
+Information: Building the design 'MEM_WB_pipe_reg'. (HDL-193)
+Presto compilation completed successfully. (MEM_WB_pipe_reg)
+Information: Building the design 'DynamicBranchPredictor'. (HDL-193)
+Presto compilation completed successfully. (DynamicBranchPredictor)
+Information: Building the design 'CPU_Register'. (HDL-193)
+Presto compilation completed successfully. (CPU_Register)
+Information: Building the design 'CLA_16bit'. (HDL-193)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_16bit.v:56: signed to unsigned assignment occurs. (VER-318)
+Presto compilation completed successfully. (CLA_16bit)
+Information: Building the design 'Cache'. (HDL-193)
+Presto compilation completed successfully. (Cache)
+Information: Building the design 'Cache_Control'. (HDL-193)
+
+Statistics for case statements in always block at line 154 in file
+	'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           167            |    auto/auto     |
+===============================================
+Presto compilation completed successfully. (Cache_Control)
+Information: Building the design 'CPU_Register' instantiated from design 'IF_ID_pipe_reg' with
+	the parameters "WIDTH=2". (HDL-193)
+Presto compilation completed successfully. (CPU_Register_WIDTH2)
+Information: Building the design 'ControlUnit'. (HDL-193)
+Presto compilation completed successfully. (ControlUnit)
+Information: Building the design 'Branch_Control'. (HDL-193)
+Presto compilation completed successfully. (Branch_Control)
+Information: Building the design 'RegisterFile'. (HDL-193)
+Presto compilation completed successfully. (RegisterFile)
+Information: Building the design 'CPU_Register' instantiated from design 'ID_EX_pipe_reg' with
+	the parameters "WIDTH=4". (HDL-193)
+Presto compilation completed successfully. (CPU_Register_WIDTH4)
+Information: Building the design 'CPU_Register' instantiated from design 'ID_EX_pipe_reg' with
+	the parameters "WIDTH=1". (HDL-193)
+Presto compilation completed successfully. (CPU_Register_WIDTH1)
+Information: Building the design 'CPU_Register' instantiated from design 'ID_EX_pipe_reg' with
+	the parameters "WIDTH=16". (HDL-193)
+Presto compilation completed successfully. (CPU_Register_WIDTH16)
+Information: Building the design 'ALU'. (HDL-193)
+
+Statistics for case statements in always block at line 91 in file
+	'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ALU.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            94            |    auto/auto     |
+===============================================
+Presto compilation completed successfully. (ALU)
+Information: Building the design 'Flag_Register'. (HDL-193)
+Presto compilation completed successfully. (Flag_Register)
+Information: Building the design 'BTB'. (HDL-193)
+Presto compilation completed successfully. (BTB)
+Information: Building the design 'BHT'. (HDL-193)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v:98: DEFAULT branch of CASE statement cannot be reached. (ELAB-311)
+
+Statistics for case statements in always block at line 73 in file
+	'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            76            |    auto/auto     |
+===============================================
+Presto compilation completed successfully. (BHT)
+Information: Building the design 'dff'. (HDL-193)
+
+Inferred memory devices in process
+	in routine dff line 15 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|      state_reg      | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (dff)
+Information: Building the design 'Decoder_3_8'. (HDL-193)
+Presto compilation completed successfully. (Decoder_3_8)
+Information: Building the design 'Decoder_6_64'. (HDL-193)
+Presto compilation completed successfully. (Decoder_6_64)
+Information: Building the design 'DataArray'. (HDL-193)
+Presto compilation completed successfully. (DataArray)
+Information: Building the design 'MetaDataArray'. (HDL-193)
+Presto compilation completed successfully. (MetaDataArray)
+Information: Building the design 'CPU_Register' instantiated from design 'Cache_Control' with
+	the parameters "WIDTH=8". (HDL-193)
+Presto compilation completed successfully. (CPU_Register_WIDTH8)
+Information: Building the design 'CLA_4bit'. (HDL-193)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_4bit.v:75: signed to unsigned conversion occurs. (VER-318)
+Presto compilation completed successfully. (CLA_4bit)
+Information: Building the design 'Decoder_4_16'. (HDL-193)
+Presto compilation completed successfully. (Decoder_4_16)
+Information: Building the design 'WriteDecoder_4_16'. (HDL-193)
+Presto compilation completed successfully. (WriteDecoder_4_16)
+Information: Building the design 'Register'. (HDL-193)
+Presto compilation completed successfully. (Register)
+Information: Building the design 'PSA_16bit'. (HDL-193)
+Presto compilation completed successfully. (PSA_16bit)
+Information: Building the design 'RED_Unit'. (HDL-193)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v:89: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v:90: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v:91: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v:92: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v:95: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v:96: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RED_Unit.v:99: signed to unsigned assignment occurs. (VER-318)
+Presto compilation completed successfully. (RED_Unit)
+Information: Building the design 'Shifter'. (HDL-193)
+Presto compilation completed successfully. (Shifter)
+Information: Building the design 'Branch_Cache'. (HDL-193)
+Presto compilation completed successfully. (Branch_Cache)
+Information: Building the design 'Branch_Cache' instantiated from design 'BHT' with
+	the parameters "15". (HDL-193)
+Presto compilation completed successfully. (Branch_Cache_WIDTH15)
+Information: Building the design 'DataSet'. (HDL-193)
+Presto compilation completed successfully. (DataSet)
+Information: Building the design 'MetaDataSet'. (HDL-193)
+Presto compilation completed successfully. (MetaDataSet)
+Information: Building the design 'WriteDecoder_3_8'. (HDL-193)
+Presto compilation completed successfully. (WriteDecoder_3_8)
+Information: Building the design 'Register' instantiated from design 'Branch_Cache' with
+	the parameters "16". (HDL-193)
+Presto compilation completed successfully. (Register_WIDTH16)
+Information: Building the design 'Register' instantiated from design 'Branch_Cache_WIDTH15' with
+	the parameters "15". (HDL-193)
+Presto compilation completed successfully. (Register_WIDTH15)
+Information: Building the design 'BitCell'. (HDL-193)
+
+Inferred tri-state devices in process
+	in routine BitCell line 36 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+| Bitline1_tri  | Tri-State Buffer |   1   |
+============================================
+
+Inferred tri-state devices in process
+	in routine BitCell line 39 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+| Bitline2_tri  | Tri-State Buffer |   1   |
+============================================
+Presto compilation completed successfully. (BitCell)
+Information: Building the design 'Block'. (HDL-193)
+Presto compilation completed successfully. (Block)
+Information: Building the design 'MBlock'. (HDL-193)
+Presto compilation completed successfully. (MBlock)
+Information: Building the design 'DWord'. (HDL-193)
+Presto compilation completed successfully. (DWord)
+Information: Building the design 'MCell'. (HDL-193)
+
+Inferred tri-state devices in process
+	in routine MCell line 28 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MetaDataArray.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+|   Dout_tri    | Tri-State Buffer |   1   |
+============================================
+Presto compilation completed successfully. (MCell)
+Information: Building the design 'DCell'. (HDL-193)
+
+Inferred tri-state devices in process
+	in routine DCell line 39 in file
+		'/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DataArray.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+|   Dout_tri    | Tri-State Buffer |   1   |
+============================================
+Presto compilation completed successfully. (DCell)
+Autoread command completed successfully.
+
+  Linking design 'proc'
+  Using the following designs and libraries:
+  --------------------------------------------------------------------------
+  proc                        /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/proc.db
+  saed32lvt_tt0p85v25c (library) /cae/apps/data/saed32_edk-2022/lib/stdcell_lvt/db_nldm/saed32lvt_tt0p85v25c.db
+  saed32io_wb_tt1p05v25c_2p5v (library) /cae/apps/data/saed32_edk-2022/lib/io_std/db_nldm/saed32io_wb_tt1p05v25c_2p5v.db
+  * (52 designs)              /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/synthesis/Fetch.db, etc
+
+Warning: Design rule attributes from the driving cell will be set on the port 'rst'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_valid'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[15]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[14]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[13]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[12]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[11]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[10]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[9]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[8]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[7]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[6]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[5]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[4]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[3]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[2]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[1]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'mem_data_in[0]'. (UID-401)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/sll_35' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/U1' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/sll_35' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_PREV/U1' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/iWORD_DECODER/sll_35' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/iWORD_DECODER/U1' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/iWORD_DECODER' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/C18' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/B_0' is of the wrong type. (UID-119)
+Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iWRITE/B_1' is of the wrong type. (UID-119)
+Warning: ...500406 additional objects are of the wrong type. (UID-119)
+Warning: Ignoring all 500416 objects in collection '_sel6' because they are not of type port, design, or lib_pin. (UID-445)
+Error: Value for list 'object_list' must have 1 elements. (CMD-036)
+CPU Load: 18%, Ram Free: 0 GB, Swap Free: 1 GB, Work Disk Free: 26 GB, Tmp Disk Free: 819 GB
+Warning: Setting attribute 'fix_multiple_port_nets' on design 'proc'. (UIO-59)
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | V-2023.12-DWBB_202312.5 |     *     |
+| Licensed DW Building Blocks        |                         |           |
+============================================================================
+
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler                                                                   |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 390418                                 |
+| Number of User Hierarchies                              | 74113                                  |
+| Sequential Cell Count                                   | 35820                                  |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 2                                      |
+| Number of VT Class                                      | 2                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 143546                                 |
+| Number of Dont Touch Nets                               | 148161                                 |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+====================================================================================================
+
+Information: There are 188 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+
+Warning: Operating condition tt0p85v25c set on design proc has different process,
+voltage and temperatures parameters than the parameters at which target library 
+saed32io_wb_tt1p05v25c_2p5v is characterized. Delays may be inaccurate as a result. (OPT-998)
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'dff_0'
+  Processing 'CPU_Register_WIDTH1_0'
+  Processing 'CPU_Register_WIDTH4_0'
+  Processing 'CPU_Register_0'
+  Processing 'MEM_WB_pipe_reg'
+  Processing 'CPU_Register_WIDTH2_0'
+  Processing 'CLA_16bit_0'
+  Processing 'CLA_4bit_0'
+  Processing 'CPU_Register_WIDTH8_0'
+  Processing 'Cache_Control_0'
+  Processing 'MCell_0'
+  Processing 'MBlock_0'
+  Processing 'MetaDataSet_0'
+  Processing 'MetaDataArray_0'
+  Processing 'DCell_0'
+  Processing 'DWord_0'
+  Processing 'Block_0'
+  Processing 'DataSet_0'
+  Processing 'DataArray_0'
+  Processing 'Decoder_6_64_0'
+  Processing 'Decoder_3_8_0'
+  Processing 'Cache_0'
+  Processing 'memory_system_0'
+  Processing 'CPU_Register_WIDTH16_0'
+  Processing 'EX_MEM_pipe_reg'
+  Processing 'ForwardingUnit'
+  Processing 'Flag_Register'
+  Processing 'Shifter'
+  Processing 'RED_Unit'
+  Processing 'PSA_16bit'
+  Processing 'ALU'
+  Processing 'Execute'
+  Processing 'ID_EX_pipe_reg'
+  Processing 'HazardDetectionUnit'
+  Processing 'BitCell_0'
+  Processing 'Register_0'
+  Processing 'Decoder_4_16_0'
+  Processing 'WriteDecoder_4_16'
+  Processing 'RegisterFile'
+  Processing 'Branch_Control'
+  Processing 'ControlUnit'
+  Processing 'Decode'
+  Processing 'IF_ID_pipe_reg'
+  Processing 'Register_WIDTH15_0'
+  Processing 'WriteDecoder_3_8_0'
+  Processing 'Branch_Cache_WIDTH15'
+  Processing 'BHT'
+  Processing 'Register_WIDTH16_0'
+  Processing 'Branch_Cache'
+  Processing 'BTB'
+  Processing 'DynamicBranchPredictor'
+  Processing 'Fetch'
+  Processing 'proc'
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+
+  Beginning Implementation Selection
+  ----------------------------------
+  Processing 'CLA_16bit_1_DW01_add_0'
+  Processing 'CLA_16bit_1_DW01_sub_0'
+  Processing 'CLA_4bit_5_DW01_sub_0_DW01_sub_1'
+  Processing 'Cache_1_DW01_cmp6_0_DW01_cmp6_8'
+  Processing 'Cache_1_DW01_cmp6_1_DW01_cmp6_9'
+  Processing 'Decoder_6_64_1_DW01_ash_0'
+  Processing 'Decoder_3_8_7_DW01_ash_0_DW01_ash_1'
+  Processing 'Shifter_DW_rash_0'
+  Allocating blocks in 'DW01_ash_A_width16_SH_width32'
+  Processing 'Shifter_DW01_ash_0_DW01_ash_2'
+  Processing 'Shifter_DW01_sub_0_DW01_sub_2'
+  Processing 'Shifter_DW_rash_1'
+  Processing 'Shifter_DW01_ash_1_DW01_ash_3'
+  Processing 'CLA_4bit_1_DW01_sub_0_DW01_sub_3'
+  Processing 'CLA_4bit_2_DW01_sub_0_DW01_sub_4'
+  Processing 'CLA_4bit_3_DW01_sub_0_DW01_sub_5'
+  Processing 'CLA_4bit_4_DW01_sub_0_DW01_sub_6'
+  Processing 'CLA_16bit_2_DW01_add_0_DW01_add_1'
+  Processing 'CLA_16bit_2_DW01_sub_0_DW01_sub_7'
+  Processing 'Decode_DW01_cmp6_0_DW01_cmp6_10'
+  Processing 'Decoder_4_16_1_DW01_ash_0_DW01_ash_4'
+  Processing 'Decoder_4_16_2_DW01_ash_0_DW01_ash_5'
+  Processing 'Decoder_4_16_0_DW01_ash_0_DW01_ash_6'
+  Processing 'Branch_Control_DW01_cmp6_0_DW01_cmp6_11'
+  Processing 'CLA_16bit_3_DW01_add_0_DW01_add_2'
+  Processing 'CLA_16bit_3_DW01_sub_0_DW01_sub_8'
+  Processing 'CLA_16bit_4_DW01_add_0_DW01_add_3'
+  Processing 'CLA_16bit_4_DW01_sub_0_DW01_sub_9'
+  Processing 'CLA_4bit_0_DW01_sub_0_DW01_sub_10'
+  Processing 'Cache_0_DW01_cmp6_0_DW01_cmp6_12'
+  Processing 'Cache_0_DW01_cmp6_1_DW01_cmp6_13'
+  Processing 'Decoder_6_64_0_DW01_ash_0_DW01_ash_7'
+  Processing 'Decoder_3_8_0_DW01_ash_0_DW01_ash_8'
+  Processing 'CLA_16bit_0_DW01_add_0_DW01_add_4'
+  Processing 'CLA_16bit_0_DW01_sub_0_DW01_sub_11'
+  Processing 'BHT_DW01_cmp6_0_DW01_cmp6_14'
+  Processing 'BHT_DW01_cmp6_1_DW01_cmp6_15'
+  Processing 'Decoder_3_8_1_DW01_ash_0_DW01_ash_9'
+  Processing 'Decoder_3_8_3_DW01_ash_0_DW01_ash_10'
+  Processing 'Decoder_3_8_4_DW01_ash_0_DW01_ash_11'
+  Processing 'Decoder_3_8_2_DW01_ash_0_DW01_ash_12'
+  Processing 'Decoder_3_8_5_DW01_ash_0_DW01_ash_13'
+  Processing 'Decoder_3_8_6_DW01_ash_0_DW01_ash_14'
+  Building model 'DW01_add_width5' (rpl)
+  Processing 'DW01_add_width5'
+  Building model 'DW01_add_width5' (cla)
+  Processing 'DW01_add_width5'
+  Building model 'DW01_add_width6' (rpl)
+  Processing 'DW01_add_width6'
+  Building model 'DW01_add_width6' (cla)
+  Processing 'DW01_add_width6'
+  Building model 'DW01_add_width7' (rpl)
+  Processing 'DW01_add_width7'
+  Building model 'DW01_add_width7' (cla)
+  Processing 'DW01_add_width7'
+  Processing 'CLA_4bit_5_DW01_add_0_DW01_add_5'
+  Processing 'CLA_4bit_5_DW01_add_1_DW01_add_6'
+  Processing 'CLA_4bit_0_DW01_add_0_DW01_add_7'
+  Processing 'CLA_4bit_0_DW01_add_1_DW01_add_8'
+  Processing 'RED_Unit_DW01_add_0_DW01_add_9'
+  Processing 'RED_Unit_DW01_add_1_DW01_add_10'
+  Processing 'RED_Unit_DW01_add_2_DW01_add_11'
+  Processing 'RED_Unit_DW01_add_3_DW01_add_12'
+  Processing 'RED_Unit_DW01_add_4_DW01_add_13'
+  Processing 'RED_Unit_DW01_add_5_DW01_add_14'
+  Processing 'RED_Unit_DW01_add_6_DW01_add_15'
+  Processing 'CLA_4bit_1_DW01_add_0_DW01_add_16'
+  Processing 'CLA_4bit_1_DW01_add_1_DW01_add_17'
+  Processing 'CLA_4bit_3_DW01_add_0_DW01_add_18'
+  Processing 'CLA_4bit_3_DW01_add_1_DW01_add_19'
+  Processing 'CLA_4bit_2_DW01_add_0_DW01_add_20'
+  Processing 'CLA_4bit_2_DW01_add_1_DW01_add_21'
+  Processing 'CLA_4bit_4_DW01_add_0_DW01_add_22'
+  Processing 'CLA_4bit_4_DW01_add_1_DW01_add_23'

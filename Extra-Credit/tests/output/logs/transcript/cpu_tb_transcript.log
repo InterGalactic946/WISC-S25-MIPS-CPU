@@ -1,0 +1,267 @@
+# vsim -c ./tests/WORK/cpu_tb.cpu_tb -wlf /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/output/waves/cpu_tb.wlf -logfile /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/output/logs/transcript/cpu_tb_transcript.log -do "run -all; log -flush /*; quit -f;" 
+# Start time: 20:31:08 on Apr 24,2025
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/PSA_16bit.v(32): (vopt-2685) [TFMPC] - Too few port connections for 'iCLA'.  Expected 11, found 10.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/PSA_16bit.v(32): (vopt-2718) [TFMPC] - Missing connection for port 'Cout'.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ALU.v(67): (vopt-2685) [TFMPC] - Too few port connections for 'iPSA'.  Expected 4, found 3.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/ALU.v(67): (vopt-2718) [TFMPC] - Missing connection for port 'Error'.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2685) [TFMPC] - Too few port connections for 'iVALID_COUNT'.  Expected 11, found 7.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2718) [TFMPC] - Missing connection for port 'G_group'.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2718) [TFMPC] - Missing connection for port 'P_group'.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2718) [TFMPC] - Missing connection for port 'neg_Ovfl'.
+# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2718) [TFMPC] - Missing connection for port 'pos_Ovfl'.
+# ** Note: (vopt-143) Recognized 1 FSM in module "Cache_Control_model(fast)".
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=10.
+# //  Questa Sim
+# //  Version 2023.2_1 linux May 12 2023
+# //
+# //  Copyright 1991-2023 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.Monitor_tasks(fast)
+# Loading work.Verification_tasks(fast)
+# Loading work.cpu_tb(fast)
+# Loading work.cpu(fast)
+# Loading work.proc(fast)
+# Loading work.Fetch(fast)
+# Loading work.DynamicBranchPredictor(fast)
+# Loading work.BTB(fast)
+# Loading work.Branch_Cache(fast)
+# Loading work.Decoder_3_8(fast)
+# Loading work.WriteDecoder_3_8(fast)
+# Loading work.BHT(fast)
+# Loading work.Branch_Cache(fast__1)
+# Loading work.CPU_Register(fast)
+# Loading work.CLA_16bit(fast)
+# Loading work.memory_system(fast)
+# Loading work.Cache(fast)
+# Loading work.Decoder_6_64(fast)
+# Loading work.DataArray(fast)
+# Loading work.MetaDataArray(fast)
+# Loading work.Cache_Control(fast)
+# Loading work.CPU_Register(fast__1)
+# Loading work.CLA_4bit(fast)
+# Loading work.CPU_Register(fast__2)
+# Loading work.CPU_Register(fast__3)
+# Loading work.CPU_Register(fast__4)
+# Loading work.IF_ID_pipe_reg(fast)
+# Loading work.Decode(fast)
+# Loading work.ControlUnit(fast)
+# Loading work.Branch_Control(fast)
+# Loading work.RegisterFile(fast)
+# Loading work.Decoder_4_16(fast)
+# Loading work.WriteDecoder_4_16(fast)
+# Loading work.HazardDetectionUnit(fast)
+# Loading work.ID_EX_pipe_reg(fast)
+# Loading work.Execute(fast)
+# Loading work.ALU(fast)
+# Loading work.PSA_16bit(fast)
+# Loading work.RED_Unit(fast)
+# Loading work.Shifter(fast)
+# Loading work.Flag_Register(fast)
+# Loading work.ForwardingUnit(fast)
+# Loading work.EX_MEM_pipe_reg(fast)
+# Loading work.MEM_WB_pipe_reg(fast)
+# Loading work.memory4c(fast)
+# Loading work.cpu_model(fast)
+# Loading work.proc_model(fast)
+# Loading work.Fetch_model(fast)
+# Loading work.DynamicBranchPredictor_model_sv_unit(fast)
+# Loading work.DynamicBranchPredictor_model(fast)
+# Loading work.memory_system_model(fast)
+# Loading work.Cache_model_sv_unit(fast)
+# Loading work.Cache_model(fast)
+# Loading work.Cache_Control_model(fast)
+# Loading work.IF_ID_pipe_reg_model(fast)
+# Loading work.Decode_model(fast)
+# Loading work.ControlUnit_model(fast)
+# Loading work.Branch_Control_model(fast)
+# Loading work.RegisterFile_model(fast)
+# Loading work.HazardDetectionUnit_model(fast)
+# Loading work.ID_EX_pipe_reg_model(fast)
+# Loading work.Execute_model(fast)
+# Loading work.ALU_tasks(fast)
+# Loading work.ALU_model_sv_unit(fast)
+# Loading work.ALU_model(fast)
+# Loading work.ForwardingUnit_model(fast)
+# Loading work.EX_MEM_pipe_reg_model(fast)
+# Loading work.MEM_WB_pipe_reg_model(fast)
+# Loading work.memory(fast)
+# Loading work.Verification_Unit_sv_unit(fast)
+# Loading work.Verification_Unit(fast)
+# Loading work.Register(fast)
+# Loading work.Register(fast__1)
+# Loading work.dff(fast)
+# Loading work.DataSet(fast)
+# Loading work.Block(fast)
+# Loading work.MetaDataSet(fast)
+# Loading work.MBlock(fast)
+# Loading work.BitCell(fast)
+# Loading work.DWord(fast)
+# Loading work.MCell(fast)
+# Loading work.dff(fast__1)
+# Loading work.DCell(fast)
+# run -all
+# 
+# 
+# ==========================================================
+# | Instruction: LLB R1, 0x0051 | Completed At Cycle: 21 |
+# ==========================================================
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0000 with data 0x0000. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 3
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0000 with data 0x0000. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 4
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0000 with data 0x0000. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 5
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0000 with data 0x0000. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 6
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0000 with data 0x0000. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 7
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0000 with data 0x0000. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 8
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0000 with data 0xa151. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 9
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0002 with data 0xb151. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 10
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0004 with data 0xa2b0. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 11
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0006 with data 0xb2a0. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 12
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x0008 with data 0x0321. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 13
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x000a with data 0x1412. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 14
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x000c with data 0x2634. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 15
+# |[FETCH] MISS: Evicting "way" 1 in set 0x00 at address 0x000e with data 0x4756. PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0x0000. @ Cycle: 16
+# |[FETCH] HIT: PC_curr: 0x0000, PC_next: 0x0002, Instruction: 0xa151 | Set: 0x00, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 17
+# |[DECODE] SUCCESS: Opcode = 0b1010, Instr: LLB, rd = 0x1, imm = 0x0051. @ Cycle: 18
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x0051, ALU_out = 0x0051, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 19
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 20
+# |[WRITE-BACK] SUCCESS: Register R1 written with data: 0x0051. @ Cycle: 21
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LHB R1, 0x0051 | Completed At Cycle: 22 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x0002, PC_next: 0x0004, Instruction: 0xb151 | Set: 0x00, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 18
+# |[DECODE] SUCCESS: Opcode = 0b1011, Instr: LHB, rd = 0x1, imm = 0x0051. @ Cycle: 19
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0051, Input_B = 0x0051, ALU_out = 0x5151, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 20
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 21
+# |[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: 22
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LLB R2, 0x00b0 | Completed At Cycle: 23 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x0004, PC_next: 0x0006, Instruction: 0xa2b0 | Set: 0x00, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 19
+# |[DECODE] SUCCESS: Opcode = 0b1010, Instr: LLB, rd = 0x2, imm = 0x00b0. @ Cycle: 20
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x0000, Input_B = 0x00b0, ALU_out = 0x00b0, Z_set = 0, V_set = 0, N_set = 0. @ Cycle: 21
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 22
+# |[WRITE-BACK] SUCCESS: Register R2 written with data: 0x00b0. @ Cycle: 23
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: LHB R2, 0x00a0 | Completed At Cycle: 24 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x0006, PC_next: 0x0008, Instruction: 0xb2a0 | Set: 0x00, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 20
+# |[DECODE] SUCCESS: Opcode = 0b1011, Instr: LHB, rd = 0x2, imm = 0x00a0. @ Cycle: 21
+# |[EXECUTE] SUCCESS: ZF = 0, VF = 0, NF = 0. Input_A = 0x00b0, Input_B = 0x00a0, ALU_out = 0xa0b0, Z_set = 0, V_set = 0, N_set = 1. @ Cycle: 22
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 23
+# |[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: 24
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: ADD R3, R2, R1 | Completed At Cycle: 25 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x0008, PC_next: 0x000a, Instruction: 0x0321 | Set: 0x00, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 21
+# |[DECODE] SUCCESS: Opcode = 0b0000, Instr: ADD, rs = 0x2, rt = 0x1, rd = 0x3. @ Cycle: 22
+# |[EXECUTE] ERROR: Input_A = 0x00b0, Input_B = 0x0051, ALU_out = 0x0101, expected_Input_A = 0xa0b0, expected_Input_B = 0x5151, expected_ALU_out = 0xf201. @ Cycle: 23
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 24
+# |[WRITE-BACK] ERROR: RegWriteData: 0x0101, expected: 0xf201. @ Cycle: 25
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: SUB R4, R1, R2 | Completed At Cycle: 26 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x000a, PC_next: 0x000c, Instruction: 0x1412 | Set: 0x00, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 22
+# |[DECODE] SUCCESS: Opcode = 0b0001, Instr: SUB, rs = 0x1, rt = 0x2, rd = 0x4. @ Cycle: 23
+# |[EXECUTE] ERROR: Input_A = 0x0051, Input_B = 0x00b0, ALU_out = 0xffa1, expected_Input_A = 0x5151, expected_Input_B = 0xa0b0, expected_ALU_out = 0x7fff. @ Cycle: 24
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 25
+# |[WRITE-BACK] ERROR: RegWriteData: 0xffa1, expected: 0x7fff. @ Cycle: 26
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: XOR R6, R3, R4 | Completed At Cycle: 27 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x000c, PC_next: 0x000e, Instruction: 0x2634 | Set: 0x00, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 23
+# |[DECODE] ERROR: actual_taken: 0, expected_actual_taken: 1. @ Cycle: 24
+# |[EXECUTE] ERROR: Input_A = 0x0101, Input_B = 0xffa1, ALU_out = 0xfea0, expected_Input_A = 0xf201, expected_Input_B = 0x7fff, expected_ALU_out = 0x8dfe. @ Cycle: 25
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 26
+# |[WRITE-BACK] ERROR: RegWriteData: 0xfea0, expected: 0x8dfe. @ Cycle: 27
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: SLL R7, R5, 0x0006 | Completed At Cycle: 28 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x000e, PC_next: 0x0010, Instruction: 0x4756 | Set: 0x00, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 24
+# |[DECODE] ERROR: actual_taken: 1, expected_actual_taken: 0. @ Cycle: 25
+# |[EXECUTE] ERROR: VF: 0x0, expected_VF: 0x1. @ Cycle: 26
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 27
+# |[WRITE-BACK] SUCCESS: Register R7 written with data: 0x0000. @ Cycle: 28
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: SRA R8, R6, 0x0002 | Completed At Cycle: 43 |
+# ==========================================================
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0010 with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 25
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0010 with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 26
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0010 with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 27
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0010 with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 28
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0010 with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 29
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0010 with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 30
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0010 with data 0x5862. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 31
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0012 with data 0x698a. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 32
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0014 with data 0xf000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 33
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0016 with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 34
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x0018 with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 35
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x001a with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 36
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x001c with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 37
+# |[FETCH] MISS: Evicting "way" 1 in set 0x01 at address 0x001e with data 0x0000. PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x0000. @ Cycle: 38
+# |[FETCH] HIT: PC_curr: 0x0010, PC_next: 0x0012, Instruction: 0x5862 | Set: 0x01, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 39
+# |[DECODE] SUCCESS: Opcode = 0b0101, Instr: SRA, rs = 0x6, rt = 0x8, imm = 0x0002. @ Cycle: 40
+# |[EXECUTE] ERROR: Input_A = 0xfea0, Input_B = 0x0002, ALU_out = 0xffa8, expected_Input_A = 0x8dfe, expected_Input_B = 0x0002, expected_ALU_out = 0xe37f. @ Cycle: 41
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 42
+# |[WRITE-BACK] ERROR: RegWriteData: 0xffa8, expected: 0xe37f. @ Cycle: 43
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: ROR R9, R8, 0x000a | Completed At Cycle: 44 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x0012, PC_next: 0x0014, Instruction: 0x698a | Set: 0x01, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 40
+# |[DECODE] SUCCESS: Opcode = 0b0110, Instr: ROR, rs = 0x8, rt = 0x9, imm = 0x000a. @ Cycle: 41
+# |[EXECUTE] ERROR: Input_A = 0xffa8, Input_B = 0x000a, ALU_out = 0xea3f, expected_Input_A = 0xe37f, expected_Input_B = 0x000a, expected_ALU_out = 0xdff8. @ Cycle: 42
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 43
+# |[WRITE-BACK] ERROR: RegWriteData: 0xea3f, expected: 0xdff8. @ Cycle: 44
+# ==========================================================
+# 
+# ==========================================================
+# | Instruction: HLT | Completed At Cycle: 45 |
+# ==========================================================
+# |[FETCH] HIT: PC_curr: 0x0014, PC_next: 0x0016, Instruction: 0xf000 | Set: 0x01, Way: 1 | Branch Predicted Weakly NOT Taken. @ Cycle: 41
+# |[DECODE] SUCCESS: Opcode = 0b1111, Instr: HLT. @ Cycle: 42
+# |[EXECUTE] ERROR: VF: 0x0, expected_VF: 0x1. @ Cycle: 43
+# |[MEMORY] SUCCESS: No memory access in this cycle. @ Cycle: 44
+# |[WRITE-BACK] SUCCESS: No register write in this cycle. @ Cycle: 45
+# ==========================================================
+# 
+# CPU halted due to HLT instruction.
+# 
+# YAHOO!! All tests passed.
+# ** Note: $stop    : /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/cpu_tb.sv(115)
+#    Time: 465 ns  Iteration: 1  Instance: /cpu_tb
+# Break in Module cpu_tb at /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/cpu_tb.sv line 115
+# Stopped at /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/cpu_tb.sv line 115
+#  log -flush /*
+#  quit -f
+# End time: 20:31:10 on Apr 24,2025, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 10
+:02
+# Errors: 0, Warnings: 10

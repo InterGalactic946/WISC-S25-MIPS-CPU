@@ -74,7 +74,9 @@ module ControlUnit (
     // WB SIGNALS  //
     /////////////////
     // RegWrite must be 1 for ADD, SUB, XOR, RED, SLL, SRA, ROR, PADDSB, LW, LLB, LHB, and PCS
-    assign RegWrite = ((~Opcode[3]) | (Opcode[1]) | (Opcode[3] & ~Opcode[2] & ~Opcode[0])) & ~(Opcode[3] & Opcode[2] & Opcode[1] & Opcode[0]);
+    //assign RegWrite = ((~Opcode[3]) | (Opcode[1]) | (Opcode[3] & ~Opcode[2] & ~Opcode[0])) & ~(Opcode[3] & Opcode[2] & Opcode[1] & Opcode[0]);
+
+    assign RegWrite = ~Opcode[0] | (~Opcode[1] & ~Opcode[3]) | (~Opcode[1] & Opcode[2]) | (Opcode[2] & ~Opcode[3]);
 
     // MemtoReg must be 1 for LW instruction
     assign MemtoReg = Opcode[3] & ~Opcode[1];

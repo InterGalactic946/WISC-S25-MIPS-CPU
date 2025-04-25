@@ -1,0 +1,380 @@
+m255
+K4
+z2
+!s12c _opt
+Z0 !s99 nomlopt
+!s11f MIXED_VERSIONS
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z1 d/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit
+T_opt
+!s110 1745542275
+V?gPJ_[`B`<zU<8ON0I;zd1
+04 25 4 work DynamicBranchPredictor_tb fast 0
+=1-000ae431a4f1-680adc82-c86b6-2e9b73
+R0
+!s12b OEM100
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work ./tests/WORK/DynamicBranchPredictor_tb
+Z2 tCvgOpt 0
+n@_opt
+OE;O;2023.2_1;77
+vBHT
+Z3 2/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_tb.sv
+Z4 !s110 1745542274
+!i10b 1
+!s100 X7bZEHZ2D@cPU^ebh5JGE1
+I]R;ih7WU:mhH04bn@dD]c0
+R1
+Z5 w1745352498
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v
+!i122 1
+L0 10 96
+Z6 VDg1SIo80bB@j0V0VzS_@n1
+Z7 OE;L;2023.2_1;77
+r1
+!s85 0
+31
+Z8 !s108 1745542274.000000
+Z9 !s107 /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_tb.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv|
+Z10 !s90 +acc|-logfile|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/output/logs/compilation/DynamicBranchPredictor_tb_compilation.log|-work|./tests/WORK/DynamicBranchPredictor_tb|-stats=none|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_model.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BHT.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_tb.sv|
+!i113 0
+Z11 o+acc -work ./tests/WORK/DynamicBranchPredictor_tb -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R2
+n@b@h@t
+vBitCell
+R3
+R4
+!i10b 1
+!s100 0YQidVA=fclSFGTbUH>8[3
+I8iV^GfU;:FQ1X0D0?>cNn3
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v
+!i122 1
+L0 15 27
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@bit@cell
+vBranch_Cache
+R3
+R4
+!i10b 1
+!s100 g;2Y5J3NMaBB;fz9]4D_N3
+I]fgg0WBVmAPgO=3a_b=KF0
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Branch_Cache.v
+!i122 1
+L0 14 45
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@branch_@cache
+vBTB
+R3
+R4
+!i10b 1
+!s100 ^68;QT5f[;QH6:91H@g9a0
+I3ne9jE>om=Wj?Tome=JZI2
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BTB.v
+!i122 1
+L0 11 27
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@b@t@b
+vDecoder_3_8
+R3
+R4
+!i10b 1
+!s100 zh=bBz37=9LoKoY<RN7fo1
+Ib9CzcH>]oZ8`IG=[OY97G3
+R1
+w1745542129
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v
+!i122 1
+L0 12 26
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@decoder_3_8
+vdff
+R3
+R4
+!i10b 1
+!s100 GPkooLjk<d<^mBZg??8oj3
+IzTdOe^7<Sj^9W@:FHReRe3
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v
+!i122 1
+L0 3 17
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+vDynamicBranchPredictor
+R3
+R4
+!i10b 1
+!s100 GRWd4QhbP^SU0l4aZ<Von1
+IgG4W2:7c][3BYl>oP?Nl[2
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DynamicBranchPredictor.v
+!i122 1
+L0 12 53
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@dynamic@branch@predictor
+vDynamicBranchPredictor_model
+R3
+Z12 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z13 DXx4 work 13 Monitor_tasks 0 22 DzW`Tek2P2DOWIhQTHRRo1
+DXx4 work 36 DynamicBranchPredictor_model_sv_unit 0 22 1T`_iZ[1d^g>aFG=CSZO]3
+R4
+R6
+r1
+!s85 0
+!i10b 1
+!s100 4cHG9YGHE1I0gdl`dkCN>1
+I;<M=o4eWiENb`k3zH[A?o0
+!s105 DynamicBranchPredictor_model_sv_unit
+S1
+R1
+R5
+Z14 8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_model.sv
+Z15 F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_model.sv
+!i122 1
+L0 9 138
+R7
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@dynamic@branch@predictor_model
+XDynamicBranchPredictor_model_sv_unit
+R3
+R12
+R13
+R4
+V1T`_iZ[1d^g>aFG=CSZO]3
+r1
+!s85 0
+!i10b 1
+!s100 Mc^GWb[__^P>Ue7mFT12b2
+I1T`_iZ[1d^g>aFG=CSZO]3
+!i103 1
+S1
+R1
+R5
+R14
+R15
+!i122 1
+L0 7 0
+R7
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@dynamic@branch@predictor_model_sv_unit
+vDynamicBranchPredictor_tb
+R3
+R12
+R13
+DXx4 work 33 DynamicBranchPredictor_tb_sv_unit 0 22 N1QbW_88ezg=[Wh:1gM8T3
+R4
+R6
+r1
+!s85 0
+!i10b 1
+!s100 J40KWiMLFzX31j<>:haCb0
+I1lNHXgQP1e=CWG1CzKUI22
+!s105 DynamicBranchPredictor_tb_sv_unit
+S1
+R1
+R5
+Z16 8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_tb.sv
+Z17 F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/DynamicBranchPredictor_tb.sv
+!i122 1
+L0 11 375
+R7
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@dynamic@branch@predictor_tb
+XDynamicBranchPredictor_tb_sv_unit
+R3
+R12
+R13
+R4
+VN1QbW_88ezg=[Wh:1gM8T3
+r1
+!s85 0
+!i10b 1
+!s100 oSMO^iBQcQYJ=0X2Ef2^G1
+IN1QbW_88ezg=[Wh:1gM8T3
+!i103 1
+S1
+R1
+R5
+R16
+R17
+!i122 1
+L0 9 0
+R7
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@dynamic@branch@predictor_tb_sv_unit
+XMonitor_tasks
+R3
+R12
+R4
+!i10b 1
+!s100 IkI9=a4B9?I^g4J^K?Di;1
+IDzW`Tek2P2DOWIhQTHRRo1
+S1
+R1
+w1745515852
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv
+!i122 1
+L0 6 0
+VDzW`Tek2P2DOWIhQTHRRo1
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@monitor_tasks
+vRegister
+R3
+R4
+!i10b 1
+!s100 K[WhTFhAhh[mY74O@Q_UC3
+IJBFllBoD`Ub^_UG:]]dck1
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v
+!i122 1
+L0 12 17
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@register
+vWriteDecoder_3_8
+R3
+R4
+!i10b 1
+!s100 l_i0Bh1Xg7@0^<8SliU9d1
+Il?>W2BHgE4L^6O<o2@[GK2
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_3_8.v
+!i122 1
+L0 10 22
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@write@decoder_3_8

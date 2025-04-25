@@ -1,0 +1,160 @@
+m255
+K4
+z2
+!s11f vlog 2023.2_1 2023.05, May 12 2023
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit
+vcpu
+Z1 2/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.vg|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory4c.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Verification_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/post_synth_tb.sv
+Z2 !s110 1745515902
+!i10b 1
+!s100 L29<LIRK:Q2R965UV2<n;3
+I41hCg8zBNiBON=iGm87dz2
+R0
+Z3 w1745515850
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/cpu.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/cpu.v
+!i122 0
+L0 11 59
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 OE;L;2023.2_1;77
+r1
+!s85 0
+31
+Z6 !s108 1745515899.000000
+!s107 /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/post_synth_tb.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Verification_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory4c.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.vg|
+Z7 !s90 +acc|-work|./tests/WORK/post_synth_tb|-stats=none|-timescale=1ns/1ps|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.vg|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory4c.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Verification_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/post_synth_tb.sv|
+!i113 0
+Z8 o+acc -work ./tests/WORK/post_synth_tb -timescale=1ns/1ps -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z9 tCvgOpt 0
+vmemory4c
+R1
+R2
+!i10b 1
+!s100 [7F[eaL0SWYlR9;GLe^ZF0
+IjbAGVJEKbJjD]U0CWcSKR3
+R0
+w1745352498
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory4c.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory4c.v
+!i122 0
+L0 24 69
+R4
+R5
+r1
+!s85 0
+31
+R6
+Z10 !s107 /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/post_synth_tb.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Verification_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/cpu.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory4c.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.vg|
+R7
+!i113 0
+R8
+R9
+XMonitor_tasks
+R1
+Z11 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+R2
+!i10b 1
+!s100 =5LEY788BQ;ch[^R6];X>0
+IoWg_K4nWcEe^1n:Khn>0T1
+S1
+R0
+Z12 w1745515852
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv
+!i122 0
+L0 6 0
+VoWg_K4nWcEe^1n:Khn>0T1
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 0
+R8
+R9
+n@monitor_tasks
+vpost_synth_tb
+R1
+R11
+Z13 DXx4 work 13 Monitor_tasks 0 22 oWg_K4nWcEe^1n:Khn>0T1
+DXx4 work 18 Verification_tasks 0 22 UagaaU>PHNSkdHl6i8?JG1
+R2
+!i10b 1
+!s100 6ZNYV0]e^z2:UW?:C56^?0
+ISlkemTHG09;IVAhFb>>h13
+S1
+R0
+w1745515885
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/post_synth_tb.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/post_synth_tb.sv
+!i122 0
+L0 11 55
+R4
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 0
+R8
+R9
+vproc
+R1
+R2
+!i10b 1
+!s100 lCl_0::h`M9MmMUEIQ;BF3
+IaK6kzl^84`9m8j`RIAIgc0
+R0
+R3
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.vg
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.vg
+!i122 0
+L0 8 644832
+R4
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 0
+R8
+R9
+XVerification_tasks
+R1
+R11
+R13
+R2
+!i10b 1
+!s100 U?;:6C:>2HobT<o0^>MXN0
+IUagaaU>PHNSkdHl6i8?JG1
+S1
+R0
+R12
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Verification_tasks.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Verification_tasks.sv
+!i122 0
+L0 11 0
+VUagaaU>PHNSkdHl6i8?JG1
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 0
+R8
+R9
+n@verification_tasks

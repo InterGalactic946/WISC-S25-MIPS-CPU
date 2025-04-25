@@ -1,0 +1,194 @@
+m255
+K4
+z2
+!s12c _opt
+Z0 !s99 nomlopt
+!s11f vlog 2023.2_1 2023.05, May 12 2023
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z1 d/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit
+T_opt
+!s110 1745542194
+VU?:iK=1i92HkKjY4S^6Xd3
+04 15 4 work RegisterFile_tb fast 0
+=1-000ae431a4f1-680adc31-dc305-2e86e8
+R0
+!s12b OEM100
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work ./tests/WORK/RegisterFile_tb
+Z2 tCvgOpt 0
+n@_opt
+OE;O;2023.2_1;77
+vBitCell
+Z3 2/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/RegisterFile_tb.sv
+Z4 !s110 1745542193
+!i10b 1
+!s100 0YQidVA=fclSFGTbUH>8[3
+IADDd7cCzc`l[I1m:2;CO_3
+R1
+Z5 w1745352498
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v
+!i122 0
+L0 15 27
+Z6 VDg1SIo80bB@j0V0VzS_@n1
+Z7 OE;L;2023.2_1;77
+r1
+!s85 0
+31
+Z8 !s108 1745542192.000000
+Z9 !s107 /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/RegisterFile_tb.sv|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v|
+Z10 !s90 +acc|-work|./tests/WORK/RegisterFile_tb|-stats=none|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/BitCell.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v|/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/RegisterFile_tb.sv|
+!i113 0
+Z11 o+acc -work ./tests/WORK/RegisterFile_tb -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R2
+n@bit@cell
+vDecoder_4_16
+R3
+R4
+!i10b 1
+!s100 XIJi<?^Tch@Ij4GZgi>SG0
+IJ1aGlNzbZNzi?of6e=U=`3
+R1
+w1745542129
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_4_16.v
+!i122 0
+L0 11 26
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@decoder_4_16
+vdff
+R3
+R4
+!i10b 1
+!s100 GPkooLjk<d<^mBZg??8oj3
+Ik5P]ZX8f]IRGl_b2gLP`E2
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v
+!i122 0
+L0 3 17
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+vRegister
+R3
+R4
+!i10b 1
+!s100 K[WhTFhAhh[mY74O@Q_UC3
+I`VKEHiD_7[UMal04_SLhK2
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Register.v
+!i122 0
+L0 12 17
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@register
+vRegisterFile
+R3
+R4
+!i10b 1
+!s100 >2IB]=^djPTknLJZdMQVA1
+I09B7cdAI_[Nj]olB9N@kF3
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/RegisterFile.v
+!i122 0
+L0 14 42
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@register@file
+vRegisterFile_tb
+R3
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+R4
+!i10b 1
+!s100 `@a@n`n:aI[`37zU?Aml01
+I_Y_O;D8>`WZabkLfI3o;21
+S1
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/RegisterFile_tb.sv
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/RegisterFile_tb.sv
+!i122 0
+L0 14 188
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@register@file_tb
+vWriteDecoder_4_16
+R3
+R4
+!i10b 1
+!s100 B_nea>L`Oc529m6S0iY_a0
+Ikn5kKX;Uaz@80lEEkeiI`0
+R1
+R5
+8/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v
+F/filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/WriteDecoder_4_16.v
+!i122 0
+L0 10 22
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R2
+n@write@decoder_4_16

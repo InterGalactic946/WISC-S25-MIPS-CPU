@@ -143,7 +143,7 @@ module proc_model (
   // We send out the main memory address as from the instruction cache or data cache based on which is granted.
   assign mem_addr = (ICACHE_miss) ? I_MEM_addr :
                     (DCACHE_miss) ? D_MEM_addr :
-                    16'h0000;
+                    EX_MEM_ALU_out;
 
   // The data output to be written to main memory is only from the DCACHE.
   assign mem_data_out = MemWriteData;

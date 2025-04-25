@@ -1,15 +1,12 @@
-# vlib ./tests/WORK/post_synth_tb
-#  vlog +acc -work ./tests/WORK/post_synth_tb -stats=none -timescale=1ns/1ps /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/proc.vg /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory4c.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/cpu.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Monitor_tasks.sv /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/Verification_tasks.sv /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/post_synth_tb.sv
-# QuestaSim vlog 2023.2_1 Compiler 2023.05 May 12 2023
-# -- Compiling module proc
-# -- Compiling module memory4c
-# -- Compiling module cpu
-# -- Compiling package Monitor_tasks
-# -- Compiling package Verification_tasks
-# -- Importing package Monitor_tasks
-# -- Compiling module post_synth_tb
-# -- Importing package Verification_tasks
-# 
-# Top level modules:
-# 	post_synth_tb
-#  quit -f
+QuestaSim vlog 2023.2_1 Compiler 2023.05 May 12 2023
+-- Compiling module proc
+-- Compiling module memory4c
+-- Compiling module cpu
+-- Compiling package Monitor_tasks
+-- Compiling package Verification_tasks
+-- Importing package Monitor_tasks
+-- Compiling module post_synth_tb
+-- Importing package Verification_tasks
+
+Top level modules:
+	post_synth_tb

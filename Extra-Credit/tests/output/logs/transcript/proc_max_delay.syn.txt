@@ -1,0 +1,79 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : proc
+Version: V-2023.12-SP5
+Date   : Fri Apr 25 03:24:26 2025
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
+Wire Load Model Mode: enclosed
+
+  Startpoint: iFETCH/iPC/iREG[6]/state_reg
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: iFETCH/iPC/iREG[2]/state_reg
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  proc               16000                 saed32lvt_tt0p85v25c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  iFETCH/iPC/iREG[6]/state_reg/CLK (DFFX1_LVT)            0.00 #     0.00 r
+  iFETCH/iPC/iREG[6]/state_reg/Q (DFFX1_LVT)              0.09       0.09 f
+  U21203/Y (AO22X1_LVT)                                   0.07       0.16 f
+  U43424/Y (NOR2X2_LVT)                                   0.08       0.23 r
+  U18765/Y (AND2X1_LVT)                                   0.06       0.29 r
+  U43455/Y (AND2X4_LVT)                                   0.10       0.39 r
+  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/set[1]/Mblk_first_way/mc[2]/Dout_tri/Y (TNBUFFX8_LVT)
+                                                          0.52       0.91 f
+  U53840/Y (DELLN3X2_LVT)                                28.42      29.33 f
+  U53887/Y (INVX0_LVT)                                    0.03      29.36 r
+  U53361/Y (XNOR2X1_LVT)                                  0.09      29.45 r
+  U43118/Y (AND4X2_LVT)                                   0.08      29.53 r
+  U43113/Y (NAND3X0_LVT)                                  0.04      29.57 f
+  U43448/Y (AND2X1_LVT)                                   0.06      29.63 f
+  U43126/Y (NAND2X0_LVT)                                  0.04      29.67 r
+  U21193/Y (NAND2X0_LVT)                                  0.02      29.69 f
+  U43445/Y (AND2X1_LVT)                                   0.06      29.75 f
+  U47404/Y (INVX1_LVT)                                    0.05      29.80 r
+  U43507/Y (INVX1_LVT)                                    0.05      29.85 f
+  U45058/Y (INVX1_LVT)                                    0.07      29.92 r
+  U55837/Y (AND2X4_LVT)                                   0.10      30.02 r
+  iINSTR_MEM_CACHE/iL1_CACHE/iDA/set[5]/blk_second_way/dw[4]/dc[12]/Dout_tri/Y (TNBUFFX8_LVT)
+                                                          2.45      32.47 f
+  U53881/Y (DELLN3X2_LVT)                              2190.77    2223.24 f
+  U43423/Y (AO22X1_LVT)                                   0.05    2223.29 f
+  U53885/Y (OAI221X1_LVT)                                 0.06    2223.36 r
+  U21494/Y (AO221X1_LVT)                                  0.07    2223.42 r
+  U43465/Y (OR2X2_LVT)                                    0.07    2223.49 r
+  U21457/Y (OA221X1_LVT)                                  0.07    2223.56 r
+  U21455/Y (AO22X1_LVT)                                   0.05    2223.61 r
+  iFETCH/iPC/iREG[2]/U3/Y (NOR2X0_LVT)                    0.05    2223.66 f
+  iFETCH/iPC/iREG[2]/state_reg/D (DFFX1_LVT)              0.01    2223.67 f
+  data arrival time                                               2223.67
+
+  clock clk (rise edge)                                   2.50       2.50
+  clock network delay (ideal)                             0.00       2.50
+  clock uncertainty                                      -0.15       2.35
+  iFETCH/iPC/iREG[2]/state_reg/CLK (DFFX1_LVT)            0.00       2.35 r
+  library setup time                                    -15.04     -12.69
+  data required time                                               -12.69
+  --------------------------------------------------------------------------
+  data required time                                               -12.69
+  data arrival time                                              -2223.67
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                               -2236.37
+
+
+1

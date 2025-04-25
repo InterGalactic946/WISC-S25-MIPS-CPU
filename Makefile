@@ -135,8 +135,8 @@ run:
 			cd Scripts && python3 execute_tests.py -m $$mode -as; \
 		elif [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "a" ]; then \
 			cd Scripts && python3 execute_tests.py -m $$mode -a; \
-		elif [ "$(words $(runargs))" -eq 2 ] && [ "$(word 2, $(runargs))" == "ps" ]; then \
-			cd Scripts && python3 execute_tests.py -m $$mode -ps; \
+		elif [ "$(words $(runargs))" -eq 3 ] && [ "$(word 2, $(runargs))" == "as" ] && [ "$(word 3, $(runargs))" == "ps" ]; then \
+			cd Scripts && python3 execute_tests.py -m $$mode -as -ps; \
 		else \
 			cd Scripts && python3 execute_tests.py -m $$mode; \
 		fi; \
@@ -162,7 +162,7 @@ log:
 			case "$(word 2, $(logargs))" in \
 			c) \
 				echo "Displaying area report:"; \
-				cat ./Extra-Credit/tests/output/logs/synth_compilation.log ;; \
+				cat ./Extra-Credit/tests/output/logs/compilation/synth_compilation.log ;; \
 			a) \
 				echo "Displaying area report:"; \
 				cat ./Extra-Credit/tests/output/logs/transcript/proc_area.syn.txt ;; \

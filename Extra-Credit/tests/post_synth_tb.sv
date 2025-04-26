@@ -62,10 +62,10 @@
    // Print out the values throughout the course of execution.
    always @(posedge clk) begin
     // Display to the file.
-     $fdisplay(log_file, "PC: 0x%h | MemAddr: 0x%h | MemEn: %b | MemWr: %b | MemValid: %b | MemIn: 0x%h | MemOut: 0x%h", pc, iDUT.mem_addr, iDUT.mem_en, iDUT.mem_wr, iDUT.mem_data_valid, iDUT.mem_data_in, iDUT.mem_data_out);
+     $fdisplay(log_file, "PC: 0x%h | MemAddr: 0x%h | MemEn: %b | MemWr: %b | MemValid: %b | MemIn: 0x%h | MemOut: 0x%h | @ Cycle: %0d", pc, iDUT.mem_addr, iDUT.mem_en, iDUT.mem_wr, iDUT.mem_data_valid, iDUT.mem_data_in, iDUT.mem_data_out, ($time/10));
 
      // Display to console.
-     $display("PC: 0x%h | MemAddr: 0x%h | MemEn: %b | MemWr: %b | MemValid: %b | MemIn: 0x%h | MemOut: 0x%h", pc, iDUT.mem_addr, iDUT.mem_en, iDUT.mem_wr, iDUT.mem_data_valid, iDUT.mem_data_in, iDUT.mem_data_out);
+     $display("PC: 0x%h | MemAddr: 0x%h | MemEn: %b | MemWr: %b | MemValid: %b | MemIn: 0x%h | MemOut: 0x%h | @ Cycle: %0d", pc, iDUT.mem_addr, iDUT.mem_en, iDUT.mem_wr, iDUT.mem_data_valid, iDUT.mem_data_in, iDUT.mem_data_out, ($time/10));
    end
  
  

@@ -20,6 +20,7 @@
    logic clk, rst_n;                  // Clock and reset signals
    logic hlt;                         // Halt signals for execution stop for DUT
    logic [15:0] pc;                   // Current program counter value
+   integer log_file;                  // log file
  
    //////////////////////
    // Instantiate DUT //
@@ -35,6 +36,9 @@
    initial begin
      // Initialize the testbench
      Initialize(.clk(clk), .rst_n(rst_n));
+
+     // Open a log file.
+     log_file = $fopen("./outputs/verilogsim.log");      
  
      // Setup the testbench environment.
      $display("\n");
@@ -46,6 +50,9 @@
      repeat (2) @(posedge clk);
      
      $display("\nCPU halted due to HLT instruction.\n");
+     
+     // Close the file.
+     $fclose(log_file);
  
      // If we reached here, that means all test cases were successful.
      $display("YAHOO!! All tests passed.");
@@ -54,6 +61,10 @@
  
    // Print out the values throughout the course of execution.
    always @(posedge clk) begin
+    // Display to the file.
+     $fdisplay(log_file, "PC: 0x%h | MemAddr: 0x%h | MemEn: %b | MemWr: %b | MemValid: %b | MemIn: 0x%h | MemOut: 0x%h", pc, iDUT.mem_addr, iDUT.mem_en, iDUT.mem_wr, iDUT.mem_data_valid, iDUT.mem_data_in, iDUT.mem_data_out);
+
+     // Display to console.
      $display("PC: 0x%h | MemAddr: 0x%h | MemEn: %b | MemWr: %b | MemValid: %b | MemIn: 0x%h | MemOut: 0x%h", pc, iDUT.mem_addr, iDUT.mem_en, iDUT.mem_wr, iDUT.mem_data_valid, iDUT.mem_data_in, iDUT.mem_data_out);
    end
  

@@ -55,8 +55,8 @@ link
 ###########################################
 # Define clock and set don't mess with it #
 ###########################################
-# clk with frequency of 400 MHz
-create_clock -name "clk" -period 2.5 -waveform { 0 1.25 } { clk }
+# clk with frequency of 400 KHz
+create_clock -name "clk" -period 2500 -waveform { 0 1250 } [get_ports clk]
 set_false_path -from [get_ports rst]
 set compile_delete_unloaded_sequential_cells false
 set compile_seqmap_propagate_constants false

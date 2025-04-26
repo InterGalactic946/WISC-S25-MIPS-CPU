@@ -162,19 +162,19 @@ log:
 			case "$(word 2, $(logargs))" in \
 			c) \
 				echo "Displaying area report:"; \
-				cat ./Extra-Credit/tests/output/logs/compilation/synth_compilation.log ;; \
+				cat ./Extra-Credit/outputs/synth_compilation.log ;; \
 			a) \
 				echo "Displaying area report:"; \
-				cat ./Extra-Credit/tests/output/logs/transcript/proc_area.syn.txt ;; \
+				cat ./Extra-Credit/outputs/proc_area.syn.txt ;; \
 			p) \
 				echo "Displaying power report:"; \
-				cat ./Extra-Credit/tests/output/logs/transcript/proc_power.syn.txt ;; \
+				cat ./Extra-Credit/tests/outputs/proc_power.syn.txt ;; \
 			n) \
 				echo "Displaying min delay report:"; \
-				cat ./Extra-Credit/tests/output/logs/transcript/proc_min_delay.syn.txt ;; \
+				cat ./Extra-Credit/tests/outputs/proc_min_delay.syn.txt ;; \
 			x) \
 				echo "Displaying max delay report:"; \
-				cat ./Extra-Credit/tests/output/logs/transcript/proc_max_delay.syn.txt ;; \
+				cat ./Extra-Credit/tests/outputs/proc_max_delay.syn.txt ;; \
 			*) \
 				echo "Error: Invalid sub-argument for 's'. Use one of: c, a, p, n, x."; \
 				exit 1 ;; \

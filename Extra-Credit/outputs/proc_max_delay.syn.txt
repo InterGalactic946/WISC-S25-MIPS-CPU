@@ -6,7 +6,7 @@ Report : timing
         -max_paths 1
 Design : proc
 Version: V-2023.12-SP5
-Date   : Fri Apr 25 23:20:43 2025
+Date   : Sat Apr 26 10:02:28 2025
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.
@@ -14,9 +14,9 @@ Date   : Fri Apr 25 23:20:43 2025
 Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
 Wire Load Model Mode: enclosed
 
-  Startpoint: iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg
+  Startpoint: iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/fsm_busy_reg
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[0][0]
+  Endpoint: iIF_ID/IF_ID_PC_curr_reg[0]
             (rising edge-triggered flip-flop clocked by clk)
   Path Group: clk
   Path Type: max
@@ -29,48 +29,47 @@ Wire Load Model Mode: enclosed
   --------------------------------------------------------------------------
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
-  iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg/CLK (DFFX1_LVT)
+  iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/fsm_busy_reg/CLK (DFFX2_LVT)
                                                           0.00 #     0.00 r
-  iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg/Q (DFFX1_LVT)
-                                                          0.10       0.10 f
-  U22579/Y (AO22X1_LVT)                                   0.07       0.17 f
-  U68279/Y (INVX1_LVT)                                    0.04       0.21 r
-  U68134/Y (AND2X1_LVT)                                   0.07       0.28 r
-  U22549/Y (NAND2X0_LVT)                                  0.10       0.37 f
-  U68133/Y (INVX1_LVT)                                    0.09       0.47 r
-  U67561/Y (INVX1_LVT)                                    0.08       0.54 f
-  U22366/Y (OA22X1_LVT)                                   0.08       0.62 f
-  U22365/Y (OA221X1_LVT)                                  0.05       0.67 f
-  U22364/Y (NAND4X0_LVT)                                  0.04       0.71 r
-  U22363/Y (AO22X1_LVT)                                   0.05       0.76 r
-  U22362/Y (AO221X1_LVT)                                  0.06       0.82 r
-  U68544/Y (XOR2X1_LVT)                                   0.08       0.91 f
-  U22323/Y (AND3X1_LVT)                                   0.05       0.96 f
-  U22322/Y (NAND4X0_LVT)                                  0.04       1.00 r
-  U22281/Y (AO221X1_LVT)                                  0.07       1.07 r
-  U22009/Y (NAND2X0_LVT)                                  0.07       1.14 f
-  U68132/Y (INVX2_LVT)                                    0.10       1.24 r
-  U10951/Y (NAND2X0_LVT)                                  0.06       1.30 f
-  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/U1173/Y (AND2X1_LVT)
-                                                          0.20       1.50 f
-  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/U597/Y (AO21X1_LVT)    22.47      23.97 f
-  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/U69/Y (AO22X1_LVT)     53.45      77.42 f
-  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[0][0]/D (DFFX1_LVT)
-                                                          0.01      77.43 f
-  data arrival time                                                 77.43
+  iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/fsm_busy_reg/Q (DFFX2_LVT)
+                                                          0.11       0.11 f
+  U23161/Y (AO22X1_LVT)                                   0.08       0.19 f
+  U69771/Y (INVX1_LVT)                                    0.05       0.24 r
+  U23155/Y (AND2X1_LVT)                                   0.05       0.28 r
+  U23154/Y (AND2X1_LVT)                                   0.04       0.33 r
+  U59855/Y (AND2X1_LVT)                                   0.06       0.39 r
+  U68984/Y (INVX1_LVT)                                    0.07       0.46 f
+  U22965/Y (OA22X1_LVT)                                   0.07       0.53 f
+  U22964/Y (OA221X1_LVT)                                  0.05       0.58 f
+  U22957/Y (NAND4X0_LVT)                                  0.04       0.62 r
+  U22947/Y (AO22X1_LVT)                                   0.06       0.67 r
+  U22946/Y (AO221X1_LVT)                                  0.06       0.74 r
+  U69776/Y (XNOR2X1_LVT)                                  0.09       0.83 r
+  U22905/Y (AND3X1_LVT)                                   0.05       0.87 r
+  U22904/Y (NAND4X0_LVT)                                  0.04       0.92 f
+  U22865/Y (AO221X1_LVT)                                  0.08       0.99 f
+  U22593/Y (NAND2X0_LVT)                                  0.06       1.05 r
+  U22592/Y (OR2X1_LVT)                                    0.07       1.12 r
+  U69766/Y (INVX1_LVT)                                    0.05       1.17 f
+  U22154/Y (OR2X1_LVT)                                    0.05       1.22 f
+  U69551/Y (INVX1_LVT)                                    0.04       1.26 r
+  iIF_ID/U78/Y (NAND2X0_LVT)                              0.04       1.30 f
+  iIF_ID/U77/Y (AND2X1_LVT)                              63.20      64.51 f
+  iIF_ID/U61/Y (AO22X1_LVT)                              18.90      83.40 f
+  iIF_ID/IF_ID_PC_curr_reg[0]/D (DFFX1_LVT)               0.01      83.41 f
+  data arrival time                                                 83.41
 
   clock clk (rise edge)                                 100.00     100.00
   clock network delay (ideal)                             0.00     100.00
   clock uncertainty                                      -0.15      99.85
-  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[0][0]/CLK (DFFX1_LVT)
-                                                          0.00      99.85 r
-  library setup time                                     -5.52      94.33
-  data required time                                                94.33
+  iIF_ID/IF_ID_PC_curr_reg[0]/CLK (DFFX1_LVT)             0.00      99.85 r
+  library setup time                                     -2.32      97.53
+  data required time                                                97.53
   --------------------------------------------------------------------------
-  data required time                                                94.33
-  data arrival time                                                -77.43
+  data required time                                                97.53
+  data arrival time                                                -83.41
   --------------------------------------------------------------------------
-  slack (MET)                                                       16.90
+  slack (MET)                                                       14.12
 
 
 1

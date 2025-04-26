@@ -2,48 +2,30 @@
 # Read in the verilog files first #
 ###################################
 read_file -format sverilog { \
-  ../designs/proc.v \
-  ../designs/ALU.v \
-  ../designs/BHT.v \
-  ../designs/BitCell.v \
-  ../designs/Branch_Cache.v \
-  ../designs/Branch_control.v \
-  ../designs/BTB.v \
-  ../designs/Cache_Control.v \
-  ../designs/Cache.v \
-  ../designs/CLA_4bit.v \
-  ../designs/CLA_8bit.v \
-  ../designs/CLA_16bit.v \
-  ../designs/ControlUnit.v \
-  ../designs/CPU_Register.v \
+  ../designs/proc.sv \
+  ../designs/ALU.sv \
+  ../designs/Branch_Control.sv \
+  ../designs/Cache_Control.sv \
+  ../designs/Cache.sv \
+  ../designs/CLA_4bit.sv \
+  ../designs/ControlUnit.sv \
   ../designs/DataArray.sv \
-  ../designs/Decode.v \
-  ../designs/Decoder_2_4.v \
-  ../designs/Decoder_3_8.v \
-  ../designs/Decoder_4_16.v \
-  ../designs/Decoder_5_32.v \
-  ../designs/Decoder_6_64.v \
-  ../designs/dff.v \
-  ../designs/DynamicBranchPredictor.v \
-  ../designs/EX_MEM_pipe_reg.v \
-  ../designs/Execute.v \
-  ../designs/Fetch.v \
-  ../designs/Flag_Register.v \
-  ../designs/ForwardingUnit.v \
-  ../designs/HazardDetectionUnit.v \
-  ../designs/ID_EX_pipe_reg.v \
-  ../designs/IF_ID_pipe_reg.v \
-  ../designs/MEM_WB_pipe_reg.v \
-  ../designs/memory_system.v \
+  ../designs/Decode.sv \
+  ../designs/DynamicBranchPredictor.sv \
+  ../designs/EX_MEM_pipe_reg.sv \
+  ../designs/Execute.sv \
+  ../designs/Fetch.sv \
+  ../designs/ForwardingUnit.sv \
+  ../designs/HazardDetectionUnit.sv \
+  ../designs/ID_EX_pipe_reg.sv \
+  ../designs/IF_ID_pipe_reg.sv \
+  ../designs/MEM_WB_pipe_reg.sv \
+  ../designs/memory_system.sv \
   ../designs/MetaDataArray.sv \
-  ../designs/PSA_16bit.v \
-  ../designs/RED_Unit.v \
-  ../designs/Register.v \
-  ../designs/RegisterFile.v \
-  ../designs/Shifter.v \
-  ../designs/WriteDecoder_3_8.v \
-  ../designs/WriteDecoder_4_16.v \
-}
+  ../designs/PSA_16bit.sv \
+  ../designs/RegisterFile.sv \
+  ../designs/Shifter.sv \
+  }
 
 ###################################
 # Set Current Design to top level #

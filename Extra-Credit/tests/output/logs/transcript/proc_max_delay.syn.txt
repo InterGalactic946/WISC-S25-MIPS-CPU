@@ -6,7 +6,7 @@ Report : timing
         -max_paths 1
 Design : proc
 Version: V-2023.12-SP5
-Date   : Fri Apr 25 19:53:29 2025
+Date   : Fri Apr 25 20:08:13 2025
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.

@@ -85,7 +85,7 @@ kill:
 # Variables for directories and file patterns
 DC_SCRIPT := ./Scripts/proc.dc
 PRE_SYNTH_DIR := ./Extra-Credit/designs
-OUTPUT_LOG_DIR := ./Extra-Credit/tests/output/logs/
+OUTPUT_LOG_DIR := ./Extra-Credit/outputs/
 VG_FILE := $(PRE_SYNTH_DIR)/proc.vg
 
 # Find all .v files in the pre-synthesis directories
@@ -99,8 +99,6 @@ $(VG_FILE): $(DC_SCRIPT) $(V_FILES)
 	@echo "Synthesizing proc to Synopsys 32-nm Cell Library..."
 	@mkdir -p ./Extra-Credit/synthesis
 	@mkdir -p $(OUTPUT_LOG_DIR)
-	@mkdir -p $(OUTPUT_LOG_DIR)/compilation/
-	@mkdir -p $(OUTPUT_LOG_DIR)/transcript/
 	@cd ./Extra-Credit/synthesis && \
 	echo "source ../../Scripts/proc.dc; report_register -level_sensitive; check_design; exit;" | \
 	dc_shell -no_gui > ../../$(OUTPUT_LOG_DIR)/synth_compilation.log 2>&1
@@ -162,19 +160,19 @@ log:
 			case "$(word 2, $(logargs))" in \
 			c) \
 				echo "Displaying area report:"; \
-				cat ./Extra-Credit/tests/output/logs/synth_compilation.log ;; \
+				cat ./Extra-Credit/outputs/synth_compilation.log ;; \
 			a) \
 				echo "Displaying area report:"; \
-				cat ./Extra-Credit/tests/output/logs/transcript/proc_area.syn.txt ;; \
+				cat ./Extra-Credit/outputs/proc_area.syn.txt ;; \
 			p) \
 				echo "Displaying power report:"; \
-				cat ./Extra-Credit/tests/output/logs/transcript/proc_power.syn.txt ;; \
+				cat ./Extra-Credit/outputs/proc_power.syn.txt ;; \
 			n) \
 				echo "Displaying min delay report:"; \
-				cat ./Extra-Credit/tests/output/logs/transcript/proc_min_delay.syn.txt ;; \
+				cat ./Extra-Credit/outputs/proc_min_delay.syn.txt ;; \
 			x) \
 				echo "Displaying max delay report:"; \
-				cat ./Extra-Credit/tests/output/logs/transcript/proc_max_delay.syn.txt ;; \
+				cat ./Extra-Credit/outputs/proc_max_delay.syn.txt ;; \
 			*) \
 				echo "Error: Invalid sub-argument for 's'. Use one of: c, a, p, n, x."; \
 				exit 1 ;; \

@@ -1,0 +1,49 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : MEM_WB_pipe_reg
+Version: V-2023.12-SP5
+Date   : Thu Apr 24 06:46:10 2025
+****************************************
+
+Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
+Wire Load Model Mode: enclosed
+
+  Startpoint: flush (input port clocked by clk)
+  Endpoint: iALU_OUT_REG/iREG[0]/state_reg
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  MEM_WB_pipe_reg    16000                 saed32lvt_tt0p85v25c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.40       0.40 f
+  flush (in)                                              0.00       0.40 f
+  U2/Y (OR2X1_LVT)                                        0.15       0.55 f
+  iALU_OUT_REG/iREG[0]/U3/Y (NOR2X0_LVT)                  0.14       0.69 r
+  iALU_OUT_REG/iREG[0]/state_reg/D (DFFX1_LVT)            0.01       0.70 r
+  data arrival time                                                  0.70
+
+  clock clk (rise edge)                                   2.50       2.50
+  clock network delay (ideal)                             0.00       2.50
+  clock uncertainty                                      -0.15       2.35
+  iALU_OUT_REG/iREG[0]/state_reg/CLK (DFFX1_LVT)          0.00       2.35 r
+  library setup time                                     -0.02       2.33
+  data required time                                                 2.33
+  --------------------------------------------------------------------------
+  data required time                                                 2.33
+  data arrival time                                                 -0.70
+  --------------------------------------------------------------------------
+  slack (MET)                                                        1.62
+
+
+1

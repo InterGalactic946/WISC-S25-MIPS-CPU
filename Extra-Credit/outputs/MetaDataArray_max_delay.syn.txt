@@ -1,0 +1,52 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : MetaDataArray
+Version: V-2023.12-SP5
+Date   : Thu Apr 24 07:41:45 2025
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
+Wire Load Model Mode: enclosed
+
+  Startpoint: SetEnable[0]
+              (input port clocked by clk)
+  Endpoint: DataOut_first_way[7]
+            (output port clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  MetaDataArray      16000                 saed32lvt_tt0p85v25c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.40       0.40 r
+  SetEnable[0] (in)                                       0.00       0.40 r
+  U1296/Y (NBUFFX2_LVT)                                   0.04       0.45 r
+  set[0]/Mblk_first_way/mc[7]/Dout_tri/Y (TNBUFFX32_LVT)
+                                                          0.44       0.89 r
+  DataOut_first_way[7] (out)                             25.73      26.62 r
+  data arrival time                                                 26.62
+
+  clock clk (rise edge)                                   2.50       2.50
+  clock network delay (ideal)                             0.00       2.50
+  clock uncertainty                                      -0.15       2.35
+  output external delay                                  -0.50       1.85
+  data required time                                                 1.85
+  --------------------------------------------------------------------------
+  data required time                                                 1.85
+  data arrival time                                                -26.62
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                 -24.77
+
+
+1

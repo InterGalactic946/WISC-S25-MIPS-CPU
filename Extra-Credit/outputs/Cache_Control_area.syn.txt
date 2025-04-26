@@ -1,0 +1,30 @@
+ 
+****************************************
+Report : area
+Design : Cache_Control
+Version: V-2023.12-SP5
+Date   : Thu Apr 24 07:11:52 2025
+****************************************
+
+Library(s) Used:
+
+    saed32lvt_tt0p85v25c (File: /cae/apps/data/saed32_edk-2022/lib/stdcell_lvt/db_nldm/saed32lvt_tt0p85v25c.db)
+
+Number of ports:                           65
+Number of nets:                           436
+Number of cells:                          388
+Number of combinational cells:            292
+Number of sequential cells:                96
+Number of macros/black boxes:               0
+Number of buf/inv:                         27
+Number of references:                      18
+
+Combinational area:                656.962243
+Buf/Inv area:                       34.309440
+Noncombinational area:             634.343445
+Macro/Black Box area:                0.000000
+Net Interconnect area:             332.802525
+
+Total cell area:                  1291.305688
+Total area:                       1624.108213
+1

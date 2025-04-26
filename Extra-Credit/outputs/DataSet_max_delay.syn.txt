@@ -1,0 +1,51 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : DataSet
+Version: V-2023.12-SP5
+Date   : Thu Apr 24 11:30:55 2025
+****************************************
+
+Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
+Wire Load Model Mode: enclosed
+
+  Startpoint: WaySelect (input port clocked by clk)
+  Endpoint: DataOut_first_way[0]
+            (output port clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  DataSet            16000                 saed32lvt_tt0p85v25c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.40       0.40 r
+  WaySelect (in)                                          0.00       0.40 r
+  U397/Y (INVX1_LVT)                                      0.03       0.43 f
+  U332/Y (NAND2X0_LVT)                                    0.04       0.47 r
+  U313/Y (AND2X1_LVT)                                     0.06       0.53 r
+  U334/Y (AND2X2_LVT)                                     0.09       0.61 r
+  blk_first_way/dw[0]/dc[0]/Dout_tri/Y (TNBUFFX2_LVT)     0.13       0.74 r
+  DataOut_first_way[0] (out)                              0.06       0.80 r
+  data arrival time                                                  0.80
+
+  clock clk (rise edge)                                   2.50       2.50
+  clock network delay (ideal)                             0.00       2.50
+  clock uncertainty                                      -0.15       2.35
+  output external delay                                  -0.50       1.85
+  data required time                                                 1.85
+  --------------------------------------------------------------------------
+  data required time                                                 1.85
+  data arrival time                                                 -0.80
+  --------------------------------------------------------------------------
+  slack (MET)                                                        1.05
+
+
+1

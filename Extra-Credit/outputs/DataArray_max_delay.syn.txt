@@ -1,0 +1,35 @@
+Warning: Design 'DataArray' has '2' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : DataArray
+Version: V-2023.12-SP5
+Date   : Thu Apr 24 11:30:13 2025
+****************************************
+
+Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
+Wire Load Model Mode: enclosed
+
+  Startpoint: set[0]/blk_first_way/Dout[15] (internal pin)
+  Endpoint: DataOut_first_way[15]
+            (output port clocked by clk)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  DataArray          16000                 saed32lvt_tt0p85v25c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  set[0]/blk_first_way/Dout[15] (Block_2)                 0.00       0.00 r
+  DataOut_first_way[15] (out)                             0.02       0.02 r
+  data arrival time                                                  0.02
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

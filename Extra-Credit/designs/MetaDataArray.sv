@@ -49,8 +49,6 @@ module MetaDataArray #(
     reg [TAG_WIDTH-1:0] tag_array_first_way [NUM_BLOCKS-1:0];
     reg [TAG_WIDTH-1:0] tag_array_second_way [NUM_BLOCKS-1:0];
 
-    genvar i;
-
     // Write logic
     always @(posedge clk) begin
         if (rst) begin

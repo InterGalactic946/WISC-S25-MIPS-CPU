@@ -60,8 +60,6 @@ module DataArray #(
     reg [DATA_WIDTH-1:0] block_first_way [NUM_BLOCKS-1:0][7:0];
     reg [DATA_WIDTH-1:0] block_second_way [NUM_BLOCKS-1:0][7:0];
 
-	genvar i, j;
-
     // Write logic
     always @(posedge clk) begin
 	if (rst) begin

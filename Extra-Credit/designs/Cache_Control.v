@@ -17,7 +17,7 @@ module Cache_Control (
     output wire         mem_en,            // Signal to enable main memory on a miss
     
     output wire [7:0] tag_out,             // Output tag to rewrite upon a miss
-    output reg        write_tag_array,     // Write enable to cache tag array when all words are filled in to data array
+    output wire        write_tag_array,     // Write enable to cache tag array when all words are filled in to data array
 
     output reg        write_data_array,     // Write enable to cache data array to signal when filling with memory_data
 
@@ -147,6 +147,8 @@ module Cache_Control (
   // We are done filling the cache data array when we have filled all 8 words.
   assign chunks_filled = valid_count == 4'h8;
   ////////////////////////////////////
+
+  assign write_tag_array = state & chunk7 & memory_data_valid;
   
   //////////////////////////////////////////////////////////////////////////////////////////
   // Implements the combinational state transition and output logic of the state machine.//
@@ -170,7 +172,7 @@ module Cache_Control (
         write_data_array = (memory_data_valid & ~chunks_filled); // Write to the cache data array when memory data is valid or all 8 words are filled.
         clr_fsm_busy = memory_data_valid & chunk7;    // Clear the busy and enab;e signals when the cache data array is filled with all 8 words.
         clr_mem_en = eight_cycles;                    // Clear it after 8 cycles
-        write_tag_array = memory_data_valid & chunk7; // Write to the tag array when 7 words are filled in the cache data array and we get one more valid signal.
+        // write_tag_array = memory_data_valid & chunk7; // Write to the tag array when 7 words are filled in the cache data array and we get one more valid signal.
         nxt_state = ~(chunks_filled) ? SEND : IDLE;   // Go back to IDLE state if all 8 words are filled in the cache data array.
       end
 
@@ -194,7 +196,7 @@ module Cache_Control (
         set_fsm_busy = 1'b0;     // By default, assume the FSM is not busy.
         incr_cnt = 1'b0;         // By default, assume we are not incrementing the word count.
         write_data_array = 1'b0; // By default, assume we are not writing to the cache data array.
-        write_tag_array = 1'b0;  // By default, assume we are not writing to the tag array.
+        // write_tag_array = 1'b0;  // By default, assume we are not writing to the tag array.
         error = 1'b1;            // Default error state.
       end
     endcase

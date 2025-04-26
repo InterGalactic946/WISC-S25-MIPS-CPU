@@ -99,8 +99,8 @@ module Cache (
 
   // If we had a hit on the this cycle, we keep the same tag, but internally update the LRU bits for each line.
   // Else if it is an eviction, we take the new tag to write in the corresponding line.
-  assign first_tag_in = (hit) ? first_tag_out : ((evict_first_way) ? tag_in : first_tag_out);
-  assign second_tag_in = (hit) ? second_tag_out : ((~evict_first_way) ? tag_in : second_tag_out);
+  assign first_tag_in = (hit | ~evict_first_way) ? first_tag_out : tag_in;
+  assign second_tag_in = (hit | evict_first_way) ? second_tag_out : tag_in;
 
   // Compare the tag stored in the cache currently at both "ways/lines" in parallel, checking for equality and valid bit set. (addr[16:8] == tag and TagOut[1] == valid)
   assign first_way_match = (addr[15:10] == first_tag_out[7:2]) & first_tag_out[1];

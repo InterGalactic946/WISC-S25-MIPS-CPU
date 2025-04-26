@@ -91,12 +91,12 @@ make synthesis
 - Generates: a compilation log file, power/max delay reports, an area report, a `.vg` file (netlist), and a `.sdc` file (timing constraints).
 
 ### Output Files:
-- `cpu_area.syn.txt`(Area Report)
-- `cpu_power.syn.txt` (Power Report)
--  `cpu_min_delay.syn.txt` (Min Delay Report)
-- `cpu_max_delay.syn.txt` (Max Delay Report)
-- `cpu.vg` (Netlist)
-- `cpu.sdc` (Timing Constraints)
+- `proc_area.syn.txt`(Area Report)
+- `proc_power.syn.txt` (Power Report)
+-  `proc_min_delay.syn.txt` (Min Delay Report)
+- `proc_max_delay.syn.txt` (Max Delay Report)
+- `proc.vg` (Netlist)
+- `proc.sdc` (Timing Constraints)
 
 ---
 

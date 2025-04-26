@@ -490,3 +490,90 @@ Information: Evaluating DesignWare library utilization. (UISN-27)
 Information: There are 204 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
 
 
+Warning: Operating condition tt0p85v25c set on design proc has different process,
+voltage and temperatures parameters than the parameters at which target library 
+saed32io_wb_tt1p05v25c_2p5v is characterized. Delays may be inaccurate as a result. (OPT-998)
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'dff_0'
+  Processing 'CPU_Register_WIDTH1_0'
+  Processing 'CPU_Register_WIDTH4_0'
+  Processing 'CPU_Register_0'
+  Processing 'MEM_WB_pipe_reg'
+  Processing 'CPU_Register_WIDTH2_0'
+  Processing 'CLA_4bit_0'
+  Processing 'CLA_16bit_0'
+  Processing 'CPU_Register_WIDTH8_0'
+  Processing 'Cache_Control_0'
+  Processing 'MCell_0'
+  Processing 'MBlock_0'
+  Processing 'MetaDataSet_0'
+  Processing 'MetaDataArray_0'
+  Processing 'DCell_0'
+  Processing 'DWord_0'
+  Processing 'Block_0'
+  Processing 'DataSet_0'
+  Processing 'DataArray_0'
+  Processing 'Decoder_2_4_0'
+  Processing 'Decoder_3_8_0'
+  Processing 'Decoder_4_16_0'
+  Processing 'Decoder_5_32_0'
+  Processing 'Decoder_6_64_0'
+  Processing 'Cache_0'
+  Processing 'memory_system_0'
+  Processing 'CPU_Register_WIDTH16_0'
+  Processing 'EX_MEM_pipe_reg'
+  Processing 'ForwardingUnit'
+  Processing 'Flag_Register'
+  Processing 'Shifter'
+  Processing 'CLA_8bit_0'
+  Processing 'RED_Unit'
+  Processing 'PSA_16bit'
+  Processing 'ALU'
+  Processing 'Execute'
+  Processing 'ID_EX_pipe_reg'
+  Processing 'HazardDetectionUnit'
+  Processing 'BitCell_0'
+  Processing 'Register_0'
+  Processing 'WriteDecoder_4_16'
+  Processing 'RegisterFile'
+  Processing 'Branch_Control'
+  Processing 'ControlUnit'
+  Processing 'Decode'
+  Processing 'IF_ID_pipe_reg'
+  Processing 'Register_WIDTH15_0'
+  Processing 'WriteDecoder_3_8_0'
+  Processing 'Branch_Cache_WIDTH15'
+  Processing 'BHT'
+  Processing 'Register_WIDTH16_0'
+  Processing 'Branch_Cache'
+  Processing 'BTB'
+  Processing 'DynamicBranchPredictor'
+  Processing 'Fetch'
+  Processing 'proc'
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+
+  Beginning Implementation Selection
+  ----------------------------------
+  Processing 'Cache_1_DW01_cmp6_0_DW01_cmp6_8'
+  Processing 'Cache_1_DW01_cmp6_1_DW01_cmp6_9'
+  Processing 'Decode_DW01_cmp6_0_DW01_cmp6_10'
+  Processing 'Branch_Control_DW01_cmp6_0_DW01_cmp6_11'
+  Processing 'Cache_0_DW01_cmp6_0_DW01_cmp6_12'
+  Processing 'Cache_0_DW01_cmp6_1_DW01_cmp6_13'
+  Processing 'BHT_DW01_cmp6_0_DW01_cmp6_14'
+  Processing 'BHT_DW01_cmp6_1_DW01_cmp6_15'
+
+  Beginning Mapping Optimizations  (Medium effort)
+  -------------------------------
+
+Information: Ignoring interrupt signal since design is being mapped.
+             One more interrupt will abort optimization without
+             transferring the design... (INT-7)
+
+Information: Aborting optimization without transferring the design... (INT-8)
+
+Information: Process terminated by interrupt. (INT-4)

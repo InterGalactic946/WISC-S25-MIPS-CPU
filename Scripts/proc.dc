@@ -1,7 +1,7 @@
 ###################################
 # Read in the verilog files first #
 ###################################
-read_file -format verilog { \
+read_file -format sverilog { \
   ../designs/proc.v \
   ../designs/ALU.v \
   ../designs/BHT.v \
@@ -16,7 +16,7 @@ read_file -format verilog { \
   ../designs/CLA_16bit.v \
   ../designs/ControlUnit.v \
   ../designs/CPU_Register.v \
-  ../designs/DataArray.v \
+  ../designs/DataArray.sv \
   ../designs/Decode.v \
   ../designs/Decoder_2_4.v \
   ../designs/Decoder_3_8.v \
@@ -35,7 +35,7 @@ read_file -format verilog { \
   ../designs/IF_ID_pipe_reg.v \
   ../designs/MEM_WB_pipe_reg.v \
   ../designs/memory_system.v \
-  ../designs/MetaDataArray.v \
+  ../designs/MetaDataArray.sv \
   ../designs/PSA_16bit.v \
   ../designs/RED_Unit.v \
   ../designs/Register.v \
@@ -43,7 +43,7 @@ read_file -format verilog { \
   ../designs/Shifter.v \
   ../designs/WriteDecoder_3_8.v \
   ../designs/WriteDecoder_4_16.v \
-} -autoread -top proc
+}
 
 ###################################
 # Set Current Design to top level #
@@ -55,8 +55,8 @@ link
 ###########################################
 # Define clock and set don't mess with it #
 ###########################################
-# clk with frequency of 400 MHz
-create_clock -name "clk" -period 2.5 -waveform { 0 1.25 } { clk }
+# clk with frequency of 100 MHz
+create_clock -name "clk" -period 100 -waveform { 0 5 } { clk }
 set_false_path -from [get_ports rst]
 set compile_delete_unloaded_sequential_cells false
 set compile_seqmap_propagate_constants false
@@ -71,6 +71,7 @@ set prim_inputs [remove_from_collection [all_inputs] [find port clk]]
 set_input_delay -clock clk 0.4 $prim_inputs
 set_driving_cell -lib_cell NAND2X2_LVT -library saed32lvt_tt0p85v25c $prim_inputs
 set_max_fanout 16 [get_cells -hier *]
+set_max_fanout 16 [current_design]
 # rst goes to many places so don't touch
 set_dont_touch_network [find port rst]
 
@@ -120,3 +121,4 @@ report_area > ../tests/output/logs/transcript/proc_area.syn.txt
 ########################################################
 write -format verilog proc -output ../designs/proc.vg
 write_sdc ../Scripts/proc.sdc
+

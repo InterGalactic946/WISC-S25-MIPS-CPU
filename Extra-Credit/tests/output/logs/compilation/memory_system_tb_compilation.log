@@ -1,27 +1,7 @@
-# vlib ./tests/WORK/memory_system_tb
-#  vlog +acc -work ./tests/WORK/memory_system_tb -stats=none /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/MetaDataArray.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/DataArray.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_3_8.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Decoder_6_64.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_4bit.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/dff.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CPU_Register.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/CLA_16bit.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory_system.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/memory4c.v /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/memory_system_tb.sv 
-# QuestaSim vlog 2023.2_1 Compiler 2023.05 May 12 2023
-# -- Compiling module MetaDataArray
-# -- Compiling module MetaDataSet
-# -- Compiling module MBlock
-# -- Compiling module MCell
-# -- Compiling module DataArray
-# -- Compiling module DataSet
-# -- Compiling module Block
-# -- Compiling module DWord
-# -- Compiling module DCell
-# -- Compiling module Decoder_3_8
-# -- Compiling module Decoder_6_64
-# -- Compiling module Cache
-# -- Compiling module CLA_4bit
-# -- Compiling module dff
-# -- Compiling module CPU_Register
-# -- Compiling module CLA_16bit
-# -- Compiling module Cache_Control
-# -- Compiling module memory_system
-# -- Compiling module memory4c
-# -- Compiling module memory_system_tb
-# 
-# Top level modules:
-# 	memory_system_tb
-#  quit -f
+QuestaSim vlog 2023.2_1 Compiler 2023.05 May 12 2023
+-- Compiling module MetaDataArray
+-- Compiling module DataArray
+-- Compiling module Cache
+
+Top level modules:
+	Cache

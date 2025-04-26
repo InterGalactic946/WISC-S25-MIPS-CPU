@@ -6,7 +6,7 @@ Report : timing
         -max_paths 1
 Design : proc
 Version: V-2023.12-SP5
-Date   : Fri Apr 25 03:24:26 2025
+Date   : Fri Apr 25 19:53:29 2025
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.
@@ -14,9 +14,9 @@ Date   : Fri Apr 25 03:24:26 2025
 Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
 Wire Load Model Mode: enclosed
 
-  Startpoint: iFETCH/iPC/iREG[6]/state_reg
+  Startpoint: iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: iFETCH/iPC/iREG[2]/state_reg
+  Endpoint: iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[0][0]
             (rising edge-triggered flip-flop clocked by clk)
   Path Group: clk
   Path Type: max
@@ -29,51 +29,49 @@ Wire Load Model Mode: enclosed
   --------------------------------------------------------------------------
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
-  iFETCH/iPC/iREG[6]/state_reg/CLK (DFFX1_LVT)            0.00 #     0.00 r
-  iFETCH/iPC/iREG[6]/state_reg/Q (DFFX1_LVT)              0.09       0.09 f
-  U21203/Y (AO22X1_LVT)                                   0.07       0.16 f
-  U43424/Y (NOR2X2_LVT)                                   0.08       0.23 r
-  U18765/Y (AND2X1_LVT)                                   0.06       0.29 r
-  U43455/Y (AND2X4_LVT)                                   0.10       0.39 r
-  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/set[1]/Mblk_first_way/mc[2]/Dout_tri/Y (TNBUFFX8_LVT)
-                                                          0.52       0.91 f
-  U53840/Y (DELLN3X2_LVT)                                28.42      29.33 f
-  U53887/Y (INVX0_LVT)                                    0.03      29.36 r
-  U53361/Y (XNOR2X1_LVT)                                  0.09      29.45 r
-  U43118/Y (AND4X2_LVT)                                   0.08      29.53 r
-  U43113/Y (NAND3X0_LVT)                                  0.04      29.57 f
-  U43448/Y (AND2X1_LVT)                                   0.06      29.63 f
-  U43126/Y (NAND2X0_LVT)                                  0.04      29.67 r
-  U21193/Y (NAND2X0_LVT)                                  0.02      29.69 f
-  U43445/Y (AND2X1_LVT)                                   0.06      29.75 f
-  U47404/Y (INVX1_LVT)                                    0.05      29.80 r
-  U43507/Y (INVX1_LVT)                                    0.05      29.85 f
-  U45058/Y (INVX1_LVT)                                    0.07      29.92 r
-  U55837/Y (AND2X4_LVT)                                   0.10      30.02 r
-  iINSTR_MEM_CACHE/iL1_CACHE/iDA/set[5]/blk_second_way/dw[4]/dc[12]/Dout_tri/Y (TNBUFFX8_LVT)
-                                                          2.45      32.47 f
-  U53881/Y (DELLN3X2_LVT)                              2190.77    2223.24 f
-  U43423/Y (AO22X1_LVT)                                   0.05    2223.29 f
-  U53885/Y (OAI221X1_LVT)                                 0.06    2223.36 r
-  U21494/Y (AO221X1_LVT)                                  0.07    2223.42 r
-  U43465/Y (OR2X2_LVT)                                    0.07    2223.49 r
-  U21457/Y (OA221X1_LVT)                                  0.07    2223.56 r
-  U21455/Y (AO22X1_LVT)                                   0.05    2223.61 r
-  iFETCH/iPC/iREG[2]/U3/Y (NOR2X0_LVT)                    0.05    2223.66 f
-  iFETCH/iPC/iREG[2]/state_reg/D (DFFX1_LVT)              0.01    2223.67 f
-  data arrival time                                               2223.67
+  iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg/CLK (DFFX1_LVT)
+                                                          0.00 #     0.00 r
+  iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg/Q (DFFX1_LVT)
+                                                          0.11       0.11 f
+  U22573/Y (AO22X1_LVT)                                   0.07       0.18 f
+  U68272/Y (INVX1_LVT)                                    0.04       0.21 r
+  U68117/Y (AND2X1_LVT)                                   0.06       0.28 r
+  U22543/Y (NAND2X0_LVT)                                  0.10       0.37 f
+  U68116/Y (INVX1_LVT)                                    0.09       0.47 r
+  U67522/Y (INVX1_LVT)                                    0.07       0.54 f
+  U22368/Y (OA22X1_LVT)                                   0.08       0.62 f
+  U22367/Y (OA221X1_LVT)                                  0.05       0.67 f
+  U22366/Y (NAND4X0_LVT)                                  0.04       0.71 r
+  U22356/Y (AO22X1_LVT)                                   0.06       0.77 r
+  U22355/Y (AO221X1_LVT)                                  0.06       0.83 r
+  U68282/Y (XOR2X1_LVT)                                   0.09       0.92 f
+  U22354/Y (AND2X1_LVT)                                   0.04       0.96 f
+  U22315/Y (NAND4X0_LVT)                                  0.04       1.00 r
+  U22314/Y (NAND2X0_LVT)                                  0.03       1.03 f
+  U22272/Y (NAND4X0_LVT)                                  0.06       1.08 r
+  U21998/Y (NAND2X0_LVT)                                  0.08       1.16 f
+  U68115/Y (INVX2_LVT)                                    0.11       1.27 r
+  U10940/Y (NAND2X0_LVT)                                  0.06       1.33 f
+  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/U1173/Y (AND2X1_LVT)
+                                                          0.21       1.53 f
+  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/U597/Y (AO21X1_LVT)    22.47      24.00 f
+  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/U69/Y (AO22X1_LVT)     53.45      77.45 f
+  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[0][0]/D (DFFX1_LVT)
+                                                          0.01      77.46 f
+  data arrival time                                                 77.46
 
-  clock clk (rise edge)                                   2.50       2.50
-  clock network delay (ideal)                             0.00       2.50
-  clock uncertainty                                      -0.15       2.35
-  iFETCH/iPC/iREG[2]/state_reg/CLK (DFFX1_LVT)            0.00       2.35 r
-  library setup time                                    -15.04     -12.69
-  data required time                                               -12.69
+  clock clk (rise edge)                                 100.00     100.00
+  clock network delay (ideal)                             0.00     100.00
+  clock uncertainty                                      -0.15      99.85
+  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[0][0]/CLK (DFFX1_LVT)
+                                                          0.00      99.85 r
+  library setup time                                     -5.52      94.33
+  data required time                                                94.33
   --------------------------------------------------------------------------
-  data required time                                               -12.69
-  data arrival time                                              -2223.67
+  data required time                                                94.33
+  data arrival time                                                -77.46
   --------------------------------------------------------------------------
-  slack (VIOLATED)                                               -2236.37
+  slack (MET)                                                       16.87
 
 
 1

@@ -1,13 +1,8 @@
 # vsim -c ./tests/WORK/memory_system_tb.memory_system_tb -wlf /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/output/waves/memory_system_tb.wlf -logfile /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/output/logs/transcript/memory_system_tb_transcript.log -do "run -all; log -flush /*; quit -f;" 
-# Start time: 19:50:16 on Apr 24,2025
-# ** Note: (vsim-3812) Design is being optimized...
+# Start time: 18:30:26 on Apr 25,2025
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
 # ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
-# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2685) [TFMPC] - Too few port connections for 'iVALID_COUNT'.  Expected 11, found 7.
-# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2718) [TFMPC] - Missing connection for port 'G_group'.
-# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2718) [TFMPC] - Missing connection for port 'P_group'.
-# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2718) [TFMPC] - Missing connection for port 'neg_Ovfl'.
-# ** Warning: /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/designs/Cache_Control.v(78): (vopt-2718) [TFMPC] - Missing connection for port 'pos_Ovfl'.
-# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=6.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
 # //  Questa Sim
 # //  Version 2023.2_1 linux May 12 2023
 # //
@@ -26,8 +21,6 @@
 # Loading work.memory_system_tb(fast)
 # Loading work.memory_system(fast)
 # Loading work.Cache(fast)
-# Loading work.Decoder_3_8(fast)
-# Loading work.Decoder_6_64(fast)
 # Loading work.DataArray(fast)
 # Loading work.MetaDataArray(fast)
 # Loading work.Cache_Control(fast)
@@ -39,15 +32,7 @@
 # Loading work.CPU_Register(fast__3)
 # Loading work.CPU_Register(fast__4)
 # Loading work.memory4c(fast)
-# Loading work.DataSet(fast)
-# Loading work.Block(fast)
-# Loading work.MetaDataSet(fast)
-# Loading work.MBlock(fast)
-# Loading work.dff(fast__1)
-# Loading work.DWord(fast)
-# Loading work.MCell(fast)
 # Loading work.dff(fast)
-# Loading work.DCell(fast)
 # run -all
 # 
 # YAHOO!! All tests passed.
@@ -57,7 +42,7 @@
 # Stopped at /filespace/j/jmlaker/ECE552/WISC-S25-MIPS-CPU/Extra-Credit/tests/memory_system_tb.sv line 160
 #  log -flush /*
 #  quit -f
-# End time: 19:50:17 on Apr 24,2025, Elapsed time: 0:00:01
-# Errors: 0, Warnings: 6
-0:01
-# Errors: 0, Warnings: 6
+# End time: 18:30:26 on Apr 25,2025, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+0:00
+# Errors: 0, Warnings: 1

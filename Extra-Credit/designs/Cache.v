@@ -31,8 +31,8 @@ module Cache (
   wire first_tag_LRU;          // LRU bit of the first tag
   wire evict_first_way;        // Indicates which line we are evicting on a cache miss.
   wire WaySelect;              // The line to write data to either on a hit or a miss.
-  wire [63:0] set_enable;      // One hot set enable for the 64 sets in the cache.
-  wire [7:0] word_enable;      // One hot word enable based on the b-bits of the address.
+  wire [5:0] set_enable;      // One hot set enable for the 64 sets in the cache.
+  wire [2:0] word_enable;      // One hot word enable based on the b-bits of the address.
   wire [15:0] first_data_out;  // The data currently stored in the first line of the cache.
   wire [15:0] second_data_out; // The data currently stored in the second line of the cache.
   wire first_way_match;        // 1-bit signal indicating the first "way" in the set caused a cache hit.
@@ -44,10 +44,12 @@ module Cache (
   ///////////////////////////////////////////////
 
   // Instantiate a 3:8 decoder to get which word of the 8 words to write to.
-  Decoder_3_8 iWORD_DECODER (.RegId(addr[3:1]), .en(1'b1), .Wordline(word_enable));
+  // Decoder_3_8 iWORD_DECODER (.RegId(addr[3:1]), .en(1'b1), .Wordline(word_enable));
+  assign word_enable = addr[3:1];
 
   // Instantiate a 6:64 read decoder to get which set of the 64 sets to enable.
-  Decoder_6_64 iSET_DECODER (.RegId(addr[9:4]), .Wordline(set_enable));
+  // Decoder_6_64 iSET_DECODER (.RegId(addr[9:4]), .Wordline(set_enable));
+  assign set_enable = addr[9:4];
 
   ////////////////////////////////////////////////////////////
   // Implement the L1-cache as structural/dataflow verilog //

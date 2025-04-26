@@ -54,9 +54,9 @@ module MetaDataArray #(
     // Write logic
     always @(posedge clk) begin
         if (rst) begin
-	    tag_array_first_way <= '{default: '0};
-	    tag_array_second_way <= '{default: '0};
-	end
+            tag_array_first_way <= '{default: '0};
+            tag_array_second_way <= '{default: '0};
+        end
         else if (Write) begin
             tag_array_second_way[SetEnable]   <= {DataIn_second_way[7:1], ~Set_First_LRU};
             tag_array_first_way[SetEnable]    <= {DataIn_first_way[7:1], Set_First_LRU};

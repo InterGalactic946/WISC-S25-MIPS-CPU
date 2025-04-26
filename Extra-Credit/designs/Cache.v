@@ -103,8 +103,8 @@ module Cache (
   assign second_tag_in = (hit | evict_first_way) ? second_tag_out : tag_in;
 
   // Compare the tag stored in the cache currently at both "ways/lines" in parallel, checking for equality and valid bit set. (addr[16:8] == tag and TagOut[1] == valid)
-  assign first_way_match = (addr[15:10] == first_tag_out[7:2]) & first_tag_out[1];
-  assign second_way_match = (addr[15:10] == second_tag_out[7:2]) & second_tag_out[1];
+  assign first_way_match =  first_tag_out[1] & ~|(addr[15:10] ^ first_tag_out[7:2]);
+  assign second_way_match = second_tag_out[1] & ~|(addr[15:10] ^ second_tag_out[7:2]);
   
   // It is a cache hit if either of the "ways" resulted in a match, else it is a miss.
   assign hit = first_way_match | second_way_match;

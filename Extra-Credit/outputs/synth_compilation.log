@@ -31,19 +31,19 @@ Please use '-no_save' simv switch to avoid this.
             Inclusivity and Diversity" (Refer to article 000036315 at
                         https://solvnetplus.synopsys.com)
 Initializing...
-Current time:       Sat Apr 26 09:54:46 2025
-Hostname:           tux-119
+Current time:       Sat Apr 26 10:20:09 2025
+Hostname:           tux-118
 CPU Model:          11th Gen Intel(R) Core(TM) i5-11600 @ 2.80GHz
-CPU Details:        Cores = 12 : Sockets = 1 : Cache Size = 12288 KB : Freq = 2.08 GHz
+CPU Details:        Cores = 12 : Sockets = 1 : Cache Size = 12288 KB : Freq = 2.76 GHz
 OS:                 Linux 5.10.0-34-amd64
-RAM:                 31 GB (Free   1 GB)
+RAM:                 31 GB (Free   6 GB)
 Swap:                 1 GB (Free   1 GB)
 Work Filesystem:    /filespace/s mounted to files.cae.wisc.edu:/s
-Tmp Filesystem:     / mounted to /dev/mapper/tux--119--vg-root
+Tmp Filesystem:     / mounted to /dev/mapper/tux--118--vg-root
 Work Disk:           27 GB (Free  25 GB)
-Tmp Disk:           820 GB (Free 818 GB)
+Tmp Disk:           820 GB (Free 819 GB)
 
-CPU Load: 16%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 818 GB
+CPU Load: 8%, Ram Free: 6 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 819 GB
 Information: Term was not able to be set up using xterm-256color . Using "xterm" by default instead. (CLE-10)
 Warning: Cannot use command line editor for terminal type 'xterm-256color'.  (UI-74)
 dc_shell> Loading db file '/cae/apps/data/saed32_edk-2022/lib/stdcell_lvt/db_nldm/saed32lvt_tt0p85v25c.db'
@@ -56,7 +56,7 @@ Loading db file '/cae/apps/data/synopsys-2024/syn/V-2023.12-SP5/libraries/syn/st
 Detecting input file type automatically (-rtl or -netlist).
 Reading with Presto HDL Compiler (equivalent to -rtl option).
 Running PRESTO HDLC
-Compiling source file /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.sv
+Compiling source file /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.v
 Compiling source file /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/ALU.sv
 Compiling source file /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/Branch_Control.sv
 Compiling source file /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/Cache_Control.sv
@@ -509,7 +509,7 @@ Warning: cell 'iFETCH/iDBP/BTB_reg[0][6]' is of the wrong type. (UID-119)
 Warning: ...47615 additional objects are of the wrong type. (UID-119)
 Warning: Ignoring all 47625 objects in collection '_sel6' because they are not of type port, design, or lib_pin. (UID-445)
 Error: Value for list 'object_list' must have 1 elements. (CMD-036)
-CPU Load: 16%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 818 GB
+CPU Load: 10%, Ram Free: 5 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 819 GB
 Warning: Setting attribute 'fix_multiple_port_nets' on design 'proc'. (UIO-59)
 Information: Evaluating DesignWare library utilization. (UISN-27)
 
@@ -639,40 +639,34 @@ Information: Updating design information... (UID-85)
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:01:41  424948.1   4343.64  211620.6 619086817.7                          
-    0:01:41  424948.1   4343.64  211620.6 619086817.7                          
-    0:01:42  434097.3   4343.64  211620.6 619090005.7                          
-    0:01:45  494583.5   4334.09   73076.0 329983767.4                          
-    0:01:45  503732.7   4334.09   73076.0 329986955.4                          
-    0:01:58  552424.9      0.00       0.0 40595224.8                          
-    0:01:58  552424.9      0.00       0.0 40595224.8                          
-    0:01:58  552424.9      0.00       0.0 40595224.8                          
-    0:01:59  552424.9      0.00       0.0 40595224.8                          
-    0:02:00  552424.9      0.00       0.0 40595224.8                          
-    0:02:05  423312.7     27.95    2487.6 40463932.0                          
-    0:02:07  421396.7     27.84    2477.6 40464011.4                          
-    0:02:11  421377.9     27.54    2450.9 40464011.4                          
-    0:02:12  421375.6     27.19    2420.1 40464011.4                          
-    0:02:15  421375.6     27.19    2420.1 40464011.4                          
-    0:02:15  421375.6     27.19    2420.1 40464011.4                          
-    0:02:16  421375.6     27.19    2420.1 40464011.4                          
-    0:02:16  421375.6     27.19    2420.1 40464011.4                          
-    0:02:17  421384.7     27.40    2420.9 40463894.2                          
-    0:02:18  421390.6     27.40    2420.8 40463793.9                          
-    0:02:19  421390.6     27.39    2420.2 40463752.4                          
-    0:02:19  421391.1     27.39    2420.2 40463727.8                          
-    0:02:19  421394.9     27.39    2420.2 40463712.9                          
-    0:02:20  421394.1     27.39    2420.2 40463707.1                          
-    0:02:20  421394.4     27.39    2420.2 40463704.8                          
-    0:02:20  421394.6     27.39    2420.2 40463702.4                          
-    0:02:21  421394.9     27.39    2420.2 40463701.4                          
-    0:02:21  421394.9     27.39    2420.2 40463701.4                          
-    0:02:26  421445.7     27.14    2397.8 40451736.5 iID_EX/ID_EX_ALUSrc_reg/D
-    0:02:30  421455.9     27.09    2393.2 40451740.1 iID_EX/ID_EX_ALUSrc_reg/D
-    0:02:31  421465.6     27.06    2391.0 40451740.1 iID_EX/ID_EX_ALUSrc_reg/D
-    0:02:32  421464.3     27.06    2390.4 40451740.1 iID_EX/ID_EX_ALUSrc_reg/D
-    0:02:34  421462.3     27.05    2390.0 40451740.1 iID_EX/ID_EX_ALUSrc_reg/D
-    0:02:34  421483.6      0.00       0.0 40410430.8                          
+    0:01:42  424931.3   4343.64  211615.0 619086814.3                          
+    0:01:42  424931.3   4343.64  211615.0 619086814.3                          
+    0:01:42  434080.5   4343.64  211615.0 619090002.3                          
+    0:01:45  494566.8   4334.09   73070.5 329983966.1                          
+    0:01:45  503716.0   4334.09   73070.5 329987154.0                          
+    0:02:01  552165.0      0.00       0.0 40595098.0                          
+    0:02:01  552165.0      0.00       0.0 40595098.0                          
+    0:02:01  552165.0      0.00       0.0 40595098.0                          
+    0:02:02  552165.0      0.00       0.0 40595098.0                          
+    0:02:02  552165.0      0.00       0.0 40595098.0                          
+    0:02:08  423322.8     28.87    2569.3 40463899.6                          
+    0:02:10  421379.7     27.47    2444.8 40464093.4                          
+    0:02:14  421368.2     27.47    2444.7 40464093.4                          
+    0:02:15  421368.2     27.47    2444.7 40464093.4                          
+    0:02:15  421368.2     27.47    2444.7 40464093.4                          
+    0:02:16  421368.2     27.47    2444.7 40464093.4                          
+    0:02:16  421368.2     27.47    2444.7 40464093.4                          
+    0:02:17  421377.6     27.66    2444.0 40463917.9                          
+    0:02:18  421381.7     27.66    2444.0 40463791.7                          
+    0:02:18  421382.2     27.66    2444.0 40463752.4                          
+    0:02:19  421382.7     27.66    2444.0 40463727.8                          
+    0:02:19  421386.5     27.66    2444.0 40463712.9                          
+    0:02:19  421385.8     27.66    2444.0 40463707.1                          
+    0:02:20  421386.0     27.66    2444.0 40463704.7                          
+    0:02:20  421386.3     27.66    2444.0 40463702.4                          
+    0:02:20  421386.5     27.66    2444.0 40463701.4                          
+    0:02:20  421386.5     27.66    2444.0 40463701.4                          
+    0:02:24  421410.4      0.00       0.0 40429441.9                          
 
 
 
@@ -683,11 +677,11 @@ Information: Updating design information... (UID-85)
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:02:34  421483.6      0.00       0.0 40410430.8                          
-    0:02:34  421483.6      0.00       0.0 40410430.8                          
-    0:02:34  421483.6      0.00       0.0 40410430.8                          
-    0:02:34  421483.6      0.00       0.0 40410430.8                          
-    0:02:35  421464.5      0.00       0.0 40410430.8                          
+    0:02:24  421410.4      0.00       0.0 40429441.9                          
+    0:02:24  421410.4      0.00       0.0 40429441.9                          
+    0:02:24  421410.4      0.00       0.0 40429441.9                          
+    0:02:24  421410.4      0.00       0.0 40429441.9                          
+    0:02:25  421390.1      0.00       0.0 40429441.9                          
 
 
   Beginning Design Rule Fixing  (max_transition)  (max_fanout)  (max_capacitance)
@@ -697,9 +691,9 @@ Information: Updating design information... (UID-85)
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:02:35  421464.5      0.00       0.0 40410430.8                          
-    0:02:41  421461.0      0.00       0.0 40410429.8 iEXECUTE/iALU/iSHIFT/Shift_In[9]
-    0:02:51  421453.9      0.00       0.0 40410428.4                          
+    0:02:25  421390.1      0.00       0.0 40429441.9                          
+    0:02:28  421386.5      0.00       0.0 40429440.9 iEXECUTE/iALU/iSHIFT/Shift_In[9]
+    0:02:29  421377.1      0.00       0.0 40429439.6 ICACHE_hit               
 
 
   Beginning Area-Recovery Phase  (cleanup)
@@ -709,49 +703,48 @@ Information: Updating design information... (UID-85)
    ELAPSED            WORST NEG   SETUP    DESIGN                            
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
   --------- --------- --------- --------- --------- -------------------------
-    0:02:51  421453.9      0.00       0.0 40410428.4                          
-    0:02:52  421453.9      0.00       0.0 40410428.4                          
-    0:02:55  419232.6      0.00       0.0 40410428.5                          
-    0:02:59  418981.3      0.00       0.0 40410428.7                          
-    0:03:00  418809.0      0.00       0.0 40410428.7                          
-    0:03:02  418665.4      0.00       0.0 40410428.7                          
-    0:03:04  418524.3      0.00       0.0 40410428.7                          
-    0:03:06  418385.8      0.00       0.0 40410428.7                          
-    0:03:07  418252.4      0.00       0.0 40410428.7                          
-    0:03:11  418122.8      0.00       0.0 40410428.7                          
-    0:03:13  417993.2      0.00       0.0 40410428.7                          
-    0:03:15  417866.1      0.00       0.0 40410428.7                          
-    0:03:16  417739.0      0.00       0.0 40410428.7                          
-    0:03:17  417612.0      0.00       0.0 40410428.7                          
-    0:03:19  417482.4      0.00       0.0 40410428.7                          
-    0:03:20  417352.7      0.00       0.0 40410428.7                          
-    0:03:21  417225.7      0.00       0.0 40410428.7                          
-    0:03:22  417164.7      0.00       0.0 40410428.7                          
-    0:03:23  417103.7      0.00       0.0 40410428.7                          
-    0:03:24  417063.0      0.00       0.0 40410428.7                          
-    0:03:25  417022.4      0.00       0.0 40410428.7                          
-    0:03:26  416981.7      0.00       0.0 40410428.7                          
-    0:03:26  416941.0      0.00       0.0 40410428.7                          
-    0:03:27  416900.4      0.00       0.0 40410428.7                          
-    0:03:27  416859.7      0.00       0.0 40410428.7                          
-    0:03:28  416817.8      0.00       0.0 40410428.7                          
-    0:03:28  416777.1      0.00       0.0 40410428.7                          
-    0:03:29  416736.4      0.00       0.0 40410428.7                          
-    0:03:30  416695.8      0.00       0.0 40410428.7                          
-    0:03:31  416655.1      0.00       0.0 40410428.7                          
-    0:03:31  416615.7      0.00       0.0 40410428.7                          
-    0:03:32  416577.6      0.00       0.0 40410428.7                          
-    0:03:33  416549.6      0.00       0.0 40410428.7                          
-    0:03:33  416535.7      0.00       0.0 40410428.7                          
-    0:03:33  416535.7      0.00       0.0 40410428.7                          
-    0:03:34  416535.7      0.00       0.0 40410428.7                          
-    0:03:35  416457.6      0.00       0.0 40410244.8                          
-    0:03:35  416457.6      0.00       0.0 40410244.8                          
-    0:03:35  416457.6      0.00       0.0 40410244.8                          
-    0:03:35  416457.6      0.00       0.0 40410244.8                          
-    0:03:35  416457.6      0.00       0.0 40410244.8                          
-    0:03:36  416457.6      0.00       0.0 40410244.8                          
-    0:03:36  416457.6      0.00       0.0 40410359.2                          
+    0:02:35  421377.1      0.00       0.0 40429439.6                          
+    0:02:35  421377.1      0.00       0.0 40429439.6                          
+    0:02:38  419165.6      0.00       0.0 40429436.2                          
+    0:02:42  418929.5      0.00       0.0 40429436.5                          
+    0:02:43  418744.7      0.00       0.0 40429436.5                          
+    0:02:46  418591.2      0.00       0.0 40429436.5                          
+    0:02:48  418450.1      0.00       0.0 40429436.5                          
+    0:02:50  418311.6      0.00       0.0 40429436.5                          
+    0:02:51  418175.7      0.00       0.0 40429436.5                          
+    0:02:54  418046.0      0.00       0.0 40429436.5                          
+    0:02:57  417916.4      0.00       0.0 40429436.5                          
+    0:02:58  417785.5      0.00       0.0 40429436.5                          
+    0:03:00  417658.5      0.00       0.0 40429436.5                          
+    0:03:01  417531.4      0.00       0.0 40429436.5                          
+    0:03:03  417403.1      0.00       0.0 40429436.5                          
+    0:03:04  417276.0      0.00       0.0 40429436.5                          
+    0:03:06  417148.9      0.00       0.0 40429436.5                          
+    0:03:07  417091.7      0.00       0.0 40429436.5                          
+    0:03:08  417035.8      0.00       0.0 40429436.5                          
+    0:03:09  416995.2      0.00       0.0 40429436.5                          
+    0:03:09  416953.2      0.00       0.0 40429436.5                          
+    0:03:10  416910.0      0.00       0.0 40429436.5                          
+    0:03:10  416869.4      0.00       0.0 40429436.5                          
+    0:03:11  416828.7      0.00       0.0 40429436.5                          
+    0:03:12  416785.5      0.00       0.0 40429436.5                          
+    0:03:12  416744.8      0.00       0.0 40429436.5                          
+    0:03:13  416704.2      0.00       0.0 40429436.5                          
+    0:03:13  416662.2      0.00       0.0 40429436.5                          
+    0:03:14  416621.6      0.00       0.0 40429436.5                          
+    0:03:15  416580.9      0.00       0.0 40429436.5                          
+    0:03:16  416540.2      0.00       0.0 40429436.5                          
+    0:03:16  416503.4      0.00       0.0 40429436.5                          
+    0:03:17  416478.0      0.00       0.0 40429436.5                          
+    0:03:17  416478.0      0.00       0.0 40429436.5                          
+    0:03:18  416478.0      0.00       0.0 40429436.5                          
+    0:03:19  416441.1      0.00       0.0 40429436.5                          
+    0:03:19  416441.1      0.00       0.0 40429436.5                          
+    0:03:19  416441.1      0.00       0.0 40429436.5                          
+    0:03:19  416441.1      0.00       0.0 40429436.5                          
+    0:03:19  416441.1      0.00       0.0 40429436.5                          
+    0:03:19  416441.1      0.00       0.0 40429436.5                          
+    0:03:20  416441.1      0.00       0.0 40429550.9                          
 
 
 Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
@@ -760,7 +753,7 @@ Note: Symbol # after min delay cost means estimated hold TNS across all active s
   Optimization Complete
   ---------------------
 Warning: Design 'proc' contains 2 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
-CPU Load: 18%, Ram Free: 0 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 818 GB
+CPU Load: 16%, Ram Free: 5 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 819 GB
 Information: Total number of MV cells in the design.
 ----------------------------------------------------------------------------------------------------
  MV Cells                                           Total Number                                   
@@ -784,7 +777,7 @@ Unmapped MV Cells
 ****************************************
 check_design summary:
 Version:     V-2023.12-SP5
-Date:        Sat Apr 26 09:58:32 2025
+Date:        Sat Apr 26 10:23:38 2025
 ****************************************
 
                    Name                                            Total
@@ -1055,7 +1048,7 @@ Information: Uniquified 1 instances of design 'DataArray_0_DW01_decode_0_DW01_de
 Information: Uniquified 1 instances of design 'ALU_DW01_add_1_DW01_add_5'. (OPT-1056)
 Information: Updating graph... (UID-83)
 Warning: Design 'proc' contains 2 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
-CPU Load: 17%, Ram Free: 0 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 818 GB
+CPU Load: 16%, Ram Free: 5 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 819 GB
 ====================================================================================================
 | Flow Information                                                                                 |
 ----------------------------------------------------------------------------------------------------
@@ -1064,7 +1057,7 @@ CPU Load: 17%, Ram Free: 0 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk 
 | Design Information                                      | Value                                  |
 ====================================================================================================
 | Number of Scenarios                                     | 0                                      |
-| Leaf Cell Count                                         | 109424                                 |
+| Leaf Cell Count                                         | 109423                                 |
 | Number of User Hierarchies                              | 0                                      |
 | Sequential Cell Count                                   | 35820                                  |
 | Macro Count                                             | 0                                      |
@@ -1099,36 +1092,36 @@ Information: Updating design information... (UID-85)
    ELAPSED            WORST NEG   SETUP    DESIGN                              MIN DELAY 
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT             COST    
   --------- --------- --------- --------- --------- ------------------------- -----------
-    0:02:24  503573.4      0.00       0.0 40552055.3                                0.00  
-    0:02:24  503573.4      0.00       0.0 40552055.3                                0.00  
-    0:02:24  516321.2      0.00       0.0 40537059.0                                0.00  
-    0:02:25  525470.4      0.00       0.0 40539565.0                                0.00  
-    0:02:25  534654.7      0.00       0.0 40541935.1                                0.00  
-    0:02:25  543803.9      0.00       0.0 40544441.1                                0.00  
+    0:02:27  503556.4      0.00       0.0 40571245.2                                0.00  
+    0:02:27  503556.4      0.00       0.0 40571245.2                                0.00  
+    0:02:28  516304.2      0.00       0.0 40556248.9                                0.00  
+    0:02:28  525453.4      0.00       0.0 40558754.9                                0.00  
+    0:02:28  534637.7      0.00       0.0 40561125.0                                0.00  
+    0:02:29  543786.8      0.00       0.0 40563631.0                                0.00  
 Warning: In design proc, there are sequential cells not driving any load. (OPT-109)
 Information: Use the 'check_design' command for 
 	 more information about warnings. (LINT-98)
-    0:02:28  545393.0      0.00       0.0 40544309.4                                0.00  
-    0:02:29  545393.0      0.00       0.0 40544309.4                                0.00  
-    0:02:29  545393.0      0.00       0.0 40544309.4                                0.00  
-    0:02:29  545393.0      0.00       0.0 40544309.4                                0.00  
-    0:02:30  545393.0      0.00       0.0 40544309.4                                0.00  
-    0:02:34  418294.9      0.00       0.0 40477610.9                                0.00  
-    0:02:36  416359.3      0.00       0.0 40477610.9                                0.00  
-    0:02:39  416359.3      0.00       0.0 40477610.9                                0.00  
-    0:02:39  416359.3      0.00       0.0 40477610.9                                0.00  
-    0:02:40  416359.3      0.00       0.0 40477610.9                                0.00  
-    0:02:40  416359.3      0.00       0.0 40477610.9                                0.00  
-    0:02:40  416368.4      0.00       0.0 40477550.9                                0.00  
-    0:02:41  416378.9      0.00       0.0 40477501.5                                0.00  
-    0:02:41  416379.6      0.00       0.0 40477457.3                                0.00  
-    0:02:41  416379.4      0.00       0.0 40477437.5                                0.00  
-    0:02:41  416379.4      0.00       0.0 40477417.7                                0.00  
-    0:02:42  416379.1      0.00       0.0 40477399.7                                0.00  
-    0:02:42  416379.4      0.00       0.0 40477383.5                                0.00  
-    0:02:42  416379.6      0.00       0.0 40477367.5                                0.00  
-    0:02:42  416379.9      0.00       0.0 40477353.4                                0.00  
-    0:02:42  416379.9      0.00       0.0 40477353.4                                0.00  
+    0:02:32  545376.0      0.00       0.0 40563496.9                                0.00  
+    0:02:33  545376.0      0.00       0.0 40563496.9                                0.00  
+    0:02:33  545376.0      0.00       0.0 40563496.9                                0.00  
+    0:02:33  545376.0      0.00       0.0 40563496.9                                0.00  
+    0:02:34  545376.0      0.00       0.0 40563496.9                                0.00  
+    0:02:39  418278.1      0.00       0.0 40496819.4                                0.00  
+    0:02:41  416342.5      0.00       0.0 40496819.4                                0.00  
+    0:02:44  416342.5      0.00       0.0 40496819.4                                0.00  
+    0:02:45  416342.5      0.00       0.0 40496819.4                                0.00  
+    0:02:45  416342.5      0.00       0.0 40496819.4                                0.00  
+    0:02:45  416342.5      0.00       0.0 40496819.4                                0.00  
+    0:02:45  416351.7      0.00       0.0 40496759.3                                0.00  
+    0:02:46  416361.1      0.00       0.0 40496711.0                                0.00  
+    0:02:46  416361.8      0.00       0.0 40496666.8                                0.00  
+    0:02:46  416361.6      0.00       0.0 40496647.0                                0.00  
+    0:02:47  416361.6      0.00       0.0 40496627.2                                0.00  
+    0:02:47  416361.3      0.00       0.0 40496609.2                                0.00  
+    0:02:47  416361.6      0.00       0.0 40496593.0                                0.00  
+    0:02:47  416361.8      0.00       0.0 40496577.0                                0.00  
+    0:02:48  416362.1      0.00       0.0 40496562.9                                0.00  
+    0:02:48  416362.1      0.00       0.0 40496562.9                                0.00  
 
 
 
@@ -1139,9 +1132,9 @@ Information: Use the 'check_design' command for
    ELAPSED            WORST NEG   SETUP    DESIGN                              MIN DELAY 
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT             COST    
   --------- --------- --------- --------- --------- ------------------------- -----------
-    0:02:42  416379.9      0.00       0.0 40477353.4                                0.00  
-    0:02:42  416379.9      0.00       0.0 40477353.4                                0.00  
-    0:02:44  416165.1      0.00       0.0 40477353.4                                0.00  
+    0:02:48  416362.1      0.00       0.0 40496562.9                                0.00  
+    0:02:48  416362.1      0.00       0.0 40496562.9                                0.00  
+    0:02:49  416147.3      0.00       0.0 40496562.9                                0.00  
 
 
   Beginning Design Rule Fixing  (min_path)  (max_transition)  (max_fanout)  (max_capacitance)
@@ -1151,8 +1144,8 @@ Information: Use the 'check_design' command for
    ELAPSED            WORST NEG   SETUP    DESIGN                              MIN DELAY 
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT             COST    
   --------- --------- --------- --------- --------- ------------------------- -----------
-    0:02:46  416165.1      0.00       0.0 40477353.4                             -543.55  
-    0:02:49  416176.3      0.00       0.0 40477306.3                             -543.55  
+    0:02:51  416147.3      0.00       0.0 40496562.9                             -543.58  
+    0:02:55  416158.5      0.00       0.0 40496515.8                             -543.58  
 
 
   Beginning Area-Recovery Phase  (cleanup)
@@ -1162,320 +1155,320 @@ Information: Use the 'check_design' command for
    ELAPSED            WORST NEG   SETUP    DESIGN                              MIN DELAY 
     TIME      AREA      SLACK     COST    RULE COST         ENDPOINT             COST    
   --------- --------- --------- --------- --------- ------------------------- -----------
-    0:02:49  416176.3      0.00       0.0 40477306.3                             -543.55  
-    0:02:49  416176.3      0.00       0.0 40477306.3                             -543.55  
-    0:02:53  414380.0      0.00       0.0 40477306.5                             -543.45  
-    0:02:56  414047.1      0.00       0.0 40477307.0                             -543.45  
-    0:02:58  413740.8      0.00       0.0 40477307.0                             -543.45  
-    0:03:00  413449.9      0.00       0.0 40477310.7                             -543.45  
-    0:03:03  413160.1      0.00       0.0 40477310.7                             -543.44  
-    0:03:05  412880.6      0.00       0.0 40477310.7                             -543.44  
-    0:03:08  412631.5      0.00       0.0 40477310.7                             -543.43  
-    0:03:10  412325.3      0.00       0.0 40477310.7                             -543.43  
-    0:03:13  412073.7      0.00       0.0 40477310.7                             -543.45  
-    0:03:15  411894.2      0.00       0.0 40477310.7                             -543.45  
-    0:03:17  411774.0      0.00       0.0 40477310.7                             -543.46  
-    0:03:19  411678.0      0.00       0.0 40477310.7                             -543.44  
-    0:03:20  411591.6      0.00       0.0 40477310.7                             -543.44  
-    0:03:21  411505.1      0.00       0.0 40477310.7                             -543.42  
-    0:03:23  411418.7      0.00       0.0 40477310.7                             -543.42  
-    0:03:24  411332.3      0.00       0.0 40477310.7                             -543.42  
-    0:03:28  411265.0      0.00       0.0 40477310.7                             -543.42  
-    0:03:29  411265.0      0.00       0.0 40477310.7                             -543.42  
-    0:03:29  411265.0      0.00       0.0 40477310.7                             -543.42  
-    0:03:29  411265.0      0.00       0.0 40477310.7                             -543.42  
-    0:03:30  411260.9      0.00       0.0 40477310.7                             -543.42  
-    0:03:30  411260.9      0.00       0.0 40477310.7                             -543.42  
-    0:03:30  411260.9      0.00       0.0 40477310.7                             -543.42  
-    0:03:30  411260.9      0.00       0.0 40477310.7                             -543.42  
-    0:03:30  411260.9      0.00       0.0 40477310.7                             -543.42  
-    0:03:30  411260.9      0.00       0.0 40477310.7                             -543.42  
-    0:03:30  411515.1      0.00       0.0 40477310.7 iFETCH/iDBP/BTB_reg[7][3]/D   -541.21  
-    0:03:30  411769.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[0][0][0]/D   -538.18  
-    0:03:30  412023.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[0][7][13]/D   -536.33  
-    0:03:30  412277.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[1][7][10]/D   -534.47  
-    0:03:30  412531.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[2][7][7]/D   -532.61  
-    0:03:30  412785.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[3][7][4]/D   -530.75  
-    0:03:30  413039.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[4][7][1]/D   -528.89  
-    0:03:30  413294.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[5][6][14]/D   -527.03  
-    0:03:30  413548.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[6][6][11]/D   -525.17  
-    0:03:31  413802.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[7][6][8]/D   -523.31  
-    0:03:31  414056.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[8][6][5]/D   -521.45  
-    0:03:31  414310.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[9][6][2]/D   -519.59  
-    0:03:31  414564.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[10][5][15]/D   -517.73  
-    0:03:31  414818.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[11][5][12]/D   -515.87  
-    0:03:31  415073.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[12][5][9]/D   -514.02  
-    0:03:31  415327.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[13][5][6]/D   -512.16  
-    0:03:31  415581.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[14][5][3]/D   -510.30  
-    0:03:31  415835.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[15][5][0]/D   -508.44  
-    0:03:31  416089.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[16][4][13]/D   -506.58  
-    0:03:31  416343.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[17][4][10]/D   -504.72  
-    0:03:31  416597.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[18][4][7]/D   -502.86  
-    0:03:31  416852.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[19][4][4]/D   -501.00  
-    0:03:31  417106.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[20][4][1]/D   -499.14  
-    0:03:31  417360.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[21][3][14]/D   -497.28  
-    0:03:31  417614.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[22][3][11]/D   -495.42  
-    0:03:31  417868.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[23][3][8]/D   -493.56  
-    0:03:32  418122.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[24][3][5]/D   -491.70  
-    0:03:32  418376.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[25][3][2]/D   -489.85  
-    0:03:32  418631.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[26][2][15]/D   -487.99  
-    0:03:32  418885.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[27][2][12]/D   -486.13  
-    0:03:32  419139.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[28][2][9]/D   -484.27  
-    0:03:32  419393.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[29][2][6]/D   -482.41  
-    0:03:32  419647.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[30][2][3]/D   -480.55  
-    0:03:32  419901.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[31][2][0]/D   -478.69  
-    0:03:32  420156.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[32][1][13]/D   -476.83  
-    0:03:32  420410.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[33][1][10]/D   -474.97  
-    0:03:32  420664.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[34][1][7]/D   -473.11  
-    0:03:32  420918.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[35][1][4]/D   -471.25  
-    0:03:32  421172.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[36][1][1]/D   -469.39  
-    0:03:32  421426.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[37][0][14]/D   -467.54  
-    0:03:32  421680.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[38][0][11]/D   -465.68  
-    0:03:32  421935.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[39][0][8]/D   -463.82  
-    0:03:32  422189.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[40][0][5]/D   -461.96  
-    0:03:33  422443.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[41][0][2]/D   -460.10  
-    0:03:33  422697.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[41][7][15]/D   -458.24  
-    0:03:33  422951.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[42][7][12]/D   -456.38  
-    0:03:33  423205.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[43][7][9]/D   -454.52  
-    0:03:33  423459.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[44][7][6]/D   -452.66  
-    0:03:33  423714.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[45][7][3]/D   -450.80  
-    0:03:33  423968.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[46][7][0]/D   -448.94  
-    0:03:33  424222.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[47][6][13]/D   -447.08  
-    0:03:33  424476.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[48][6][10]/D   -445.22  
-    0:03:33  424730.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[49][6][7]/D   -443.37  
-    0:03:33  424984.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[50][6][4]/D   -441.51  
-    0:03:33  425238.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[51][6][1]/D   -439.65  
-    0:03:33  425493.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[52][5][14]/D   -437.79  
-    0:03:33  425747.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[53][5][11]/D   -435.93  
-    0:03:33  426001.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[54][5][8]/D   -434.07  
-    0:03:33  426255.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[55][5][5]/D   -432.21  
-    0:03:33  426509.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[56][5][2]/D   -430.35  
-    0:03:33  426763.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[57][4][15]/D   -428.49  
-    0:03:34  427017.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[58][4][12]/D   -426.63  
-    0:03:34  427272.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[59][4][9]/D   -424.77  
-    0:03:34  427526.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[60][4][6]/D   -422.91  
-    0:03:34  427780.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[61][4][3]/D   -421.06  
-    0:03:34  428034.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[62][4][0]/D   -419.20  
-    0:03:34  428288.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[63][3][13]/D   -417.34  
-    0:03:34  428542.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[0][3][10]/D   -415.48  
-    0:03:34  428796.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[1][3][7]/D   -413.62  
-    0:03:34  429051.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[2][3][4]/D   -411.76  
-    0:03:34  429305.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[3][3][1]/D   -409.90  
-    0:03:34  429559.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[4][2][14]/D   -408.04  
-    0:03:34  429813.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[5][2][11]/D   -406.18  
-    0:03:34  430067.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[6][2][8]/D   -404.32  
-    0:03:34  430321.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[7][2][5]/D   -402.46  
-    0:03:34  430575.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[8][2][2]/D   -400.60  
-    0:03:34  430830.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[9][1][15]/D   -398.75  
-    0:03:34  431084.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[10][1][12]/D   -396.89  
-    0:03:35  431338.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[11][1][9]/D   -395.03  
-    0:03:35  431592.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[12][1][6]/D   -393.17  
-    0:03:35  431846.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[13][1][3]/D   -391.31  
-    0:03:35  432100.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[14][1][0]/D   -389.45  
-    0:03:35  432354.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[15][0][13]/D   -387.59  
-    0:03:35  432609.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[16][0][10]/D   -385.73  
-    0:03:35  432863.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[17][0][7]/D   -383.87  
-    0:03:35  433117.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[18][0][4]/D   -382.01  
-    0:03:35  433371.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[19][0][1]/D   -380.15  
-    0:03:35  433625.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[19][7][14]/D   -378.29  
-    0:03:35  433879.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[20][7][11]/D   -376.43  
-    0:03:35  434133.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[21][7][8]/D   -374.58  
-    0:03:35  434388.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[22][7][5]/D   -372.72  
-    0:03:35  434642.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[23][7][2]/D   -370.86  
-    0:03:35  434896.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[24][6][15]/D   -369.00  
-    0:03:35  435150.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[25][6][12]/D   -367.14  
-    0:03:35  435404.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[26][6][9]/D   -365.28  
-    0:03:36  435658.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[27][6][6]/D   -363.42  
-    0:03:36  435912.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[28][6][3]/D   -361.56  
-    0:03:36  436167.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[29][6][0]/D   -359.70  
-    0:03:36  436421.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[30][5][13]/D   -357.84  
-    0:03:36  436675.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[31][5][10]/D   -355.98  
-    0:03:36  436929.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[32][5][7]/D   -354.12  
-    0:03:36  437183.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[33][5][4]/D   -352.27  
-    0:03:36  437437.7      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[34][5][1]/D   -350.41  
-    0:03:36  437691.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[35][4][14]/D   -348.55  
-    0:03:36  437946.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[36][4][11]/D   -346.69  
-    0:03:36  438200.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[37][4][8]/D   -344.83  
-    0:03:36  438454.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[38][4][5]/D   -342.97  
-    0:03:36  438708.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[39][4][2]/D   -341.11  
-    0:03:36  438962.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[40][3][15]/D   -339.25  
-    0:03:36  439216.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[41][3][12]/D   -337.39  
-    0:03:36  439470.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[42][3][9]/D   -335.53  
-    0:03:36  439725.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[43][3][6]/D   -333.67  
-    0:03:37  439979.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[44][3][3]/D   -331.81  
-    0:03:37  440233.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[45][3][0]/D   -329.96  
-    0:03:37  440487.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[46][2][13]/D   -328.10  
-    0:03:37  440741.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[47][2][10]/D   -326.24  
-    0:03:37  440995.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[48][2][7]/D   -324.38  
-    0:03:37  441249.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[49][2][4]/D   -322.52  
-    0:03:37  441504.0      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[50][2][1]/D   -320.66  
-    0:03:37  441758.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[51][1][14]/D   -318.80  
-    0:03:37  442012.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[52][1][11]/D   -316.94  
-    0:03:37  442266.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[53][1][8]/D   -315.08  
-    0:03:37  442520.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[54][1][5]/D   -313.22  
-    0:03:37  442774.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[55][1][2]/D   -311.36  
-    0:03:37  443028.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[56][0][15]/D   -309.50  
-    0:03:37  443283.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[57][0][12]/D   -307.64  
-    0:03:37  443537.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[58][0][9]/D   -305.79  
-    0:03:37  443791.3      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[59][0][6]/D   -303.93  
-    0:03:37  444045.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[60][0][3]/D   -302.07  
-    0:03:38  444299.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[61][0][0]/D   -300.21  
-    0:03:38  444553.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[61][7][13]/D   -298.35  
-    0:03:38  444807.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[62][7][10]/D   -296.49  
-    0:03:38  445062.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[63][7][7]/D   -294.63  
-    0:03:38  445316.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[14][4]/D   -292.17  
-    0:03:38  445570.4      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[30][1]/D   -290.31  
-    0:03:38  445824.5      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[45][6]/D   -288.45  
-    0:03:38  446078.6      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[61][3]/D   -286.59  
-    0:03:38  446332.8      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[13][0]/D   -283.75  
-    0:03:38  446586.9      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[28][5]/D   -280.71  
-    0:03:38  446841.1      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[44][2]/D   -277.68  
-    0:03:38  447095.2      0.00       0.0 40477310.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[59][7]/D   -274.64  
-    0:03:38  447349.4      0.00       0.0 40477310.7 iIF_ID/IF_ID_predicted_target_reg[12]/D   -272.50  
-    0:03:38  447601.5      0.00       0.0 40477310.7 iDECODE/iRF/regfile_reg[9][1]/D   -270.83  
-    0:03:38  447855.6      0.00       0.0 40477310.7 iDECODE/iRF/regfile_reg[2][14]/D   -268.97  
-    0:03:39  448109.8      0.00       0.0 40477310.7 iID_EX/ID_EX_SrcReg1_reg[2]/D   -267.21  
-    0:03:39  448363.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[0][2][9]/D   -265.06  
-    0:03:39  448618.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[1][2][6]/D   -263.20  
-    0:03:39  448872.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[2][2][3]/D   -261.34  
-    0:03:39  449126.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[3][2][0]/D   -259.48  
-    0:03:39  449380.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[4][1][13]/D   -257.62  
-    0:03:39  449634.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[5][1][10]/D   -255.76  
-    0:03:39  449888.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[6][1][7]/D   -253.90  
-    0:03:39  450142.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[7][1][4]/D   -252.05  
-    0:03:39  450397.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[8][1][1]/D   -250.19  
-    0:03:40  450651.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[9][0][14]/D   -248.33  
-    0:03:40  450905.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[10][0][11]/D   -246.47  
-    0:03:40  451159.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[11][0][8]/D   -244.61  
-    0:03:40  451413.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[12][0][5]/D   -242.75  
-    0:03:40  451667.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[13][0][2]/D   -240.89  
-    0:03:40  451921.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[13][7][15]/D   -239.03  
-    0:03:40  452176.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[14][7][12]/D   -237.17  
-    0:03:40  452430.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[15][7][9]/D   -235.31  
-    0:03:40  452684.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[16][7][6]/D   -233.45  
-    0:03:40  452938.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[17][7][3]/D   -231.59  
-    0:03:40  453192.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[18][7][0]/D   -229.74  
-    0:03:40  453446.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[19][6][13]/D   -227.88  
-    0:03:40  453700.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[20][6][10]/D   -226.02  
-    0:03:40  453955.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[21][6][7]/D   -224.16  
-    0:03:40  454209.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[22][6][4]/D   -222.30  
-    0:03:40  454463.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[23][6][1]/D   -220.44  
-    0:03:40  454717.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[24][5][14]/D   -218.58  
-    0:03:41  454971.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[25][5][11]/D   -216.72  
-    0:03:41  455225.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[26][5][8]/D   -214.86  
-    0:03:41  455479.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[27][5][5]/D   -213.00  
-    0:03:41  455734.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[28][5][2]/D   -211.14  
-    0:03:41  455988.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[29][4][15]/D   -209.28  
-    0:03:41  456242.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[30][4][12]/D   -207.42  
-    0:03:41  456496.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[31][4][9]/D   -205.57  
-    0:03:41  456750.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[32][4][6]/D   -203.71  
-    0:03:41  457004.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[33][4][3]/D   -201.85  
-    0:03:41  457258.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[34][4][0]/D   -199.99  
-    0:03:41  457513.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[35][3][13]/D   -198.13  
-    0:03:41  457767.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[36][3][10]/D   -196.27  
-    0:03:41  458021.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[37][3][7]/D   -194.41  
-    0:03:41  458275.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[38][3][4]/D   -192.55  
-    0:03:41  458529.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[39][3][1]/D   -190.69  
-    0:03:41  458783.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[40][2][14]/D   -188.83  
-    0:03:41  459038.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[41][2][11]/D   -186.97  
-    0:03:41  459292.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[42][2][8]/D   -185.11  
-    0:03:42  459546.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[43][2][5]/D   -183.26  
-    0:03:42  459800.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[44][2][2]/D   -181.40  
-    0:03:42  460054.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[45][1][15]/D   -179.54  
-    0:03:42  460308.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[46][1][12]/D   -177.68  
-    0:03:42  460562.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[47][1][9]/D   -175.82  
-    0:03:42  460817.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[48][1][6]/D   -173.96  
-    0:03:42  461071.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[49][1][3]/D   -172.10  
-    0:03:42  461325.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[50][1][0]/D   -170.24  
-    0:03:42  461579.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[51][0][13]/D   -168.38  
-    0:03:42  461833.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[52][0][10]/D   -166.52  
-    0:03:42  462087.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[53][0][7]/D   -164.66  
-    0:03:42  462341.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[54][0][4]/D   -162.80  
-    0:03:42  462596.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[55][0][1]/D   -160.95  
-    0:03:42  462850.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[55][7][14]/D   -159.09  
-    0:03:42  463104.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[56][7][11]/D   -157.23  
-    0:03:42  463358.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[57][7][8]/D   -155.37  
-    0:03:42  463612.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[58][7][5]/D   -153.51  
-    0:03:43  463866.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[59][7][2]/D   -151.65  
-    0:03:43  464120.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[60][6][15]/D   -149.79  
-    0:03:43  464375.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[61][6][12]/D   -147.93  
-    0:03:43  464629.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[62][6][9]/D   -146.07  
-    0:03:43  464883.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[63][6][6]/D   -144.21  
-    0:03:43  465137.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[0][6][3]/D   -142.35  
-    0:03:43  465391.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[1][6][0]/D   -140.49  
-    0:03:43  465645.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[2][5][13]/D   -138.63  
-    0:03:43  465899.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[3][5][10]/D   -136.78  
-    0:03:43  466154.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[4][5][7]/D   -134.92  
-    0:03:43  466408.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[5][5][4]/D   -133.06  
-    0:03:43  466662.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[6][5][1]/D   -131.20  
-    0:03:43  466916.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[7][4][14]/D   -129.34  
-    0:03:43  467170.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[8][4][11]/D   -127.48  
-    0:03:43  467424.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[9][4][8]/D   -125.62  
-    0:03:43  467678.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[10][4][5]/D   -123.76  
-    0:03:43  467933.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[11][4][2]/D   -121.90  
-    0:03:44  468187.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[12][3][15]/D   -120.04  
-    0:03:44  468441.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[13][3][12]/D   -118.18  
-    0:03:44  468695.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[14][3][9]/D   -116.32  
-    0:03:44  468949.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[15][3][6]/D   -114.47  
-    0:03:44  469203.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[16][3][3]/D   -112.61  
-    0:03:44  469457.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[17][3][0]/D   -110.75  
-    0:03:44  469712.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[18][2][13]/D   -108.89  
-    0:03:44  469966.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[19][2][10]/D   -107.03  
-    0:03:44  470220.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[20][2][7]/D   -105.17  
-    0:03:44  470474.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[21][2][4]/D   -103.31  
-    0:03:44  470728.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[22][2][1]/D   -101.45  
-    0:03:44  470982.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[23][1][14]/D    -99.59  
-    0:03:44  471236.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[24][1][11]/D    -97.73  
-    0:03:44  471491.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[25][1][8]/D    -95.87  
-    0:03:44  471745.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[26][1][5]/D    -94.01  
-    0:03:44  471999.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[27][1][2]/D    -92.16  
-    0:03:44  472253.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[28][0][15]/D    -90.30  
-    0:03:45  472507.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[29][0][12]/D    -88.44  
-    0:03:45  472761.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[30][0][9]/D    -86.58  
-    0:03:45  473015.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[31][0][6]/D    -84.72  
-    0:03:45  473270.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[32][0][3]/D    -82.86  
-    0:03:45  473524.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[33][0][0]/D    -81.00  
-    0:03:45  473778.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[33][7][13]/D    -79.14  
-    0:03:45  474032.4      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[34][7][10]/D    -77.28  
-    0:03:45  474286.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[35][7][7]/D    -75.42  
-    0:03:45  474540.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[36][7][4]/D    -73.56  
-    0:03:45  474794.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[37][7][1]/D    -71.70  
-    0:03:45  475049.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[38][6][14]/D    -69.84  
-    0:03:45  475303.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[39][6][11]/D    -67.99  
-    0:03:45  475557.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[40][6][8]/D    -66.13  
-    0:03:45  475811.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[41][6][5]/D    -64.27  
-    0:03:45  476065.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[42][6][2]/D    -62.41  
-    0:03:45  476319.7      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[43][5][15]/D    -60.55  
-    0:03:45  476573.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[44][5][12]/D    -58.69  
-    0:03:45  476828.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[45][5][9]/D    -56.83  
-    0:03:46  477082.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[46][5][6]/D    -54.97  
-    0:03:46  477336.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[47][5][3]/D    -53.11  
-    0:03:46  477590.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[48][5][0]/D    -51.25  
-    0:03:46  477844.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[49][4][13]/D    -49.39  
-    0:03:46  478098.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[50][4][10]/D    -47.53  
-    0:03:46  478352.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[51][4][7]/D    -45.68  
-    0:03:46  478607.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[52][4][4]/D    -43.82  
-    0:03:46  478861.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[53][4][1]/D    -41.96  
-    0:03:46  479115.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[54][3][14]/D    -40.10  
-    0:03:46  479369.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[55][3][11]/D    -38.24  
-    0:03:46  479623.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[56][3][8]/D    -36.38  
-    0:03:46  479877.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[57][3][5]/D    -34.52  
-    0:03:46  480131.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[58][3][2]/D    -32.66  
-    0:03:46  480386.0      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[59][2][15]/D    -30.80  
-    0:03:46  480640.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[60][2][12]/D    -28.94  
-    0:03:46  480894.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[61][2][9]/D    -27.08  
-    0:03:46  481148.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[62][2][6]/D    -25.22  
-    0:03:47  481402.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[63][2][3]/D    -23.37  
-    0:03:47  481656.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[4][0]/D    -21.20  
-    0:03:47  481910.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[19][5]/D    -19.05  
-    0:03:47  482165.1      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[35][2]/D    -17.19  
-    0:03:47  482419.2      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[50][7]/D    -15.33  
-    0:03:47  482673.3      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[2][4]/D    -13.27  
-    0:03:47  482927.5      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[18][1]/D    -10.24  
-    0:03:47  483181.6      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[33][6]/D     -7.20  
-    0:03:47  483435.8      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[49][3]/D     -4.17  
-    0:03:47  483689.9      0.00       0.0 40477310.7 iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/memory_address_1_reg[14]/D     -1.24  
-    0:03:48  483860.7      0.00       0.0 40477310.7                                0.00  
+    0:02:55  416158.5      0.00       0.0 40496515.8                             -543.58  
+    0:02:55  416158.5      0.00       0.0 40496515.8                             -543.58  
+    0:02:59  414361.7      0.00       0.0 40496516.6                             -543.48  
+    0:03:02  414028.8      0.00       0.0 40496517.0                             -543.47  
+    0:03:05  413722.6      0.00       0.0 40496517.0                             -543.47  
+    0:03:07  413431.6      0.00       0.0 40496520.7                             -543.47  
+    0:03:10  413140.6      0.00       0.0 40496520.7                             -543.47  
+    0:03:12  412861.0      0.00       0.0 40496520.7                             -543.47  
+    0:03:16  412611.9      0.00       0.0 40496520.7                             -543.45  
+    0:03:19  412304.4      0.00       0.0 40496520.7                             -543.46  
+    0:03:21  412056.6      0.00       0.0 40496520.7                             -543.47  
+    0:03:23  411879.8      0.00       0.0 40496520.7                             -543.48  
+    0:03:25  411765.6      0.00       0.0 40496520.7                             -543.49  
+    0:03:27  411671.1      0.00       0.0 40496520.7                             -543.47  
+    0:03:28  411584.7      0.00       0.0 40496520.7                             -543.47  
+    0:03:30  411498.3      0.00       0.0 40496520.7                             -543.44  
+    0:03:31  411411.9      0.00       0.0 40496520.7                             -543.44  
+    0:03:33  411325.5      0.00       0.0 40496520.7                             -543.44  
+    0:03:36  411256.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:37  411256.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:37  411256.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:38  411256.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:38  411252.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:38  411252.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:38  411252.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:38  411252.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:38  411252.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:39  411252.8      0.00       0.0 40496520.7                             -543.44  
+    0:03:39  411506.9      0.00       0.0 40496520.7 iFETCH/iDBP/BTB_reg[7][3]/D   -541.23  
+    0:03:39  411761.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[0][0][0]/D   -538.21  
+    0:03:39  412015.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[0][7][13]/D   -536.35  
+    0:03:39  412269.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[1][7][10]/D   -534.49  
+    0:03:39  412523.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[2][7][7]/D   -532.63  
+    0:03:39  412777.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[3][7][4]/D   -530.77  
+    0:03:39  413031.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[4][7][1]/D   -528.91  
+    0:03:39  413285.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[5][6][14]/D   -527.05  
+    0:03:39  413540.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[6][6][11]/D   -525.19  
+    0:03:39  413794.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[7][6][8]/D   -523.33  
+    0:03:39  414048.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[8][6][5]/D   -521.47  
+    0:03:39  414302.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[9][6][2]/D   -519.62  
+    0:03:39  414556.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[10][5][15]/D   -517.76  
+    0:03:39  414810.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[11][5][12]/D   -515.90  
+    0:03:39  415064.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[12][5][9]/D   -514.04  
+    0:03:40  415319.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[13][5][6]/D   -512.18  
+    0:03:40  415573.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[14][5][3]/D   -510.32  
+    0:03:40  415827.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[15][5][0]/D   -508.46  
+    0:03:40  416081.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[16][4][13]/D   -506.60  
+    0:03:40  416335.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[17][4][10]/D   -504.74  
+    0:03:40  416589.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[18][4][7]/D   -502.88  
+    0:03:40  416843.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[19][4][4]/D   -501.02  
+    0:03:40  417098.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[20][4][1]/D   -499.16  
+    0:03:40  417352.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[21][3][14]/D   -497.31  
+    0:03:40  417606.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[22][3][11]/D   -495.45  
+    0:03:40  417860.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[23][3][8]/D   -493.59  
+    0:03:40  418114.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[24][3][5]/D   -491.73  
+    0:03:40  418368.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[25][3][2]/D   -489.87  
+    0:03:40  418623.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[26][2][15]/D   -488.01  
+    0:03:40  418877.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[27][2][12]/D   -486.15  
+    0:03:40  419131.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[28][2][9]/D   -484.29  
+    0:03:41  419385.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[29][2][6]/D   -482.43  
+    0:03:41  419639.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[30][2][3]/D   -480.57  
+    0:03:41  419893.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[31][2][0]/D   -478.71  
+    0:03:41  420147.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[32][1][13]/D   -476.85  
+    0:03:41  420402.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[33][1][10]/D   -474.99  
+    0:03:41  420656.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[34][1][7]/D   -473.14  
+    0:03:41  420910.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[35][1][4]/D   -471.28  
+    0:03:41  421164.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[36][1][1]/D   -469.42  
+    0:03:41  421418.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[37][0][14]/D   -467.56  
+    0:03:41  421672.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[38][0][11]/D   -465.70  
+    0:03:41  421926.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[39][0][8]/D   -463.84  
+    0:03:41  422181.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[40][0][5]/D   -461.98  
+    0:03:41  422435.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[41][0][2]/D   -460.12  
+    0:03:41  422689.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[41][7][15]/D   -458.26  
+    0:03:41  422943.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[42][7][12]/D   -456.40  
+    0:03:41  423197.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[43][7][9]/D   -454.54  
+    0:03:41  423451.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[44][7][6]/D   -452.68  
+    0:03:42  423705.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[45][7][3]/D   -450.83  
+    0:03:42  423960.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[46][7][0]/D   -448.97  
+    0:03:42  424214.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[47][6][13]/D   -447.11  
+    0:03:42  424468.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[48][6][10]/D   -445.25  
+    0:03:42  424722.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[49][6][7]/D   -443.39  
+    0:03:42  424976.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[50][6][4]/D   -441.53  
+    0:03:42  425230.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[51][6][1]/D   -439.67  
+    0:03:42  425484.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[52][5][14]/D   -437.81  
+    0:03:42  425739.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[53][5][11]/D   -435.95  
+    0:03:42  425993.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[54][5][8]/D   -434.09  
+    0:03:42  426247.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[55][5][5]/D   -432.23  
+    0:03:42  426501.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[56][5][2]/D   -430.37  
+    0:03:42  426755.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[57][4][15]/D   -428.52  
+    0:03:42  427009.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[58][4][12]/D   -426.66  
+    0:03:42  427263.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[59][4][9]/D   -424.80  
+    0:03:42  427518.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[60][4][6]/D   -422.94  
+    0:03:42  427772.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[61][4][3]/D   -421.08  
+    0:03:43  428026.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[62][4][0]/D   -419.22  
+    0:03:43  428280.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[63][3][13]/D   -417.36  
+    0:03:43  428534.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[0][3][10]/D   -415.50  
+    0:03:43  428788.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[1][3][7]/D   -413.64  
+    0:03:43  429042.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[2][3][4]/D   -411.78  
+    0:03:43  429297.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[3][3][1]/D   -409.92  
+    0:03:43  429551.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[4][2][14]/D   -408.06  
+    0:03:43  429805.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[5][2][11]/D   -406.20  
+    0:03:43  430059.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[6][2][8]/D   -404.35  
+    0:03:43  430313.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[7][2][5]/D   -402.49  
+    0:03:43  430567.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[8][2][2]/D   -400.63  
+    0:03:43  430821.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[9][1][15]/D   -398.77  
+    0:03:43  431076.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[10][1][12]/D   -396.91  
+    0:03:43  431330.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[11][1][9]/D   -395.05  
+    0:03:43  431584.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[12][1][6]/D   -393.19  
+    0:03:43  431838.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[13][1][3]/D   -391.33  
+    0:03:43  432092.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[14][1][0]/D   -389.47  
+    0:03:44  432346.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[15][0][13]/D   -387.61  
+    0:03:44  432600.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[16][0][10]/D   -385.75  
+    0:03:44  432855.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[17][0][7]/D   -383.89  
+    0:03:44  433109.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[18][0][4]/D   -382.04  
+    0:03:44  433363.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[19][0][1]/D   -380.18  
+    0:03:44  433617.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[19][7][14]/D   -378.32  
+    0:03:44  433871.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[20][7][11]/D   -376.46  
+    0:03:44  434125.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[21][7][8]/D   -374.60  
+    0:03:44  434379.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[22][7][5]/D   -372.74  
+    0:03:44  434634.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[23][7][2]/D   -370.88  
+    0:03:44  434888.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[24][6][15]/D   -369.02  
+    0:03:44  435142.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[25][6][12]/D   -367.16  
+    0:03:44  435396.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[26][6][9]/D   -365.30  
+    0:03:44  435650.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[27][6][6]/D   -363.44  
+    0:03:44  435904.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[28][6][3]/D   -361.58  
+    0:03:44  436158.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[29][6][0]/D   -359.73  
+    0:03:44  436413.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[30][5][13]/D   -357.87  
+    0:03:45  436667.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[31][5][10]/D   -356.01  
+    0:03:45  436921.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[32][5][7]/D   -354.15  
+    0:03:45  437175.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[33][5][4]/D   -352.29  
+    0:03:45  437429.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[34][5][1]/D   -350.43  
+    0:03:45  437683.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[35][4][14]/D   -348.57  
+    0:03:45  437937.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[36][4][11]/D   -346.71  
+    0:03:45  438192.0      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[37][4][8]/D   -344.85  
+    0:03:45  438446.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[38][4][5]/D   -342.99  
+    0:03:45  438700.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[39][4][2]/D   -341.13  
+    0:03:45  438954.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[40][3][15]/D   -339.27  
+    0:03:45  439208.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[41][3][12]/D   -337.41  
+    0:03:45  439462.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[42][3][9]/D   -335.56  
+    0:03:45  439716.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[43][3][6]/D   -333.70  
+    0:03:45  439971.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[44][3][3]/D   -331.84  
+    0:03:45  440225.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[45][3][0]/D   -329.98  
+    0:03:45  440479.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[46][2][13]/D   -328.12  
+    0:03:46  440733.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[47][2][10]/D   -326.26  
+    0:03:46  440987.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[48][2][7]/D   -324.40  
+    0:03:46  441241.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[49][2][4]/D   -322.54  
+    0:03:46  441495.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[50][2][1]/D   -320.68  
+    0:03:46  441750.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[51][1][14]/D   -318.82  
+    0:03:46  442004.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[52][1][11]/D   -316.96  
+    0:03:46  442258.3      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[53][1][8]/D   -315.10  
+    0:03:46  442512.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[54][1][5]/D   -313.25  
+    0:03:46  442766.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[55][1][2]/D   -311.39  
+    0:03:46  443020.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[56][0][15]/D   -309.53  
+    0:03:46  443274.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[57][0][12]/D   -307.67  
+    0:03:46  443529.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[58][0][9]/D   -305.81  
+    0:03:46  443783.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[59][0][6]/D   -303.95  
+    0:03:46  444037.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[60][0][3]/D   -302.09  
+    0:03:46  444291.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[61][0][0]/D   -300.23  
+    0:03:46  444545.6      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[61][7][13]/D   -298.37  
+    0:03:46  444799.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[62][7][10]/D   -296.51  
+    0:03:47  445053.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[63][7][7]/D   -294.65  
+    0:03:47  445308.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[14][4]/D   -292.19  
+    0:03:47  445562.2      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[30][1]/D   -290.33  
+    0:03:47  445816.4      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[45][6]/D   -288.47  
+    0:03:47  446070.5      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[61][3]/D   -286.62  
+    0:03:47  446324.7      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[13][0]/D   -283.77  
+    0:03:47  446578.8      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[28][5]/D   -280.74  
+    0:03:47  446832.9      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[44][2]/D   -277.70  
+    0:03:47  447087.1      0.00       0.0 40496520.7 iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[59][7]/D   -274.67  
+    0:03:47  447341.2      0.00       0.0 40496520.7 iIF_ID/IF_ID_predicted_target_reg[12]/D   -272.52  
+    0:03:47  447593.3      0.00       0.0 40496520.7 iDECODE/iRF/regfile_reg[9][1]/D   -270.85  
+    0:03:47  447847.5      0.00       0.0 40496520.7 iDECODE/iRF/regfile_reg[2][14]/D   -268.99  
+    0:03:48  448101.6      0.00       0.0 40496520.7 iID_EX/ID_EX_SrcReg1_reg[2]/D   -267.23  
+    0:03:48  448355.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[0][2][7]/D   -265.07  
+    0:03:48  448609.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[1][2][4]/D   -263.21  
+    0:03:48  448864.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[2][2][1]/D   -261.35  
+    0:03:48  449118.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[3][1][14]/D   -259.49  
+    0:03:48  449372.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[4][1][11]/D   -257.63  
+    0:03:48  449626.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[5][1][8]/D   -255.77  
+    0:03:48  449880.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[6][1][5]/D   -253.91  
+    0:03:48  450134.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[7][1][2]/D   -252.05  
+    0:03:48  450388.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[8][0][15]/D   -250.19  
+    0:03:48  450643.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[9][0][12]/D   -248.33  
+    0:03:48  450897.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[10][0][9]/D   -246.47  
+    0:03:48  451151.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[11][0][6]/D   -244.61  
+    0:03:49  451405.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[12][0][3]/D   -242.76  
+    0:03:49  451659.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[13][0][0]/D   -240.90  
+    0:03:49  451913.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[13][7][13]/D   -239.04  
+    0:03:49  452167.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[14][7][10]/D   -237.18  
+    0:03:49  452422.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[15][7][7]/D   -235.32  
+    0:03:49  452676.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[16][7][4]/D   -233.46  
+    0:03:49  452930.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[17][7][1]/D   -231.60  
+    0:03:49  453184.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[18][6][14]/D   -229.74  
+    0:03:49  453438.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[19][6][11]/D   -227.88  
+    0:03:49  453692.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[20][6][8]/D   -226.02  
+    0:03:49  453946.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[21][6][5]/D   -224.16  
+    0:03:49  454201.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[22][6][2]/D   -222.30  
+    0:03:49  454455.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[23][5][15]/D   -220.45  
+    0:03:49  454709.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[24][5][12]/D   -218.59  
+    0:03:49  454963.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[25][5][9]/D   -216.73  
+    0:03:49  455217.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[26][5][6]/D   -214.87  
+    0:03:49  455471.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[27][5][3]/D   -213.01  
+    0:03:50  455725.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[28][5][0]/D   -211.15  
+    0:03:50  455980.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[29][4][13]/D   -209.29  
+    0:03:50  456234.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[30][4][10]/D   -207.43  
+    0:03:50  456488.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[31][4][7]/D   -205.57  
+    0:03:50  456742.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[32][4][4]/D   -203.71  
+    0:03:50  456996.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[33][4][1]/D   -201.85  
+    0:03:50  457250.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[34][3][14]/D   -199.99  
+    0:03:50  457505.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[35][3][11]/D   -198.14  
+    0:03:50  457759.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[36][3][8]/D   -196.28  
+    0:03:50  458013.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[37][3][5]/D   -194.42  
+    0:03:50  458267.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[38][3][2]/D   -192.56  
+    0:03:50  458521.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[39][2][15]/D   -190.70  
+    0:03:50  458775.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[40][2][12]/D   -188.84  
+    0:03:50  459029.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[41][2][9]/D   -186.98  
+    0:03:50  459284.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[42][2][6]/D   -185.12  
+    0:03:50  459538.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[43][2][3]/D   -183.26  
+    0:03:50  459792.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[44][2][0]/D   -181.40  
+    0:03:50  460046.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[45][1][13]/D   -179.54  
+    0:03:51  460300.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[46][1][10]/D   -177.68  
+    0:03:51  460554.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[47][1][7]/D   -175.82  
+    0:03:51  460808.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[48][1][4]/D   -173.97  
+    0:03:51  461063.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[49][1][1]/D   -172.11  
+    0:03:51  461317.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[50][0][14]/D   -170.25  
+    0:03:51  461571.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[51][0][11]/D   -168.39  
+    0:03:51  461825.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[52][0][8]/D   -166.53  
+    0:03:51  462079.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[53][0][5]/D   -164.67  
+    0:03:51  462333.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[54][0][2]/D   -162.81  
+    0:03:51  462587.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[54][7][15]/D   -160.95  
+    0:03:51  462842.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[55][7][12]/D   -159.09  
+    0:03:51  463096.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[56][7][9]/D   -157.23  
+    0:03:51  463350.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[57][7][6]/D   -155.37  
+    0:03:51  463604.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[58][7][3]/D   -153.51  
+    0:03:51  463858.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[59][7][0]/D   -151.66  
+    0:03:51  464112.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[60][6][13]/D   -149.80  
+    0:03:51  464366.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[61][6][10]/D   -147.94  
+    0:03:52  464621.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[62][6][7]/D   -146.08  
+    0:03:52  464875.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_first_way_reg[63][6][4]/D   -144.22  
+    0:03:52  465129.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[0][6][1]/D   -142.36  
+    0:03:52  465383.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[1][5][14]/D   -140.50  
+    0:03:52  465637.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[2][5][11]/D   -138.64  
+    0:03:52  465891.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[3][5][8]/D   -136.78  
+    0:03:52  466145.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[4][5][5]/D   -134.92  
+    0:03:52  466400.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[5][5][2]/D   -133.06  
+    0:03:52  466654.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[6][4][15]/D   -131.20  
+    0:03:52  466908.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[7][4][12]/D   -129.35  
+    0:03:52  467162.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[8][4][9]/D   -127.49  
+    0:03:52  467416.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[9][4][6]/D   -125.63  
+    0:03:52  467670.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[10][4][3]/D   -123.77  
+    0:03:52  467924.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[11][4][0]/D   -121.91  
+    0:03:52  468179.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[12][3][13]/D   -120.05  
+    0:03:52  468433.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[13][3][10]/D   -118.19  
+    0:03:52  468687.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[14][3][7]/D   -116.33  
+    0:03:53  468941.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[15][3][4]/D   -114.47  
+    0:03:53  469195.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[16][3][1]/D   -112.61  
+    0:03:53  469449.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[17][2][14]/D   -110.75  
+    0:03:53  469703.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[18][2][11]/D   -108.89  
+    0:03:53  469958.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[19][2][8]/D   -107.03  
+    0:03:53  470212.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[20][2][5]/D   -105.18  
+    0:03:53  470466.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[21][2][2]/D   -103.32  
+    0:03:53  470720.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[22][1][15]/D   -101.46  
+    0:03:53  470974.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[23][1][12]/D    -99.60  
+    0:03:53  471228.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[24][1][9]/D    -97.74  
+    0:03:53  471482.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[25][1][6]/D    -95.88  
+    0:03:53  471737.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[26][1][3]/D    -94.02  
+    0:03:53  471991.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[27][1][0]/D    -92.16  
+    0:03:53  472245.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[28][0][13]/D    -90.30  
+    0:03:53  472499.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[29][0][10]/D    -88.44  
+    0:03:53  472753.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[30][0][7]/D    -86.58  
+    0:03:53  473007.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[31][0][4]/D    -84.72  
+    0:03:54  473261.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[32][0][1]/D    -82.87  
+    0:03:54  473516.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[32][7][14]/D    -81.01  
+    0:03:54  473770.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[33][7][11]/D    -79.15  
+    0:03:54  474024.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[34][7][8]/D    -77.29  
+    0:03:54  474278.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[35][7][5]/D    -75.43  
+    0:03:54  474532.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[36][7][2]/D    -73.57  
+    0:03:54  474786.7      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[37][6][15]/D    -71.71  
+    0:03:54  475040.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[38][6][12]/D    -69.85  
+    0:03:54  475295.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[39][6][9]/D    -67.99  
+    0:03:54  475549.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[40][6][6]/D    -66.13  
+    0:03:54  475803.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[41][6][3]/D    -64.27  
+    0:03:54  476057.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[42][6][0]/D    -62.41  
+    0:03:54  476311.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[43][5][13]/D    -60.56  
+    0:03:54  476565.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[44][5][10]/D    -58.70  
+    0:03:54  476819.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[45][5][7]/D    -56.84  
+    0:03:54  477074.0      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[46][5][4]/D    -54.98  
+    0:03:54  477328.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[47][5][1]/D    -53.12  
+    0:03:54  477582.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[48][4][14]/D    -51.26  
+    0:03:55  477836.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[49][4][11]/D    -49.40  
+    0:03:55  478090.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[50][4][8]/D    -47.54  
+    0:03:55  478344.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[51][4][5]/D    -45.68  
+    0:03:55  478598.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[52][4][2]/D    -43.82  
+    0:03:55  478853.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[53][3][15]/D    -41.96  
+    0:03:55  479107.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[54][3][12]/D    -40.10  
+    0:03:55  479361.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[55][3][9]/D    -38.24  
+    0:03:55  479615.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[56][3][6]/D    -36.39  
+    0:03:55  479869.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[57][3][3]/D    -34.53  
+    0:03:55  480123.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[58][3][0]/D    -32.67  
+    0:03:55  480377.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[59][2][13]/D    -30.81  
+    0:03:55  480632.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[60][2][10]/D    -28.95  
+    0:03:55  480886.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[61][2][7]/D    -27.09  
+    0:03:55  481140.3      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[62][2][4]/D    -25.23  
+    0:03:55  481394.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iDA/block_second_way_reg[63][2][1]/D    -23.37  
+    0:03:55  481648.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[3][6]/D    -21.22  
+    0:03:55  481902.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[19][3]/D    -19.05  
+    0:03:56  482156.9      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[35][0]/D    -17.19  
+    0:03:56  482411.1      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_first_way_reg[50][5]/D    -15.33  
+    0:03:56  482665.2      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[2][2]/D    -13.30  
+    0:03:56  482919.4      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[17][7]/D    -10.26  
+    0:03:56  483173.5      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[33][4]/D     -7.23  
+    0:03:56  483427.6      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[49][1]/D     -4.19  
+    0:03:56  483681.8      0.00       0.0 40496520.7 iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/memory_address_3_reg[15]/D     -1.25  
+    0:03:57  483852.6      0.00       0.0 40496520.7                                0.00  
 
 
 Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
@@ -1484,7 +1477,7 @@ Note: Symbol # after min delay cost means estimated hold TNS across all active s
   Optimization Complete
   ---------------------
 Warning: Design 'proc' contains 2 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
-CPU Load: 17%, Ram Free: 1 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 818 GB
+CPU Load: 20%, Ram Free: 5 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 819 GB
 Information: Total number of MV cells in the design.
 ----------------------------------------------------------------------------------------------------
  MV Cells                                           Total Number                                   
@@ -1508,7 +1501,7 @@ Unmapped MV Cells
 ****************************************
 check_design summary:
 Version:     V-2023.12-SP5
-Date:        Sat Apr 26 10:02:25 2025
+Date:        Sat Apr 26 10:27:40 2025
 ****************************************
 
                    Name                                            Total
@@ -1525,7 +1518,7 @@ Writing verilog file '/filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Cr
 Report : register
 Design : proc
 Version: V-2023.12-SP5
-Date   : Sat Apr 26 10:02:37 2025
+Date   : Sat Apr 26 10:27:52 2025
 ****************************************
 
 Attributes:
@@ -1543,7 +1536,7 @@ Total 0 cells                                             0.000000
 ****************************************
 check_design summary:
 Version:     V-2023.12-SP5
-Date:        Sat Apr 26 10:02:38 2025
+Date:        Sat Apr 26 10:27:52 2025
 ****************************************
 
                    Name                                            Total
@@ -1557,7 +1550,7 @@ Warning: In design 'proc', cell 'iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/cache_memo
 
 Memory usage for this session 1135 Mbytes.
 Memory usage for this session including child processes 1135 Mbytes.
-CPU usage for this session 469 seconds ( 0.13 hours ).
-Elapsed time for this session 474 seconds ( 0.13 hours ).
+CPU usage for this session 462 seconds ( 0.13 hours ).
+Elapsed time for this session 465 seconds ( 0.13 hours ).
 
 Thank you...

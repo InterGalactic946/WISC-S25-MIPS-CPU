@@ -7,7 +7,7 @@ Report : power
         -analysis_effort low
 Design : proc
 Version: V-2023.12-SP5
-Date   : Sat Apr 26 10:02:34 2025
+Date   : Sat Apr 26 10:27:49 2025
 ****************************************
 
 
@@ -38,12 +38,12 @@ Attributes
 i - Including register clock pin internal power
 
 
-  Cell Internal Power  =  56.3108 mW  (100%)
-  Net Switching Power  =   9.5112 uW    (0%)
+  Cell Internal Power  =  56.3159 mW  (100%)
+  Net Switching Power  =   9.5118 uW    (0%)
                          ---------
-Total Dynamic Power    =  56.3203 mW  (100%)
+Total Dynamic Power    =  56.3255 mW  (100%)
 
-Cell Leakage Power     = 351.1929 mW
+Cell Leakage Power     = 351.1910 mW
 
 
                  Internal         Switching           Leakage            Total
@@ -53,9 +53,9 @@ io_pad             0.0000            0.0000            0.0000            0.0000 
 memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
 clock_network  1.5208e+03            0.0000            0.0000        1.5208e+03  (   0.37%)  i
-register           3.7395            0.1291        1.9510e+11        1.9510e+05  (  47.87%)
+register           3.7703            0.1289        1.9510e+11        1.9510e+05  (  47.87%)
 sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
-combinational  5.4808e+04            9.3820        1.5609e+11        2.1091e+05  (  51.75%)
+combinational  5.4814e+04            9.3828        1.5609e+11        2.1091e+05  (  51.75%)
 --------------------------------------------------------------------------------------------------
-Total          5.6333e+04 uW         9.5111 uW     3.5119e+11 pW     4.0754e+05 uW
+Total          5.6338e+04 uW         9.5117 uW     3.5119e+11 pW     4.0754e+05 uW
 1

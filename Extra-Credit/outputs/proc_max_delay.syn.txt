@@ -6,7 +6,7 @@ Report : timing
         -max_paths 1
 Design : proc
 Version: V-2023.12-SP5
-Date   : Sat Apr 26 10:02:28 2025
+Date   : Sat Apr 26 10:27:43 2025
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.
@@ -33,28 +33,28 @@ Wire Load Model Mode: enclosed
                                                           0.00 #     0.00 r
   iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/fsm_busy_reg/Q (DFFX2_LVT)
                                                           0.11       0.11 f
-  U23161/Y (AO22X1_LVT)                                   0.08       0.19 f
-  U69771/Y (INVX1_LVT)                                    0.05       0.24 r
-  U23155/Y (AND2X1_LVT)                                   0.05       0.28 r
-  U23154/Y (AND2X1_LVT)                                   0.04       0.33 r
-  U59855/Y (AND2X1_LVT)                                   0.06       0.39 r
-  U68984/Y (INVX1_LVT)                                    0.07       0.46 f
-  U22965/Y (OA22X1_LVT)                                   0.07       0.53 f
-  U22964/Y (OA221X1_LVT)                                  0.05       0.58 f
-  U22957/Y (NAND4X0_LVT)                                  0.04       0.62 r
-  U22947/Y (AO22X1_LVT)                                   0.06       0.67 r
-  U22946/Y (AO221X1_LVT)                                  0.06       0.74 r
-  U69776/Y (XNOR2X1_LVT)                                  0.09       0.83 r
-  U22905/Y (AND3X1_LVT)                                   0.05       0.87 r
-  U22904/Y (NAND4X0_LVT)                                  0.04       0.92 f
-  U22865/Y (AO221X1_LVT)                                  0.08       0.99 f
-  U22593/Y (NAND2X0_LVT)                                  0.06       1.05 r
-  U22592/Y (OR2X1_LVT)                                    0.07       1.12 r
-  U69766/Y (INVX1_LVT)                                    0.05       1.17 f
-  U22154/Y (OR2X1_LVT)                                    0.05       1.22 f
-  U69551/Y (INVX1_LVT)                                    0.04       1.26 r
+  U23738/Y (AO22X1_LVT)                                   0.08       0.19 f
+  U69782/Y (INVX1_LVT)                                    0.05       0.23 r
+  U23733/Y (AND2X1_LVT)                                   0.05       0.28 r
+  U23715/Y (AND2X1_LVT)                                   0.04       0.33 r
+  U59851/Y (AND2X1_LVT)                                   0.06       0.39 r
+  U69576/Y (INVX1_LVT)                                    0.06       0.45 f
+  U23534/Y (OA22X1_LVT)                                   0.07       0.53 f
+  U23533/Y (OA221X1_LVT)                                  0.05       0.58 f
+  U23530/Y (NAND4X0_LVT)                                  0.04       0.62 r
+  U23520/Y (AO22X1_LVT)                                   0.06       0.67 r
+  U23519/Y (AO221X1_LVT)                                  0.06       0.74 r
+  U69787/Y (XNOR2X1_LVT)                                  0.09       0.83 r
+  U23478/Y (AND3X1_LVT)                                   0.05       0.88 r
+  U23477/Y (NAND4X0_LVT)                                  0.04       0.92 f
+  U23438/Y (AO221X1_LVT)                                  0.08       1.00 f
+  U23166/Y (NAND2X0_LVT)                                  0.06       1.06 r
+  U23165/Y (OR2X1_LVT)                                    0.06       1.12 r
+  U69777/Y (INVX1_LVT)                                    0.05       1.17 f
+  U22150/Y (OR2X1_LVT)                                    0.05       1.22 f
+  U69575/Y (INVX1_LVT)                                    0.04       1.26 r
   iIF_ID/U78/Y (NAND2X0_LVT)                              0.04       1.30 f
-  iIF_ID/U77/Y (AND2X1_LVT)                              63.20      64.51 f
+  iIF_ID/U77/Y (AND2X1_LVT)                              63.20      64.50 f
   iIF_ID/U61/Y (AO22X1_LVT)                              18.90      83.40 f
   iIF_ID/IF_ID_PC_curr_reg[0]/D (DFFX1_LVT)               0.01      83.41 f
   data arrival time                                                 83.41

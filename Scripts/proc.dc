@@ -111,14 +111,13 @@ check_design
 ####################################################
 # Take a look at max & min timings as well as area #
 ####################################################
-report_timing -delay min > ../tests/output/logs/transcript/proc_min_delay.syn.txt
-report_timing -delay max > ../tests/output/logs/transcript/proc_max_delay.syn.txt
-report_power > ../tests/output/logs/transcript/proc_power.syn.txt
-report_area > ../tests/output/logs/transcript/proc_area.syn.txt
+report_timing -delay min > ../outputs/proc_min_delay.syn.txt
+report_timing -delay max > ../outputs/proc_max_delay.syn.txt
+report_power > ../outputs/proc_power.syn.txt
+report_area > ../outputs/proc_area.syn.txt
 
 ########################################################
 # Write out resulting synthesized netlist and SDC file #
 ########################################################
 write -format verilog proc -output ../designs/proc.vg
-write_sdc ../Scripts/proc.sdc
-
+write_sdc ../../Scripts/proc.sdc

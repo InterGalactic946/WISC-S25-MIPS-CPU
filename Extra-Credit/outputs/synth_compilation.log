@@ -31,10 +31,10 @@ Please use '-no_save' simv switch to avoid this.
             Inclusivity and Diversity" (Refer to article 000036315 at
                         https://solvnetplus.synopsys.com)
 Initializing...
-Current time:       Sat Apr 26 07:00:23 2025
+Current time:       Sat Apr 26 07:52:38 2025
 Hostname:           tux-127
 CPU Model:          11th Gen Intel(R) Core(TM) i5-11600 @ 2.80GHz
-CPU Details:        Cores = 12 : Sockets = 1 : Cache Size = 12288 KB : Freq = 4.37 GHz
+CPU Details:        Cores = 12 : Sockets = 1 : Cache Size = 12288 KB : Freq = 4.42 GHz
 OS:                 Linux 5.10.0-34-amd64
 RAM:                 31 GB (Free   8 GB)
 Swap:                 1 GB (Free   1 GB)
@@ -43,7 +43,7 @@ Tmp Filesystem:     / mounted to /dev/mapper/tux--127--vg-root
 Work Disk:           27 GB (Free  25 GB)
 Tmp Disk:           820 GB (Free 820 GB)
 
-CPU Load: 10%, Ram Free: 8 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 820 GB
+CPU Load: 13%, Ram Free: 8 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 820 GB
 Information: Term was not able to be set up using screen . Using "xterm" by default instead. (CLE-10)
 Warning: Cannot use command line editor for terminal type 'screen'.  (UI-74)
 dc_shell> == READ_FILE autoread for top design 'proc' ==
@@ -454,7 +454,7 @@ Warning: cell 'iFETCH/iDBP/iBTB/iMEM_BTB/iREAD_CURR/iDECODER_first/B_1' is of th
 Warning: ...504648 additional objects are of the wrong type. (UID-119)
 Warning: Ignoring all 504658 objects in collection '_sel7' because they are not of type port, design, or lib_pin. (UID-445)
 Error: Value for list 'object_list' must have 1 elements. (CMD-036)
-CPU Load: 11%, Ram Free: 7 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 820 GB
+CPU Load: 14%, Ram Free: 7 GB, Swap Free: 1 GB, Work Disk Free: 25 GB, Tmp Disk Free: 820 GB
 Warning: Setting attribute 'fix_multiple_port_nets' on design 'proc'. (UIO-59)
 Information: Evaluating DesignWare library utilization. (UISN-27)
 
@@ -552,28 +552,3 @@ saed32io_wb_tt1p05v25c_2p5v is characterized. Delays may be inaccurate as a resu
   Processing 'DynamicBranchPredictor'
   Processing 'Fetch'
   Processing 'proc'
-
-  Updating timing information
-Information: Updating design information... (UID-85)
-
-  Beginning Implementation Selection
-  ----------------------------------
-  Processing 'Cache_1_DW01_cmp6_0_DW01_cmp6_8'
-  Processing 'Cache_1_DW01_cmp6_1_DW01_cmp6_9'
-  Processing 'Decode_DW01_cmp6_0_DW01_cmp6_10'
-  Processing 'Branch_Control_DW01_cmp6_0_DW01_cmp6_11'
-  Processing 'Cache_0_DW01_cmp6_0_DW01_cmp6_12'
-  Processing 'Cache_0_DW01_cmp6_1_DW01_cmp6_13'
-  Processing 'BHT_DW01_cmp6_0_DW01_cmp6_14'
-  Processing 'BHT_DW01_cmp6_1_DW01_cmp6_15'
-
-  Beginning Mapping Optimizations  (Medium effort)
-  -------------------------------
-
-Information: Ignoring interrupt signal since design is being mapped.
-             One more interrupt will abort optimization without
-             transferring the design... (INT-7)
-
-Information: Aborting optimization without transferring the design... (INT-8)
-
-Information: Process terminated by interrupt. (INT-4)

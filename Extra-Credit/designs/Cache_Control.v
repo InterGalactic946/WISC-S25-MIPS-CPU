@@ -148,7 +148,7 @@ module Cache_Control (
   assign chunks_filled = valid_count == 4'h8;
   ////////////////////////////////////
 
-  assign write_tag_array = (state == SEND) & chunk7 & memory_data_valid;
+  assign write_tag_array = state[1] & chunk7 & memory_data_valid;
   
   //////////////////////////////////////////////////////////////////////////////////////////
   // Implements the combinational state transition and output logic of the state machine.//

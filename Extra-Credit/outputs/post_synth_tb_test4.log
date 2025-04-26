@@ -1,0 +1,928 @@
+# vsim -c ./tests/WORK/post_synth_tb.post_synth_tb -wlf /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/output/waves/post_synth_tb.wlf -logfile /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/output/logs/transcript/post_synth_tb_transcript.log -t ns -Lf /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib -do "run -all; log -flush /*; quit -f;" 
+# Start time: 23:27:05 on Apr 25,2025
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# //  Questa Sim
+# //  Version 2023.2_1 linux May 12 2023
+# //
+# //  Copyright 1991-2023 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.Monitor_tasks(fast)
+# Loading work.Verification_tasks(fast)
+# Loading work.post_synth_tb(fast)
+# Loading work.cpu(fast)
+# Loading work.proc(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NOR2X0_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.DFFX1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AOI21X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AO22X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.INVX0_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AND2X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AO21X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OR2X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.DFFX2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.FADDX1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.TNBUFFX8_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NOR4X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.INVX2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OA21X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AND3X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NAND2X0_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AO221X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AOI222X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AOI22X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NAND3X0_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OA22X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NAND4X0_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OA222X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OR3X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OA221X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AND4X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AO222X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NOR3X0_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OAI22X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OAI222X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.TNBUFFX2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.MUX21X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.XOR3X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NBUFFX2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NAND2X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OAI221X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NAND3X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.XNOR2X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NAND2X2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.INVX1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AO22X2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AND2X2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.INVX4_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NOR2X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.XOR2X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OAI21X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OR4X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.XNOR3X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AOI221X1_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AND3X2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.NAND3X2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.OR2X2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AND2X4_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.AO21X2_LVT(fast)
+# Loading /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/SAED32_lib.IBUFFX2_LVT(fast)
+# Loading work.memory4c(fast)
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[0][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[0][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213101
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[1][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[1][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213132
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[2][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[2][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213163
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[3][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[3][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213194
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[4][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[4][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213225
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[5][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[5][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213256
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[6][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[6][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213287
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[7][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[7][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213318
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[8][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[8][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213349
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[9][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[9][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213380
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[10][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[10][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213411
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[11][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[11][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213442
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[12][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[12][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213473
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[13][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[13][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213504
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[14][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[14][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213535
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[15][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[15][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213566
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[16][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[16][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213597
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[17][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[17][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213628
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[18][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[18][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213659
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[19][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[19][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213690
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[20][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[20][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213721
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[21][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[21][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213752
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[22][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[22][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213783
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[23][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[23][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213814
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[24][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[24][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213845
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[25][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[25][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213876
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[26][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[26][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213907
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[27][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[27][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213938
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[28][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[28][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 213969
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[29][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[29][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214000
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[30][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[30][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214031
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[31][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[31][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214062
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[32][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[32][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214093
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[33][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[33][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214124
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[34][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[34][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214155
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[35][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[35][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214186
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[36][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[36][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214217
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[37][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[37][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214248
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[38][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[38][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214279
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[39][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[39][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214310
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[40][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[40][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214341
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[41][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[41][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214372
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[42][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[42][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214403
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[43][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[43][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214434
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[44][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[44][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214465
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[45][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[45][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214496
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[46][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[46][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214527
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[47][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[47][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214558
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[48][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[48][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214589
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[49][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[49][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214620
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[50][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[50][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214651
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[51][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[51][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214682
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[52][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[52][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214713
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[53][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[53][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214744
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[54][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[54][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214775
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[55][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[55][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214806
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[56][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[56][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214837
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[57][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[57][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214868
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[58][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[58][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214899
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[59][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[59][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214930
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[60][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[60][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214961
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[61][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[61][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 214992
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[62][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[62][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215023
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[63][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[63][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215054
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iTAG_OUT_REG/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iTAG_OUT_REG/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215088
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215176
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215182
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215260
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215267
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215274
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215281
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215360
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215367
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215374
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215381
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215460
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215467
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215474
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215481
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[0]/state_reg '.  Expected 4, found 2.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215560
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215566
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215578
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[4]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[4]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215584
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[5]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[5]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215590
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[6]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[6]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215596
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[7]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[7]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215602
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[8]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[8]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215608
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[9]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[9]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 215614
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iBC/iCLA_branch/add_56/U1_15 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iBC/iCLA_branch/add_56/U1_15  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216034
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[0]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[0]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216046
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[1]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[1]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216058
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[2]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[2]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216070
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[3]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[3]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216082
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[4]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[4]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216094
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[5]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[5]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216106
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[6]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[6]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216118
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[7]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[7]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216130
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[8]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[8]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216142
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[9]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[9]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216154
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[10]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[10]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216166
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[11]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[11]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216178
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[12]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[12]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216190
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[13]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[13]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216202
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[14]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[14]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216214
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[15]/iDFF/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDECODE/iRF/iREGISTER[0]/iBIT_CELL[15]/iDFF/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 216226
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iEXECUTE/iALU/iPSA/iCLA[0]/add_75_2/U1_3 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iEXECUTE/iALU/iPSA/iCLA[0]/add_75_2/U1_3  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 219648
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iEXECUTE/iALU/iPSA/iCLA[1]/add_75_2/U1_3 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iEXECUTE/iALU/iPSA/iCLA[1]/add_75_2/U1_3  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 219659
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iEXECUTE/iALU/iPSA/iCLA[2]/add_75_2/U1_3 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iEXECUTE/iALU/iPSA/iCLA[2]/add_75_2/U1_3  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 219673
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iEXECUTE/iALU/iPSA/iCLA[3]/add_75_2/U1_3 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iEXECUTE/iALU/iPSA/iCLA[3]/add_75_2/U1_3  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 219687
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iEXECUTE/iALU/iRED/add_3_root_add_99/U1_4 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iEXECUTE/iALU/iRED/add_3_root_add_99/U1_4  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 219751
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iEXECUTE/iALU/iRED/add_2_root_add_99/U1_5 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iEXECUTE/iALU/iRED/add_2_root_add_99/U1_5  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 219765
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iEXECUTE/iALU/iRED/add_1_root_add_0_root_add_99/U1_6 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iEXECUTE/iALU/iRED/add_1_root_add_0_root_add_99/U1_6  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 219789
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iEXECUTE/iALU/iRED/add_0_root_add_0_root_add_99/U1_6 '.  Expected 5, found 4.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iEXECUTE/iALU/iRED/add_0_root_add_0_root_add_99/U1_6  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 219854
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[0][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[0][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338130
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[1][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[1][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338161
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[2][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[2][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338192
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[3][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[3][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338223
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[4][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[4][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338254
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[5][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[5][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338285
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[6][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[6][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338316
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[7][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[7][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338347
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[8][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[8][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338378
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[9][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[9][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338409
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[10][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[10][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338440
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[11][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[11][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338471
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[12][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[12][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338502
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[13][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[13][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338533
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[14][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[14][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338564
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[15][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[15][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338595
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[16][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[16][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338626
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[17][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[17][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338657
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[18][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[18][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338688
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[19][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[19][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338719
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[20][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[20][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338750
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[21][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[21][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338781
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[22][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[22][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338812
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[23][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[23][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338843
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[24][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[24][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338874
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[25][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[25][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338905
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[26][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[26][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338936
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[27][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[27][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338967
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[28][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[28][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 338998
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[29][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[29][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339029
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[30][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[30][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339060
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[31][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[31][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339091
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[32][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[32][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339122
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[33][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[33][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339153
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[34][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[34][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339184
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[35][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[35][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339215
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[36][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[36][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339246
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[37][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[37][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339277
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[38][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[38][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339308
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[39][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[39][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339339
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[40][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[40][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339370
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[41][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[41][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339401
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[42][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[42][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339432
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[43][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[43][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339463
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[44][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[44][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339494
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[45][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[45][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339525
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[46][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[46][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339556
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[47][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[47][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339587
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[48][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[48][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339618
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[49][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[49][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339649
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[50][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[50][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339680
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[51][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[51][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339711
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[52][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[52][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339742
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[53][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[53][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339773
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[54][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[54][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339804
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[55][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[55][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339835
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[56][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[56][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339866
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[57][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[57][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339897
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[58][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[58][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339928
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[59][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[59][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339959
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[60][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[60][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 339990
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[61][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[61][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340021
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[62][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[62][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340052
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[63][0] '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE/iMDA/tag_array_second_way_reg[63][0]  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340083
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iTAG_OUT_REG/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iTAG_OUT_REG/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340117
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340205
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340211
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340289
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340296
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340303
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_3/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340310
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340389
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340396
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340403
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_2/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340410
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340489
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340496
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340503
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iMEM_ADDR_REG_1/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340510
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[0]/state_reg '.  Expected 4, found 2.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340589
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340595
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340607
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[4]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[4]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340613
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[5]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[5]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340619
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[6]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[6]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340625
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[7]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[7]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340631
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[8]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[8]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340637
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[9]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iDATA_MEM_CACHE/iL1_CACHE_CONTROLLER/iCACHE_ADDR_REG/iREG[9]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340643
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340706
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340711
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340716
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340721
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[4]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[4]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340726
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[5]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[5]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340731
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[6]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[6]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340736
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[7]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[7]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340741
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[8]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[8]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340746
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[9]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[9]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340751
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[10]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[10]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340756
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[11]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[11]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340761
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[12]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[12]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340766
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[13]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[13]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340771
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[14]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[14]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340776
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iPC_NEXT_REG/iREG[15]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iPC_NEXT_REG/iREG[15]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340781
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340786
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340791
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340796
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340801
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[4]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[4]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340806
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[5]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[5]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340811
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[6]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[6]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340816
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[7]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[7]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340821
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[8]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[8]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340826
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[9]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[9]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340831
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[10]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[10]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340836
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[11]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[11]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340841
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[12]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[12]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340846
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[13]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[13]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340851
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[14]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[14]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340856
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iALU_OUT_REG/iREG[15]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iALU_OUT_REG/iREG[15]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340861
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340866
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[1]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[1]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340871
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[2]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[2]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340876
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[3]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[3]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340881
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[4]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[4]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340886
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[5]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[5]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340891
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[6]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[6]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340896
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[7]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[7]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340901
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[8]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[8]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340906
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[9]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[9]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340911
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[10]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[10]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340916
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[11]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[11]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340920
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[12]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[12]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340924
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[13]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[13]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340928
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[14]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[14]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340932
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iMEM_DATA_REG/iREG[15]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iMEM_DATA_REG/iREG[15]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340936
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for '\iMEM_WB/iHLT_REG/iREG[0]/state_reg '.  Expected 4, found 3.
+#    Time: 0 ns  Iteration: 0  Instance: /post_synth_tb/iDUT/iPROC/\iMEM_WB/iHLT_REG/iREG[0]/state_reg  File: /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/designs/proc.vg Line: 340956
+# run -all
+# PC: 0xxxxx | MemAddr: 0xxxxx | MemEn: x | MemWr: x | MemValid: x | MemIn: 0xxxxx | MemOut: 0xxxxx
+# PC: 0xxxxx | MemAddr: 0xxxxx | MemEn: x | MemWr: x | MemValid: x | MemIn: 0xxxxx | MemOut: 0xxxxx
+# PC: 0x0000 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# 
+# 
+# PC: 0x0000 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0000 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0000 | MemAddr: 0x0000 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0000 | MemAddr: 0x0002 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0000 | MemAddr: 0x0004 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0000 | MemAddr: 0x0006 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0000 | MemAddr: 0x0008 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa18a
+# PC: 0x0000 | MemAddr: 0x000a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa680
+# PC: 0x0000 | MemAddr: 0x000c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xb601
+# PC: 0x0000 | MemAddr: 0x000e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x9160
+# PC: 0x0000 | MemAddr: 0x0010 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa110
+# PC: 0x0000 | MemAddr: 0x0012 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa270
+# PC: 0x0000 | MemAddr: 0x0014 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa302
+# PC: 0x0000 | MemAddr: 0x0016 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x9120
+# PC: 0x0000 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0002 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0004 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0006 | MemAddr: 0x008a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0008 | MemAddr: 0x0080 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x000a | MemAddr: 0x0180 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0180 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0180 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0182 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0184 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0186 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0188 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x018a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x018c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x018e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0190 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0192 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0194 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0196 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000c | MemAddr: 0x0180 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0010 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x001a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0010 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0070 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0010 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0012 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0014 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0016 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0018 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0223
+# PC: 0x0010 | MemAddr: 0x001a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x1113
+# PC: 0x0010 | MemAddr: 0x001c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0xc1fc
+# PC: 0x0010 | MemAddr: 0x001e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0xa110
+# PC: 0x0010 | MemAddr: 0x0020 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0xa270
+# PC: 0x0010 | MemAddr: 0x0022 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0xa580
+# PC: 0x0010 | MemAddr: 0x0024 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x8420
+# PC: 0x0010 | MemAddr: 0x0026 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0223
+# PC: 0x0010 | MemAddr: 0x0070 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0070 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0072 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0074 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0076 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0078 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x007a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x007c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x007e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0080 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0082 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0084 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0086 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0070 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0012 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0014 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0016 | MemAddr: 0x0072 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0016 | MemAddr: 0x000e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0012 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0014 | MemAddr: 0x0072 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x000e | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0074 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x000c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0012 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0014 | MemAddr: 0x0074 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x000c | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0076 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x000a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0012 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0014 | MemAddr: 0x0076 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x000a | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0078 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0008 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0012 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0014 | MemAddr: 0x0078 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0008 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x007a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0006 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0012 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0014 | MemAddr: 0x007a | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0006 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x007c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0004 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0012 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0014 | MemAddr: 0x007c | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0004 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x007e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0002 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0010 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0012 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0014 | MemAddr: 0x007e | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0080 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x000e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0016 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0018 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x001a | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0010 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x001e | MemAddr: 0x0070 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x002a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0020 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0020 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0022 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0024 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0026 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0028 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x9450
+# PC: 0x0020 | MemAddr: 0x002a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x0553
+# PC: 0x0020 | MemAddr: 0x002c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x1113
+# PC: 0x0020 | MemAddr: 0x002e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xc1fa
+# PC: 0x0020 | MemAddr: 0x0030 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa110
+# PC: 0x0020 | MemAddr: 0x0032 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa580
+# PC: 0x0020 | MemAddr: 0x0034 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x8450
+# PC: 0x0020 | MemAddr: 0x0036 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x1041
+# PC: 0x0020 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0022 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0024 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x008a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0080 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0080 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0082 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0084 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0086 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0088 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x008a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x008c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x008e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0090 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0092 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0094 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0096 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0080 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0028 | MemAddr: 0x0082 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0028 | MemAddr: 0x000e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x001e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0022 | MemAddr: 0x0072 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0024 | MemAddr: 0x0074 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0082 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x000e | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0084 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x000c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0022 | MemAddr: 0x0074 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0024 | MemAddr: 0x0076 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0084 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x000c | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0086 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x000a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0022 | MemAddr: 0x0076 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0024 | MemAddr: 0x0078 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0086 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x000a | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0088 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0008 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0022 | MemAddr: 0x0078 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0024 | MemAddr: 0x007a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x0088 | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0008 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x008a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0006 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0022 | MemAddr: 0x007a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0024 | MemAddr: 0x007c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x008a | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0006 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x008c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0004 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0022 | MemAddr: 0x007c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0024 | MemAddr: 0x007e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x008c | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0004 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x008e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0002 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0020 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0022 | MemAddr: 0x007e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0024 | MemAddr: 0x0080 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0026 | MemAddr: 0x008e | MemEn: 1 | MemWr: 1 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0090 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x001c | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0028 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002a | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002e | MemAddr: 0x0010 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x003a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0030 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0030 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0032 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0034 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0036 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0038 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xc00d
+# PC: 0x0030 | MemAddr: 0x003a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x0553
+# PC: 0x0030 | MemAddr: 0x003c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x1113
+# PC: 0x0030 | MemAddr: 0x003e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xc1fa
+# PC: 0x0030 | MemAddr: 0x0040 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x8260
+# PC: 0x0030 | MemAddr: 0x0042 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa18a
+# PC: 0x0030 | MemAddr: 0x0044 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x1012
+# PC: 0x0030 | MemAddr: 0x0046 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xc006
+# PC: 0x0030 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0034 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0036 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0038 | MemAddr: 0x0082 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0038 | MemAddr: 0x000e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0082 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x000e | MemOut: 0x0000
+# PC: 0x0034 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0036 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0084 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x000c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0084 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x000c | MemOut: 0x0000
+# PC: 0x0034 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0036 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0086 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x000a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0086 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x000a | MemOut: 0x0000
+# PC: 0x0034 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0036 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0088 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0008 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0088 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0008 | MemOut: 0x0000
+# PC: 0x0034 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0036 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x008a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0006 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x008a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0006 | MemOut: 0x0000
+# PC: 0x0034 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0036 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x008c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0004 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x008c | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0004 | MemOut: 0x0000
+# PC: 0x0034 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0036 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x008e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0002 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002e | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0030 | MemAddr: 0x008e | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0032 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0034 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0036 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0090 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x002c | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0002 | MemOut: 0x0000
+# PC: 0x0038 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x003a | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x003c | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x003e | MemAddr: 0x0180 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0040 | MemAddr: 0x004a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0040 | MemAddr: 0x0040 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x008a | MemOut: 0x0000
+# PC: 0x0040 | MemAddr: 0x0040 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0040 | MemAddr: 0x0042 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0180 | MemOut: 0x0000
+# PC: 0x0040 | MemAddr: 0x0044 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0040 | MemAddr: 0x0046 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0040 | MemAddr: 0x0048 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa680
+# PC: 0x0040 | MemAddr: 0x004a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xb600
+# PC: 0x0040 | MemAddr: 0x004c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x8260
+# PC: 0x0040 | MemAddr: 0x004e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa110
+# PC: 0x0040 | MemAddr: 0x0050 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x1012
+# PC: 0x0040 | MemAddr: 0x0052 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xc205
+# PC: 0x0040 | MemAddr: 0x0054 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa1ff
+# PC: 0x0040 | MemAddr: 0x0056 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xf000
+# PC: 0x0040 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0042 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0044 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0046 | MemAddr: 0x0180 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0048 | MemAddr: 0x0080 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x004a | MemAddr: 0x0080 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x004c | MemAddr: 0x0010 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x004c | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0010 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x005a | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x0050 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0090 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x0050 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x0052 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x0054 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x0056 | MemEn: 1 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x0058 | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x0bba
+# PC: 0x0056 | MemAddr: 0x005a | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x0bba
+# PC: 0x0056 | MemAddr: 0x005c | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x0bba
+# PC: 0x0056 | MemAddr: 0x005e | MemEn: 1 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xa1aa
+# PC: 0x0056 | MemAddr: 0x0060 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xb1aa
+# PC: 0x0056 | MemAddr: 0x0062 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0xf000
+# PC: 0x0056 | MemAddr: 0x0064 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x0066 | MemEn: 0 | MemWr: 0 | MemValid: 1 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0056 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x0058 | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x005a | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x005a | MemAddr: 0x00aa | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x005a | MemAddr: 0xaaaa | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x005a | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x005a | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# PC: 0x005a | MemAddr: 0x0000 | MemEn: 0 | MemWr: 0 | MemValid: 0 | MemIn: 0x0000 | MemOut: 0x0000
+# 
+# CPU halted due to HLT instruction.
+# 
+# YAHOO!! All tests passed.
+# ** Note: $stop    : /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/post_synth_tb.sv(52)
+#    Time: 3315 ns  Iteration: 1  Instance: /post_synth_tb
+# Break in Module post_synth_tb at /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/post_synth_tb.sv line 52
+# Stopped at /filespace/s/sjonnalagad2/WISC-S25-MIPS-CPU_extra/Extra-Credit/tests/post_synth_tb.sv line 52
+#  log -flush /*
+#  quit -f
+# End time: 23:27:06 on Apr 25,2025, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 250
+01
+# Errors: 0, Warnings: 250

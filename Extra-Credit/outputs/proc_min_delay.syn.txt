@@ -8,7 +8,7 @@ Report : timing
         -max_paths 1
 Design : proc
 Version: V-2023.12-SP5
-Date   : Sat Apr 26 04:42:50 2025
+Date   : Sat Apr 26 12:50:59 2025
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.
@@ -35,7 +35,7 @@ Wire Load Model Mode: enclosed
                                                           0.00 #     0.00 r
   iFETCH/iDBP/iBHT/iMEM_BHT/iBRANCH_CACHE[0]/iBIT_CELL[14]/iDFF/state_reg/QN (DFFX1_LVT)
                                                           0.05       0.05 f
-  U22082/Y (AND2X1_LVT)                                   0.04       0.09 f
+  U22080/Y (AND2X1_LVT)                                   0.04       0.09 f
   iFETCH/iDBP/iBHT/iMEM_BHT/iBRANCH_CACHE[0]/iBIT_CELL[14]/iDFF/U3/Y (NOR2X0_LVT)
                                                           0.05       0.14 r
   iFETCH/iDBP/iBHT/iMEM_BHT/iBRANCH_CACHE[0]/iBIT_CELL[14]/iDFF/state_reg/D (DFFX1_LVT)

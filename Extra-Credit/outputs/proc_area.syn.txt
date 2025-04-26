@@ -3,7 +3,7 @@
 Report : area
 Design : proc
 Version: V-2023.12-SP5
-Date   : Sat Apr 26 04:42:58 2025
+Date   : Sat Apr 26 12:51:08 2025
 ****************************************
 
 Library(s) Used:
@@ -11,20 +11,20 @@ Library(s) Used:
     saed32lvt_tt0p85v25c (File: /cae/apps/data/saed32_edk-2022/lib/stdcell_lvt/db_nldm/saed32lvt_tt0p85v25c.db)
 
 Number of ports:                           70
-Number of nets:                        157834
-Number of cells:                       157897
-Number of combinational cells:          86533
+Number of nets:                        157864
+Number of cells:                       157927
+Number of combinational cells:          86563
 Number of sequential cells:             71364
 Number of macros/black boxes:               0
-Number of buf/inv:                       7840
-Number of references:                      56
+Number of buf/inv:                       7866
+Number of references:                      62
 
-Combinational area:             210783.476317
-Buf/Inv area:                    10144.920231
-Noncombinational area:          456387.741117
+Combinational area:             210337.961743
+Buf/Inv area:                    10230.312620
+Noncombinational area:          469627.627592
 Macro/Black Box area:                0.000000
-Net Interconnect area:          200513.026854
+Net Interconnect area:          198554.530535
 
-Total cell area:                667171.217434
-Total area:                     867684.244288
+Total cell area:                679965.589335
+Total area:                     878520.119871
 1

@@ -7,7 +7,7 @@ Report : power
         -analysis_effort low
 Design : proc
 Version: V-2023.12-SP5
-Date   : Sat Apr 26 04:42:56 2025
+Date   : Sat Apr 26 12:51:06 2025
 ****************************************
 
 
@@ -38,12 +38,12 @@ Attributes
 i - Including register clock pin internal power
 
 
-  Cell Internal Power  = 243.1760 uW  (100%)
-  Net Switching Power  = 219.2502 nW    (0%)
+  Cell Internal Power  = 270.8245 uW  (100%)
+  Net Switching Power  = 239.4190 nW    (0%)
                          ---------
-Total Dynamic Power    = 243.3953 uW  (100%)
+Total Dynamic Power    = 271.0639 uW  (100%)
 
-Cell Leakage Power     = 323.4673 mW
+Cell Leakage Power     = 325.5412 mW
 
 
                  Internal         Switching           Leakage            Total
@@ -52,10 +52,10 @@ Power Group      Power            Power               Power              Power  
 io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
 memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
-clock_network     60.9238            0.0000            0.0000           60.9238  (   0.02%)  i
-register           4.2613        1.2163e-02        1.9530e+11        1.9530e+05  (  60.33%)
+clock_network     67.9611            0.0000            0.0000           67.9611  (   0.02%)  i
+register           4.7517        1.2864e-02        1.9529e+11        1.9530e+05  (  59.94%)
 sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
-combinational    177.9639            0.2072        1.2817e+11        1.2835e+05  (  39.65%)
+combinational    198.1529            0.2268        1.3025e+11        1.3045e+05  (  40.04%)
 --------------------------------------------------------------------------------------------------
-Total            243.1490 uW         0.2193 uW     3.2347e+11 pW     3.2371e+05 uW
+Total            270.8656 uW         0.2397 uW     3.2554e+11 pW     3.2581e+05 uW
 1

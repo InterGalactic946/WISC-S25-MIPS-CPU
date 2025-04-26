@@ -6,7 +6,7 @@ Report : timing
         -max_paths 1
 Design : proc
 Version: V-2023.12-SP5
-Date   : Sat Apr 26 04:42:50 2025
+Date   : Sat Apr 26 12:51:00 2025
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.
@@ -16,7 +16,7 @@ Wire Load Model Mode: enclosed
 
   Startpoint: iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: iFETCH/iPC/iREG[1]/state_reg
+  Endpoint: iFETCH/iPC/iREG[3]/state_reg
             (rising edge-triggered flip-flop clocked by clk)
   Path Group: clk
   Path Type: max
@@ -32,56 +32,56 @@ Wire Load Model Mode: enclosed
   iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg/CLK (DFFX1_LVT)
                                                           0.00 #     0.00 r
   iINSTR_MEM_CACHE/iL1_CACHE_CONTROLLER/iFSM_BUSY_REG/iREG[0]/state_reg/Q (DFFX1_LVT)
-                                                          0.11       0.11 f
-  U21445/Y (AO22X1_LVT)                                   0.07       0.18 f
-  U53367/Y (INVX1_LVT)                                    0.04       0.22 r
-  U20799/Y (AND2X1_LVT)                                   0.04       0.27 r
-  U20798/Y (AND2X1_LVT)                                   0.06       0.32 r
-  U2666/Y (AND2X1_LVT)                                    0.09       0.41 r
-  U44682/Y (INVX1_LVT)                                    0.05       0.46 f
-  U52432/Y (INVX4_LVT)                                    0.10       0.56 r
-  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/set[9]/Mblk_second_way/mc[7]/Dout_tri/Y (TNBUFFX8_LVT)
-                                                          0.46       1.02 r
-  U53598/Y (INVX0_LVT)                                   29.51      30.53 f
-  U53365/Y (XOR2X1_LVT)                                   0.08      30.61 f
-  U43249/Y (NAND2X0_LVT)                                  0.04      30.66 r
-  U43248/Y (AO221X1_LVT)                                  0.07      30.73 r
-  U43241/Y (NAND2X0_LVT)                                  0.07      30.80 f
-  U54939/Y (OR2X2_LVT)                                    0.08      30.88 f
-  U21437/Y (NAND2X0_LVT)                                  0.06      30.95 r
-  U53364/Y (NOR2X0_LVT)                                   0.06      31.01 f
-  U52985/Y (INVX1_LVT)                                    0.06      31.06 r
-  U52429/Y (INVX1_LVT)                                    0.05      31.11 f
-  U51887/Y (INVX1_LVT)                                    0.05      31.16 r
-  U47167/Y (INVX1_LVT)                                    0.05      31.21 f
-  U44903/Y (INVX1_LVT)                                    0.07      31.29 r
-  U54940/Y (AND2X4_LVT)                                   0.10      31.39 r
-  iINSTR_MEM_CACHE/iL1_CACHE/iDA/set[0]/blk_first_way/dw[0]/dc[13]/Dout_tri/Y (TNBUFFX8_LVT)
-                                                          2.33      33.72 r
-  U53592/Y (INVX0_LVT)                                 2203.17    2236.89 f
-  U21790/Y (OR3X1_LVT)                                    0.13    2237.02 f
-  U21787/Y (AO221X1_LVT)                                  0.09    2237.11 f
-  U53374/Y (INVX1_LVT)                                    0.05    2237.16 r
-  U53373/Y (OR3X1_LVT)                                    0.09    2237.25 r
-  U52986/Y (INVX1_LVT)                                    0.05    2237.30 f
-  U21731/Y (AOI22X1_LVT)                                  0.07    2237.38 r
-  U53596/Y (AO21X1_LVT)                                   0.05    2237.43 r
-  U53595/Y (AO21X1_LVT)                                   0.05    2237.48 r
-  iFETCH/iPC/iREG[1]/U3/Y (NOR2X0_LVT)                    0.05    2237.53 f
-  iFETCH/iPC/iREG[1]/state_reg/D (DFFX1_LVT)              0.01    2237.54 f
-  data arrival time                                               2237.54
+                                                          0.09       0.09 f
+  U44703/Y (AO22X1_LVT)                                   0.05       0.15 f
+  U44790/Y (INVX0_LVT)                                    0.03       0.18 r
+  U19310/Y (AND2X1_LVT)                                   0.05       0.23 r
+  U17821/Y (AND2X1_LVT)                                   0.04       0.27 r
+  U17820/Y (AND2X1_LVT)                                   0.05       0.32 r
+  U53409/Y (NAND2X0_LVT)                                  0.06       0.38 f
+  U52914/Y (INVX2_LVT)                                    0.11       0.49 r
+  iINSTR_MEM_CACHE/iL1_CACHE/iMDA/set[20]/Mblk_first_way/mc[7]/Dout_tri/Y (TNBUFFX32_LVT)
+                                                          0.47       0.96 f
+  U54967/Y (DELLN2X2_LVT)                                28.37      29.32 f
+  U54897/Y (INVX0_LVT)                                    0.03      29.35 r
+  U43522/Y (XOR2X1_LVT)                                   0.06      29.41 r
+  U43239/Y (AND4X1_LVT)                                   0.05      29.47 r
+  U43238/Y (NAND4X0_LVT)                                  0.05      29.52 f
+  U44707/Y (AND2X1_LVT)                                   0.06      29.58 f
+  U44706/Y (NAND2X0_LVT)                                  0.05      29.63 r
+  U21435/Y (NAND2X0_LVT)                                  0.03      29.65 f
+  U21259/Y (NAND2X0_LVT)                                  0.05      29.70 r
+  U54940/Y (INVX1_LVT)                                    0.04      29.74 f
+  U52916/Y (INVX1_LVT)                                    0.05      29.79 r
+  U47315/Y (INVX1_LVT)                                    0.05      29.84 f
+  U45016/Y (INVX1_LVT)                                    0.08      29.92 r
+  U56769/Y (AND2X4_LVT)                                   0.10      30.02 r
+  iINSTR_MEM_CACHE/iL1_CACHE/iDA/set[51]/blk_second_way/dw[4]/dc[12]/Dout_tri/Y (TNBUFFX8_LVT)
+                                                          2.45      32.47 f
+  U54489/Y (DELLN1X2_LVT)                              2191.55    2224.02 f
+  U21786/Y (AO22X1_LVT)                                   0.05    2224.07 f
+  U54934/Y (OAI221X1_LVT)                                 0.06    2224.13 r
+  U44720/Y (INVX0_LVT)                                    0.02    2224.16 f
+  U44717/Y (NAND3X0_LVT)                                  0.05    2224.20 r
+  U44714/Y (OR2X1_LVT)                                    0.06    2224.26 r
+  U21721/Y (OA21X1_LVT)                                   0.05    2224.31 r
+  U21720/Y (OA222X1_LVT)                                  0.06    2224.37 r
+  U21719/Y (AO22X1_LVT)                                   0.05    2224.42 r
+  iFETCH/iPC/iREG[3]/U3/Y (NOR2X0_LVT)                    0.05    2224.47 f
+  iFETCH/iPC/iREG[3]/state_reg/D (DFFX1_LVT)              0.01    2224.48 f
+  data arrival time                                               2224.48
 
-  clock clk (rise edge)                                2500.00    2500.00
-  clock network delay (ideal)                             0.00    2500.00
-  clock uncertainty                                      -0.15    2499.85
-  iFETCH/iPC/iREG[1]/state_reg/CLK (DFFX1_LVT)            0.00    2499.85 r
-  library setup time                                    -15.04    2484.81
-  data required time                                              2484.81
+  clock clk (rise edge)                                2240.00    2240.00
+  clock network delay (ideal)                             0.00    2240.00
+  clock uncertainty                                      -0.15    2239.85
+  iFETCH/iPC/iREG[3]/state_reg/CLK (DFFX1_LVT)            0.00    2239.85 r
+  library setup time                                    -15.04    2224.81
+  data required time                                              2224.81
   --------------------------------------------------------------------------
-  data required time                                              2484.81
-  data arrival time                                              -2237.54
+  data required time                                              2224.81
+  data arrival time                                              -2224.48
   --------------------------------------------------------------------------
-  slack (MET)                                                      247.27
+  slack (MET)                                                        0.33
 
 
 1

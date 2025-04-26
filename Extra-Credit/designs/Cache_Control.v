@@ -163,7 +163,7 @@ module Cache_Control (
     set_fsm_busy = 1'b0;     // By default, assume the FSM is not busy.
     incr_cnt = 1'b0;         // By default, assume we are not incrementing the word count.
     write_data_array = 1'b0; // By default, assume we are not writing to the cache data array.
-    write_tag_array = 1'b0;  // By default, assume we are not writing to the tag array.
+    // write_tag_array = 1'b0;  // By default, assume we are not writing to the tag array.
     error = 1'b0;            // Default no error state.
 
     case (state)

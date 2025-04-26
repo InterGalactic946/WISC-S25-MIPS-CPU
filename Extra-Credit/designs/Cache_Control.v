@@ -17,7 +17,7 @@ module Cache_Control (
     output wire         mem_en,            // Signal to enable main memory on a miss
     
     output wire [7:0] tag_out,             // Output tag to rewrite upon a miss
-    output wire        write_tag_array,     // Write enable to cache tag array when all words are filled in to data array
+    output reg        write_tag_array,     // Write enable to cache tag array when all words are filled in to data array
 
     output reg        write_data_array,     // Write enable to cache data array to signal when filling with memory_data
 

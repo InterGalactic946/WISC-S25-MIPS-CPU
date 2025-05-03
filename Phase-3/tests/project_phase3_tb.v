@@ -197,7 +197,7 @@ module project_phase3_tb();
    assign MemDataOut = DUT.iPROC.MemData;
    // If there's a memory read in this cycle, this is the data being read out of memory (16 bits)
 
-   assign ICacheReq = ~DUT.iPROC.PC_stall;
+   assign ICacheReq = DUT.iPROC.ICACHE_hit | DUT.iPROC.iINSTR_MEM_CACHE.iL1_CACHE_CONTROLLER.state[0]; 
    // Signal indicating a valid instruction read request to cache
    
    assign ICacheHit = DUT.iPROC.ICACHE_hit;

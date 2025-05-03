@@ -1,0 +1,1 @@
+add wave /project_phase3_tb/DUT/iPROC/iIF_ID/iPREDICTED_TARGET_REG/clk; add wave /project_phase3_tb/DUT/iPROC/iMEM_WB/iRegWrite_REG/rst;

@@ -177,5 +177,5 @@ SIMLOG:: icachehit_count          97
 
 SIMLOG:: dcachereq_count          62
 
-SIMLOG:: icachereq_count          60
+SIMLOG:: icachereq_count         102
 

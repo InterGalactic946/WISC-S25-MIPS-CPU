@@ -334,9 +334,9 @@ SIMLOG:: inst_count         163
 
 SIMLOG:: dcachehit_count          35
 
-SIMLOG:: icachehit_count         240
+SIMLOG:: icachehit_count         244
 
 SIMLOG:: dcachereq_count          88
 
-SIMLOG:: icachereq_count         246
+SIMLOG:: icachereq_count         250
 

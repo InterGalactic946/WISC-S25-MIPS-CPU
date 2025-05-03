@@ -64,9 +64,9 @@ SIMLOG:: inst_count          37
 
 SIMLOG:: dcachehit_count           2
 
-SIMLOG:: icachehit_count          26
+SIMLOG:: icachehit_count          30
 
 SIMLOG:: dcachereq_count          28
 
-SIMLOG:: icachereq_count          28
+SIMLOG:: icachereq_count          32
 

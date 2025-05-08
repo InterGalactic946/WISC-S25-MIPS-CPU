@@ -1,5 +1,3 @@
-`default_nettype none // Set the default as none to avoid errors
-
 ///////////////////////////////////////////////////////////
 // cpu_tb.sv: CPU Testbench Module                       //  
 //                                                       //
@@ -12,323 +10,271 @@
 ///////////////////////////////////////////////////////////
 module cpu_tb();
 
-  import ALU_tasks::*;
-  import Model_tasks::*;
+  // Importing task libraries.
+  import Monitor_tasks::*;
   import Verification_tasks::*;
-
 
   ///////////////////////////
   // Stimulus of type reg //
   /////////////////////////
-  logic clk, rst_n;
+  logic clk, rst_n;                  // Clock and reset signals
+  logic hlt, expected_hlt;           // Halt signals for execution stop for each DUT and model
+  logic [15:0] expected_pc;          // Expected program counter value for verification
+  logic [15:0] pc;                   // Current program counter value
 
-  ///////////////////////////////
-  // Declare internal signals //
-  /////////////////////////////
-  logic hlt;               // Halt signal for execution stop
-  logic taken;             // Indicates if branch was taken
-  logic [15:0] expected_pc; // Expected program counter value for verification
-  logic [15:0] pc;         // Current program counter value
-  logic [15:0] next_pc;    // Next program counter value
-  logic [15:0] instr;      // Current instruction
-  logic [3:0] opcode;      // Instruction opcode
-  logic [3:0] rs, rt, rd;  // Source and destination registers
-  logic [15:0] imm;        // Immediate value
-  logic [15:0] A, B;       // ALU operands
-  logic ALUSrc, MemtoReg, RegWrite, RegSrc, MemEnable, MemWrite, Branch, BR, HLT, Z_en, NV_en; // Control signals
-  logic [3:0] ALUOp;       // ALU operation
-  logic [15:0] reg_data;   // Register data for write
-  logic [15:0] result;     // ALU result
-  logic [15:0] data_memory_output; // Data memory output
-  string instr_name;       // Instruction name for logging
-  logic [2:0] cc;          // Condition code for branch
-  logic [15:0] regfile [0:15]; // Register file
-  reg [15:0] instr_memory [0:65535]; // Instruction memory
-  reg [15:0] data_memory [0:65535]; // Data memory
-  logic [2:0] flag_reg;    // Flag register
-  logic Z_enable, V_enable, N_enable; // Flag enable signals
-  logic Z_set, V_set, N_set; // Flags to be set
-  logic PCS;               // Flag for ALU-based PC update
-  logic error;             // Error flag for test failures
+  logic [62:0] EX_signals;           // Execute stage control signals
+  logic [17:0] MEM_signals;          // Memory stage control signals
+  logic [7:0] WB_signals;            // Write-back stage control signals
+  logic [62:0] expected_EX_signals;  // Execute stage control signals (expected)
+  logic [17:0] expected_MEM_signals; // Memory stage control signals (expected)
+  logic [7:0] expected_WB_signals;   // Write-back stage control signals (expected)
 
+  string fetch_msg;                  // Message from the fetch stage.
+  string decode_msg;                 // Message from the decode stage.
+  string instruction_full_msg;       // Full instruction message from the decode stage.
+  string execute_msg;                // Message from the execute stage.
+  string mem_msg;                    // Message from the memory stage.
+  string wb_msg;                     // Message from the write-back stage.
+  
   //////////////////////
   // Instantiate DUT //
   ////////////////////
-  cpu iDUT (.clk(clk), .rst_n(rst_n), .hlt(hlt), .pc(pc));
+  cpu iDUT (
+    .clk(clk),
+    .rst_n(rst_n),
+    .hlt(hlt),
+    .pc(pc)
+  );
 
-  // Task to initialize the testbench.
-  task automatic Setup();
-    begin
-      error = 1'b0; // Reset error flag
-      
-      // Initialize the PC to a starting value (e.g., 0)
-      $display("\nInitializing CPU Testbench...");
-      instr_memory = '{default: 16'h0000};
-      data_memory <= '{default: 16'h0000};
-      regfile = '{default: 16'h0000};
-      flag_reg = 3'h0;
-      next_pc = 16'h0000;
-      expected_pc = 16'h0000;
+  ////////////////////////
+  // Instantiate Model //
+  //////////////////////
+  cpu_model iMODEL (
+    .clk(clk),
+    .rst_n(rst_n),
+    .hlt(expected_hlt),
+    .pc(expected_pc)
+  );
 
-      // Initialize all signals for the testbench.
-      Initialize(.clk(clk), .rst_n(rst_n));
-
-      // Verify that the PC is initialized to 0x0000.
-			if (pc !== expected_pc) begin
-					$display("ERROR: DUT has incorrect PC value after reset. PC: 0x%h does not match Expected_PC: 0x%h..", pc, expected_pc);
-					error = 1'b1;
-			end
-
-      // Load instructions into memory for the CPU to execute.
-      if (!error) begin
-        // Load instructions into memory for the CPU to execute.
-        LoadImage("./tests/loadfile_all.img", instr_memory);
-
-        // Load instructions into data memory for the CPU to perform memory operations.
-        LoadImage("./tests/data.img", data_memory);
-        
-        // Print a message to indicate successful initialization.
-        $display("CPU Testbench initialized successfully.");
-        
-        // Print a new line.
-        $display("\n");
-      end else begin
-        $display("ERROR: CPU Testbench initialization failed.");
-        $stop();
-      end
-    end
-  endtask 
+  ////////////////////////////////////
+  // Instantiate Verification Unit //
+  //////////////////////////////////
+   Verification_Unit iVERIFY (
+    .clk(clk),
+    .rst_n(rst_n),
+    .fetch_msg(fetch_msg),
+    .decode_msg(decode_msg),
+    .instruction_full_msg(instruction_full_msg),
+    .execute_msg(execute_msg),
+    .mem_msg(mem_msg),
+    .wb_msg(wb_msg)
+  );
 
   // Test procedure to apply stimulus and check responses.
   initial begin
-      ///////////////////////////////
-      // Initialize the testbench //
-      /////////////////////////////
-      Setup();
+    // Initialize the testbench
+    Initialize(.clk(clk), .rst_n(rst_n));
 
-      // Run the simulation for each instruction in the instruction memory.
-      repeat ($size(instr_memory)) @(posedge clk) begin
-        // Fetch the current instruction from memory.
-        FetchInstruction(.instr_memory(instr_memory), .pc(expected_pc), .instr(instr));
+    // Setup the testbench environment.
+    $display("\n");
 
-        // Verify that the instruction was fetched correctly.
-        VerifyInstructionFetched(
-            .expected_instr(instr),      
-            .actual_instr(iDUT.pc_inst),          
-            .instr_memory(iDUT.iINSTR_MEM.mem),          
-            .expected_pc(expected_pc),            
-            .pc(pc),                              
-            .error(error)                        
-        );
+    // Run the simulation for each instruction in the instruction memory until HLT reaches WB.
+    TimeoutTask(.sig(hlt), .clk(clk), .clks2wait(1000000), .signal("HLT"));
 
-        // Decode the instruction to extract opcode, rs, rt, rd, imm, and cc, and control signals.
-        DecodeInstruction(
-            .instr(instr),
-            .opcode(opcode),
-            .instr_name(instr_name),
-            .rs(rs),
-            .rt(rt),
-            .rd(rd),
-            .imm(imm),
-            .Z_en(Z_en),
-            .flag_reg(flag_reg),
-            .NV_en(NV_en),
-            .ALUSrc(ALUSrc),
-            .MemtoReg(MemtoReg),
-            .RegWrite(RegWrite),
-            .RegSrc(RegSrc),
-            .MemEnable(MemEnable),
-            .MemWrite(MemWrite),
-            .Branch(Branch),
-            .BR(BR),
-            .HLT(HLT),
-            .PCS(PCS),
-            .ALUOp(ALUOp),
-            .cc(cc)
-        );
+    // Wait for 2 cycles to print last actual instruction and HLT.
+    repeat (2) @(posedge clk);
+    
+    $display("CPU halted due to HLT instruction.\n");
 
-        // Verify that the control signals are correctly decoded.
-        VerifyControlSignals(
-            .opcode(opcode),
-            .instr_name(instr_name),
-            .rs(rs), .rt(rt), .rd(rd),
-            .imm(imm),
-            .ALUSrc(ALUSrc), .MemtoReg(MemtoReg), .RegWrite(RegWrite), .RegSrc(RegSrc),
-            .MemEnable(MemEnable), .MemWrite(MemWrite), .Branch(Branch), .BR(BR),
-            .HLT(HLT), .PCS(PCS),
-            .ALUOp(ALUOp), .Z_en(Z_en), .NV_en(NV_en), .cc(cc),
-            .DUT_opcode(iDUT.opcode),
-            .DUT_reg_rs(iDUT.reg_rs), .DUT_reg_rt(iDUT.reg_rt), .DUT_reg_rd(iDUT.reg_rd),
-            .DUT_ALUSrc(iDUT.iCC.ALUSrc), .DUT_MemtoReg(iDUT.iCC.MemtoReg),
-            .DUT_RegWrite(iDUT.iCC.RegWrite), .DUT_RegSrc(iDUT.iCC.RegSrc),
-            .DUT_MemEnable(iDUT.iCC.MemEnable), .DUT_MemWrite(iDUT.iCC.MemWrite),
-            .DUT_Branch(iDUT.iCC.Branch), .DUT_BR(iDUT.iPCC.BR),
-            .DUT_HLT(iDUT.iCC.HLT), .DUT_PCS(iDUT.iCC.PCS), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
-            .DUT_ALUOp(iDUT.iCC.ALUOp),
-            .DUT_Z_en(iDUT.iCC.Z_en), .DUT_NV_en(iDUT.iCC.NV_en),
-            .DUT_c_codes(iDUT.c_codes),
-            .error(error)
-        );
+    // If we reached here, that means all test cases were successful.
+    $display("YAHOO!! All tests passed.");
+    $stop();
+  end
 
-        // If the HLT instruction is encountered, stop the simulation.
-        if (opcode === 4'hF) begin
-          if (hlt !== 1'b1) begin
-            $display("ERROR: HLT signal not set after HLT instruction.");
-            error = 1'b1;
-          end else begin
-            $display("HLT instruction encountered. Stopping simulation...\n");
-            // If we reached here, that means all test cases were successful
-            $display("YAHOO!! All tests passed.");
-          end
-          $stop();
+
+  // Dump contents of Data memory, and Regfile contents.
+  always_ff @(negedge clk) begin
+      if (rst_n) begin
+        // Log data memory contents.
+        if (iDUT.MemEnable || hlt) begin
+          log_data_dump(
+              .model_data_mem(iMODEL.iDATA_MEM.data_memory),     
+              .dut_data_mem(iDUT.iDATA_MEM.mem)          
+          );
         end
         
-        // Choose the correct operands for the instruction based on the opcode.
-        ChooseALUOperands(
-          .opcode(opcode), 
-          .reg_rs(rs),         
-          .reg_rt(rt),         
-          .reg_rd(rd),         
-          .imm(imm),       
-          .regfile(regfile), 
-          .Input_A(A),
-          .Input_B(B)
-        );
-
-        // Verify that the correct operands were chosen.
-        VerifyALUOperands(
-            .instr_name(instr_name),
-            .Input_A(A),
-            .Input_B(B),
-            .ALU_Input_A(iDUT.iALU.Input_A), 
-            .ALU_Input_B(iDUT.iALU.Input_B), 
-            .error(error)
-        );
-
-        // Execute the instruction based on the opcode and operands.
-        ExecuteInstruction(
-          .opcode(opcode), 
-          .instr_name(instr_name), 
-          .Input_A(A), 
-          .Input_B(B), 
-          .result(result), 
-          .Z_set(Z_set),
-          .V_set(V_set),
-          .N_set(N_set)
-        );
-
-        // Verify the result of the operation.
-        VerifyExecutionResult(
-            .instr_name(instr_name),
-            .opcode(opcode),
-            .result(result),
-            .Z_set(Z_set),
-            .N_set(N_set),
-            .V_set(V_set),
-            .Input_A(iDUT.iALU.Input_A), 
-            .Input_B(iDUT.iALU.Input_B), 
-            .ALU_Out(iDUT.iALU.ALU_Out), 
-            .ALU_Z(iDUT.iALU.Z_set),     
-            .ALU_N(iDUT.iALU.N_set),     
-            .ALU_V(iDUT.iALU.V_set),     
-            .error(error)
-        );
-
-        // Access the memory based on the opcode and operands.
-        AccessMemory(.addr(result), .data_in(regfile[rd]), .data_out(data_memory_output), .MemEnable(MemEnable), .MemWrite(MemWrite), .data_memory(data_memory));
-
-        // Verify the memory access operation.
-        VerifyMemoryAccess(
-            .addr(result),            
-            .enable(MemEnable),           
-            .DUT_data_in(iDUT.SrcReg2_data),   
-            .model_data_in(regfile[rd]),   
-            .instr_name(instr_name),      
-            .wr(MemWrite),             
-            .model_memory(data_memory),  
-            .mem_unit(iDUT.iDATA_MEM.mem),     
-            .error(error)               
-        );
-
-        // Determine the next PC value based on the opcode and operands.
-        DetermineNextPC(
-          .Branch(Branch), 
-          .BR(BR), 
-          .C(cc), 
-          .F(flag_reg), 
-          .PC_in(expected_pc), 
-          .imm(imm), 
-          .next_PC(next_pc),
-          .Rs(regfile[rs]),
-          .taken(taken)
-        );
-
-        // Verify the next PC based on the branch condition.
-        VerifyNextPC(  
-            .expected_next_PC(next_pc),  
-            .DUT_next_PC(iDUT.iPCC.PC_out),  
-            .expected_taken(taken),  
-            .DUT_taken(iDUT.iPCC.Branch_taken),  
-            .DUT_Branch(iDUT.iPCC.Branch),
-            .error(error)  
-        );  
-
-        // Choose ALU_output or memory_output based on the opcode.
-        reg_data = (MemtoReg) ? data_memory_output : ((PCS) ? next_pc : result);
-
-        // Write the result back to the register file based on the opcode and operands.
-        WriteBack(.regfile(regfile), .rd(rd), .input_data(reg_data), .RegWrite(RegWrite));
-
-        // Verifies the write back stage.
-        VerifyWriteBack(
-          .DUT_reg_rd(iDUT.reg_rd), 
-          .RegWrite(RegWrite), 
-          .DUT_RegWriteData(iDUT.RegWriteData), 
-          .model_reg_rd(rd), 
-          .model_RegWriteData(reg_data), 
-          .error(error)
-        );
-
-        // Update the PC register with the next PC value.
-        expected_pc = next_pc;
-
-        // Update Z flag if enabled, otherwise hold.
-        flag_reg[2] = (Z_en)  ? Z_set : flag_reg[2];
-        // Update V flag if enabled, otherwise hold.  
-        flag_reg[1] = (NV_en) ? V_set : flag_reg[1];
-        // Update N flag if enabled, otherwise hold.  
-        flag_reg[0] = (NV_en) ? N_set : flag_reg[0];
-
-        // Stop the simulation if an error is detected.
-        if (error) begin
-          $stop();
+        // Log the regfile contents.
+        if (iDUT.RegWrite || hlt) begin
+          log_regfile_dump(.regfile(iMODEL.iRF.regfile));
         end
-
-        // Print a new line between instructions.
-        $display("\n");
       end
+  end
 
-      // If we reached here, that means all test cases were successful
-      $display("YAHOO!! All tests passed.");
-      $stop();
-    end
-  
-  // Verify the flag register at the begining of each clock cycle.
-  always @(posedge clk) begin
-    // Ignore the check on reset.
-    if (rst_n) begin
-      // Print out the current state of the model's flag register.
-      $display("Model flag register state: ZF = 0b%1b, VF = 0b%1b, NF = 0b%1b.", flag_reg[2], flag_reg[1], flag_reg[0]);
-      
-      // Verify the DUT's flag register at the begining of each cycle.
-      VerifyFlagRegister(.flag_reg(flag_reg), .DUT_flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}), .error(error));
+
+  // Always block for verify_FETCH stage.
+  always_ff @(posedge clk) begin
+      if (rst_n) begin
+        // Local variable.
+        string ftch_msg;
+
+        // Verify FETCH stage logic.
+        verify_FETCH(
+              .PC_next(iDUT.nxt_pc), 
+              .expected_PC_next(iMODEL.nxt_pc), 
+              .PC_inst(iDUT.pc_inst), 
+              .expected_PC_inst(iMODEL.pc_inst), 
+              .PC_curr(pc), 
+              .expected_PC_curr(expected_pc), 
+              .fetch_msg(ftch_msg)
+        );
+
+        fetch_msg = {"|", ftch_msg};
+
     end
   end
 
-  // Generate clock signal with 10 ns period.
+
+  ////////////////////////////////////////////////
+  // Package each stage's control signals (DUT) //
+  ////////////////////////////////////////////////
+  // Package the execute stage control signals.
+  assign EX_signals = {iDUT.SrcReg1, iDUT.SrcReg2, iDUT.ALU_In1, iDUT.ALU_imm, iDUT.ALU_In2, iDUT.ALUOp, iDUT.ALUSrc, iDUT.Z_en, iDUT.NV_en};
+
+  // Package the memory stage control signals.
+  assign MEM_signals = {iDUT.SrcReg2_data, iDUT.MemEnable, iDUT.MemWrite};
+
+  // Package the write back stage control signals.
+  assign WB_signals = {iDUT.reg_rd, iDUT.RegWrite, iDUT.MemToReg, iDUT.HLT, iDUT.PCS};
+  /////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////
+  // Package each stage's control signals (Model)  //
+  ///////////////////////////////////////////////////
+  // Package the execute stage control signals.
+  assign expected_EX_signals = {iMODEL.SrcReg1, iMODEL.SrcReg2, iMODEL.ALU_In1, iMODEL.ALU_imm, iMODEL.ALU_In2, iMODEL.ALUOp, iMODEL.ALUSrc, iMODEL.Z_en, iMODEL.NV_en};
+
+  // Package the memory stage control signals.
+  assign expected_MEM_signals = {iMODEL.SrcReg2_data, iMODEL.MemEnable, iMODEL.MemWrite};
+
+  // Package the write back stage control signals.
+  assign expected_WB_signals = {iMODEL.reg_rd, iMODEL.RegWrite, iMODEL.MemToReg, iMODEL.HLT, iMODEL.PCS};
+  /////////////////////////////////////////////////////////////
+
+
+  // Always block for verify_DECODE stage
+  always_ff @(posedge clk) begin
+      if (rst_n) begin
+        // Local variable.
+        string dcode_msg;
+
+        // Call the verify_DECODE task and get the decode message and full instruction message.
+        verify_DECODE(
+            .EX_signals(EX_signals),
+            .expected_EX_signals(expected_EX_signals),
+            .MEM_signals(MEM_signals),
+            .expected_MEM_signals(expected_MEM_signals),
+            .WB_signals(WB_signals),
+            .expected_WB_signals(expected_WB_signals),
+            .cc(iDUT.c_codes),
+            .flag_reg({iDUT.ZF, iDUT.VF, iDUT.NF}),
+            .is_branch(iDUT.Branch),
+            .expected_is_branch(iMODEL.Branch),
+            .is_BR(iDUT.pc_inst[12]),
+            .expected_is_BR(iMODEL.pc_inst[12]),
+            .actual_target(iDUT.iPCC.PC_out),
+            .expected_actual_target(iMODEL.iPCC.PC_out),
+            .actual_taken(iDUT.iPCC.Branch_taken),
+            .expected_actual_taken(iMODEL.iPCC.Branch_taken),
+            
+            .decode_msg(dcode_msg),
+            .instruction_full(instruction_full_msg)
+          );
+
+        decode_msg = {"|", dcode_msg};
+
+      end
+  end
+
+
+    // Always block for verify_EXECUTE stage.
+    always_ff @(posedge clk) begin
+      if (rst_n) begin
+        // Local variable.
+        string ex_msg;
+
+        verify_EXECUTE(
+          .Input_A(iDUT.iALU.Input_A),
+          .Input_B(iDUT.iALU.Input_B),
+          .expected_Input_A(iMODEL.iALU_model.Input_A),
+          .expected_Input_B(iMODEL.iALU_model.Input_B),
+          .ALU_out(iDUT.ALU_out),
+          .Z_set(iDUT.iALU.Z_set),
+          .V_set(iDUT.iALU.V_set),
+          .N_set(iDUT.iALU.N_set),
+          .expected_ALU_out(iMODEL.ALU_out),
+          .ZF(iDUT.ZF),
+          .NF(iDUT.NF),
+          .VF(iDUT.VF),
+          .expected_ZF(iMODEL.ZF),
+          .expected_VF(iMODEL.VF),
+          .expected_NF(iMODEL.NF),
+          
+          .execute_msg(ex_msg)
+        );
+
+        execute_msg = {"|", ex_msg};
+      
+    end   
+  end
+
+
+  // Always block for verify_MEMORY stage.
+  always_ff @(posedge clk) begin
+    if (rst_n) begin
+      // Local variable.
+      string mem_verify_msg;
+
+      verify_MEMORY(
+        .MemAddr(iDUT.ALU_out),
+        .MemData(iDUT.MemData),
+        .expected_MemData(iMODEL.MemData),
+        .MemWriteData(iDUT.SrcReg2_data),
+        .expected_MemWriteData(iMODEL.SrcReg2_data),
+        .MemEnable(iDUT.MemEnable),
+        .MemWrite(iDUT.MemWrite),
+        
+        .mem_verify_msg(mem_verify_msg)
+      );
+      
+      mem_msg = {"|", mem_verify_msg};
+
+    end
+  end
+
+
+  // Always block for verify_WRITEBACK stage.
+  always_ff @(posedge clk) begin
+    if (rst_n) begin
+      // Local variable.
+      string wbb_msg;
+
+      verify_WRITEBACK(
+        .DstReg(iDUT.reg_rd),
+        .RegWrite(iDUT.RegWrite),
+        .RegWriteData(iDUT.RegWriteData),
+        .expected_RegWriteData(iMODEL.RegWriteData),
+        
+        .wb_verify_msg(wbb_msg)
+      );
+      
+      wb_msg = {"|", wbb_msg};
+
+    end
+  end
+
+
+  // Generate clock signal with 10 ns period
   always 
     #5 clk = ~clk;
 
 endmodule
-
-`default_nettype wire  // Reset default behavior at the end

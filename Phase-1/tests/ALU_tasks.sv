@@ -7,7 +7,6 @@
 ///////////////////////////////////////////////////////////////
 package ALU_tasks;
   
-  
   // Task: Get positive and negative overflow for addition or subtraction.
   task automatic get_overflow(
     input logic signed [15:0] A,        // Operand A (16-bit)

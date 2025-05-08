@@ -1,7 +1,5 @@
-`default_nettype none // Set the default as none to avoid errors
-
 ///////////////////////////////////////////////////////////
-// cpu.v: Central Processing Unit Module                 //  
+// cpu_model.sv: Model Central Processing Unit Module    //  
 //                                                       //
 // This module represents the CPU core, responsible for  //
 // fetching, decoding, executing instructions, and       //
@@ -9,69 +7,70 @@
 // instruction memory, program counter, ALU, registers,  //
 // and control unit to facilitate program execution.     //
 ///////////////////////////////////////////////////////////
-module cpu (clk, rst_n, hlt, pc);
+module cpu_model (clk, rst_n, hlt, pc);
 
-  input wire clk;         // System clock
-  input wire rst_n;       // Active low synchronous reset
-  output wire hlt;        // Asserted once the processor finishes an instruction before a HLT instruction
-  output wire [15:0] pc;  // PC value over the course of program execution
+  input logic clk;         // System clock
+  input logic rst_n;       // Active low synchronous reset
+  output logic hlt;        // Asserted once the processor finishes an instruction before a HLT instruction
+  output logic [15:0] pc;  // PC value over the course of program execution
 
   ///////////////////////////////////
   // Declare any internal signals //
   /////////////////////////////////
-  wire rst; // Active high synchronous reset signal
+  logic rst; // Active high synchronous reset signal
 
   // Signals for the PC and instruction memory
-  wire [15:0] nxt_pc;    // Next PC address
-  wire [15:0] pc_inst;   // Instruction at the current PC address
+  logic [15:0] nxt_pc;             // Next PC address
+  logic [15:0] pc_inst;            // Instruction at the current PC address
+  logic [15:0] inst_mem [0:65535]; // Instruction memory (read-only)
 
   // Signals from the decoded instruction
-  wire [3:0] opcode;     // opcode of the instruction
-  wire [3:0] reg_rd;     // register ID of the destination register
-  wire [3:0] reg_rs;     // register ID of the first source register
-  wire [3:0] reg_rt;     // register ID of the second source register
-  wire [3:0] imm;        // immediate value decoded from the instruction
-  wire [15:0] imm_ext;   // Sign-extended or zero-extended immediate from the instruction
-  wire [7:0] LB_imm;     // immediate for LLB/LHB instructions
-  wire [8:0] Branch_imm; // immediate for branch instructions
-  wire [2:0] c_codes;    // condition codes for branch instructions
-  wire [15:0] Mem_ex_offset;  // Sign extended memory offset
+  logic [3:0] opcode;     // opcode of the instruction
+  logic [3:0] reg_rd;     // register ID of the destination register
+  logic [3:0] reg_rs;     // register ID of the first source register
+  logic [3:0] reg_rt;     // register ID of the second source register
+  logic [3:0] imm;        // immediate value decoded from the instruction
+  logic [15:0] imm_ext;   // Sign-extended or zero-extended immediate from the instruction
+  logic [7:0] LB_imm;     // immediate for LLB/LHB instructions
+  logic [8:0] Branch_imm; // immediate for branch instructions
+  logic [2:0] c_codes;    // condition codes for branch instructions
+  logic [15:0] Mem_ex_offset;  // Sign extended memory offset
 
   // Register IDs of source registers
-  wire [3:0] SrcReg1; // Register ID of the first source register
-  wire [3:0] SrcReg2; // Register ID of the second source register
+  logic [3:0] SrcReg1; // Register ID of the first source register
+  logic [3:0] SrcReg2; // Register ID of the second source register
   
   // Data from registers
-  wire [15:0] SrcReg1_data; // Data from the first source register
-  wire [15:0] SrcReg2_data; // Data from the second source register
+  logic [15:0] SrcReg1_data; // Data from the first source register
+  logic [15:0] SrcReg2_data; // Data from the second source register
 
   // Control signals
-  wire RegSrc;               // Selects the register to read from based on LLB/LHB instructions and not
-  wire RegWrite;             // Enables writing to the register file        
-  wire Branch;               // Indicates a branch instruction
-  wire ALUSrc;               // Selects the second ALU input based on the instruction type
-  wire [3:0] ALUOp;          // ALU operation code
-  wire Z_en, NV_en;          // Enables setting the Z, N, and V flags
-  wire Z_set, V_set, N_set;  // Flags set by the ALU
-  wire MemWrite;             // Enables writing to memory
-  wire MemEnable;            // Enables reading from memory
-  wire MemToReg;             // Selects the data to write back to the register file
-  wire HLT;                  // Indicates a HLT instruction
-  wire PCS;                  // Indicates a PCS instruction
+  logic RegSrc;               // Selects the register to read from based on LLB/LHB instructions and not
+  logic RegWrite;             // Enables writing to the register file        
+  logic Branch;               // Indicates a branch instruction
+  logic ALUSrc;               // Selects the second ALU input based on the instruction type
+  logic [3:0] ALUOp;          // ALU operation code
+  logic Z_en, NV_en;          // Enables setting the Z, N, and V flags
+  logic Z_set, V_set, N_set;  // Flags set by the ALU
+  logic MemWrite;             // Enables writing to memory
+  logic MemEnable;            // Enables reading from memory
+  logic MemToReg;             // Selects the data to write back to the register file
+  logic HLT;                  // Indicates a HLT instruction
+  logic PCS;                  // Indicates a PCS instruction
 
   // Execute signals
-  wire [15:0] ALU_imm;       // Immediate for I-type ALU instructions
-  wire [15:0] ALU_In1;       // First ALU input 
-  wire [15:0] ALU_In2;       // Second ALU input based on the instruction type
-  wire [15:0] ALU_out;       // ALU output
-  wire ZF, VF, NF;           // Flags from the ALU indicating zero, overflow, and negative results
+  logic [15:0] ALU_imm;       // Immediate for I-type ALU instructions
+  logic [15:0] ALU_In1;       // First ALU input 
+  logic [15:0] ALU_In2;       // Second ALU input based on the instruction type
+  logic [15:0] ALU_out;       // ALU output
+  logic ZF, VF, NF;           // Flags from the ALU indicating zero, overflow, and negative results
 
   // Memory signals
-  wire [15:0] MemData;        // Data read from memory
+  logic [15:0] MemData;        // Data read from memory
 
   // Write back signals
-  wire [15:0] RegWriteData;   // Data to be written back to the register file
-  //////////////////////////////////////////////////
+  logic [15:0] RegWriteData;   // Data to be written back to the register file
+  ////////////////////////////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////
   // Make reset active high for modules //
@@ -86,22 +85,26 @@ module cpu (clk, rst_n, hlt, pc);
   ////////////////////////////////
   // Fetch Instruction from PC //
   //////////////////////////////
-  // Infer the instruction memory, it is always read enabled and never write enabled.
-  memory1c iINSTR_MEM (.data_out(pc_inst),
-                              .data_in(16'h0000),
-                              .addr(pc),
-                              .enable(1'b1),
-                              .data(1'b0),
-                              .wr(1'b0),
-                              .clk(clk),
-                              .rst(rst)
-                              );
+  // Model the instruction memory (read only).
+  always_ff @(posedge clk) begin
+    if (rst) begin
+      // Initialize the instruction memory on reset.
+      $readmemh("./tests/loadfile_all.img", inst_mem);
+    end
+  end
+
+  // Asynchronously read out the instruction.
+  assign pc_inst = inst_mem[pc[15:1]];
 
   // Infer the PC Register.
-  PC_Register iPC (.clk(clk), .rst(rst), .nxt_pc(nxt_pc), .curr_pc(pc));
+  always_ff @(posedge clk)
+      if (rst)
+        pc <= 16'h0000;
+      else
+        pc <= nxt_pc;
 
   // Determines what the next pc address is based on branch taken/not.
-  PC_control iPCC (.C(c_codes),
+  PC_control_model iPCC (.C(c_codes),
                    .I(Branch_imm),
                    .F({ZF, VF, NF}),
                    .Rs(SrcReg1_data),
@@ -134,7 +137,7 @@ module cpu (clk, rst_n, hlt, pc);
   assign SrcReg2 = (MemWrite) ? reg_rd : reg_rt;
 
   // Instantiate the register file for the CPU.
-  RegisterFile iRF(.clk(clk),
+  RegisterFile_model iRF(.clk(clk),
                    .rst(rst),
                    .SrcReg1(SrcReg1),
                    .SrcReg2(SrcReg2),
@@ -146,7 +149,8 @@ module cpu (clk, rst_n, hlt, pc);
                    );
 
   // Decodes the opcode and outputs the necessary control signals.
-  ControlUnit iCC(.Opcode(opcode), 
+  ControlUnit_model iCC(
+                  .Opcode(opcode), 
                   .ALUSrc(ALUSrc), 
                   .MemtoReg(MemToReg), 
                   .RegWrite(RegWrite), 
@@ -177,7 +181,7 @@ module cpu (clk, rst_n, hlt, pc);
   assign ALU_In2 = (ALUSrc) ? ALU_imm : SrcReg2_data;
 
   // Instantiate ALU.
-  ALU iALU (.ALU_In1(ALU_In1),
+  ALU_model iALU_model (.ALU_In1(ALU_In1),
             .ALU_In2(ALU_In2),
             .Opcode(ALUOp),
             .ALU_Out(ALU_out),
@@ -186,25 +190,24 @@ module cpu (clk, rst_n, hlt, pc);
             .V_set(V_set)
             );
 
-  // Instantiate the flag_register.
-  flag_register iFR (.clk(clk),
+  // Instantiate the model flag_register.
+  flag_register_model iFR (.clk(clk),
                     .rst(rst),
                     .Z_en(Z_en), .Z_set(Z_set),
                     .V_en(NV_en), .V_set(V_set),
                     .N_en(NV_en), .N_set(N_set),
-                    .Z(ZF),
-                    .V(VF),
-                    .N(NF)
+                    .ZF(ZF),
+                    .VF(VF),
+                    .NF(NF)
                     );
 
   /////////////////////////////
   // Read or Write to Memory //
   /////////////////////////////
-  // Instantiate the data memory. 
-  memory1c iDATA_MEM (.data_out(MemData),
+  // Instantiate the data memory.
+  memory iDATA_MEM (.data_out(MemData),
                       .data_in(SrcReg2_data),
                       .addr(ALU_out),
-                      .data(1'b1),
                       .enable(MemEnable),
                       .wr(MemWrite),
                       .clk(clk),
@@ -219,5 +222,3 @@ module cpu (clk, rst_n, hlt, pc);
   assign RegWriteData = (MemToReg) ? MemData : ((PCS) ? nxt_pc : ALU_out);
 
 endmodule
-
-`default_nettype wire  // Reset default behavior at the end
